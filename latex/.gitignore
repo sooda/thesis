@@ -1,0 +1,7 @@
+*.swp
+dippa.aux
+tex/*.aux
+dippa.log
+dippa.out
+dippa.pdf
+dippa.toc
