@@ -1,0 +1,87 @@
+dippa
+	Art of Optical Flow | fxguide http://www.fxguide.com/featured/art_of_optical_flow/
+	CGL @ ETHZ - Papers http://graphics.ethz.ch/publications/papers/papers.php
+	fxguide | vfx, mograph, and production news http://www.fxguide.com/
+	hardware
+		Data Translation - USB and Ethernet Data Acquisition Solutions http://www.datatranslation.com/
+		3dMD Customer Research http://www.3dmd.com/3dmd-customer-research/
+		www.doc-diy.net :: SmaTrig - The smart 15-in-1 trigger for SLRs http://www.doc-diy.net/photo/smatrig/
+		1004_CAMERA http://homepage.ntlworld.com/molyned/1004.htm
+		Computer Vision Hardware / CMU http://www.cs.cmu.edu/~cil/v-hardware.html
+		DSLR vs. Camcorder for Video http://mountainmultimedia.biz/web-multimedia-blog/dslr-vs-camcorder-video
+		cameras
+			Point Grey http://ww2.ptgrey.com/
+			Sony | Applications Catalog Professional http://pro.sony.com/bbsc/ssr/app-machinevision/
+			Videology Imaging Solutions, Inc. http://www.videologyinc.com/index.html
+			Basler http://www.baslerweb.com/
+			FireWire and Gigabit Ethernet (GigE) Machine Vision Cameras, Industrial Cameras - Allied Vision Technologies http://www.alliedvisiontec.com/emea/home.html
+			Measurement Sensors and Systems, Development and fabrication | Riftek http://www.riftek.com/eng
+			Total Turnkey Solutions - suppliers of industrial cameras, machine vision systems, industrial PCs, Panel PCs, USB data acquisition, industrial lenses, http://www.turnkey-solutions.com.au/index.html
+			Rugged HD surveillance video camera solutions for critical infrastructure | CohuHD - CohuHD | Rugged HD surveillance video camera solutions for critical infrastructure http://www.cohuhd.com/content/index
+			Home | Acal BFi http://www.acalbfi.com/se/
+			Andor Technology - EMCCD, CCD & sCMOS Camera Selection | Spectrographs | Confocal Microscope Systems http://www.andor.com/
+			industrial cameras | machine vision cameras,frame grabbers,lenses,lighting http://1stvision.com/
+			Machine Vision Camera, Industrial Camera, Microscope Camera from PixeLINK http://www.pixelink.com/
+			The Imaging Source - Industrial Cameras, Machine Vision Cameras, Video Converters & Software http://www.theimagingsource.com/en_US/
+			STEMMER IMAGING http://www.stemmer-imaging.co.uk/en
+			Optics - Imaging - Photonics - Optomechanics - Lasers | Edmund Optics http://www.edmundoptics.com/
+			NI Vision - Machine Vision for Any Application - National Instruments http://sine.ni.com/np/app/main/p/ap/vision/lang/fi/pg/1/sn/n17:vision/
+			KEYENCE America | Sensors and Machine Vision Systems for Factory Automation http://www.keyence.com/usa.jsp
+			Princeton Instruments: CCD, ICCD, EMCCD, InGaAs Cameras, Spectrographs, Monochromators, Optics & Coatings http://www.princetoninstruments.com/
+			Emergent Vision Technologies - 10 Gigabit Ethernet (GigE, 10GigE) Ultra High Speed Machine Vision Cameras, Industrial Cameras http://www.emergentvisiontec.com/
+			Industrial CCD and CMOS cameras for machine vision, traffic imaging and medical imaging http://www.jai.com/en/
+			adimec http://www.adimec.com/en
+			Industrial Cameras and Machine Vision - Wholesale Distributor - Aegis Electronic Group http://www.aegis-elec.com/
+			Total Turnkey Solutions - suppliers of industrial cameras, machine vision systems, industrial PCs, Panel PCs, USB data acquisition, industrial lenses, http://www.turnkey-solutions.com.au/
+			Machine Vision Cameras, Industrial Cameras - Phase 1 Technology http://www.phase1tech.com/index.cfm
+			CCD and CMOS Image Sensors | Image Sensor Technology - Truesense Imaging, Inc. http://www.truesenseimaging.com/
+			Machine Vision Solutions : United Kingdom : Sony Professional http://www.sony.co.uk/pro/products/industrial-cameras-machine-vision
+			pco-tech inc http://www.pco-tech.com/
+			Teledyne DALSA Inc http://www.teledynedalsa.com/corp/
+			Home - IDS Imaging Development Systems GmbH http://en.ids-imaging.com/
+			Home - Optronis GmbH - Make time visible http://www.optronis.com/en/home.html
+			Photonfocus AG, producer of CMOS image sensors and CMOS cameras http://www.photonfocus.com/index.php
+			QImaging Scientific Research Cameras - Digital Imaging Made Easy http://www.qimaging.com/
+			The Smart Camera People: Vision Components GmbH http://www.vision-components.com/en/
+			Industrial Cameras, Firewire Interfaces and Accessories - Scorpion Vision Software http://scorpionvision.co.uk/
+			Machine Vision Systems specialists for industrial vision solutions http://www.adept.net.au/
+			XIMEA http://www.ximea.com/
+			Machine Vision Store Cameras, Lenses, Lights, Cables http://machinevisionstore.com/
+			NET GmbH http://net-gmbh.com/en/start.html
+			CIS http://www.ciscorp.co.jp/en/product/gige-color.html
+			Photonfocus AG, producer of CMOS image sensors and CMOS cameras http://www.photonfocus.com/
+			Thorlabs, Inc. - Your Source for Fiber Optics, Laser Diodes, Optical Instrumentation and Polarization Measurement & Control http://www.thorlabs.de/index.cfm
+			A comprehensive list of firewire and USB3 machine vision cameras http://damien.douxchamps.net/ieee1394/cameras/
+	synch
+		Crowdsourcing Bullet Time | DIYPhotography.net http://www.diyphotography.net/crowdsourcing-bullet-time
+		Camera Axe flash strobe trigger http://www.cameraaxe.com/
+	specs
+		Photo Strobe Trigger Voltages http://www.botzilla.com/photo/strobeVolts.html
+	software
+		plural eyes audio video sync | B&H Photo Video http://www.bhphotovideo.com/c/search?Ntt=plural+eyes&N=0
+		Camera Calibration Toolbox for Matlab http://www.vision.caltech.edu/bouguetj/calib_doc/
+		Computer Vision Algorithm Implementations http://www.cvpapers.com/rr.html
+		c++ - FindChessboardCorners cannot detect chessboard on very large images by long focal length lens - Stack Overflow http://stackoverflow.com/questions/15018620/findchessboardcorners-cannot-detect-chessboard-on-very-large-images-by-long-foca
+		Camera Calibration and 3D Reconstruction — OpenCV 2.4.8.0 documentation http://docs.opencv.org/modules/calib3d/doc/camera_calibration_and_3d_reconstruction.html
+		SFMToolkit » Visual-Experiments.com http://www.visual-experiments.com/demos/sfmtoolkit/
+		Autodesk 123D Catch | 3d model from photos http://www.123dapp.com/catch
+		Photofly, A Free App, Makes 3-D Models Out Of Your Snapshots http://www.fastcodesign.com/1663964/photofly-a-free-app-makes-3-d-models-out-of-your-snapshots-video
+		Montage Algorithms http://montage.ipac.caltech.edu/docs/algorithms.html
+		c++ - How to get points in stereo image from extrinsic parameters - Stack Overflow http://stackoverflow.com/questions/15475190/how-to-get-points-in-stereo-image-from-extrinsic-parameters/15495933#15495933
+		CGTalk - Crossing the uncanny valley WIP http://forums.cgsociety.org/showthread.php?f=43&t=1019262&page=1&pp=15
+		Projects/Aravis/TestedCameras - GNOME Wiki! https://wiki.gnome.org/Projects/Aravis/TestedCameras
+		reacTIVision http://reactivision.sourceforge.net/
+		Interface between OpenCV and FFMpeg • FFmpeg Support Forum http://ffmpeg.gusari.org/viewtopic.php?f=11&t=947
+		Entangle Tethered Camera Control & Capture http://entangle-photo.org/
+		Free open source tethering software for Nikon DSLR cameras | Nikon Rumors http://nikonrumors.com/2013/05/11/free-open-source-tethering-software-for-nikon-dslr-cameras.aspx/
+		Linux: Tethered Shooting ─ .:: granjow.net http://granjow.net/tetheredCam.html
+		MeshMixer http://meshmixer.com/
+		MeshLab http://meshlab.sourceforge.net/
+	capture
+		Vicon | Homepage http://www.vicon.com/
+		Animation World Network http://www.awn.com/
+	render
+		DIY Universal Capture System http://www.zbrushcentral.com/showthread.php?177615-DIY-Universal-Capture-System
+		Crossing the uncanny valley WIP - CGFeedback http://www.cgfeedback.com/cgfeedback/showthread.php?t=3776
+	math
+		Scheimpflug principle - Wikipedia http://en.wikipedia.org/wiki/Scheimpflug_principle
