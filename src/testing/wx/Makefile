@@ -4,9 +4,10 @@ WX_LDFLAGS := $(shell wx-config --libs core)
 CV_CFLAGS := $(shell pkg-config --cflags opencv)
 CV_LDFLAGS := $(shell pkg-config --libs opencv)
 
-CXXFLAGS := -g $(WX_CFLAGS) $(CV_CFLAGS)
+BOOST_LDFLAGS := -lboost_filesystem -lboost_system
 
-LDFLAGS := $(WX_LDFLAGS) $(CV_LDFLAGS)
+CXXFLAGS := -g -std=c++0x $(WX_CFLAGS) $(CV_CFLAGS)
+LDFLAGS := -std=c++0x $(WX_LDFLAGS) $(CV_LDFLAGS) $(BOOST_LDFLAGS)
 
 APPS := pairbrowse
 

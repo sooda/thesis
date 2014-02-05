@@ -9,13 +9,14 @@
 class ImagePanel : public wxPanel {
 public:
 	ImagePanel(wxFrame* parent, const std::string& file);
+	ImagePanel(wxFrame* parent);
 
 	void paintEvent(wxPaintEvent& evt);
 	void paintNow();
-
 	void render(wxDC& dc);
-private:
+
 	void setImage(const std::string& file);
+private:
 
 	wxBitmap image;
 };
