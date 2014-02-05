@@ -12,7 +12,7 @@ APPS := pairbrowse
 
 all: $(APPS)
 
-pairbrowse: pairbrowse.o
+pairbrowse: pairbrowse.o imagepanel.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 %.o: %.cpp
