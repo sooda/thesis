@@ -1,2 +1,64 @@
 %Tutkimusaineisto ja -menetelmät
 \section{Materials and methods}
+
+\subsection{Software tools}
+
+\subsubsection{Programs}
+
+- kinect
+- autodesk 123d catch
+- meshlab
+- meshmixer
+- photofly
+- sfm toolkit
+
+\subsubsection{Libraries}
+
+- OpenCV
+- PCL
+- KLT: http://www.inf.ethz.ch/personal/chzach/opensource.html
+- http://slowmovideo.granjow.net/
+
+
+\subsection{Hardware construction}
+
+\subsubsection{Frame}
+
+Aluminium profile system as a frame
+
+Generic camera support screws, 360 angle ball joints?
+
+Adapters for machine vision cameras
+
+Arduino-like adapter HW for sync signals
+
+Connectors, wire
+
+\subsubsection{Cameras}
+
+GigE/USB3/???
+
+- size
+- resolution
+- speed
+- cmos/ccd
+- configurability
+- noise
+- price
+- availability
+
+\subsection{Practicalities}
+
+- lens distortion?
+- baseline width, focus, depth etc
+- compression artifacts are nasty (edge detectors go wild etc.)
+
+
+\subsection{Reconstruction}
+
+Both shape and texture are considered in this work. Only diffuse color (albedo) is of interest; more complex material properties are assumed to be captured in other means and not spatially varying.
+
+Basic uv mapping. Project texture to computed mesh. Somehow use colors and optical flow everywhere...
+
+Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed).
+

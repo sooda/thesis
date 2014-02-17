@@ -1,3 +1,268 @@
 % Aikaisempi tutkimus
 \section{Background}
 
+(Should the subsections here be separated into several other sections?)
+
+(corresponding problems in e.g. autonomous driving or harvester machines?)
+
+(any point in outdoor methods?)
+
+\subsection{Imaging}
+
+Hybrid cams?
+
+\subsubsection{CCD vs. CMOS}
+
+CCD (Charge-coupled Device)
+
+Global shutter
+
+CMOS (Complementary Metal-Oxide Semiconductor)
+
+Cheaper, rolling shutter: reading the pixels out happens linearly
+
+\subsubsection{Shutter}
+
+Mechanical vs. electrical (varying ccd charge time)
+
+Shutter vs frame rate. More discussed in the section \ref{subsec:video}.
+
+Flash visibility, short flash, flash shared to two frames
+
+\subsubsection{DSLRs}
+
+Intended for single pictures
+
+Mechanical shutter
+
+Big sensor
+
+Shallower DOF
+
+Lots of resolution
+
+Memory card speed
+
+gphoto2
+
+No autofocus in general
+
+Easy sync for single image
+
+
+\subsubsection{Camcorders}
+
+Electrical shutter
+
+Ok fps
+
+More features for video
+
+Autofocus (not needed here)
+
+Better (deeper) DOF for video
+
+Usually zoom lens
+
+Consumer devices: affordable
+
+Pro devices: bukkits of money (features; external sync)
+
+Internal hard disk
+
+Interlace vs. progressive recording
+
+\subsubsection{Machine vision cameras}
+
+Well controllable, flexible (in SW terms), still vendor-specific APIs for tuning the settings
+
+External sync
+
+Raw data
+
+Data bandwidth, auxiliary hardware
+
+Expensive
+
+  - vendor-specific apis
+  - probably easier to control
+  - expensive
+  - raw images (high bandwidth)
+  - usually fixed lens
+\subsubsection{Depth cameras}
+
+In addition to stereo depth...
+
+Active measurement (difficult to use several)
+
+Laser rangers
+
+IR patterns and an IR camera (Kinect)
+
+\subsubsection{Light field}
+
+Lytro
+
+\subsection{Video}
+
+Video is consecutive, ordered pictures displayed one after another.
+
+\subsubsection{Frames per second}
+
+More fps = better movement stopping (less motion blur), need also more light or more sensitive sensors. More sensitivity often means also more noise. Noise vs. motion blur trade-off.
+
+Interlaced video = twice the amount of *pictures*, two pictures per frame
+
+Film: 24 FPS traditionally
+
+PAL. 25 FPS (50 Hz line current frequency in Europe)
+
+NTSC. 30 FPS (60 Hz line current frequency in the US)
+
+Actual FPS in camcorders is slowed down by a factor of 1.001 because of historical reasons relating to black and white / color TV backwards compabilities [REF].
+30 and 24 FPS refer often actually to approximately 29.970 and 23.976 FPS, respectively.
+
+24 frames per second is often transformed to 30 by carefully repeating some frames [REF].
+
+Externally triggered cameras can be configured to record at any arbitrary speed, as long as it's in the limits of the camera speed capabilities.
+
+\subsubsection{Frame rate vs. shutter}
+
+Picture:
+
+\begin{verbatim}
+
+       those bars are actually just 1 pixel markers when shutter opens
+       v   v   v ...
+
+shutter
+speed
+1/30   |---|---|---|---|---|---|---|---|---|--- full block
+1/60   |-- |-- |-- |-- |-- |-- |-- |-- |-- |--
+1/90   |-  |-  |-  |-  |-  |-  |-  |-  |-  |-
+
+       0   1   2   3   4   5   6   7   8   9
+
+30 FPS, 10 frames = 1/3 s
+\end{verbatim}
+
+Nyquist-Shannon sampling theorem, what happens when shutter is closed, motion stopping, how eyes like blurred fast motion (more information about movement, less precise by time) [CITE slowmovideo]
+
+\subsection{Video synchronization}
+
+Multi view imaging poses lots of challenges, sync is an important one
+
+Time offset / drift / jitter
+
+Offset: Different cameras do not start recording immediately at the same time, which results in one or more cameras being a little late at every frame.
+
+Drift: A camera does not record at exactly the advertised speed, e.g. one camera's internal clock is sligtly faster than that of another.
+
+Jitter: the difference between frames for a same camera might not be exactly the same during recording, but a more or less random delta time is added to each delay.
+
+Le pic:
+
+\begin{verbatim}
+Offset
+
+cam A  |   |   |   |   |
+cam B   |   |   |   |   |
+       0t  1t  2t  3t  4t time -->
+
+
+Drift
+
+normal   |   |   |   |   |   |   |
+drifting |    |    |    |    |    |
+         0t  1t  2t  3t  4t  5t  6t time -->
+
+
+Jitter
+
+normal   |   |   |   |   |   |   |
+jitterin |    |  |   | |      |    |
+         0t  1t  2t  3t  4t  5t  6t time -->
+\end{verbatim}
+
+In the scope of this paper, we consider drift and jitter negligible.
+Offset may be recovered by several means.
+Often used techniques are starting flash (does not need an audio track) [REF], clapperboard [REF], strobe sync'd to fps, genlock.
+
+
+\subsection{Hardware}
+
+Integral memory cards / disks, offline usage
+
+USB2
+
+USB3
+
+Firewire
+
+GigE
+
+Camera Link
+
+libgphoto2
+
+\subsection{Camera calibration}
+
+Intrinsic, extrinsic. Distortions. Projection matrices. Camera resectioning.
+
+many single planar chessboard pics vs. a single image of an accurate 3d model.
+
+
+\subsection{Optical flow}
+
+Long history; several mature commercial video editing products. The Matrix.
+
+Uses: Frame time offset compensation by interpolation (morphing), needs features, direction vector estimation
+
+\subsection{Feature / surface tracking}
+
+(Should this be a separate section?)
+
+Pore-level matching, good resolution needed
+
+Many cameras, zoom in to just a part of the target
+
+Markers / markerless
+
+This work considers markerless capture important, because time-varying texture is important in facial capture (wrinkles from different facial expressions)
+
+Special marker makeup / pre-recording of pore-level texture? Then "good enough" zillion markers and map and deform the mesh?
+
+Corner detector (harris, sift, surf). Color usually not important. Brightness constancy. Repeated texture or no texture (uniform color = bad).
+
+Matching to a priori model
+
+
+\subsection{Structured light}
+
+- every Nth frame fre of patterns for texture extraction (zhang snavely curless 2004)
+- maybe not fast enough with common cameras
+
+\subsection{Stereo vision}
+
+(Should this and the next ones be under a "methods for multi view stereo" section?)
+
+Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
+
+\subsection{Multi-view stereo}
+
+\subsection{Structure from motion}
+
+\subsection{Bundle adjustment}
+
+\subsection{Registration}
+
+Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
+
+\subsection{Reconstruction}
+
+Uv mapping. Manual work. 3d noise removal; ignore points that have no close pair in other clouds.
+
+Rendering: "as usual".
+
+Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed).
+

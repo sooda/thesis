@@ -1,0 +1,50 @@
+Tavoitteena laitteisto ja helppokäyttöinen softaketju lähikuvaus-mocappiin.
+Erityisenä käytännön kiinnostuksen kohteena kasvojen liike; puhe/ilmevaihtelut.
+Myös staattisten esineiden digitointi tulee mahdollistaa. Monta videokameraa
+kuvattavan kohteen ympärillä (ei välttämättä joka puolella - esim. päästä
+riittää kasvot), tuloksena teksturoituja 3d-meshejä per frame; periaatteessa
+pistepilviä yhdistettynä rgb-dataan. Eri suunnista voi tietty yhdistää meshit
+jos rahkeita riittää (registration). Kohteesta (kasvoista) kannattanee ottaa
+aluksi jonkinlainen mallikuva, johon mätsää seuraavia kuvia.
+
+Käytännön ongelmia: hyvä on kallista. Varsinkin suun liike vaatii korkeaa
+frameratea kameralta. Tarpeen vaatiessa jätetään käsittelemättä, ja kuvataan
+tähän hitaampaa dataa. Oletetaan, että saataisiin vastaavaa kuvadataa
+järeämmällä laitteistolla, ja osoitetaan, että se toimisi samoilla
+menetelmillä. Konenäkökameroilla saattaa tulla ongelmaksi muun infran tarve
+riippuen datan pakkauksesta (gigabittinen verkkokortti per kamera, kiintolevyn
+tallennusvauhti ei riitä).
+
+Osana tutkimusta voi olla myös sen selvittäminen, että miten tällainen
+ylipäätään on mahdollista, tai miten halvalla "tarpeeksi hyvän" tavoitteen voi
+saavuttaa. Kasvojen featureiden träkkäämiseen tarvitaan tarkka lähikuva, jotta
+ihohuokosista saa selvää ilman erillistä meikkimarkeria. Kuriositeettina eri
+kameratyyppien käyttämistä yhdessä sopisi tutkia hieman (rgb-kameroiden lisäksi
+mukaan esim. 3d tai lightfield?). Matala framerate ja kameroiden framejen
+synkronointi (kameralta A kuvat aikoihin 0, t, 2t, ..; B:ltä eps, t+eps,
+2t+eps, ...) ovat ikävä kombinaatio, mitä on kompensoitu mm. optical flowlla
+(3d:tä mätsätessä olisi kiva olettaa, että kuvat on otettu samaan aikaan, eli
+samasta objektista, kun kerran kohde muuttuu ajan funktiona).
+
+Koko pipeline on pitkä eikä joka osan teknisiin yksityiskohtiin ehdi paneutua.
+Käydään läpi kaikki vaiheet kokonaiskuvan vuoksi; esitellään tarkasti vain
+olennainen (mm. multi-view stereo). Pohdittavaa: kahden kameran pareja eri
+kohtiin / enemmän päällekkäisyyttä. Useammalla aina tarkempaa, mutta
+pikselimäärässä häviää.
+
+Pipelinen alkuvaiheita (mm. kameroiden kalibrointi) käsitellään vähemmän,
+kamerarigin rakentamista käytännön tasolla kuitenkin jonkin verran siten, että
+esitellään, mitä vaihtoehtoja on ja mihin kannattaa kiinnittää huomiota.
+Kameroiden valinnassa tahtoisin esitellä niiden tradeoffeja (rolling shutter,
+synkronointi tarvittaessa, kohina, konffattavuus, etäohjattavuus jne.)
+Loppuvaihe määritellään suurin piirtein niin, että 3d-meshejä saa ulos per
+otos, mutta niiden suodattelu/rekisteröinti jätetään hienostuneemmille
+algoritmeille, joiden käsittely ei välttämättä mahdu tähän työhön. Varsinkin
+loppudatan renderöinti on aivan asia erikseen, mutta olisi mukava plussa jos
+ehtisi tehdä siihen jonkinlaisen esimerkin.
+
+Kaikenlaista softaa on paljon olemassa jo (opencv:tä ja pcl:ää tullee käytettyä
+vahvasti), eli kannattaa yhdistää valmiita palikoita ennen pyörän keksimistä
+uudelleen. Valmiiden kirjastojen päälle lienee myös helppoa plugata itse
+koodattuja algoritmeja päälle, kun työkaluja datan käsittelyyn on muuten
+ympärillä.

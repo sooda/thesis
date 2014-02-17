@@ -1,9 +1,48 @@
 % Johdanto
 \section{Introduction}
 
-%% Ensimmäinen sivu tyhjäksi
-%% 
 %% Leave first page empty
-\thispagestyle{empty}
 % (wat?)
+\thispagestyle{empty}
+
+Computer vision is a mature field; the steps of acquiring three-dimensional structure of a real-life scene are well known.
+Stereo, multiview, structure from motion, blah blah.
+
+This work concentrates most on scanning human faces, but the algorithms are kept as abstract as possible to make it simple to apply them to other targets too.
+Acquiring structure of static objects is also presented.
+
+Facial motion capture (mocap) is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement.
+The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal}.
+
+Three-dimensional capture means in general the way of recording a sequence of movements of a real-life target or scene.
+The technical details vary by what information is required and available.
+
+Static capture is simple in the way that the time when the pictures are taken does not affect the performance.
+Small objects have been scanned successfully with a turntable [CITE], and structure from motion techniques have recently been presented that impressively recover a structure from pictures taken all over an outdoor location with no a priori information about the camera configurations [CITE].
+
+The movie industry usually knows the structure of the objects that are tracked; a pre-recorded mesh is used as a helping model (also called ``virtual bones'' [CITE] universal capture) to track the object pose [CITE].
+It is obviously easier to map image features to a priori information than to recover a fully unknown structure.
+(A pre-recorded higher resolution texture could be used for pore-level details, then tracking with a good-enough resolution and possibly markers to get wrinkles.)
+
+The intention of this work is both capturing the structure and texture of a target and tracking of the target's movement by time.
+The captured data should then be used to reconstruct the same target.
+A camera rig is constructed to record continuous video from several, carefully decided viewpoints.
+In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
+
+The structure of an object can be extracted relatively easily from distinct features that can be detected with several cameras [CITE].
+Current advances in camera technology and price make it possible for consumers to do pretty sophisticated reconstruction that has been possible only with a large budget of e.g. a movie studio.
+Even software that uses only a smart phone camera and runs on the same phone has been published [CITE, CITE].
+
+The objective of this work is to describe a complete 3D object scanning and reconstruction pipeline with both shape and texture information.
+A rig of cameras is constructed, and a generic software pipeline is developed and presented, for reading generic video stream and producing raw reconstructed textured 3D meshes and/or point clouds for further handling.
+Real-time processing is not considered important, as the data will be post-processed and observed manually and not used as such.
+
+The reconstruction and rendering involves lots of filtering of the raw data and further using high-resolution textures to extract better resolution depth data than what is available with computer vision technologies only.
+By making certain assumptions on the texture, very detailed bump maps can be extracted, for example, by backprojecting the expected 3d mesh to textures and refining. [CITE]
+
+Reconstruction of a static detailed mesh is difficult enough; human faces not only move, but also deform very heavily, which poses even further challenges [CITE].
+We present basic techniques for taking also motion into account, but leave the use of state-of-the-art algorithms for future implementations.
+It is possible to assume locally smooth movements in most areas; thus, a more intelligent approach should be used than simply reconstructing a new mesh for each frame and using registration to just align them. [CITE]
+
+Many tracking algorithms work in the 2D space using simply the picture data and not the post-processed 3D meshes [CITE].
 

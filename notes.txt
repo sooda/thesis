@@ -1,4 +1,5 @@
 OBJECTIVE
+- given several images of the same object or scene, compute a representation of its 3d shape *and* texture
 - hardware, quite practical level
 - hw problems: cameras in general, camera selection, calibration, syncing
 - face tracking: working in 2d space / mesh reconstruction in 3d
@@ -15,6 +16,7 @@ CAMS
 - 3d cams? pairwise stereo? general multi view?
   - stereo pairs vs. general multiview quite different
   - opencv deals with pairs a lot
+  - structure from motion does not need positions, much unnecessary work
 - connection: memcard/usb2/usb3/ethernet/firewire/custom
 - trade-offs:
   - size
@@ -38,7 +40,8 @@ CAMS
   - gigabit ethernet good
  - raw image before bayering
  - compression artifacts are nasty (edge detectors go wild etc.)
- - lens distortion?
+- lens distortion?
+- baseline width, focus, depth etc
 
 DSLR/CAMCORDER/MACHINE VISION CAM
 - cmos rolling shutter, ccd not
@@ -62,6 +65,11 @@ DSLR/CAMCORDER/MACHINE VISION CAM
   - expensive
   - raw images (high bandwidth)
   - usually fixed lens
+- hybrid 2d/3d/lytro lightfield?
+- video recording produces massive amounts of data
+  - infra needed
+  - consumer camcorders have disks/memory cards
+  - directly to pc: need lots of bus width and storage
 
 PHOTO SYNC
 - long exposure, one flash
@@ -89,7 +97,7 @@ GENERAL
   - and iterative closest point
 - correspondence problem
 - bundle adjustment (maybe not if camera parameters fixed)
-- structure from motion
+- structure from motion (not really)
 - homography
 - feature tracking (klt)
 - surface tracking
@@ -98,6 +106,9 @@ GENERAL
 - match moving
 - corresponding problems in e.g. autonomous driving?
 - are outdoor methods of any use?
+- space carving: photo-consistent shapes?
+- backproject the expected 3d and refine
+- visual hull
 
 SW ALREADY
 - kinect
@@ -132,20 +143,39 @@ FPS
 - high shutter speed also needs lots of light
 
 CALIBRATION
+- many pair calibrations vs per-camera with a 3d model (cv::stereocalibrate)
+- chessboard (planar, opencv) vs 3d; cv::calibratecamera uses several views, not as in macperp
+- findfundamentalmat 8-point algo with image pair, corresponding points
+- lens distortions
+- projection matrix M = K[R -R'T] = KR[I -C] http://en.wikipedia.org/wiki/Camera_resectioning
 - opencv, machine vision matrices
 - intrisic, extrisic parameters
-- essential+fundamental matrices
+- essential+fundamental matrices (essential comes from dot and cross products, slideset N p^t E p' = 0) (fundamental x'^t F x = 0 7 degs freedom rank2)
+- epilines l' = Fx, l = F^t x', epipoles Fe = 0, F^te' = 0
 - triangulation
 - epipolar geometry etc.
+- epipolar constraint (TO INTRO)
+- write a tool for playing with epipolar lines?
+  - pyglet fun
+  - render to texture from several viewpoints
+  - use the algos for the rendered pics
+  - find epipolar lines, draw them, rectify
+  - model lens distortion?
 
 MAPPING/TRACKING
 - tracking feature points
+- get features with a corner detector (harris, sift, surf)
 - color usually not important
 - mark features at the beginning manually?
 - brightness constancy might not hold (blushing, not lambertian surfaces, etc.)
   - otoh, blushing, small wrinkles and such are important for the time-varying texture
+- repeated texture or no texture (too uniform color to find markers)
 
 MESH RECONSTRUCTION
+- shape _and_ texture (local reflectance model too complicated, assume uniform material whose properties are captured in other means)
+- postprocessing: remodel the mesh (face), see what it would look like
+  - refine parameters to get a similar output as in the photos (normal map etc.)
+  - use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley)
 - combining meshes from multiple viewpoints (cameras/camera pairs)
 - e.g. ransac for removing noise
 - called 3d mesh registration
@@ -153,6 +183,13 @@ MESH RECONSTRUCTION
 - iterative closest point fitting
 - 3d morphable models
 - stitch
+- priori model with higher resolution, track with good-enough resolution to get something with wrinkles
+- track markers and fit to the model, use virtual bones
+- facial bone rig in universal capture
+- patches instead of the traditional 2-cam approach (?)
+  - patch vs. depthmap
+  - tool to calib cams and just retrieve patches for post?
+  - register separate depth maps into a combined 3d mesh
 
 PROCESSING SOFTWARE
 - minimize deps = maximise ease of usage
@@ -170,6 +207,8 @@ PIPELINE
    a. find matching features (correspondence; sift/surf)
    b. build 3d meshes (triangulation)
    c. align the meshes to a single model (registration)
+      - the model could be initially captured with higher resolution
+      - afterwards, just track with very small marker dots
    d. refine the model, maybe
    (filter the data at some point here - outliers, noise, holes, ...)
 5. combine mesh frames to a motion
