@@ -1,3 +1,9 @@
+GPHOTO2
+# eos 5d mk2
+--list-cameras (all supported)
+--list-all-config
+--capture-image
+
 OBJECTIVE
 - given several images of the same object or scene, compute a representation of its 3d shape *and* texture
 - hardware, quite practical level
@@ -130,6 +136,10 @@ NAMES
 - faugeras
 - computer vision szeliski p. 20 fig 1.11
   - shape from X
+- furukawa
+- jancosek
+- hernandez
+- bouguet (opencv)
 
 
 FPS

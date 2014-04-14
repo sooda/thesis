@@ -1,4 +1,4 @@
-SRC := dippa.tex $(wildcard tex/*.tex)
+SRC := dippa.tex $(wildcard tex/*.tex) $(wildcard gfx/*.tex)
 
 all: dippa.pdf
 	okular dippa.pdf

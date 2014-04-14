@@ -5,14 +5,27 @@
 
 % pdflatex, gfx in jpg/pdf
 \usepackage{graphicx}
-
 %\usepackage{url}
 \usepackage[pdfpagemode=None,colorlinks=true,urlcolor=red,%
 linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
-
-\usepackage{amsfonts,amssymb,amsbsy}
-
 \usepackage[comma,sort&compress,numbers]{natbib}
+
+\usepackage{amsfonts,amssymb,amsbsy,amsmath}
+\usepackage{tikz}
+
+\input{gfx/bayer}
+% \simplefig{pos-specifier}{contents}{labelname}{caption}
+\newcommand{\simplefig}[4]{%
+	\begin{figure}[#1]\begin{center}
+		#2
+		\caption{#4}
+		\label{#3}
+	\end{center}\end{figure}
+}
+% \simplegfx{pos-specifier}{width}{filename-and-labelname}{caption}
+\newcommand{\simplegfx}[4]{%
+	\simplefig{#1}{\includegraphics[width=#2]{gfx/#3}}{fig:#3}{#4}
+}
 
 \setlength{\hoffset}{-1in}
 \setlength{\oddsidemargin}{35mm}
@@ -36,7 +49,8 @@ linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
 
 \author{Konsta Hölttä}
 
-\thesistitle{Dippa}{Thesis}
+% a rig for multi-view stereo reconstruction of facial movement
+\thesistitle{Thesis}{Dippa}
 
 \place{Espoo}
 \date{X.Y.2014}
