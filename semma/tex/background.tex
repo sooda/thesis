@@ -1,0 +1,170 @@
+The reconstruction and rendering involves lots of filtering of the raw data and further using high-resolution textures to extract better resolution depth data than what is available with computer vision technologies only.
+By making certain assumptions on the texture, very detailed bump maps can be extracted, for example, by backprojecting the expected 3d mesh to textures and refining. [CITE]
+
+Reconstruction of a static detailed mesh is difficult enough; human faces not only move, but also deform very heavily, which poses even further challenges [CITE].
+We present basic techniques for taking also motion into account, but leave the use of state-of-the-art algorithms for future implementations.
+It is possible to assume locally smooth movements in most areas; thus, a more intelligent approach should be used than simply reconstructing a new mesh for each frame and using registration to just align them. [CITE]
+
+Many tracking algorithms work in the 2D space using simply the picture data and not the post-processed 3D meshes [CITE].
+
+The movie industry usually knows the structure of the objects that are tracked; a pre-recorded mesh is used as a helping model (also called ``virtual bones'' [CITE] universal capture) to track the object pose [CITE].
+It is obviously easier to map image features to a priori information than to recover a fully unknown structure.
+(A pre-recorded higher resolution texture could be used for pore-level details, then tracking with a good-enough resolution and possibly markers to get wrinkles.)
+% Aikaisempi tutkimus
+\section{Background}
+
+(Should the subsections here be separated into several other sections instead of a single big ``background''?)
+
+(corresponding problems in e.g. autonomous driving or harvester machines?)
+
+(any point in outdoor methods?)
+
+\subsection{Video}
+
+Video is consecutive, ordered pictures displayed one after another.
+
+Hox ALL-I (intra) vs. IPB (intra-predict-bidirpredict)
+
+\subsubsection{Frames per second}
+
+More fps = better movement stopping (less motion blur), need also more light or more sensitive sensors. More sensitivity often means also more noise. Noise vs. motion blur trade-off.
+
+Interlaced video = twice the amount of *pictures*, two pictures per frame
+
+Film: 24 FPS traditionally
+
+PAL. 25 FPS (50 Hz line current frequency in Europe)
+
+NTSC. 30 FPS (60 Hz line current frequency in the US)
+
+Actual FPS in camcorders is slowed down by a factor of 1.001 because of historical reasons relating to black and white / color TV backwards compabilities [REF].
+30 and 24 FPS refer often actually to approximately 29.970 and 23.976 FPS, respectively.
+
+24 frames per second is often transformed to 30 by carefully repeating some frames [REF].
+
+Externally triggered cameras can be configured to record at any arbitrary speed, as long as it's in the limits of the camera speed capabilities.
+
+\subsubsection{Frame rate vs. shutter}
+
+Picture:
+
+\begin{verbatim}
+
+   those bars are actually just 1 pixel markers when shutter opens
+   v   v   v ...
+
+shutter
+speed
+1/30   |---|---|---|---|---|---|---|---|---|--- full block
+1/60   |-- |-- |-- |-- |-- |-- |-- |-- |-- |--
+1/90   |-  |-  |-  |-  |-  |-  |-  |-  |-  |-
+
+   0   1   2   3   4   5   6   7   8   9
+
+30 FPS, 10 frames = 1/3 s
+\end{verbatim}
+
+Nyquist-Shannon sampling theorem, what happens when shutter is closed, motion stopping, how eyes like blurred fast motion (more information about movement, less precise by time) [CITE slowmovideo]
+
+\subsubsection{Video synchronization}
+
+Multi view imaging poses lots of challenges, sync is an important one
+
+Time offset / drift / jitter
+
+Offset: Different cameras do not start recording immediately at the same time, which results in one or more cameras being a little late at every frame.
+
+Drift: A camera does not record at exactly the advertised speed, e.g. one camera's internal clock is sligtly faster than that of another.
+
+Jitter: the difference between frames for a same camera might not be exactly the same during recording, but a more or less random delta time is added to each delay.
+
+Le pic:
+
+\begin{verbatim}
+Offset
+
+cam A  |   |   |   |   |
+cam B   |   |   |   |   |
+   0t  1t  2t  3t  4t time -->
+
+
+Drift
+
+normal   |   |   |   |   |   |   |
+drifting |    |    |    |    |    |
+	 0t  1t  2t  3t  4t  5t  6t time -->
+
+
+Jitter
+
+normal   |   |   |   |   |   |   |
+jitterin |    |  |   | |      |    |
+	 0t  1t  2t  3t  4t  5t  6t time -->
+\end{verbatim}
+
+In the scope of this paper, we consider drift and jitter negligible.
+Offset may be recovered by several means.
+Often used techniques are starting flash (does not need an audio track) [REF], clapperboard [REF], strobe sync'd to fps, genlock.
+
+TODO: investigate if the errors have been researched or if they are meaningful at all.
+
+
+\subsection{Hardware}
+
+Integral memory cards / disks, offline usage
+
+USB2
+
+USB3
+
+Firewire
+
+GigE
+
+Camera Link
+
+libgphoto2
+
+\subsection{Acquisition steps}
+
+Guidelines for successful pictures/video
+
+\subsection{Facial capture}
+
+Surface capture of human skin is different from static objects: it stretches and shears in a highly non-predicatable way such that both its local geometry and texture changes.
+Traditional methods for tracking rigid objects are thus not viable for high quality.
+Some cites here [?] [?]. The deformations can be taken into account with e.g. furukawa etc.
+
+Several 
+
+\subsubsection{Uncanny valley}
+
+\subsubsection{Expression space}
+
+Some techiques [autodesk faceshift, what other] use pre-recorded facial expressions to identify the subject's pose. They suffer from not being able to accurately describe the temporal changes in finest details, but benefit from densely packed parameterization of facial expressions.
+A separate mesh is stored as a three-dimensional template for each expression (such as happy or angry) and each frame is encoded, as a linear combination of these individual expressions.
+Such feature vectors describe well each possible face, and importantly, they eliminate the need for encoding the movement of each vertex, which can be unnecessarily heavy to compute or store.
+The results from this method can easily be mapped to other models than the face of the subject, as it is independent on the actual facial geometry and only uses weights for pre-modeled faces, making it interesting in computer animation.
+
+Compare to Facial Action Coding System (FACS) (Hjortsjö 1969), which parameterizes the face in a group of muscular actions. This is similar to grouping vertices in keyframe animation [?].
+
+
+\subsection{Pre-processing}
+- histogram equalization
+
+- brightness equalization between images
+
+
+
+\subsection{Post-processing}
+
+Much manual work wow especially in video
+
+\subsection{Reprojecting}
+
+Meshlab
+
+build mesh from the point clouds that has been built from the pixels
+
+use the registered raster projections to find out best textures and build uv coordinates
+

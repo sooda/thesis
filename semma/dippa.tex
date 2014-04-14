@@ -1,0 +1,100 @@
+\documentclass[english,12pt,a4paper,pdftex]{article}
+%\documentclass[english,12pt,a4paper,dvips]{article}
+
+\usepackage[elec,utf8]{aaltothesis}
+
+% pdflatex, gfx in jpg/pdf
+\usepackage{graphicx}
+%\usepackage{url}
+\usepackage[pdfpagemode=None,colorlinks=true,urlcolor=red,%
+linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
+\usepackage[comma,sort&compress,numbers]{natbib}
+
+\usepackage{amsfonts,amssymb,amsbsy,amsmath}
+\usepackage{tikz}
+
+\input{gfx/bayer}
+% \simplefig{pos-specifier}{contents}{labelname}{caption}
+\newcommand{\simplefig}[4]{%
+	\begin{figure}[#1]\begin{center}
+		#2
+		\caption{#4}
+		\label{#3}
+	\end{center}\end{figure}
+}
+% \simplegfx{pos-specifier}{width}{filename-and-labelname}{caption}
+\newcommand{\simplegfx}[4]{%
+	\simplefig{#1}{\includegraphics[width=#2]{gfx/#3}}{fig:#3}{#4}
+}
+
+\setlength{\hoffset}{-1in}
+\setlength{\oddsidemargin}{35mm}
+\setlength{\evensidemargin}{25mm}
+\setlength{\textwidth}{15cm}
+
+\setlength{\voffset}{-1in}
+\setlength{\headsep}{7mm}
+\setlength{\headheight}{1em}
+\setlength{\topmargin}{25mm-\headheight-\headsep}
+\setlength{\textheight}{23cm}
+
+\begin{document}
+
+\department{Department of Automation and systems technology}%
+{Automaatio- ja systeemitekniikan laitos}
+\professorship{automagic}{automagia}
+\code{AS-1337}
+
+\univdegree{MSc}
+
+\author{Konsta Hölttä}
+
+% a rig for multi-view stereo reconstruction of facial movement
+\thesistitle{Non-static Object Capture Using Multi-view Stereo Video}{Dippa}
+
+\place{Espoo}
+\date{X.Y.2014}
+
+\supervisor{Prof.\ Ville Kyrki}{Prof.\ Ville Kyrki}
+\instructor{Prof.\ Jaakko Lehtinen}{Prof. Jaakko Lehtinen}
+
+\uselogo{aaltoPurple}{!}
+
+\makecoverpage
+%\newpage
+
+\thesistableofcontents
+
+%\include{tex/syms-opers-abbrs}
+
+\cleardoublepage
+\storeinipagenumber
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% Two cam Stereo
+% Multi-view Stereo
+\include{tex/introduction}
+%\include{tex/background}
+\include{tex/imaging}
+\include{tex/camera-calibration}
+\include{tex/stereo-vision}
+\include{tex/object-tracking}
+\include{tex/software-tools}
+\include{tex/applications}
+\include{tex/summary}
+
+\phantomsection
+\addcontentsline{toc}{section}{References}
+\bibliographystyle{plain}
+\bibliography{dippa}
+
+\appendix
+\clearpage
+% liitteet
+%\phantomsection
+%\addtocontents{toc}{\protect\contentsline{section}{Appendices}{}{appendix}}
+
+\include{tex/appendix}
+
+\end{document}

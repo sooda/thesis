@@ -1,0 +1,207 @@
+\section{Stereo vision}
+\subsection{Camera calibration}
+
+Calibration is often specified with a camera projection matrix, or several separate matrices. It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
+
+Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras. Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?]. Commonly the points are particular \emph{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
+
+Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern [chuan; zhang] whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration. These usually need several pictures taken with the same camera from different poses.
+
+The checkerboard calibration step can also measure optical distortion at the same time; e.g. opencv[?], matlab camera calib toolbox [?]
+
+TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
+
+Single three-dimensional calibration object is also sufficient blbl
+
+One possible way is direct linear transform (DLT) [hartley/zisserman multiviewgeom]: Solve whole projection matrix instead of individual parameters, decompose projection to intrinsics and extrinsics. For each projected point $\vec x$ from 3d point $\vec X$,
+
+\[
+	\vec x = M \vec X
+\]
+
+and construct N of these equations and solve for $M$.
+
+Methods that dig the matrix out of a single image have certain restrictions, and won't work if e.g. seven points lie on the same plane [longuet-higgins etc.]
+
+XXX see below. Intrinsic, extrinsic. Distortions. Projection matrices. Camera resectioning.
+
+many single planar chessboard pics vs. a single image of an accurate 3d model.
+
+\subsection{Normalization}
+
+The scale of values in the equations above affects the precision [hartley, in defense of .., h,ziss]. A similarity transform can be used to modify the values to a more consistent range.
+
+
+\subsection{Optical flow}
+
+Long history; several mature commercial video editing products. The Matrix.
+
+Uses: Frame time offset compensation by interpolation (morphing), needs features, direction vector estimation
+
+\subsection{Static capture}
+
+TODO: combine and structure better the following flattened section list
+
+\subsubsection{Imaging methods}
+
+Light field, structured light, laser scanner
+
+- every Nth frame fre of patterns for texture extraction (zhang snavely curless 2004)
+- maybe not fast enough with common cameras
+
+\subsubsection{Coordinate systems and transforms}
+
+Homogenous point description here, [dubrofsky] homography estimation is nice, also refer hartley/zisserman
+
+Homography definition (mapping of points and lines in $P^2$)
+
+The imaging process essentially captures a projection to a flat two-dimensional plane of the camera's view.
+When relating points between different cameras that view the same scene, their relational positions and rotations must be known.
+One of the cameras is often chosen as the origin of a global coordinate frame.
+Each three-dimensional point in the world is transformed to the small sensor or film inside the camera, which is then digitized to a discrete two-dimensional grid of pixels. The size of this pixel array (i.e. image) is referred to the camera's resolution.
+Figure \ref{fig:TODO} illustrates this transformation chain, which is encoded as the following equation, given a homogenous point (4-dimensional vector) $X$ representing a 3D location described in physical (e.g. metric) coordinates:
+
+\begin{align}
+	x_i &= P X\\
+	  &= M_2 X_s\\ % X_s on the sensor
+	  &= M_2 R T X\\
+	  &= M_3 M_4 R T X\\ % R, T camera pose, M_4 to camera sensor, M_3 to pixel coords
+\end{align}
+
+$p_i$ 2d pixel in discrete image, $X_s$ on the sensor, $T$ is a simple translation matrix from $\vec t$
+
+Note that the projection $P = M_3 M_4 R T$.
+
+The external camera parameters are called the extrinsics: camera coordinate system position and rotation (heading) in the global space.
+Camera position (projection center) blah.
+The internal parameters, intrinsics, encode how the image is formed on the sensor: they consist of focal length, sensor size and principal point:
+\begin{equation}
+	M =
+	\begin{pmatrix}
+		m_x & \gamma & u_0\\
+		0   &    m_y & v_0\\
+		0   &        0 & 1
+	\end{pmatrix}
+	*
+	\begin{pmatrix}
+		f & 0 & 0\\
+		0 & f & 0\\
+		0 & 0 & 1
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		\alpha_x & \gamma   & u_0\\
+		0        & \alpha_y & v_0\\
+		0        & 0        & 1
+	\end{pmatrix}
+\end{equation}
+
+For simplicity, we denote $\alpha_x = m_x f$, $\alpha_y = m_y f$. $(u_0, v_0)$ is the image center (or principal point). For square pixels, $m_x = m_y$, and for a non-skewed sensor, $\gamma = 0$, which is often the case.
+
+Le image. Horizontal planar triangle, lines between camera origins etc. lecture11.pdf.
+
+\subsubsection{Stereo vision, disparity}
+
+Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
+
+Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis. Calibration assumed to be known.
+
+Similar triangles:
+
+\begin{align}
+	\frac{Z}{T} &= \frac{Z-f}{T - x_l + x_r} \\
+	&= \frac{Z-f}{T - d}\\
+	ZT - Zd &= ZT - fT\\
+	Z &= \frac{fT}{d}
+\end{align}
+
+
+Depth inversely proportional to disparity. Algorithms such as those in OpenCV can compute point clouds from disparity images.
+
+Two or more cameras
+
+(Should this and the next ones be under a "methods for multi view stereo" section?)
+
+\subsubsection{Epipolar geometry}
+
+A point seen by camera A at 3d point P could be anywhere on the line between A's origin and P.
+This line is seen as a single point.
+From another viewpoint in camera B, this line equals to some line on B's image plane.
+The real point must be on that line.
+The inverse applies for any point on B and a line on A.
+The lines on the image planes are called epipolar lines.
+
+
+Essential matrix defines how the camera poses differ by the something something points seen by both. $p_l$, $p_r$ 3d points; vectors from camera origins (camera coordinates!) to the same point
+
+\[
+	p_l^T E p_l = 0
+\]
+
+Le image. lecture11.pdf. O->p dot (O->O' cross O'->p') = 0
+
+Cross product expressed in a skew-symmetric matrix form is
+\begin{equation}
+\vec a \times \vec b =
+\begin{pmatrix}
+	 0   & -a_z &  a_y\\
+	 a_z &  0   & -a_x\\
+	-a_y &  a_x & 0
+\end{pmatrix}
+\begin{pmatrix}
+	b_x\\b_y\\b_z
+\end{pmatrix}
+= \vec c
+\end{equation}
+
+
+Fundamental matrix relates the corresponding points in stereo images.
+
+Epipole can be interpreted as the location of another camera as seen by other camera.
+
+\subsubsection{Correspondence and rectification}
+
+In order to triangulate a real point from two or more photos, the location of the point in all images must be known.
+Given a pixel in one image, what is the corresponding pixel in another image taken from the same scene?
+
+Rectification is a process that simplifies this search problem by restricting the search to a single dimension.
+By aligning the cameras such that their images are coplanar, the search only has to be performed on a line that is parallel to the line connecting the camera centers.
+Usually, the calibration between the cameras is known at this point, and foobar.
+After rectification, the corresponding lines are axis-aligned (horizontal or vertical) in both images.
+
+
+
+\subsubsection{Multi-view stereo}
+
+\subsubsection{Structure from motion}
+
+Structure from motion (SfM) refers usually to recovering the structure of a scene from the motion of a single camera.
+For each view, the pose of the camera is determined and the scene structure is extended with the new information in the image.
+(pollefeys)
+
+\subsubsection{Bundle adjustment}
+
+\subsubsection{Registration}
+
+Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
+
+\subsubsection{Reconstruction}
+
+Uv mapping. Manual work. 3d noise removal; ignore points that have no close pair in other clouds.
+
+Rendering: "as usual".
+
+Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed). Still, structured light and/or shading assumptions [shape from single image cues/shading trucco,verri p.225] done too.
+
+
+\subsubsection{Reprojection errors}
+
+The quality of the reconstruction is measured by reprojecting the 3D points back to the cameras and calculating the distance between the projected and original point.
+Minimizing all of the points is very expensive but something something bundle adjustment.
+
+Compare to algebraic, geometric etc.
+
+A common way to handle feature errors is Random Sample Consensus (RANSAC). Random subsets of the sample space is iterated, and samples that do not fit well to a model that is constructed of a smaller set are ignored. The iteration that matches most samples is selected.
+
+
+\subsection{Multiple baseline stereo}
