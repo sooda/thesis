@@ -1,11 +1,21 @@
 \section{Stereo vision}
+
+This chapter introduces the methods for seeing three-dimensional structures from stereo setups, consisting of two or more cameras.
+The configuration of a proper setup with two is described and it is extended to the multi-view domain.
+
 \subsection{Camera calibration}
 
-Calibration is often specified with a camera projection matrix, or several separate matrices. It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
+In order to accurately measure a scene with a camera, the camera's properties must be known. Calibrating a camera refers to the act of examine its internal and external configuration in order to map its data to a known coordinate frame.
 
-Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras. Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?]. Commonly the points are particular \emph{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
+Calibration is often specified with a camera projection matrix, or several separate matrices.
+It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
 
-Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern [chuan; zhang] whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration. These usually need several pictures taken with the same camera from different poses.
+Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
+Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?].
+Commonly the points are particular \emph{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
+
+Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern [chuan; zhang] whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration.
+These usually need several pictures taken with the same camera from different poses.
 
 The checkerboard calibration step can also measure optical distortion at the same time; e.g. opencv[?], matlab camera calib toolbox [?]
 
@@ -27,10 +37,7 @@ XXX see below. Intrinsic, extrinsic. Distortions. Projection matrices. Camera re
 
 many single planar chessboard pics vs. a single image of an accurate 3d model.
 
-\subsection{Normalization}
-
-The scale of values in the equations above affects the precision [hartley, in defense of .., h,ziss]. A similarity transform can be used to modify the values to a more consistent range.
-
+The scale of values in the equations above affects the precision [hartley, in defense of .., h,ziss]. A similarity transform can be used to modify the values to a more consistent range; this is called normalization of the data.
 
 \subsection{Optical flow}
 
@@ -42,24 +49,23 @@ Uses: Frame time offset compensation by interpolation (morphing), needs features
 
 TODO: combine and structure better the following flattened section list
 
-\subsubsection{Imaging methods}
+The cameras that are used in capturing a scene can be fixed or positioned arbitrarily; in fact, the \texttt{structure from motion} technique \ref{sec:sfm} enables to use just one camera that is moved around. Accurate and fast reconstructions are still traditionally done with stereo camera pairs, though.
 
-Light field, structured light, laser scanner
-
-- every Nth frame fre of patterns for texture extraction (zhang snavely curless 2004)
-- maybe not fast enough with common cameras
+This chapter goes first to the basic ideas on how a camera transforms world space points to a two-dimensional plane and how the camera parameters are usually encoded.
 
 \subsubsection{Coordinate systems and transforms}
 
 Homogenous point description here, [dubrofsky] homography estimation is nice, also refer hartley/zisserman
 
+In computer graphics and vision, points and directions are usually described in homogenous coordinates. Translation, perspective projection, rotation, and other operations are conveniently described by using an additional dimension, of which usually the last element is 1: $(x, y, z, 1)$. All points $(xw, yw, zw, w)$ map to the same point $(x, y, z)$ something something.
+
 Homography definition (mapping of points and lines in $P^2$)
 
-The imaging process essentially captures a projection to a flat two-dimensional plane of the camera's view.
+The imaging process essentially captures a projection to a flat two-dimensional plane of the camera's view, as described in section \ref{sec:imaging}.
 When relating points between different cameras that view the same scene, their relational positions and rotations must be known.
-One of the cameras is often chosen as the origin of a global coordinate frame.
-Each three-dimensional point in the world is transformed to the small sensor or film inside the camera, which is then digitized to a discrete two-dimensional grid of pixels. The size of this pixel array (i.e. image) is referred to the camera's resolution.
-Figure \ref{fig:TODO} illustrates this transformation chain, which is encoded as the following equation, given a homogenous point (4-dimensional vector) $X$ representing a 3D location described in physical (e.g. metric) coordinates:
+One of the cameras is often conveniently chosen as the origin of a global coordinate frame, so that its extrinsic parameters become unity transforms (e.g. opencv stereo).
+Each three-dimensional point in the world is transformed to the small sensor or film inside the camera, which is then digitized to a discrete two-dimensional grid of pixels. The size of this pixel array (i.e. image) is referred to as the camera's resolution.
+Figure \ref{fig:TODO} illustrates this transformation chain, which is encoded as the following equations, given a homogenous point (4-dimensional vector) $X$ representing a 3D location described in physical (e.g. metric) coordinates:
 
 \begin{align}
 	x_i &= P X\\
@@ -70,10 +76,10 @@ Figure \ref{fig:TODO} illustrates this transformation chain, which is encoded as
 
 $p_i$ 2d pixel in discrete image, $X_s$ on the sensor, $T$ is a simple translation matrix from $\vec t$
 
-Note that the projection $P = M_3 M_4 R T$.
+The whole projection $P = M_3 M_4 R T$ can be used as-is without decomposing it to separate matrices, unless the individual parameters are needed. As the chain consists of several matrices, some of them are defined only up to scale; the coordinate systems' units can be chosen freely.
 
 The external camera parameters are called the extrinsics: camera coordinate system position and rotation (heading) in the global space.
-Camera position (projection center) blah.
+Camera position sits at the projection center blah.
 The internal parameters, intrinsics, encode how the image is formed on the sensor: they consist of focal length, sensor size and principal point:
 \begin{equation}
 	M =
@@ -82,7 +88,7 @@ The internal parameters, intrinsics, encode how the image is formed on the senso
 		0   &    m_y & v_0\\
 		0   &        0 & 1
 	\end{pmatrix}
-	*
+
 	\begin{pmatrix}
 		f & 0 & 0\\
 		0 & f & 0\\
@@ -106,7 +112,7 @@ Essential, fundamental matrices. Correspondence problem. Rectification, undistor
 
 Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis. Calibration assumed to be known.
 
-Similar triangles:
+From similar triangles with a common vertex at TODO, we get
 
 \begin{align}
 	\frac{Z}{T} &= \frac{Z-f}{T - x_l + x_r} \\
@@ -123,6 +129,9 @@ Two or more cameras
 (Should this and the next ones be under a "methods for multi view stereo" section?)
 
 \subsubsection{Epipolar geometry}
+
+In stereo vision, the same scene of interest is seen by two or more cameras at the same time.
+Epipolar geometry encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with triangulation.
 
 A point seen by camera A at 3d point P could be anywhere on the line between A's origin and P.
 This line is seen as a single point.
@@ -158,6 +167,13 @@ Cross product expressed in a skew-symmetric matrix form is
 Fundamental matrix relates the corresponding points in stereo images.
 
 Epipole can be interpreted as the location of another camera as seen by other camera.
+
+\subsubsection{Point matching}
+
+Previously, methods for reconstructing three-dimensional location for a point pair were introduced. To reconstruct a whole scene from a full image, pairwise points must be matched.
+
+Matching can be done in sparse or dense mode; sparse matching finds a set of \texttt{features} from each image, and tries to match them. Dense matching runs through each pixel of one image and tries to find the same from another one; from the coordinate differences between the two images, a disparity map is built. The disparities can be directly transformed to depth values.
+
 
 \subsubsection{Correspondence and rectification}
 

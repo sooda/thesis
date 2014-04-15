@@ -1,10 +1,16 @@
 \section{Tracking}
 
+The dynamic case requires tracking of individual points or objects in order to usefully use the moved object(s). Non-static human motion capture cases in video gaming or movies where post-processing time is available rely on manual work to perfect the performance. A realtime case would need to register each frame between the previous one to use the geometry's dynamic properties.
+
+The simplest tracking step is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need e.g. topological continuity in the time domain, but recomputes its work on each new point cloud.
+
+Registration and tracking of point clouds is a large topic on its own; this section reviewes some of the most common methods presented in the literature.
+
 \subsubsection{Feature / surface tracking}
 
-Pore-level matching, good resolution needed
+Registration aligns disoriented models (e.g. point clouds, surfaces or triangular meshes, depending on the application) together. The models can (and usually will) be not topologically related, i.e. they describe the same structure with unrelated points, accompanied with noise. Registration finds a rigid transformation between them so that one becomes the other from a reference coordinate frame's viewpoint.
 
-Many cameras, zoom in to just a part of the target
+Analogous to the case of traditional 2D video consisting of separate discrete frames of pixels, a dynamic stream of 3D data is, in a simple case, individual ``frames'' of point sets.
 
 Markers / markerless
 
