@@ -21,8 +21,8 @@ x \\ y \\ z
 \end{equation}
 
 
-\simplegfx{h}{0.9\textwidth}{pinhole-camera}
-{Pinhole camera principle. The box represents a camera; image is formed to the plane on its back.}
+%\simplegfx{h}{0.9\textwidth}{pinhole-camera}
+%{Pinhole camera principle. The box represents a camera; image is formed to the plane on its back.}
 
 \subsubsection{Optics}
 
@@ -52,12 +52,12 @@ Perspective distortion something something viewer location. Normal TV is usually
 
 % TODO: custom tikz for exactly specified parameters in barrel/radial
 
-\simplefig{h}{%
-\includegraphics[width=0.3\textwidth]{gfx/barrel-distortion}
-\includegraphics[width=0.3\textwidth]{gfx/pincushion-distortion}
-\includegraphics[width=0.3\textwidth]{gfx/mustache-distortion}
-}{fig:distortions}
-{Left to right: barrel, pincushion and mustache distortions, respectively.}
+%\simplefig{h}{%
+%\includegraphics[width=0.3\textwidth]{gfx/barrel-distortion}
+%\includegraphics[width=0.3\textwidth]{gfx/pincushion-distortion}
+%\includegraphics[width=0.3\textwidth]{gfx/mustache-distortion}
+%}{fig:distortions}
+%{Left to right: barrel, pincushion and mustache distortions, respectively.}
 
 Distortion should be corrected in software, as the following stereo algorithms assume that the images are free of nonlinear errors, i.e. straight lines in the world should remain straight in 2D images after the projective transformation.
 In particular, image rectification [X] won't work if this straightness does not remain; the assumption that similar features should be found on horizontal lines wouldn't hold on distorted images.
