@@ -1,0 +1,123 @@
+\newcommand\bayer[1]{
+\begin{tikzpicture}[scale=#1]
+
+% box sizes in screen coordinates; isometric
+\newcommand*{\dx}{0.866}
+\newcommand*{\dy}{0.5}
+\newcommand*{\dz}{0.33}
+
+% coords for colored or gray top
+\newcommand*{\mytopbox}{ -- ++(\dx,\dy) -- ++(\dx,-\dy) -- ++(-\dx,-\dy) -- cycle}
+% coords for the left wall
+\newcommand*{\myleftbox}{ -- ++(0,-\dz) -- ++(\dx,-\dy) -- ++(0,\dz) -- cycle}
+% coords for the right wall
+\newcommand*{\myrightbox}{ -- ++(0,-\dz) -- ++(\dx,\dy) -- ++(0,\dz) -- cycle}
+% draw the outline first, then the inner edges separately. this prevents
+% annoying small ticks in the joined corners where faces overlap. (see the
+% tikz manual about the line-to operation's smoothness)
+\newcommand*{\myfullbox}{
+	% top side
+	-- ++(\dx,\dy) -- ++(\dx,-\dy) -- ++(0,-\dz)
+	% bottom
+	-- ++(-\dx,-\dy) -- ++(-\dx,\dy) -- ++(0,\dz) -- cycle
+	% the inner three
+	++(0,0) -- ++(\dx,-\dy)
+	++(0,0) -- ++(0,-\dz)
+	++(0,\dz) -- ++(\dx,\dy)
+}
+
+% draw the boxes
+\newcommand*{\mybox}[2]{\draw [fill=##1] (##2) \myfullbox}
+\newcommand*{\mytop}[2]{\draw [fill=##1] (##2) \mytopbox}
+\newcommand*{\leftside}[2]{\draw [fill=##1] (##2) \myleftbox}
+\newcommand*{\rightside}[2]{\draw [fill=##1] (##2) \myrightbox}
+\newcommand*{\leftcorner}[1]{\draw (##1) ++(0,-\dz) -- ++(0,\dz) -- ++(\dx,\dy)}
+
+\newcommand*{\myboxat}[4]{
+	\mybox{##1}{##2*\dx+##3*\dx, -##2*\dy+##3*\dy-##4*\dz};
+}
+% a row of boxes with row index (incrementing to top right) with y offset
+\newcommand*{\rowpartlyq}[4]{
+	\foreach \x in {##3} {
+		\mytop{##1}{##2*\dx + \x*\dx, -##2*\dy + \x*\dy + ##4};
+	}
+}
+% zero offset rows
+\newcommand*{\rowpartly}[3]{
+	\rowpartlyq{##1}{##2}{##3}{0}
+}
+% same row, two different colors and indices
+\newcommand*{\rowcolorpair}[5]{
+	\rowpartly{##1}{##3}{##4}
+	\rowpartly{##2}{##3}{##5}
+}
+% same row with offset
+\newcommand*{\rowbase}[3]{
+	\rowpartlyq{##1}{##2}{##3}{-\dz}
+}
+% row of right sides with an offset
+\newcommand*{\rightsides}[4]{
+	\foreach \y in {##3} {
+		\rightside{##1}{\dx + ##2*\dx + \y*\dx, -\dy - ##2*\dy + \y*\dy + ##4};
+	}
+}
+% alternating colors, zero offset
+\newcommand*{\rightsidespair}[5]{
+	\rightsides{##1}{##3}{##4}{0}
+	\rightsides{##2}{##3}{##5}{0}
+}
+% row of left sides with an offset, first column for each row
+\newcommand*{\leftsides}[3]{
+	\foreach \y in {##2} {
+		\leftside{##1}{\y*\dx, -\y*\dy + ##3};
+	}
+}
+% alternating colors
+\newcommand*{\leftsidespair}[4]{
+	\leftsides{##1}{##3}{0}
+	\leftsides{##2}{##4}{0}
+}
+
+% --- and then the actual rendering
+% look at the picture for documentation ;-)
+% row lengths: 8 8 8 7 7 6 4 0
+
+% draw order here: 1) floor 2) color tops 3) sides
+% three corners are special
+
+\color{black} % line color changeable here
+
+\myboxat{blue}{0}{0}{0}
+\rowcolorpair{blue}{green}{0}{2,4,6}{1,3,5,7}
+
+\rowcolorpair{green}{red} {1}{0,2,4,6}{1,3,5,7}
+
+\rowcolorpair{blue}{green}{2}{0,2,4,6}{1,3,5,7}
+\rightsidespair{blue}{green}{2}{}{7}
+
+\rowbase{gray}           {3}{7}
+\rowcolorpair{green}{red} {3}{0,2,4,6}{1,3,5}
+
+\rowbase{gray}           {4}{7}
+\rowcolorpair{blue}{green}{4}{0,2,4,6}{1,3,5}
+\rightsidespair{blue}{green}{4}{6}{}
+
+\rowbase{gray}           {5}{6,7}
+\rowcolorpair{green}{red} {5}{0,2,4}{1,3,5}
+\rightsidespair{green}{red} {5}{4}{5}
+
+\rowbase{gray}           {6}{4,5,6,7}
+\rowcolorpair{blue}{green}{6}{0,2}{1,3}
+
+\rightsidespair{blue}{green}{6}{0,2}{1,3}
+\myboxat{gray}{7}{7}{1}
+\rowbase{gray}           {7}{1,2,...,6}
+\myboxat{gray}{7}{0}{1}
+
+% left sides
+\leftsidespair{blue}{green}{2,4,6}{1,3,5}
+\leftsides{gray}{0,1,...,6}{-\dz}
+\rightsides{gray}{7}{1,2,...,6}{-\dz}
+
+\end{tikzpicture}
+}
