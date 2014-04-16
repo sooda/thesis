@@ -42,12 +42,6 @@ many single planar chessboard pics vs. a single image of an accurate 3d model.
 
 The scale of values in the equations above affects the precision [hartley, in defense of .., h,ziss]. A similarity transform can be used to modify the values to a more consistent range; this is called normalization of the data.
 
-\subsection{Optical flow}
-
-Long history; several mature commercial video editing products. The Matrix.
-
-Uses: Frame time offset compensation by interpolation (morphing), needs features, direction vector estimation
-
 \subsection{Static capture}
 
 TODO: combine and structure better the following flattened section list
@@ -302,6 +296,8 @@ After rectification, the corresponding lines are axis-aligned (horizontal or ver
 
 \subsubsection{Multi-view stereo}
 
+Multiple baseline stereo
+
 \subsubsection{Structure from motion}
 
 Structure from motion (SfM) refers usually to recovering the structure of a scene from the motion of a single camera.
@@ -309,15 +305,13 @@ For each view, the pose of the camera is determined and the scene structure is e
 (pollefeys)
 Bundle adjustment is used to refine the camera parameters.
 
-\subsubsection{Bundle adjustment}
-
-\subsubsection{Reconstruction}
+\subsubsection{Post-processing}
 
 Uv mapping. Manual work. 3d noise removal; ignore points that have no close pair in other clouds.
 
 Rendering: "as usual".
 
-Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed). Still, structured light and/or shading assumptions [shape from single image cues/shading trucco,verri p.225] done too.
+Post: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed). Still, structured light and/or shading assumptions [shape from single image cues/shading trucco,verri p.225] done too.
 
 
 \subsubsection{Reprojection errors}
@@ -329,5 +323,9 @@ Compare to algebraic, geometric etc.
 
 A common way to handle feature errors is Random Sample Consensus (RANSAC). Random subsets of the sample space is iterated, and samples that do not fit well to a model that is constructed of a smaller set are ignored. The iteration that matches most samples is selected.
 
+\subsection{Optical flow}
 
-\subsection{Multiple baseline stereo}
+Long history; several mature commercial video editing products. The Matrix.
+
+Uses: Frame time offset compensation by interpolation (morphing), needs features, direction vector estimation
+
