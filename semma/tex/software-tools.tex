@@ -1,3 +1,33 @@
 \section{Software tools}
 
 Now that the theoretical background has been described, this section reviews the current state of available tools on the reconstruction problem. There is a wide collection of libraries, open-source tools and commercial packages for both automatic reconstruction and generic mesh editing for post-processing the data.
+
+\subsection{Libraries}
+
+OpenCV.
+
+Point Cloud Library.
+
+\subsection{Free software}
+
+Bundler.
+
+BigSFM.
+
+SiftGPU.
+
+PBA.
+
+VisualSFM is a free but closed-source integration tool for A, B, C.
+
+Meshlab.
+
+PoissonRecon.
+
+VisualSFM [?] is probably the most common tool in the open source community.
+It integrates into a few clicks the whole pipeline from images to 3D point cloud, using SiftGPU [?] for feature matching, PBA (multicore bundle adjustment) [?] for camera parameter estimation, and PMVS/CMVS [?] for dense matching.
+A common post-process step is to use Meshlab [?], an interactive general-purpose mesh processing tool, to filter outliers away from the data and to build a triangular mesh of it. PMVS outputs oriented points, i.e. points with normals.
+
+(VisualSFM screenshot here)
+
+\subsection{Commercial}

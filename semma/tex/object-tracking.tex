@@ -1,4 +1,4 @@
-\section{Tracking}
+\section{Object tracking / dynamic properties}
 
 The dynamic case requires tracking of individual points or objects in order to usefully use the moved object(s). Non-static human motion capture cases in video gaming or movies where post-processing time is available rely on manual work to perfect the performance. A realtime case would need to register each frame between the previous one to use the geometry's dynamic properties.
 
@@ -6,7 +6,17 @@ The simplest tracking step is to leave tracking out completely: depending on the
 
 Registration and tracking of point clouds is a large topic on its own; this section reviewes some of the most common methods presented in the literature.
 
-\subsubsection{Feature / surface tracking}
+\subsection{Registration}
+
+Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
+
+Registration seeks to align two meshes of a geometrically \textit{same} object; when tracking the motion/deformation of a surface, the point sets describe a different geometry and there will always be some error.
+
+\section{Remapping/fitting/something}
+
+Useful method for the entertainment industry is to use a pre-determined model of the scanned target, and deform it on each frame based on the current state of the object, fitting the model's vertices to the scanned set.
+
+\subsection{Feature / surface tracking}
 
 Registration aligns disoriented models (e.g. point clouds, surfaces or triangular meshes, depending on the application) together. The models can (and usually will) be not topologically related, i.e. they describe the same structure with unrelated points, accompanied with noise. Registration finds a rigid transformation between them so that one becomes the other from a reference coordinate frame's viewpoint.
 
@@ -29,8 +39,4 @@ Matching to a priori model
 \subsection{2D features}
 
 * SIFT/SURF/Harris feature tracking, reproject
-
-\subsection{3D}
-
-*
 

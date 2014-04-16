@@ -2,6 +2,7 @@
 
 This chapter introduces the methods for seeing three-dimensional structures from stereo setups, consisting of two or more cameras.
 The configuration of a proper setup with two is described and it is extended to the multi-view domain.
+The previous chapter described how to record a view of a scene with a camera. From now on, the term camera refers to a particular camera configuration, which can be a single physical camera moved to different locations.
 
 \subsection{Camera calibration}
 
@@ -49,11 +50,13 @@ Uses: Frame time offset compensation by interpolation (morphing), needs features
 
 TODO: combine and structure better the following flattened section list
 
-The cameras that are used in capturing a scene can be fixed or positioned arbitrarily; in fact, the \texttt{structure from motion} technique \ref{sec:sfm} enables to use just one camera that is moved around. Accurate and fast reconstructions are still traditionally done with stereo camera pairs, though.
+The cameras that are used in capturing a scene can be fixed or positioned arbitrarily; in fact, the \textit{structure from motion} technique \ref{sec:sfm} enables to use just one camera that is moved around. Accurate and fast reconstructions are still traditionally done with stereo camera pairs, though.
 
 This chapter goes first to the basic ideas on how a camera transforms world space points to a two-dimensional plane and how the camera parameters are usually encoded.
 
 \subsubsection{Coordinate systems and transforms}
+
+What the camera does.
 
 Homogenous point description here, [dubrofsky] homography estimation is nice, also refer hartley/zisserman
 
@@ -71,16 +74,20 @@ Figure \ref{fig:TODO} illustrates this transformation chain, which is encoded as
 	x_i &= P X\\
 	  &= M_2 X_s\\ % X_s on the sensor
 	  &= M_2 R T X\\
-	  &= M_3 M_4 R T X\\ % R, T camera pose, M_4 to camera sensor, M_3 to pixel coords
+	  &= M_p M_4 R T X\\ % R, T camera pose, M_4 to camera sensor, M_3 to pixel coords
 \end{align}
 
 $p_i$ 2d pixel in discrete image, $X_s$ on the sensor, $T$ is a simple translation matrix from $\vec t$
+
+$R$, $T$ encode the camera rotation and translation (extrinsics); $M_4$ projects the world coordinates to the camera sensor (film) - still in world coordinates (intrinsics!), and finally the affine $M_p$ transforms the points from the sensor to pixel coordinates.
 
 The whole projection $P = M_3 M_4 R T$ can be used as-is without decomposing it to separate matrices, unless the individual parameters are needed. As the chain consists of several matrices, some of them are defined only up to scale; the coordinate systems' units can be chosen freely.
 
 The external camera parameters are called the extrinsics: camera coordinate system position and rotation (heading) in the global space.
 Camera position sits at the projection center blah.
+
 The internal parameters, intrinsics, encode how the image is formed on the sensor: they consist of focal length, sensor size and principal point:
+
 \begin{equation}
 	M =
 	\begin{pmatrix}
@@ -88,7 +95,7 @@ The internal parameters, intrinsics, encode how the image is formed on the senso
 		0   &    m_y & v_0\\
 		0   &        0 & 1
 	\end{pmatrix}
-
+\cdot
 	\begin{pmatrix}
 		f & 0 & 0\\
 		0 & f & 0\\
@@ -108,9 +115,11 @@ Le image. Horizontal planar triangle, lines between camera origins etc. lecture1
 
 \subsubsection{Stereo vision, disparity}
 
+Next, the setup of binocular stereo vision is described.
+
 Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
 
-Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis. Calibration assumed to be known.
+Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis. Calibration assumed to be known, and the cameras are assumed to be identical (same focal length and sensor)
 
 From similar triangles with a common vertex at TODO, we get
 
@@ -131,9 +140,16 @@ Two or more cameras
 \subsubsection{Epipolar geometry}
 
 In stereo vision, the same scene of interest is seen by two or more cameras at the same time.
+The cameras are rarely aligned perfectly such as in the setup described above, however.
 Epipolar geometry encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with triangulation.
 
-A point seen by camera A at 3d point P could be anywhere on the line between A's origin and P.
+The locations and sensor planes of these cameras is related something
+
+Projective stereo matching in most general case is underconstrained unless some real-world assumptions are fixed.
+
+
+
+A point seen by camera A at 3d point P could be anywhere on the line between A's origin and P, because a certain line passing through the principal point always projects to a point.
 This line is seen as a single point.
 From another viewpoint in camera B, this line equals to some line on B's image plane.
 The real point must be on that line.
@@ -141,11 +157,15 @@ The inverse applies for any point on B and a line on A.
 The lines on the image planes are called epipolar lines.
 
 
-Essential matrix defines how the camera poses differ by the something something points seen by both. $p_l$, $p_r$ 3d points; vectors from camera origins (camera coordinates!) to the same point
+Essential matrix defines how the camera poses differ by the something something points seen by both. $p_l$, $p_r$ 3d points; vectors from camera origins (camera coordinates!) to the same point (in camera coordinates):
 
-\[
-	p_l^T E p_l = 0
+\[ \label{eq:essential}
+	p_r = R (p_l - t) \\
+	p_r^T R T p_l = 0 \\
+	p_r^T E p_l = 0
 \]
+
+where $T$ is the cross-product blahblah encoded in a matrix form below, essential matrix $E = R T$.
 
 Le image. lecture11.pdf. O->p dot (O->O' cross O'->p') = 0
 
@@ -163,16 +183,40 @@ Cross product expressed in a skew-symmetric matrix form is
 = \vec c
 \end{equation}
 
+Fundamental matrix relates the corresponding points in stereo images; it has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account.
 
-Fundamental matrix relates the corresponding points in stereo images.
+Inverting the matrix $M_p$ in sensor-to-pixel coordinate transform
+
+\[
+\hat p_l = M_p p_l\\
+\hat p_r = M_p p_r
+\]
+
+and using it on pixel coordinates, the world coords can be obtained, plugging in to the equation \ref{eq:essential}
+
+\[
+p_r^T E p_l = 0\\
+(M_p^-1 \hat p_r)^T E (M_p^-1 \hat p_l) = 0\\
+\hat p_r^T M_p^-T E M_p^-1 p_l = 0\\
+\hat p_r^T F \hat p_l = 0
+\]
+
+the fundamental matrix
+
+\[
+F = M_p^-T E M_p^-1 = M_p^-T R T M_p^-1
+\]
+
+is obtained. It relates the pixels and epipolar lines, and as such it is useful in image processing where the images are described as pixels in a color array (image) and not colored physical coordinates.
 
 Epipole can be interpreted as the location of another camera as seen by other camera.
 
 \subsubsection{Point matching}
 
-Previously, methods for reconstructing three-dimensional location for a point pair were introduced. To reconstruct a whole scene from a full image, pairwise points must be matched.
+Previously, methods for reconstructing three-dimensional location for a point pair were introduced, assuming known positions for the same point in different images.
+To reconstruct a whole scene from a full image, all pairwise points must be matched.
 
-Matching can be done in sparse or dense mode; sparse matching finds a set of \texttt{features} from each image, and tries to match them. Dense matching runs through each pixel of one image and tries to find the same from another one; from the coordinate differences between the two images, a disparity map is built. The disparities can be directly transformed to depth values.
+Matching can be done in sparse or dense mode; sparse matching finds a set of \textit{features} from each image, and tries to match them. Dense matching runs through each pixel of one image and tries to find the same from another one; from the coordinate differences between the two images, a disparity map is built. The disparities can be directly transformed to depth values.
 
 
 \subsubsection{Correspondence and rectification}
@@ -186,7 +230,6 @@ Usually, the calibration between the cameras is known at this point, and foobar.
 After rectification, the corresponding lines are axis-aligned (horizontal or vertical) in both images.
 
 
-
 \subsubsection{Multi-view stereo}
 
 \subsubsection{Structure from motion}
@@ -194,12 +237,9 @@ After rectification, the corresponding lines are axis-aligned (horizontal or ver
 Structure from motion (SfM) refers usually to recovering the structure of a scene from the motion of a single camera.
 For each view, the pose of the camera is determined and the scene structure is extended with the new information in the image.
 (pollefeys)
+Bundle adjustment is used to refine the camera parameters.
 
 \subsubsection{Bundle adjustment}
-
-\subsubsection{Registration}
-
-Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
 
 \subsubsection{Reconstruction}
 

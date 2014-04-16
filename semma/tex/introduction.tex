@@ -8,36 +8,48 @@
 Computer vision is a mature field; the steps of acquiring three-dimensional structure of a real-life scene are well known.
 Stereo, multiview, structure from motion, blah blah.
 
-Photogrammetry and motion capture are well studied fields; 3D scanning and reconstruction has been done on single objects and bigger scenes, and motion capture in coarser form is an ubiquitous tool in the film industry.
-Current state of processing power has made it possible to reconstruct large scenes in sensible time from static images and even video material.
-Recently introduced Microsoft Photosynth, for example, is able to take an arbitrary collection of photos and reconstruct three-dimensional models of the photographed targets.
+Stereo vision and motion capture are well studied fields; 3D scanning and reconstruction has been successfully done on single objects and bigger scenes, and mocap in coarser form is an ubiquitous tool in the film industry.
+Current state of processing power has made it possible to reconstruct large and accurate scenes in sensible time from static images and even video material.
+Recently introduced Microsoft Photosynth, for example, is able to take an arbitrary collection of photos from the internet and reconstruct three-dimensional models of publicly photographed targets.
 
 Using similar principles as the human eyes to calculate point disparity and depth of individual pixels from photos, 3D point clouds can be constructed, given only a set of two-dimensional images taken of a same target from different poses and and a few camera parameters.
 This technique, called photogrammetry, has applications in many fields ranging from mapping of larger scenes to scanning of individual objects.
 The principles are old and mature; only current state of computing power available to individuals has introduced lots of progress in automatic software tools.
 
-Facial surface motion capture (mocap) is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement to record performances for replaying them later.
-Mocap records movements of a human body or another object that is to be recorded so that the movements can be replayed or analyzed.
+Three-dimensional structure can be scanned with other means too, such as laser range finders [?], structured light [?], or computer tomography [?]; in this seminar work, the focus is kept on stereo-based computer vision.
+
 Recent advances in three-dimensional printing have brought the need to scan the geometry of arbitrary objects accurately in order to replicate them by printing.
 Home-grade printer enthusiasts need to rely mostly on manual measurements and/or lots of manual work in modeling tools.
 Even mobile phones have software for reconstructing an object by simply rotating the phone around it, taking pictures automatically using the phone's camera.
 
-Non-static cases need a larger set of cameras set up so that the captured target can move, while the geometry is imaged from several different directions. Applications include performance capture for video games or movies [?], cloth something something [?], geoscience [?] and realtime traffic analysis [?]
+When 3D scanning is extended to take into account temporal changes in geometry or appearance (color), more complex hardware and calculations are needed in order to cope with the changing data.
+Non-static cases need a larger set of cameras set up so that the captured target can move, while the geometry is imaged from several different directions. Applications include for example performance capture for video games or movies [?], cloth something something [?], geoscience [?] and realtime traffic analysis [?]
+
+Facial surface motion capture (mocap) is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement to record performances for replaying them later.
+Mocap records movements of a human body or another object that is to be recorded so that the movements can be replayed or analyzed.
 
 Human performance capture is traditionally done on special easily distinguishable markers, typically small retroreflective dots, that are mapped to a model for playback. Playback then interpolates between the recorded positions. [CITE THESE] Advances in camera resolution make it possible to use only texture features without separate markers.
 % http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
 
 Dyn dyn dyy to study cloth simulation what
 
-The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal}.
+The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; it is a good example on what is needed to capture data that changes over time in non-controllable and non-repeatable ways. The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal} to encode and simulate accurate facial movements in 3D.
 (Other applications (uses). Movies. Remedy? Medical [essential physics of, bushberg]!). Landscape/architecture engineering. Crime scenes (police investigation). Topographic mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
+
+For there are several methods on the topic, choices must be made when implementing the reconstruction setup.
+Different purposes have pros and cons, and the length of this seminar work cannot cover all the details; therefore, only the most common methods are described, sometimes referring to more detailed papers for details.
+The structure of this work is divided as follows in a bottom-up approach: the first part presents the basic principles behind most implementations on stereo vision, starting from grabbing images of real-life scenes, finally extending to multi-view stereo.
+The same chapter describes what happens in the dynamic case.
+Then, the next chapter focuses on what should be done when tracking the dynamic actions of a scanned target.
+Finally, the current state of of software tools and applications are presented. The last chapter summarizes the methods.
+In-depth mathematical details are kept to minimum, keeping the focus on the steps and principles of the whole pipeline from cameras to triangular mesh output. All the chapters present the additional challenges brought by dynamic targets when applicable.
+
 Close range photogrammetry
 
 Three-dimensional capture means in general the way of recording a sequence of movements of a real-life target or scene.
 
 Small objects have been scanned successfully with a turntable [CITE], and structure from motion techniques have recently been presented that impressively recover a structure from pictures taken all over an outdoor location with no a priori information about the camera configurations [CITE].
 
-The captured data should then be used to reconstruct the same target.
 In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
 
 Disorganised nature of the result data topology in frame-per-frame capture make it challenging to track individual points something something
