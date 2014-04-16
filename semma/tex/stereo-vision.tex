@@ -6,6 +6,8 @@ The previous chapter described how to record a view of a scene with a camera. Fr
 
 \subsection{Camera calibration}
 
+TODO Combine information here to the coordsys below and strip the actual procedure downwards
+
 In order to accurately measure a scene with a camera, the camera's properties must be known. Calibrating a camera refers to the act of examine its internal and external configuration in order to map its data to a known coordinate frame.
 
 Calibration is often specified with a camera projection matrix, or several separate matrices.
@@ -55,6 +57,11 @@ The cameras that are used in capturing a scene can be fixed or positioned arbitr
 This chapter goes first to the basic ideas on how a camera transforms world space points to a two-dimensional plane and how the camera parameters are usually encoded.
 
 \subsubsection{Coordinate systems and transforms}
+
+\simplefig{h}{%
+\includegraphics[width=0.9\textwidth]{gfx/pinhole3d}
+}{fig:pinhole3d}
+{Pinhole camera geometry. Camera coordinate system origin at O, axis X3 points towards the optical axis, Y1 and Y2 point to image plane axes and R is the principal point, at the image center. The point P projects to Q, as well as everything else on the line joining them. The image plane is f units away from camera origin; f is called the focal length.}
 
 What the camera does.
 
@@ -115,13 +122,74 @@ Le image. Horizontal planar triangle, lines between camera origins etc. lecture1
 
 \subsubsection{Stereo vision, disparity}
 
-Next, the setup of binocular stereo vision is described.
+Next, the setup of binocular stereo vision is described. Common stereo vision rigs use the simplest possible case: two identical cameras with a fixed distance, both oriented to the same direction, parallel to the line connecting them.
+
+(Here a stereo camera setup image)
 
 Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
 
-Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis. Calibration assumed to be known, and the cameras are assumed to be identical (same focal length and sensor)
+Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis.
 
-From similar triangles with a common vertex at TODO, we get
+\simplefig{h!}{
+\begin{tikzpicture}[scale=0.5]
+	% P, Z
+	\draw[fill] (0, 20) circle [radius=0.1];
+	\node at (0, 21) {$P$};
+
+	\draw [<->] (0, 0.5) -- (0, 19.5);
+	\node at (0.5, 10) {$Z$};
+
+	% origins, T
+	% TODO: circles, node ends not exactly at those points
+	\draw [<->] (-9.5,0) -- (9.5, 0);
+	\draw[fill] (-10, 0) circle [radius=0.1];
+	\draw[fill] ( 10, 0) circle [radius=0.1];
+	\node at (-10, -1) {$O_l$};
+	\node at (10, -1) {$O_r$};
+	\node at (0, -1) {$T$};
+
+	% headings
+	\draw [->] (-10, 0) -- (-10, 10);
+	\draw [->] (10, 0) -- (10, 10);
+
+	% image planes, at y=4
+	\draw[thick] (-13, 4) -- (-7, 4);
+	\draw[thick] (13, 4) -- (7, 4);
+
+	\draw [<->] (-6, 0.5) -- (-6, 3.5);
+	\node at (-5.5, 2) {$f$};
+
+
+	% intersection points at principals and xs
+	\draw[fill] (-10, 4) circle [radius=0.1];
+	\draw[fill] (10, 4) circle [radius=0.1];
+
+	\node at (-10.5, 3) {$c_l$};
+	\node at (10.5, 3) {$c_r$};
+
+	\node at (-9, 5) {$x_l$};
+	\node at (9, 5) {$x_r$};
+
+
+	% O-to-P
+	\draw (-10, 0) -- (0, 20);
+	\draw (10, 0) -- (0, 20);
+
+
+	% p
+	\draw[fill] (8, 4) circle [radius=0.1];
+	\node at (8, 3) {$p_r$};
+	\draw[fill] (-8, 4) circle [radius=0.1];
+	\node at (-8, 3) {$p_l$};
+\end{tikzpicture}
+}{fig:simplestero}
+{A very simple stereo setup, picture from above. The image planes (thick lines) are actually imaginary, as a real film in a camera would exist behind the principal point and project the image upside down, as described earlier in \ref{sec:imaging}. The coordinates exist in the world coordinate units. The symbols $O$ are the camera origins ($T$ units between each other); $c$ the principal points; $x$ the image plane coordinates of $p$ w.r.t. the principal points; and $f$ is the focal length. The unknown is $Z$, depth of point $P$. TODO capitalization}
+
+Assuming known calibration with identical cameras (same focal length and sensor) in a setup described above, visualized in figure \ref{fig:simplestereo}, points can be triangulated as follows:
+
+Translation T between the cameras is called the baseline [?multiviewgeom].
+
+From similar triangles with a common vertex at $P$, we get (note that $x_r < 0$ as it's to the left from the corresponding plane's center)
 
 \begin{align}
 	\frac{Z}{T} &= \frac{Z-f}{T - x_l + x_r} \\
@@ -130,12 +198,14 @@ From similar triangles with a common vertex at TODO, we get
 	Z &= \frac{fT}{d}
 \end{align}
 
+The disparity $d$ is the difference of the points in their image planes, $d = x_r - x_l$.
+If the image planes would be fixed as being physically correct, in the back side of the camera origins, the focal length should be negated to keep the correct interpretation and sign because the projected physical image is mirrored. Image processing between the sensor and a picture file usually inverts this.
 
-Depth inversely proportional to disparity. Algorithms such as those in OpenCV can compute point clouds from disparity images.
+As the equation shows, depth is inversely proportional to disparity in this simple case.
+To map the depth to correct units, only focal length $f$ and the baseline $T$ are needed additionally; when using pixel coordinates instead of physical in $d$, also the pixel size should be taken into account.
+All of these are encoded in the camera parameters.
 
-Two or more cameras
-
-(Should this and the next ones be under a "methods for multi view stereo" section?)
+Algorithms such as those in OpenCV can compute point clouds from disparity images.
 
 \subsubsection{Epipolar geometry}
 
