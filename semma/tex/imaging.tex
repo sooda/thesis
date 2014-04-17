@@ -2,7 +2,9 @@
 
 Digital stereo vision in the end analyses digital images; this chapter introduces the basic concerns that affect reconstruction quality. Cameras are never ideal, and practical algorithms take lens imperfections into account (see e.g. opencv [? that net page about distortion]). Images are commonly taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane, and finally to a discrete grid of numerical values that describe light intensities.
 
-Practical details, such as depth of field, camera sensor noise, aberrations and others are not considered, as they vary greatly depending on the used hardware and are out of scope of this work. It suffices to say that in a practical system the choice of good optics is a key to good quality reconstruction.
+Practical details, such as depth of field, sharpness, aberrations and others are not considered, as they vary greatly depending on the used hardware and are out of scope of this work.
+It suffices to say that in a practical system the choice of good optics is a key to good quality reconstruction.
+Accuracy and errors depend on not only decidable physical parameters of a stereo imaging rig, such as camera positioning, but also on e.g.~physical construction errors, lens imperfections, camera sensor noise, image compression and algorithmic accuracy. \cite{hollsten2013imagequality, kyto2011method}.
 
 In addition to plain photographic cameras, reconstruction can be done using e.g. laser scanners or light field cameras. Those are not covered in this work.
 
@@ -18,12 +20,14 @@ A physical camera is in its simplest form modeled as a pinhole camera; an ideal 
 u \\ v
 \end{pmatrix}
 =
-\frac{f}{z} \begin{pmatrix}
+-\frac{f}{z} \begin{pmatrix}
 x \\ y \\ z
 \end{pmatrix}
 \end{equation}
 
 Light rays travel through the pinhole camera's focal point, to the image plane.
+The result can be derived from similar triangles with a common vertex at the pinhole.
+Sometimes the sign is inverted, which results in a plane between the pinhole (i.e.~camera origin) and the actual point, where the image is not rotated; this can be more convenient to analyse.
 
 Setting the camera to origin and using homogenous coordinates, the mapping above is given with a camera matrix as
 
@@ -174,4 +178,8 @@ Faster frame rate encodes information more often, which is preferable as longer 
 Fast shutter needs to compensate the short exposure by using more sensitive sensors or more light.
 Noise vs. motion blur is a common tradeoff that has to be made when building a stereo vision system.
 
-Video recording and motion tracking are best considered orhtogonal issues; while a single static case can be scanned in three dimensions, so can also each frame, separately. While this sounds tempting, it might not be computationally feasible, though, because the reconstruction must be started all over again for each frame. Assumptions that the scene is locally almost the same can help and speed up computations. [?]
+Video recording and motion tracking are best considered orhtogonal issues; while a single static case can be scanned in three dimensions, so can also each frame, separately.
+While this sounds tempting, it might not be computationally feasible, though, because the reconstruction must be started all over again for each frame.
+Assumptions that the scene is locally almost the same can help and speed up computations. [?]
+
+Section \ref{sec:tracking} will 

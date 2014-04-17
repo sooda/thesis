@@ -9,13 +9,16 @@ The previous chapter described how to record a view of a scene with a camera. Fr
 TODO Combine information here to the coordsys below and strip the actual procedure downwards
 
 In order to accurately measure a scene with a camera, the camera's properties must be known. Calibrating a camera refers to the act of examine its internal and external configuration in order to map its data to a known coordinate frame.
+Calibration has always to be done, but it does not necessary need to be a manual step before scanning; self-calibration attempts to target this convenience problem \cite{pollefeys1999handheld, ETC}.
+
+Projective calibration only is too general, as it leaves out some assumptions that can be done about a physical world, such as relative angles and sizes; metric calibration something something. \cite{zisserman1999metric}.
 
 Calibration is often specified with a camera projection matrix, or several separate matrices.
 It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
 
 Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
 Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?].
-Commonly the points are particular \emph{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
+Commonly the points are particular \textit{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
 
 Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern [chuan; zhang] whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration.
 These usually need several pictures taken with the same camera from different poses.
@@ -296,7 +299,7 @@ After rectification, the corresponding lines are axis-aligned (horizontal or ver
 
 \subsubsection{Multi-view stereo}
 
-Multiple baseline stereo
+Multiple baseline stereo \cite{okotomi1999multiple}
 
 \subsubsection{Structure from motion}
 

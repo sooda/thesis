@@ -1,42 +1,53 @@
-\section{Object tracking / dynamic properties}
+\section{Object tracking / dynamic properties} \label{sec:tracking}
 
-The dynamic case requires tracking of individual points or objects in order to usefully use the moved object(s). Non-static human motion capture cases in video gaming or movies where post-processing time is available rely on manual work to perfect the performance. A realtime case would need to register each frame between the previous one to use the geometry's dynamic properties.
+Tracking can be addressed in two different domains: for rigid and non-rigid 
+
+The dynamic case requires tracking of individual points or objects in order to usefully use the moved object(s).
+Non-static human motion capture cases in video gaming or movies where post-processing time is available rely on manual work to perfect the performance.
+A realtime case would need to automatically register each frame between the previous one to use the geometry's dynamic properties.
 
 The simplest tracking step is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need e.g. topological continuity in the time domain, but recomputes its work on each new point cloud.
 
-Registration and tracking of point clouds is a large topic on its own; this section reviewes some of the most common methods presented in the literature.
+Registration and tracking of point clouds is a large topic on its own; this section reviewes some of the most common methods presented in the literature. Some work with the reconstructed 3D structure [?]; others use optical flow in the camera images [?].
 
 \subsection{Registration}
 
 Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
 
+When reconstructing an object all over again in consecutive frames, the points might not be fully aligned, and more importantly, they do not share the same model topology, i.e. the vertices have no other relation to the vertices in previous frames than 
+
 Registration seeks to align two meshes of a geometrically \textit{same} object; when tracking the motion/deformation of a surface, the point sets describe a different geometry and there will always be some error.
 
 \section{Remapping/fitting/something}
 
-Useful method for the entertainment industry is to use a pre-determined model of the scanned target, and deform it on each frame based on the current state of the object, fitting the model's vertices to the scanned set.
+Common method for the entertainment industry is to use a pre-determined model of the scanned target or a completely separate character, and deform it on each frame based on the current state of the object, fitting the model's vertices to the scanned set.
 
 \subsection{Feature / surface tracking}
+
+Matching points and objects between images needs to relate pixels in the images.
+Pixels correspond to each other if they represent the same physical point.
+To describe the pixel's characteristics, its surrounding environment is encoded as a \textit{feature}, a easily recognizable, unique property vector.
+When discussing about features, not every pixel's neighbourhoods are used; \textit{good} features are those that have strongly distinguishable properties, such as edges and corners.
+
+Neighbourhood of a pixel where features are detected is often called a window or a patch.
 
 Registration aligns disoriented models (e.g. point clouds, surfaces or triangular meshes, depending on the application) together. The models can (and usually will) be not topologically related, i.e. they describe the same structure with unrelated points, accompanied with noise. Registration finds a rigid transformation between them so that one becomes the other from a reference coordinate frame's viewpoint.
 
 Analogous to the case of traditional 2D video consisting of separate discrete frames of pixels, a dynamic stream of 3D data is, in a simple case, individual ``frames'' of point sets.
 
-Markers / markerless
+Facial animation does not even need multi-view stereo for tracking and driving a predesigned character \cite{chuang-blendshape,deng-facialanimsurvey}.
 
-Markers traditional
+High precision tracking has traditionally used retroreflective markers \cite[?] Feature tracking achieves the same with markerless capture \cite[?].
 
 %http://en.wikipedia.org/wiki/Facial_motion_capture the polar express, beowulf
 
-This work considers markerless capture important, because time-varying texture is important in facial capture (wrinkles from different facial expressions)
-
-Special marker makeup / pre-recording of pore-level texture? Then "good enough" zillion markers and map and deform the mesh?
-
 Corner detector (harris, sift, surf). Color usually not important. Brightness constancy. Repeated texture or no texture (uniform color = bad).
 
-Matching to a priori model
-
 \subsection{2D features}
+
+Scale-invariant feature transform (SIFT) \cite{lowe1999object} is a commonly used algorithm for local feature detection. A GPU implementation is also available \cite{changchang2007siftgpu}.  Invariance to scaling, translation and rotation makes SIFT useful in describing features that can be matched between images.
+
+Harris corner detector 
 
 * SIFT/SURF/Harris feature tracking, reproject
 
