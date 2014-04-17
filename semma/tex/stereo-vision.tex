@@ -4,56 +4,10 @@ This chapter introduces the methods for seeing three-dimensional structures from
 The configuration of a proper setup with two is described and it is extended to the multi-view domain.
 The previous chapter described how to record a view of a scene with a camera. From now on, the term camera refers to a particular camera configuration, which can be a single physical camera moved to different locations.
 
-\subsection{Camera calibration}
-
-TODO Combine information here to the coordsys below and strip the actual procedure downwards
-
-In order to accurately measure a scene with a camera, the camera's properties must be known. Calibrating a camera refers to the act of examine its internal and external configuration in order to map its data to a known coordinate frame.
-Calibration has always to be done, but it does not necessary need to be a manual step before scanning; self-calibration attempts to target this convenience problem \cite{pollefeys1999handheld, ETC}.
-
-Projective calibration only is too general, as it leaves out some assumptions that can be done about a physical world, such as relative angles and sizes; metric calibration something something. \cite{zisserman1999metric}.
+\subsection{Coordinate systems and transforms}
 
 Calibration is often specified with a camera projection matrix, or several separate matrices.
 It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
-
-Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
-Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?].
-Commonly the points are particular \textit{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
-
-Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern [chuan; zhang] whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration.
-These usually need several pictures taken with the same camera from different poses.
-
-The checkerboard calibration step can also measure optical distortion at the same time; e.g. opencv[?], matlab camera calib toolbox [?]
-
-TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
-
-Single three-dimensional calibration object is also sufficient blbl
-
-One possible way is direct linear transform (DLT) [hartley/zisserman multiviewgeom]: Solve whole projection matrix instead of individual parameters, decompose projection to intrinsics and extrinsics. For each projected point $\vec x$ from 3d point $\vec X$,
-
-\[
-	\vec x = M \vec X
-\]
-
-and construct N of these equations and solve for $M$.
-
-Methods that dig the matrix out of a single image have certain restrictions, and won't work if e.g. seven points lie on the same plane [longuet-higgins etc.]
-
-XXX see below. Intrinsic, extrinsic. Distortions. Projection matrices. Camera resectioning.
-
-many single planar chessboard pics vs. a single image of an accurate 3d model.
-
-The scale of values in the equations above affects the precision [hartley, in defense of .., h,ziss]. A similarity transform can be used to modify the values to a more consistent range; this is called normalization of the data.
-
-\subsection{Static capture}
-
-TODO: combine and structure better the following flattened section list
-
-The cameras that are used in capturing a scene can be fixed or positioned arbitrarily; in fact, the \textit{structure from motion} technique \ref{sec:sfm} enables to use just one camera that is moved around. Accurate and fast reconstructions are still traditionally done with stereo camera pairs, though.
-
-This chapter goes first to the basic ideas on how a camera transforms world space points to a two-dimensional plane and how the camera parameters are usually encoded.
-
-\subsubsection{Coordinate systems and transforms}
 
 \simplefig{h}{%
 \includegraphics[width=0.9\textwidth]{gfx/pinhole3d}
@@ -116,6 +70,52 @@ The internal parameters, intrinsics, encode how the image is formed on the senso
 For simplicity, we denote $\alpha_x = m_x f$, $\alpha_y = m_y f$. $(u_0, v_0)$ is the image center (or principal point). For square pixels, $m_x = m_y$, and for a non-skewed sensor, $\gamma = 0$, which is often the case.
 
 Le image. Horizontal planar triangle, lines between camera origins etc. lecture11.pdf.
+
+\subsection{Camera calibration}
+
+
+In order to accurately measure a scene with a camera, the camera's properties must be known. Calibrating a camera refers to the act of examine its internal and external configuration in order to map its data to a known coordinate frame.
+Calibration has always to be done, but it does not necessary need to be a manual step before scanning; self-calibration attempts to target this convenience problem \cite{pollefeys1999handheld, ETC}.
+
+Projective calibration only is too general, as it leaves out some assumptions that can be done about a physical world, such as relative angles and sizes; metric calibration something something. \cite{zisserman1999metric}.
+
+Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
+Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?].
+Commonly the points are particular \textit{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
+
+Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern [chuan; zhang] whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration.
+These usually need several pictures taken with the same camera from different poses.
+
+The checkerboard calibration step can also measure optical distortion at the same time; e.g. opencv[?], matlab camera calib toolbox [?]
+
+TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
+
+Single three-dimensional calibration object is also sufficient blbl
+
+One possible way is direct linear transform (DLT) [hartley/zisserman multiviewgeom]: Solve whole projection matrix instead of individual parameters, decompose projection to intrinsics and extrinsics. For each projected point $\vec x$ from 3d point $\vec X$,
+
+\[
+	\vec x = M \vec X
+\]
+
+and construct N of these equations and solve for $M$.
+
+Methods that dig the matrix out of a single image have certain restrictions, and won't work if e.g. seven points lie on the same plane [longuet-higgins etc.]
+
+XXX see below. Intrinsic, extrinsic. Distortions. Projection matrices. Camera resectioning.
+
+many single planar chessboard pics vs. a single image of an accurate 3d model.
+
+The scale of values in the equations above affects the precision [hartley, in defense of .., h,ziss]. A similarity transform can be used to modify the values to a more consistent range; this is called normalization of the data.
+
+\subsection{Static capture}
+
+TODO: combine and structure better the following flattened section list
+
+The cameras that are used in capturing a scene can be fixed or positioned arbitrarily; in fact, the \textit{structure from motion} technique \ref{sec:sfm} enables to use just one camera that is moved around. Accurate and fast reconstructions are still traditionally done with stereo camera pairs, though.
+
+This chapter goes first to the basic ideas on how a camera transforms world space points to a two-dimensional plane and how the camera parameters are usually encoded.
+
 
 \subsubsection{Stereo vision, disparity}
 
