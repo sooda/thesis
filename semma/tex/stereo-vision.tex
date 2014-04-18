@@ -1,5 +1,10 @@
 \section{Stereo vision}
 
+The structure of an object can be extracted relatively easily from distinct features that can be detected with several cameras [CITE].
+
+Three-dimensional capture means in general the way of recording a sequence of movements of a real-life target or scene.
+
+
 This chapter introduces the methods for seeing three-dimensional structures from stereo setups, consisting of two or more cameras.
 The configuration of a proper setup with two is described and it is extended to the multi-view domain.
 The previous chapter described how to record a view of a scene with a camera. From now on, the term camera refers to a particular camera configuration, which can be a single physical camera moved to different locations.
@@ -10,7 +15,7 @@ Calibration is often specified with a camera projection matrix, or several separ
 It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
 
 \simplefig{h}{%
-\includegraphics[width=0.9\textwidth]{gfx/pinhole3d}
+\includegraphics[width=0.7\textwidth]{gfx/pinhole3d}
 }{fig:pinhole3d}
 {Pinhole camera geometry. Camera coordinate system origin at O, axis X3 points towards the optical axis, Y1 and Y2 point to image plane axes and R is the principal point, at the image center. The point P projects to Q, as well as everything else on the line joining them. The image plane is f units away from camera origin; f is called the focal length.}
 
@@ -75,9 +80,9 @@ Le image. Horizontal planar triangle, lines between camera origins etc. lecture1
 
 
 In order to accurately measure a scene with a camera, the camera's properties must be known. Calibrating a camera refers to the act of examine its internal and external configuration in order to map its data to a known coordinate frame.
-Calibration has always to be done, but it does not necessary need to be a manual step before scanning; self-calibration attempts to target this convenience problem \cite{pollefeys1999handheld, ETC}.
+Calibration has always to be done, but it does not necessary need to be a manual step before scanning; self-calibration attempts to target this convenience problem \cite{pollefeys1999hand, ETC}.
 
-Projective calibration only is too general, as it leaves out some assumptions that can be done about a physical world, such as relative angles and sizes; metric calibration something something. \cite{zisserman1999metric}.
+Projective calibration only is too general, as it leaves out some assumptions that can be done about a physical world, such as relative angles and sizes; metric calibration something something. \cite{zisserman1995metric}.
 
 Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
 Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?].
@@ -128,7 +133,7 @@ Essential, fundamental matrices. Correspondence problem. Rectification, undistor
 Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis.
 
 \simplefig{h!}{
-\begin{tikzpicture}[scale=0.5]
+\begin{tikzpicture}[scale=0.3]
 	% P, Z
 	\draw[fill] (0, 20) circle [radius=0.1];
 	\node at (0, 21) {$P$};
@@ -299,7 +304,7 @@ After rectification, the corresponding lines are axis-aligned (horizontal or ver
 
 \subsubsection{Multi-view stereo}
 
-Multiple baseline stereo \cite{okotomi1999multiple}
+Multiple baseline stereo \cite{okutomi1993multiple}
 
 \subsubsection{Structure from motion}
 

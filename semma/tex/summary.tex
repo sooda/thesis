@@ -1,4 +1,16 @@
 %Yhteenveto
 \section{Summary}
 
-This report has introduced the basics of a stereo vision reconstruction pipeline and its applications.
+Scanning real-life objects and scenes into three-dimensional computer models is an old area of research that is receiving increasing attention while computational processing power increases.
+Especially surface capture of facial expressions or human actions is a popular topic; majority of current literature on dynamic 3D scanning deals with human performance.
+
+This report introduced the basics of a multi-view stereo vision reconstruction pipeline for static and dynamic scans.
+The steps and concerns involved from taking pictures with plain cameras to reconstructing a three-dimensional geometry and appearance of objects was presented.
+Most reconstruction methods share the same geometric principles on multi-view geometry, but each have their own details in the final steps where a point cloud or topological mesh is produced.
+Care should be taken in each step to minimize reconstruction errors; good lighting and high-quality optics in well positioned cameras guarantees good input data.
+
+Dynamic scenes present challenges in every step. Methods for tracking, registration and remodeling of dynamic, non-rigid objects vary, using techniques from optical flow to iterative locally adaptive registration.
+
+Different popular algorithms for reconstructing and tracking scenes or morphing objects was presented.
+One should consider the level of generality needed when constructing a 3D scanning rig; the more constraints and assumptions are set, better quality data can be accomplished.
+A number of currently available software tools were presented, and some hot applications were shown; the topic can be applied in several fields, and it is increasingly popular in not only experimental fields but also among consumers.

@@ -1,5 +1,11 @@
 \section{Object tracking / dynamic properties} \label{sec:tracking}
 
+Disorganised nature of the result data topology in frame-per-frame capture make it challenging to track individual points something something
+
+
+\cite{bojsen2012tracking}
+\cite{li2009robust}
+
 Tracking can be addressed in two different domains: for rigid and non-rigid 
 
 The dynamic case requires tracking of individual points or objects in order to usefully use the moved object(s).
@@ -8,7 +14,12 @@ A realtime case would need to automatically register each frame between the prev
 
 The simplest tracking step is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need e.g. topological continuity in the time domain, but recomputes its work on each new point cloud.
 
-Registration and tracking of point clouds is a large topic on its own; this section reviewes some of the most common methods presented in the literature. Some work with the reconstructed 3D structure [?]; others use optical flow in the camera images [?].
+Registration and tracking of point clouds or meshes is a large topic on its own; this section reviewes some of the most common methods presented in the literature. Some work with the reconstructed 3D structure [?]; others use optical flow in the 2D camera images [?].
+
+In three dimensions, a template model is often scanned beforehand that is then morphed to match the target object.
+\cite{bojsen2012tracking,li2009robust}
+
+When ICP is used locally, it can be applied to non-rigid cases. \cite{brown2007global}
 
 \subsection{Registration}
 
@@ -35,7 +46,7 @@ Registration aligns disoriented models (e.g. point clouds, surfaces or triangula
 
 Analogous to the case of traditional 2D video consisting of separate discrete frames of pixels, a dynamic stream of 3D data is, in a simple case, individual ``frames'' of point sets.
 
-Facial animation does not even need multi-view stereo for tracking and driving a predesigned character \cite{chuang-blendshape,deng-facialanimsurvey}.
+Facial animation does not even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
 
 High precision tracking has traditionally used retroreflective markers \cite[?] Feature tracking achieves the same with markerless capture \cite[?].
 
@@ -51,3 +62,15 @@ Harris corner detector
 
 * SIFT/SURF/Harris feature tracking, reproject
 
+In two dimensions, the full reconstruction step can be skipped when using only features in image space, providing real-time performance. \cite{pilet2005real}
+
+
+\subsection{Optical flow}
+
+Motion in an image shows as changes in pixel color.
+It can be perceived as similar pixels flowing to the direction of movement in a pattern.
+A motion vector can be calculated for each pixel, resulting in a vector field.
+\cite{gibson1950perception,horn1981determining,beauchemin1995computation}
+
+Something something integrated to models
+\cite{decarlo1996integration}
