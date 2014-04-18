@@ -11,8 +11,16 @@ The previous chapter described how to record a view of a scene with a camera. Fr
 
 \subsection{Coordinate systems and transforms}
 
+The camera is a projective object located somewhere in the imaged scene.
+\textit{intrinsic parameters} model the properties of projection, but it does not take into account the camera location in any global coordinate system.
+The \textit{extrinsics parameters} contain the camera location and rotation in another global coordinate system, modeled as a matrix.
+This is especially advantageous when there are more than one cameras and their coordinates must be related.
+\cite{hartley03multiview,heyden2005multiple}
+This chapter brings asdfgja basic transforms whose results are needed in the later reconstruction steps.
+
 Calibration is often specified with a camera projection matrix, or several separate matrices.
 It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
+
 
 \simplefig{h}{%
 \includegraphics[width=0.7\textwidth]{gfx/pinhole3d}
@@ -78,15 +86,11 @@ Le image. Horizontal planar triangle, lines between camera origins etc. lecture1
 
 \subsection{Camera calibration}
 
-
-In order to accurately measure a scene with a camera, the camera's properties must be known. Calibrating a camera refers to the act of examine its internal and external configuration in order to map its data to a known coordinate frame.
+In order to accurately measure a scene with a camera, the camera's properties must be known.
+Calibrating a camera refers to the act of examine its internal and external configuration in order to map its data to a known coordinate frame.
 Calibration has always to be done, but it does not necessary need to be a manual step before scanning; self-calibration attempts to target this convenience problem \cite{pollefeys1999hand, ETC}.
 
 Projective calibration only is too general, as it leaves out some assumptions that can be done about a physical world, such as relative angles and sizes; metric calibration something something. \cite{zisserman1995metric}.
-
-Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
-Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?].
-Commonly the points are particular \textit{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
 
 Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern [chuan; zhang] whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration.
 These usually need several pictures taken with the same camera from different poses.
@@ -97,7 +101,10 @@ TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world 
 
 Single three-dimensional calibration object is also sufficient blbl
 
-One possible way is direct linear transform (DLT) [hartley/zisserman multiviewgeom]: Solve whole projection matrix instead of individual parameters, decompose projection to intrinsics and extrinsics. For each projected point $\vec x$ from 3d point $\vec X$,
+One possible way is direct linear transform (DLT)
+\cite{hartley03multiview}: Solve whole projection matrix instead of individual parameters.
+
+For each projected point $\vec x$ from 3d point $\vec X$,
 
 \[
 	\vec x = M \vec X
@@ -135,7 +142,7 @@ Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looki
 \simplefig{h!}{
 \begin{tikzpicture}[scale=0.3]
 	% P, Z
-	\draw[fill] (0, 20) circle [radius=0.1];
+	\draw[fill] (0, 20) circle [radius=0.3];
 	\node at (0, 21) {$P$};
 
 	\draw [<->] (0, 0.5) -- (0, 19.5);
@@ -144,8 +151,8 @@ Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looki
 	% origins, T
 	% TODO: circles, node ends not exactly at those points
 	\draw [<->] (-9.5,0) -- (9.5, 0);
-	\draw[fill] (-10, 0) circle [radius=0.1];
-	\draw[fill] ( 10, 0) circle [radius=0.1];
+	\draw[fill] (-10, 0) circle [radius=0.3];
+	\draw[fill] ( 10, 0) circle [radius=0.3];
 	\node at (-10, -1) {$O_l$};
 	\node at (10, -1) {$O_r$};
 	\node at (0, -1) {$T$};
@@ -163,8 +170,8 @@ Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looki
 
 
 	% intersection points at principals and xs
-	\draw[fill] (-10, 4) circle [radius=0.1];
-	\draw[fill] (10, 4) circle [radius=0.1];
+	\draw[fill] (-10, 4) circle [radius=0.3];
+	\draw[fill] (10, 4) circle [radius=0.3];
 
 	\node at (-10.5, 3) {$c_l$};
 	\node at (10.5, 3) {$c_r$};
@@ -179,9 +186,9 @@ Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looki
 
 
 	% p
-	\draw[fill] (8, 4) circle [radius=0.1];
+	\draw[fill] (8, 4) circle [radius=0.3];
 	\node at (8, 3) {$p_r$};
-	\draw[fill] (-8, 4) circle [radius=0.1];
+	\draw[fill] (-8, 4) circle [radius=0.3];
 	\node at (-8, 3) {$p_l$};
 \end{tikzpicture}
 }{fig:simplestero}
@@ -210,6 +217,64 @@ All of these are encoded in the camera parameters.
 Algorithms such as those in OpenCV can compute point clouds from disparity images.
 
 \subsubsection{Epipolar geometry}
+\cite{trucco1998introductory,hartley03multiview}
+
+\simplefig{h!}{
+\begin{tikzpicture}[scale=0.5]
+	% cameras
+	\draw[fill] (-11,-1) circle [radius=0.2];
+	\draw[fill] ( 11,-1) circle [radius=0.2];
+	\draw (-11,-1) -- (11, -1);
+	\node at (0, -2) { baseline };
+
+	\node at (-11,-2) {$C_l$};
+	\node at ( 11,-2) {$C_r$};
+
+	% planes
+	\draw (-10,1) -- (-10,7) -- (-5,3) -- (-5,-3) -- cycle;
+	\draw ( 10,1) -- ( 10,7) -- ( 5,3) -- ( 5,-3) -- cycle;
+
+	% 3d pts
+	\draw[fill] ( 0,3) circle [radius=0.2];
+	\draw[fill] ( 0,9) circle [radius=0.2];
+	\node at (0,2) {$A$};
+	\node at (0,8) {$B$};
+
+	% origins via pts
+	\draw (-11,-1) -- (0,3) -- (11,-1);
+	\draw (-11,-1) -- (0,9) -- (11,-1);
+
+	% epis
+	\draw[fill] (-6,-1) circle [radius=0.1];
+	\draw[fill] (6,-1) circle [radius=0.1];
+	\node at (-6,-1.5) { $e_l$ };
+	\node at (6,-1.5) { $e_r$ };
+
+	% projections
+	\draw[fill] (-7.5,0.2727) circle [radius=0.1];
+	\draw[fill] (-7.5,2.1818) circle [radius=0.1];
+	\node at (-8.5, 0.2727) {$A_l$};
+	\node at (-8.5, 2.1818) {$B_l$};
+	% lines from epis
+	\draw (-6,-1) -- +(-2*1.5,2*1.2727);%(-7.5,0.2727);
+	\draw (-6,-1) -- +(-2*1.5,2*3.1818);%(-7.5,2.1818);
+
+	\draw[fill] (7.5,0.2727) circle [radius=0.1];
+	\draw[fill] (7.5,2.1818) circle [radius=0.1];
+	\node at (8.5, 0.2727) {$A_r$};
+	\node at (8.5, 2.1818) {$B_r$};
+	\draw (6,-1) -- +(2*1.5,2*1.2727);%(7.5,0.2727);
+	\draw (6,-1) -- +(2*1.5,2*3.1818);%(7.5,2.1818);
+\end{tikzpicture}
+}{fig:epigeom}
+{Epipolar geometry.
+World points $A$, $B$ project to planes of different views imaged from $C_l$ and $C_r$ on the left ($A_l$ and $B_l$), and to the right ($A_r$, $B_r$).
+When $A_l$ is known, its corresponding point $A_r$ (not initially known in practice) is found on the epipolar line joining $e_r$ and $A_r$ in the right image.
+All epipolar lines in a view join in the same point ($e_l$ and $e_r$).}
+
+Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
+Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?].
+Commonly the points are particular \textit{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
 
 In stereo vision, the same scene of interest is seen by two or more cameras at the same time.
 The cameras are rarely aligned perfectly such as in the setup described above, however.

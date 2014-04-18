@@ -16,7 +16,10 @@ In addition to plain photographic cameras, reconstruction can be done using e.g.
 \simplegfx{h}{0.6\textwidth}{pinhole-camera}
 {Pinhole camera principle. The box represents a camera; image seen through the small hole is formed to the plane on its back.}
 
-A physical camera is in its simplest form modeled as a pinhole camera; an ideal device that projects an image upside down on its film through a small aperture. Illustration given in image \ref{fig:pinhole-camera}. In computer vision, this projection is given as a $3 \times 4$ matrix, when homogenous coordinates \cite[?] are used. The pinhole model (or, perspective projection) states that the world point $(x, y, z)$ is projected to the image plane ($f$ units away from the origin) at $(u, v)$:
+A physical camera is in its simplest form modeled as a pinhole camera; an ideal device that projects an image upside down on its film through a small aperture.
+Illustration given in image \ref{fig:pinhole-camera}.
+In computer vision, this projection is given as a $3 \times 4$ matrix, when homogeneous coordinates \cite{hartley03multiview,heyden2005multiple} are used. Homogeneous coordinates add an extra dimension to the interpretation of coordinates and each point becomes a line that crosses the origin in a dimension one higher than the original. Something something computer graphics.
+The pinhole model (or, perspective projection) states that the world point $(x, y, z)$ is projected to the image plane ($f$ units away from the origin) at $(u, v)$:
 
 \begin{equation}
 \begin{pmatrix}
@@ -32,7 +35,7 @@ Light rays travel through the pinhole camera's focal point, to the image plane.
 The result can be derived from similar triangles with a common vertex at the pinhole.
 Sometimes the sign is inverted, which results in a plane between the pinhole (i.e.~camera origin) and the actual point, where the image is not rotated; this can be more convenient to analyse.
 
-Setting the camera to origin and using homogenous coordinates, the mapping above is given with a camera matrix as
+Setting the camera to origin and using homogeneous coordinates, the mapping above is given with a camera matrix as
 
 \begin{equation}
 \begin{pmatrix}
