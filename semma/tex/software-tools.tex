@@ -27,14 +27,14 @@ Multicore (parallel) bundle adjustment PBA computes something something in a way
 
 Patch-based, clustering multi-view stereopsis (PMVS/CMVS) starts from a set of matching keypoints (features) and expands them to a dense patch set. \cite{furukawa2010accurate,furukawa2012patch}
 
-VisualSFM is a free but closed-source integration tool for A, B, C.
+VisualSFM \cite{wu2013towards} is a free but closed-source integration tool for A, B, C.
 
 Meshlab is a portable interactive editor of point clouds and meshes \cite{meshlab}.
 It can be scripted to do the steps automatically.
 In a reconstruction pipeline, it is one of the last processing steps, used for removing outliers or fitting a surface on a point cloud, and finally projecting the textures to the generated mesh when given the camera parameters in relation to the point cloud pose.
 It can also perform registration between point clouds.
 
-Screened poisson surface reconstruction, or PoissonRecon, is another alternative for surface fitting \cite{poissonrecon}
+Screened poisson surface reconstruction, or PoissonRecon, is another alternative for surface fitting \cite{kazhdan2013screened}
 
 Cmpmvs is a multi-view reconstruction software for transforming a set of calibrated image data to a full textured mesh
 \cite{jancosek2011multi}
@@ -43,6 +43,19 @@ VisualSFM is probably the most common tool in the open source community.
 It integrates into a few clicks the whole pipeline from images to 3D point cloud, using SiftGPU for feature matching, PBA for camera parameter estimation, and PMVS/CMVS for dense matching.
 A common post-process step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it. PMVS outputs oriented points, i.e. points with normals, which enables the generation of a good-quality surface using poisson reconstruction.
 
-(VisualSFM screenshot here)
+%(VisualSFM screenshot here)
 
 \subsection{Commercial}
+
+There is a large selection of commercial solutions available. Some companies are devoted to building software on certain applications or constructing whole scanning rigs. Examples include:
+\begin{description}
+\item[Autodesk 123D Catch] is a free web-based application for automatic structureless reconstruction.
+\item[CaptiveMotion] provides a facial capture and retargeting system that can be used with full-body mocap.
+\item[MotionScan] is the technology behind the video game L.A. Noire. \cite{rockstar2011noire} It uses tens of cameras to recover detailed structure.
+\item[Faceshift] encodes a markerless face captuer in a feature space that describes virtual muscle and bone movements.
+\item[3DF Zephyr Pro] is another automatic photo reconstruction system.
+\item[Mova Contour Reality Capture] does high-performance surface capture with a large array of cameras.
+\item[Pendulum Studio] provides a capture system that integrates with game engines.
+\item[Pix4dMapper] converts aerial images to geometric surface models.
+\item[Acute3d] is targeted for large-scale photogrammetry and cultural heritage digitization.
+\end{description}

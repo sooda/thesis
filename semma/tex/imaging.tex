@@ -1,15 +1,14 @@
-\section{Imaging}
+\section{Imaging} \label{sec:imaging}
 
-In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
+%In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
 
-
-Digital stereo vision in the end analyses digital images; this chapter introduces the basic concerns that affect reconstruction quality. Cameras are never ideal, and practical algorithms take lens imperfections into account (see e.g. opencv [? that net page about distortion]). Images are commonly taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane, and finally to a discrete grid of numerical values that describe light intensities.
+Digital stereo vision in the end analyses digital images; this section introduces the basic image acquisition steps and concerns that affect reconstruction quality. Cameras are never ideal, and practical algorithms take lens imperfections into account (e.g. \cite{opencv}). Images are commonly taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane, and finally to a discrete grid of numerical values that describe light intensities.
 
 Practical details, such as depth of field, sharpness, aberrations and others are not considered, as they vary greatly depending on the used hardware and are out of scope of this work.
 It suffices to say that in a practical system the choice of good optics is a key to good quality reconstruction.
-Accuracy and errors depend on not only decidable physical parameters of a stereo imaging rig, such as camera positioning, but also on e.g.~physical construction errors, lens imperfections, camera sensor noise, image compression and algorithmic accuracy. \cite{hollsten2013imagequality, kyto2011method}.
+Accuracy and errors depend on not only decidable physical parameters of a stereo imaging rig, such as camera positioning, but also on e.g.~physical construction errors, lens imperfections, camera sensor noise, image compression and algorithmic accuracy. \cite{hollsten2013imagequality, kyto2011method,rieke2009evaluation}.
 
-In addition to plain photographic cameras, reconstruction can be done using e.g. laser scanners or light field cameras. Those are not covered in this work.
+%In addition to plain photographic cameras, reconstruction can be done using e.g. laser scanners or light field cameras. Those are not covered in this work.
 
 \subsection{Pinhole camera}
 
@@ -18,7 +17,10 @@ In addition to plain photographic cameras, reconstruction can be done using e.g.
 
 A physical camera is in its simplest form modeled as a pinhole camera; an ideal device that projects an image upside down on its film through a small aperture.
 Illustration given in image \ref{fig:pinhole-camera}.
-In computer vision, this projection is given as a $3 \times 4$ matrix, when homogeneous coordinates \cite{hartley03multiview,heyden2005multiple} are used. Homogeneous coordinates add an extra dimension to the interpretation of coordinates and each point becomes a line that crosses the origin in a dimension one higher than the original. Something something computer graphics.
+In computer vision, this projection is given as a $3 \times 4$ matrix, when homogeneous coordinates are used.
+Homogeneous coordinates add an extra dimension to the interpretation of coordinates and each point becomes a line that crosses the origin in a dimension one higher than the original.
+In addition, several vector operations become more convenient to manipulate. \cite{hartley03multiview,heyden2005multiple}
+
 The pinhole model (or, perspective projection) states that the world point $(x, y, z)$ is projected to the image plane ($f$ units away from the origin) at $(u, v)$:
 
 \begin{equation}
@@ -31,11 +33,12 @@ x \\ y \\ z
 \end{pmatrix}
 \end{equation}
 
-Light rays travel through the pinhole camera's focal point, to the image plane.
+Light rays travel through the pinhole camera's aperture to the image plane that is $f$ units behind the pinhole.
 The result can be derived from similar triangles with a common vertex at the pinhole.
 Sometimes the sign is inverted, which results in a plane between the pinhole (i.e.~camera origin) and the actual point, where the image is not rotated; this can be more convenient to analyse.
+\cite{hartley03multiview}
 
-Setting the camera to origin and using homogeneous coordinates, the mapping above is given with a camera matrix as
+Setting the camera to origin and using homogeneous coordinates, the mapping is given with a camera matrix as
 
 \begin{equation}
 \begin{pmatrix}
@@ -56,15 +59,16 @@ x \\ y \\ z \\ 1
 \end{pmatrix}
 \end{equation}
 
-The camera position and rotation in a global coordinate frame can be encoded in a matrix so that the point $(x,y,z)$ is first transformed to origin for equation \ref{eq:cmat}:
-
-TODO
+The camera position and rotation in a global coordinate frame can be encoded in a matrix so that the point $(x,y,z)$ in global coordinate frame is first transformed relative to the camera's origin; section \ref{sec:coord} discusses this in more detail.
 
 \subsection{Optics}
 
-In practice, no actual camera works ideally; imperfections in the lenses project points to positions that differ from those predicted by straight lines in this linear case. Lens distortions deviate the rays, and no system is in perfect focus, so that one light ray spreads out as a circle. In reconstructing, methods that estimate the points and minimize errors are used, as no model predicts the camera perfectly.
+In practice, no actual camera works ideally; imperfections in the lenses project points to positions that differ from those predicted by straight lines in this linear case.
+Lens distortions deviate the rays, and no system is in perfect focus, so that one light ray spreads out as a circle.
+In reconstructing, methods that estimate the points and minimize errors are used, as no model predicts the camera perfectly.
 
-Construction of optical systems is well studied [?,?,?]. Actual camera lenses consist usually of not only a single glass element but many, especially in the case of zoom lenses [?]. In this work, the inner workings of these systems are ignored and equations assume a simple projective model.
+Construction of optical systems is well studied. \cite{kingslake1989history}
+Actual camera lenses consist of not only a single glass element but many, especially in the case of zoom lenses. In this work, the inner workings of these systems are ignored and equations assume a simple projective model, which is a safe assumption when the image is in focus.
 
 The following equation applies for a thin lens while capturing sharp images:
 
@@ -72,35 +76,29 @@ The following equation applies for a thin lens while capturing sharp images:
 	\frac{1}{a} + \frac{1}{b} = \frac{1}{f} \label{eq:focal}
 \end{equation}
 
-where f is the focal length, a is the distance between the lens and the film, and b is the distance between the lens and the imaged source. This is illustrated in figure TODO.
+where f is the focal length, a is the distance between the lens and the film, and b is the distance between the lens and the imaged source.
 
-The focal length has a direct influence to field of view, as given in figure TODO. Longer focal length (long-focus lens, often referred to as telephoto lens) results to a more zoomed in picture, as opposed to a wide-angle lens. 
+%The focal length has a direct influence to field of view, as given in figure TODO. Longer focal length (long-focus lens, often referred to as telephoto lens) results to a more zoomed in picture, as opposed to a wide-angle lens. 
 
 All practical optical systems (lenses) introduce some non-linear distortion that affects the performance of the ideal pinhole model.
-
 Common distortions are the purely radial so-called barrel and pincushion distortions, where the magnification is a nonlinear function of image ray distance from the center of the lens.
 Fisheye lenses are commonly known to have this kind of effect.
-Tangential distortion is less common, particularly in great magnitudes, and is often ignored. Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not parallel to the image plane.
+Tangential distortion is less common, particularly in great magnitudes, and is often ignored. Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not parallel to the image plane. \cite{kingslake1989history}
 
 Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
 
-Perspective distortion something something viewer location. Normal TV is usually watched at the distance of twice the screen diagonal. At this location, the scene looks normal when taken with a normal lens. A wide-angle scene then looks normal when viewed at a nearer distance. \cite{wilson2004anton}
+It should be noted that the nonlinear optical distortions are different from the inevitable perspective projection distortion that happens when projecting a 3D scene to a 2D plane, which is taken into account in the reconstruction.
 
-% 14:01:55 <naavis> Kai sillä yritetään emuloida sitä, että katsojan paikalta se leffan kuvakenttä vastais sitä että valkokankaan tilalla on ikkuna.
-
-% TODO: custom tikz for exactly specified parameters in barrel/radial
-
-%\simplefig{h}{%
-%\includegraphics[width=0.3\textwidth]{gfx/barrel-distortion}
-%\includegraphics[width=0.3\textwidth]{gfx/pincushion-distortion}
-%\includegraphics[width=0.3\textwidth]{gfx/mustache-distortion}
-%}{fig:distortions}
-%{Left to right: barrel, pincushion and mustache distortions, respectively.}
+\simplefig{h}{%
+\includegraphics[width=0.2\textwidth]{gfx/barrel-distortion}
+\includegraphics[width=0.2\textwidth]{gfx/pincushion-distortion}
+}{fig:distortions}
+{Barrel (left) and pincushion distortions that would show up when shooting a wall with straight lines. For a non-distorted lens, the lines would not be curved.}
 
 Distortion should be corrected in software, as the following stereo algorithms assume that the images are free of nonlinear errors, i.e. straight lines in the world should remain straight in 2D images after the projective transformation.
-In particular, image rectification [X] won't work if this straightness does not remain; the assumption that similar features should be found on horizontal lines wouldn't hold on distorted images.
+%In particular, image rectification (discussed later in \ref{sec:rectification} won't work if this straightness does not remain; the assumption that similar features should be found on horizontal lines wouldn't hold on distorted images. \cite{hartley03multiview} 
 
-The radial correction used by the OpenCV library is
+The radial correction used by the OpenCV library to create a new image of the original pixel values at new positions \cite{opencv} is
 
 \begin{align}
 	x_{corr} &= x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\\
@@ -120,45 +118,37 @@ where $x$ and $y$ are the original coordinates in the distorted image, $x_{corr}
 r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
 \end{equation}
 
-TODO: example pic of a fisheyed image and undistorted one.
-
 \subsection{Shutter}
 
 In dynamic (i.e.~moving) environments, the process of acquiring several images consecutively is an important thing to consider.
 When a group of cameras are capturing the same target, they should operate synchronously and grab images at same infinitesimally small points in time.
-In reality, there is error: the cameras do not work in perfect sync, and their sensors take some time to acquire an image.
+In reality, there is some error: the cameras do not work in perfect sync, and their sensors take some time to acquire an image.
 
 Moreover, a CCD sensor should be used in place of a chaper CMOS sensor; CCDs incorporate a ``global shutter'', i.e.~the whole sensor images the scene at once.
-A phenomenon called ``rolling shutter'' is common in CMOS sensors: the reading happens linearly, and moving objects get distorted. [?]
-
-Uniform lightning (lightness constancy or what)
-
-Shutter duration that exposes half of the frame time was common in old professional motion pictures \cite{wilson2004anton}.
-While the shutter is closed, the film advances to next frame (in mechanical cameras).
-Blur makes the human mind think that the movement is smooth.
-When sampling for 3D reconstruction, the ideal shutter speed would be infinitesimally fast to reduce blur.
-Movement in between is then interpolated.
-
-Flash visibility, short flash, flash shared to two frames
-
-Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality, e.g. mechanical problems blah blah
-
-Polarization filter can be used to reduce specular highlights. [?] 
+A phenomenon called ``rolling shutter'' is common in CMOS sensors: the reading happens linearly, and moving objects get distorted when several pixels see the same object occurring at the same time.
+This should be avoided, but it can be also taken into account and fixed. \cite{ait2006simultaneous,bradley2009synchronization}.
+Uniform lightning is also usually assumed: when comparing pixel intensities, some figures might not look the same in different brightnesses, which is one of many reasons to use cameras that do as little automatic improvements as possible.
 
 \subsection{Video}
 
-Humans perceive motion when a previously seen object is seen again in a nearby location or similar position. Current digital video technology encodes motion in a sequence of still images, usually displayed in constant rate. Three dimensional motion is usually no different: it is encoded as discrete poses in sequence. [?] In order to do object capture in stereo, video material from two or more of cameras is used to initially capture a sequence of still photos.
+Humans perceive motion when a previously seen object is seen again in a nearby location or similar position.
+Current digital video technology encodes motion in a sequence of still images, usually displayed in constant rate.
+Three dimensional motion is usually no different: it is encoded as discrete poses in sequence.
+In order to do object capture in stereo, video material from two or more of cameras is used to initially capture a sequence of still photos.
 
-When scanning a scene continuously, a camera grabs frames using the same principles as in photos, but does it in sequence, at a speed that is called frame rate. Another notable point from the capture viewpoint is the shutter speed; in movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more information about the scene is encoded than when grabbing infinitesimally short times [? tähän se iso kirja videon historiasta, slowmovideo myös].
+When scanning a scene continuously, a camera grabs frames using the same principles as in photos, but does it in sequence, at a speed that is called frame rate.
+Another notable point from the capture viewpoint is the shutter speed; in movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more information about the scene is encoded than when grabbing infinitesimally short times.
+\cite{wilson2004anton}
+For sharp images that are preferred in reconstruction, this is to be avoided.
 
 Synchronizing all the cameras that shoot the same scene might not a trivial issue in practice, depending on the gear used.
-Professional grade cameras can be synced to a single clock generator, called generator locking or genlocking, so that they all operate on the same frequency.
+Professional grade cameras can be synced to a single clock generator, so that they all operate on the same frequency and phase.
 The same method is used when shooting with machine vision cameras that have external trigger input.
 This still leaves a small phase difference caused by unequal transmission paths from the clock generator.
-Genlockable camcorders are very expensive, though, and consumer-grade hardware usually lacks all possibilities to properly sync frequency or phase, not to mention frequency drift or frame jitter.
-Clapperboards are a ubiquitous and simple way to sync video and audio, but it still leaves a maximum of half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}. Can be overcome with optical flow \ref{se 14 kameran naamajuttu}.
+Synchronizable camcorders are very expensive, though, and consumer-grade hardware usually lacks all possibilities to properly sync frequency or phase, not to mention frequency drift or frame jitter.
+Clapperboards are a ubiquitous and simple way to sync video and audio, but it still leaves a maximum of half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
 When cameras open their shutter in a different time, they effectively shoot a different scene, breaking one of the most fundamental assumptions of stereo vision: that the images encode geometrically same objects.
-During long takes, different cameras might go out of sync (?) etc etc
+This can be compensated to some degree with optical flow \cite{bradley2009synchronization}.
 
 \simplefig{h!}{
 \begin{tikzpicture}[scale=1.5]
@@ -178,14 +168,16 @@ During long takes, different cameras might go out of sync (?) etc etc
 	% P, Z
 \end{tikzpicture}
 }{fig:syncproblems}
-{Video phase difference. Red rectangles illustrate exposure times of camera A, green rectangles for camera B. Frame period is t, and the cameras have a constant exposure time offset of e.}
+{Video phase difference.
+Red rectangles illustrate exposure times of camera A, green rectangles the same for camera B.
+Frame period is t, and the cameras have a constant exposure time offset of an arbitrary e.}
 
-Faster frame rate encodes information more often, which is preferable as longer distances of pixels of same objects are more difficult to match; faster shutter speeds help to reduce motion blur.
-Fast shutter needs to compensate the short exposure by using more sensitive sensors or more light.
+Faster frame rate encodes information more often, which is preferable as longer distances of pixels of same objects are more difficult to match when tracking objects; faster shutter speeds help to reduce motion blur.
+Fast shutter (i.e.~short exposure) obviously needs to be compensated by using more sensitive sensors or more light to get equivalently bright images.
 Noise vs. motion blur is a common tradeoff that has to be made when building a stereo vision system.
 
-Video recording and motion tracking are best considered orhtogonal issues; while a single static case can be scanned in three dimensions, so can also each frame, separately.
+Video recording and motion tracking are best considered orhtogonal issues; while a single static case can be scanned in three dimensions, so can be also each frame of a sequence, separately.
 While this sounds tempting, it might not be computationally feasible, though, because the reconstruction must be started all over again for each frame.
-Assumptions that the scene is locally almost the same can help and speed up computations. [?]
+% Assumptions that the scene is locally almost the same can help and speed up computations. [?]
 
-Section \ref{sec:tracking} will 
+%Section \ref{sec:tracking} will 
