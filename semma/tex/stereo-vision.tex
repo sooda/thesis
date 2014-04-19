@@ -3,9 +3,11 @@
 Three-dimensional dynamic capture means in general the way of recording a sequence of movements of a real-life target or scene.
 This section introduces the methods for seeing three-dimensional structures from stereo setups, consisting of two or more cameras.
 The configuration of a proper setup with two is described; it can be extended to the multi-view domain.
-The previous section described how to record a view of a scene with a camera. From now on, the term camera refers to a particular camera configuration, which can be a single physical camera moved to different locations.
+Most of the sophisticated algorithms able to recover a dense reconstruction base their work on the same principles, as follows.
 
 \subsection{Coordinate systems and transforms} \label{sec:coord}
+
+The previous section described how to record a view of a scene with a camera. From now on, the term camera refers to a particular camera configuration, which can be a single physical camera moved to different locations.
 
 The camera is a projective object located somewhere in the imaged scene.
 Its \textit{intrinsic parameters} model the properties of projection, but do not take into account the camera location in any global coordinate system.
@@ -23,7 +25,7 @@ This part quickly reviews basic transforms whose results are needed in the later
 }{fig:pinhole3d}
 {Pinhole camera geometry. Camera coordinate system origin at O, axis X3 points towards the optical axis, Y1 and Y2 point to image plane axes and R is the principal point, at the image center. The point P projects to Q, as well as everything else on the line joining them. The image plane is f units away from camera origin; f is called the focal length.}
 
-In computer graphics and vision, points and directions are usually described in homogeneous coordinates. \cite{dubrofsky2009homography,hartley03multiview} Translation, perspective projection, rotation, and other operations are conveniently described by using an additional dimension, of which usually the last element is 1: $(x, y, z, 1)$. All points $(xw, yw, zw, w)$ map to the same point $(x, y, z)$.
+In computer graphics and vision, points and directions are usually described in homogeneous coordinates. Translation, perspective projection, rotation, and other operations are conveniently described as matrices by using an additional dimension for points, of which usually the last element is 1: $(x, y, z, 1)$. All points $(xw, yw, zw, w)$ map to the same point $(x, y, z)$. \cite{dubrofsky2009homography,hartley03multiview}
 
 %Homography definition (mapping of points and lines in $P^2$)
 
@@ -50,7 +52,7 @@ The whole projection $P = M_i M_p T R$ can be used as-is without decomposing it 
 %The external camera parameters are called the extrinsics: camera coordinate system position and rotation (heading) in the global space.
 %Camera position sits at the projection center blah.
 
-The internal parameters, intrinsics, encode how the image is formed on the sensor: they consist of focal length, sensor size and principal point:
+The internal parameters, intrinsics, encode how the image is formed on the sensor: they consist of focal length, sensor size and principal point: (last column left out, as it's full of zeroes in 3x4)
 
 \begin{equation}
 	M =
@@ -96,7 +98,7 @@ The checkerboard calibration step can also measure optical distortion at the sam
 %Single three-dimensional calibration object is also sufficient blbl
 
 One possible way is direct linear transform (DLT)
-\cite{hartley03multiview}: the whole matrix $P$ is solved from $x = PX$ by constructing a system of equations from the projections, and minimizing an error metric, as the case is usually overconditioned.
+\cite{hartley03multiview}: the whole matrix $P$ is solved from $x_i = PX_i$ by constructing a system of equations from the projections of some known points $i$, and minimizing an error metric, as the case is usually overconditioned.
 
 %Methods that dig the matrix out of a single image have certain restrictions, and won't work if e.g. seven points lie on the same plane [longuet-higgins etc.]
 
@@ -287,9 +289,7 @@ Essential matrix is a matrix form of this relation; it includes the relative rot
 %= \vec c
 %\end{equation}
 
-Fundamental matrix relates the corresponding points in stereo images; it has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account.
-
-Inverting the matrix $M_i$ (\ref{sec:coord}) in sensor-to-pixel coordinate transform and using it on pixel coordinates, world coordinates seen by the camera can be obtained.
+Fundamental matrix relates the corresponding points in stereo images; it has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account. Inverting the matrix $M_i$ (\ref{sec:coord}) in sensor-to-pixel coordinate transform and using it on pixel coordinates, world coordinates seen by the camera can be obtained.
 
 %\[
 %\hat pAl = M_p A_l\\
@@ -322,14 +322,23 @@ To reconstruct a whole scene from a full image, all pairwise points must be matc
 
 Matching is often also called correspondence searching:
 Given a pixel in one image, what is the corresponding pixel in another image taken from the same scene?
+Pixels correspond to each other if they represent the same physical point.
 
-Matching can be done in sparse or dense mode; sparse matching finds a set of \textit{features} from each image, and tries to match them. Dense matching runs through each pixel of one image and tries to find the same from another one with e.g. template matching \cite{?}; from the coordinate differences in image space between the two images, a disparity map is built. The disparities can be directly transformed to depth values.
+To describe the pixel's characteristics, its surrounding environment is encoded as a \textit{feature}, a easily recognizable, unique property vector.
+When discussing about features, not every pixel's neighbourhoods are used; \textit{good} features are those that have strongly distinguishable properties, such as edges and corners.
 
-The sparse points from the feature locations are found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
+Edges or corners are essentially high-frequency information in the image that can be interpreted as a 2D discrete function; thus, they can be detected by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found \cite{marr1980theory}
+
+Neighbourhood of a pixel where features are detected is often called a window or a patch.
+
+Matching can be done in sparse or dense mode; sparse matching finds a set of features from each image, and tries to match them. Dense matching runs through each pixel of one image and tries to find the same from another one with e.g. template matching \cite{duda1973pattern}; from the coordinate differences in image space between the two images, a disparity map is built. The disparities are then directly transformed to depth values, yielding a point cloud.
+
+Scale-invariant feature transform (SIFT) \cite{lowe1999object} is a commonly used algorithm for local feature detection. A GPU implementation is also available \cite{changchang2007siftgpu}.  Invariance to scaling, translation and rotation makes SIFT useful in describing features that can be matched between unaligned images. Other similar commonly used means are Speede Up Robust Features (SURF) \cite{bay2006surf} Harris corner detector \cite{harris1988combined}.
+
 
 \subsection{Correspondence and rectification} \label{sec:rectification}
 
-In order to triangulate a real point from two or more photos, the location of the point in all images must be known.
+In order to triangulate a real point from two or more photographs, the location of the point in all images must be known.
 Rectification is a process that simplifies this search problem by restricting the search to a single dimension.
 By aligning the cameras such that their images are coplanar, the search only has to be performed on a line that is parallel to the line connecting the camera centers.
 After rectification, the corresponding lines are axis-aligned (horizontal or vertical) in both images. \cite{hartley03multiview}
@@ -337,16 +346,16 @@ After rectification, the corresponding lines are axis-aligned (horizontal or ver
 
 \subsection{N-view stereo}
 
+The case of more cameras than a single pair uses the same principles in epipolar geometry.
+It brings more restrictions and dimensions; in three dimensions, for example, the fundamental matrix becomes three-dimensional, the trifocal tensor. \cite{hartley03multiview}
 It is also more computationally heavy, as more data must be processed; if no information about camera parameters is available, pairwise checks between the images may become expensive. \cite{wu2013towards}
-
-The case of more cameras than a single pair uses the same principles in epipolar geometry. It brings more restrictions and dimensions; in three dimensions, for example, the fundamental matrix becomes three-dimensional, the trifocal tensor. \cite{hartley03multiview}
 
 Multiple baseline stereo is a simple special case for many cameras. When all the cameras lie on the same baseline, calibration is easier and points can be selected by using a minimized sum of errors. \cite{okutomi1993multiple}
 
 The cameras that are used in capturing a scene can be fixed or positioned arbitrarily; in fact, the structure from motion technique \cite{snavely2006photo,fitzgibbon1998automatic} enables to use just one camera that is moved around.
 Accurate and fast reconstructions are still traditionally done with stereo camera pairs, though.
 
-Another common way is to use pairwise cameras for individual reconstructions to build a point cloud for every pair, and then register them together. \cite{?}
+Another common way is to use pairwise cameras for individual reconstructions to build a point cloud for every pair, and then register them together. \cite{bradley2010high}
 
 %\subsection{Structure from motion}
 %

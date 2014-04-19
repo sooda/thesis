@@ -1,79 +1,44 @@
-\section{Object tracking / dynamic properties} \label{sec:tracking}
-
-Disorganised nature of the result data topology in frame-per-frame capture make it challenging to track individual points something something
-
-
-\cite{bojsen2012tracking}
-\cite{li2009robust}
-
-Edges or corners are essentially high-frequency information in the image that can be interpreted as a 2D discrete function; thus, they can be detected by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found \cite{marr1980theory}
-
-
-Tracking can be addressed in two different domains: for rigid and non-rigid 
-
-The dynamic case requires tracking of individual points or objects in order to usefully use the moved object(s).
-Non-static human motion capture cases in video gaming or movies where post-processing time is available rely on manual work to perfect the performance.
-A realtime case would need to automatically register each frame between the previous one to use the geometry's dynamic properties.
-
-The simplest tracking step is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need e.g. topological continuity in the time domain, but recomputes its work on each new point cloud.
-
-Registration and tracking of point clouds or meshes is a large topic on its own; this section reviewes some of the most common methods presented in the literature. Some work with the reconstructed 3D structure [?]; others use optical flow in the 2D camera images [?].
-
-In three dimensions, a template model is often scanned beforehand that is then morphed to match the target object.
-\cite{bojsen2012tracking,li2009robust}
-
-When ICP is used locally, it can be applied to non-rigid cases. \cite{brown2007global}
-
-\subsection{Registration}
-
-Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
-
-When reconstructing an object all over again in consecutive frames, the points might not be fully aligned, and more importantly, they do not share the same model topology, i.e. the vertices have no other relation to the vertices in previous frames than 
-
-Registration seeks to align two meshes of a geometrically \textit{same} object; when tracking the motion/deformation of a surface, the point sets describe a different geometry and there will always be some error.
-
-\subsection{Remapping/fitting/something}
-
-Common method for the entertainment industry is to use a pre-determined model of the scanned target or a completely separate character, and deform it on each frame based on the current state of the object, fitting the model's vertices to the scanned set.
-
-\subsection{Feature / surface tracking}
-
-Matching points and objects between images needs to relate pixels in the images.
-Pixels correspond to each other if they represent the same physical point.
-To describe the pixel's characteristics, its surrounding environment is encoded as a \textit{feature}, a easily recognizable, unique property vector.
-When discussing about features, not every pixel's neighbourhoods are used; \textit{good} features are those that have strongly distinguishable properties, such as edges and corners.
-
-Neighbourhood of a pixel where features are detected is often called a window or a patch.
-
-Registration aligns disoriented models (e.g. point clouds, surfaces or triangular meshes, depending on the application) together. The models can (and usually will) be not topologically related, i.e. they describe the same structure with unrelated points, accompanied with noise. Registration finds a rigid transformation between them so that one becomes the other from a reference coordinate frame's viewpoint.
+\section{Object tracking} \label{sec:tracking}
 
 Analogous to the case of traditional 2D video consisting of separate discrete frames of pixels, a dynamic stream of 3D data is, in a simple case, individual ``frames'' of point sets.
 
-Facial animation does not even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
+The dynamic case requires tracking of individual points or objects in order to usefully handle the moved object(s).
+Non-static human motion capture cases in video gaming or movies where post-processing time is available rely on manual work to perfect the quality.
+A realtime case would need to e.g.~automatically register each frame between the previous one to use the geometry's dynamic properties.
 
-High precision tracking has traditionally used retroreflective markers \cite[?] Feature tracking achieves the same with markerless capture \cite[?].
+The simplest tracking step is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need e.g. topological continuity in the time domain, but recomputes its work on each new point cloud.
 
-%http://en.wikipedia.org/wiki/Facial_motion_capture the polar express, beowulf
+Registration and tracking of point clouds or meshes is a large topic on its own; this section reviewes only some of the most common methods presented in the literature. Some work with the reconstructed 3D structure; others use the source images and do additional work.
 
-Corner detector (harris, sift, surf). Color usually not important. Brightness constancy. Repeated texture or no texture (uniform color = bad).
+Disorganised nature of the result data topology in frame-per-frame capture make it challenging to track individual points.
+In three dimensions, a template model is often scanned beforehand that is then morphed to match the target object to keep the topology (i.e.~vertex neighborhood connectivity) constant.
+This technique adapts to both static and rigid cases.
+\cite{bojsen2012tracking,li2009robust}
+
+Common method also for the entertainment industry is to use a pre-determined model of the scanned target or a completely separate character, and deform it on each frame based on the current state of the object, fitting the model's vertices to the scanned set.
+
+Facial animation does not necessarily even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
+
+\subsection{Registration}
+
+When reconstructing an object all over again in consecutive frames, the points might not be fully aligned, and more importantly, they do not share the same model topology, i.e. the vertices have no other relation to the vertices in previous frames than being spatially near each other, accompanied with noise. \cite{zhao2005alignment}
+
+Registration aligns disoriented models (e.g. point clouds, surfaces or triangular meshes, depending on the application) together with a rigid transformation between them so that one becomes the other from a reference coordinate frame's viewpoint.
+Aligning two geometrically \textit{same} objects may not hold if the object deforms in a non-rigid way; when tracking the motion/deformation of a surface, the point sets describe a different geometry and there will always be some error.
+
+A common method is Iterative Closest Point (ICP): iterative refinement approach to move the meshes closer to each other a small step at a time.
+When ICP is used locally, it can be applied to non-rigid cases too. \cite{brown2007global}
 
 \subsection{2D features}
 
-Scale-invariant feature transform (SIFT) \cite{lowe1999object} is a commonly used algorithm for local feature detection. A GPU implementation is also available \cite{changchang2007siftgpu}.  Invariance to scaling, translation and rotation makes SIFT useful in describing features that can be matched between images.
-
-Harris corner detector 
-
-* SIFT/SURF/Harris feature tracking, reproject
-
 In two dimensions, the full reconstruction step can be skipped when using only features in image space, providing real-time performance. \cite{pilet2005real}
-
+When assuming that a precise object stays in the cameras, features can be detected and tracked locally with no reprojection, while the tracked object is assumed to keep the same topology as a previously scanned model.
 
 \subsection{Optical flow}
 
-Motion in an image shows as changes in pixel color.
-It can be perceived as similar pixels flowing to the direction of movement in a pattern.
-A motion vector can be calculated for each pixel, resulting in a vector field.
+Motion in an image shows as changes in pixel color; it can be perceived as similar pixels flowing to the direction of movement in a pattern.
+A motion vector can be calculated for each pixel, resulting in a vector field; following and interpolating the movement is another way to detect three-dimensional movement.
 \cite{gibson1950perception,horn1981determining,beauchemin1995computation}
 
-Something something integrated to models
+By combining the movement tracking to a mesh whose dynamics are modeled physically, motion can be estimated from a single image.
 \cite{decarlo1996integration}

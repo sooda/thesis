@@ -8,7 +8,7 @@
 Computer vision is a mature field; the steps of acquiring three-dimensional structure of a real-life scene are well known.
 Multiple view geometry (or multi-view stereo) is a method to interpret depth in camera images and thus to acquire 3D scans.
 \cite{hartley03multiview,szeliski10vision,trucco1998introductory,heyden2005multiple}
-For detailed scanning dealing with arbitrary rigs and reconstruction types, there exist a wide range of algorithms, each suited for different setups, some more general than others.
+For detailed scanning dealing arbitrary reconstruction types, there exist a wide range of algorithms, each suited for different setups.
 \cite{seitz2006comparison}.
 
 Stereo vision and the related motion capture are well studied fields.
@@ -16,18 +16,18 @@ Stereo vision and the related motion capture are well studied fields.
 \cite{goesele2007multi,furukawa2010towards,pollefeys1999hand},
 and mocap in coarser form is an ubiquitous tool in the film industry \cite{moeslund2006survey}.
 Microsoft Photosynth \cite{photosynth}, for example, is able to take an arbitrary collection of photos from the internet and reconstruct three-dimensional models of publicly photographed targets. Users can also upload their own collections.
-Another similar web-based tool is Autodesk 123D Catch \cite{autodeskcatch}, which is popular among hobbyists. It reconstructs three-dimensional models from photographs with no configuration, but with a restricted accuracy.
+Another web-based tool is Autodesk 123D Catch \cite{autodeskcatch}, which is popular among hobbyists. It reconstructs three-dimensional models from photographs with no configuration, but with a restricted accuracy.
 
 Using similar principles as the human eyes to calculate point disparity and depth of individual pixels from photos, 3D point clouds can be constructed, given only a set of two-dimensional images taken of a same target from different poses and and a few camera parameters.
 \cite{hartley03multiview}
 This technique, also called photogrammetry, has applications in many fields ranging from mapping of larger scenes to scanning of individual objects.
-The principles are old and mature; only current state of computing power and quality cameras has introduced lots of progress in automatic software tools.
+The principles are mature; current state of computing power and quality cameras has introduced lots of progress in automatic software tools.
+
+%Recent advances in additive fabrication, informally called 3D printing, have brought the need to scan the geometry of arbitrary objects accurately in order to replicate them by printing.
+%Hobby-grade printer enthusiasts have needed to rely mostly on manual measurements and/or lots of manual work in modeling tools; low-cost scanning could bring new dimensions to the area.
+%Professional quality capture still needs a laboratory environment with a large number of cameras \cite{winder2008technical,motionscan}.
 
 Three-dimensional structure can be scanned with other means too, such as laser range finders \cite{levoy2000digital} or  structured light \cite{rocchini2001low}; in this seminar work, the focus is kept on stereo-based computer vision.
-
-Recent advances in additive fabrication, informally called 3D printing, have brought the need to scan the geometry of arbitrary objects accurately in order to replicate them by printing.
-Hobby-grade printer enthusiasts have needed to rely mostly on manual measurements and/or lots of manual work in modeling tools; low-cost scanning could bring new dimensions to the area.
-Professional quality capture still needs a laboratory environment with a large number of cameras \cite{winder2008technical,motionscan}.
 
 When 3D scanning is extended to take into account temporal changes in geometry or appearance (color), more complex hardware and calculations are needed in order to cope with the changing data.
 Non-static cases need a larger set of cameras set up so that the captured target can move while the geometry is imaged from several different directions.
@@ -35,8 +35,8 @@ Applications include for example performance capture for video games or movies \
 A related field in robotics is simultaneous localization and mapping (SLAM), where the surroundings are mostly static but the camera moves in an unknown environment. \cite{durrant2006simultaneous}
 
 For there are several methods on the topic, choices must be made when implementing the reconstruction setup.
-Different purposes have pros and cons, and the length of this seminar work cannot cover all the details; therefore, only the most common methods are described, sometimes referring to more detailed papers for details.
-The structure of this work is divided as follows in a bottom-up approach: the first part presents the basic geometric principles behind most implementations on stereo vision, starting from grabbing images of real-life scenes, finally extending to multi-view stereo.
+The length of this seminar work cannot cover all the details; the common initial steps are described, sometimes referring to more detailed papers for details.
+The bottom-up structure of this work is divided as follows: the first part presents the basic geometric principles behind most implementations on stereo vision, starting from grabbing images of real-life scenes, finally extending to multi-view stereo.
 Issues in the dynamic case are discussed when applicable.
 Then, the next chapter focuses on what should be done when tracking the dynamic actions of a scanned target.
 Finally, the current state of software tools and applications are presented. The last chapter summarizes the methods.

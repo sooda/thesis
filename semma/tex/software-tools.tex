@@ -4,44 +4,44 @@ Now that the theoretical background has been described, this section reviews the
 
 \subsection{Libraries}
 
-There exist several generic computer vision and geometry processing libraries, most common of them being probably OpenCV \cite{opencv}, Point Cloud Library (PCL) \cite{pcl} and Computational Geometry Algorithms Library (CGAL) \cite{cgal}. These three are written in the C or C++ programming languages.
+There exist several generic computer vision and geometry processing libraries, most common of them being probably OpenCV \cite{opencv}, Point Cloud Library (PCL) \cite{pcl} and Computational Geometry Algorithms Library (CGAL) \cite{cgal}. These are written in the C or C++ languages and they have bindings to several scripting languages too.
 
 OpenCV contains a large set of tools for 2D image processing and extends also to camera calibration and 3D reprojection.
 It is probably the most commonly known and most used computer vision algorithm package.
 
-PCL contains a set of algorithms for filtering, segmentation, registration, visualization, and more for working on data sets that consist of points that may share attributes such as colors and normals.
-
-CGAL's scope is in the same field as PCL's.
+PCL contains a set of algorithms for filtering, segmentation, registration, visualization, and more for working on data sets that consist of points that may share attributes such as colors and normals. CGAL's scope is in the same field, concentrating on a little more advanced topics.
 
 \subsection{Free software}
 
-While libraries can be used to write new tools, many pieces of software are readily available that perform the algorithms presented and are distributed in binary executables.
+While libraries can be used to write new tools, many pieces of software are readily available that perform the algorithms presented with some additional magic and are distributed in binary executables.
 
-Camera Calibration Toolbox for Matlab, also included in OpenCV as a C port. \cite{camcalmatlab}
+Camera Calibration Toolbox for Matlab, also included in OpenCV as a C port, is a more or less standard tool to computation of undistortion maps and intrinsic and extrinsic parameters with checkerboard images using non-linear optimization and homographies. \cite{camcalmatlab}
 
-Bundler. \cite{snavely2006photo}
+Bundler is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds. \cite{snavely2006photo}
 
 SiftGPU, a SIFT implementation for graphics processing units. \cite{changchang2007siftgpu} It is built on Sift++ \cite{vedaldi2011sift++}; both are based on difference of gaussians, a method for edge detection \cite{marr1980theory}
 
 Multicore (parallel) bundle adjustment PBA computes something something in a way that exploits the modern parallel nature of computer processors that have several computing cores. \cite{wu2011multicore}
 
-Patch-based, clustering multi-view stereopsis (PMVS/CMVS) starts from a set of matching keypoints (features) and expands them to a dense patch set. \cite{furukawa2010accurate,furukawa2012patch}
+Patch-based, clustering multi-view stereopsis (PMVS/CMVS) starts from a set of matching keypoints (features) and expands them to a dense patch set iteratively. \cite{furukawa2010accurate,furukawa2012patch}
 
-VisualSFM \cite{wu2013towards} is a free but closed-source integration tool for A, B, C.
+VisualSFM \cite{wu2013towards} is a common and free but closed-source integration tool simplifying the workflow using external programs.
 
-Meshlab is a portable interactive editor of point clouds and meshes \cite{meshlab}.
-It can be scripted to do the steps automatically.
+Meshlab is a portable editor of point clouds and meshes \cite{meshlab}.
+It can be used interactively and scripted to do the same steps automatically.
 In a reconstruction pipeline, it is one of the last processing steps, used for removing outliers or fitting a surface on a point cloud, and finally projecting the textures to the generated mesh when given the camera parameters in relation to the point cloud pose.
 It can also perform registration between point clouds.
 
-Screened poisson surface reconstruction, or PoissonRecon, is another alternative for surface fitting \cite{kazhdan2013screened}
+Screened poisson surface reconstruction, or PoissonRecon, is another alternative for surface fitting. \cite{kazhdan2013screened}
 
-Cmpmvs is a multi-view reconstruction software for transforming a set of calibrated image data to a full textured mesh
+Cmpmvs is a multi-view reconstruction software for transforming a set of calibrated image data to a full textured mesh, used in a similar way as VisualSFM but using internally a different method based on graph cuts and weakly-supported surfaces.
 \cite{jancosek2011multi}
 
+Python Photogrammetry Toolbox is another pipeline combinator for full 3D reconstruction, popular in archaeological fields. It combines Bundler and PMVS and others. \cite{moulon2011python}
+
 VisualSFM is probably the most common tool in the open source community.
-It integrates into a few clicks the whole pipeline from images to 3D point cloud, using SiftGPU for feature matching, PBA for camera parameter estimation, and PMVS/CMVS for dense matching.
-A common post-process step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it. PMVS outputs oriented points, i.e. points with normals, which enables the generation of a good-quality surface using poisson reconstruction.
+It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, PBA for camera estimation, and PMVS/CMVS for dense matching.
+A common post step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
 
 %(VisualSFM screenshot here)
 

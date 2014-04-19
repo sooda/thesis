@@ -4,15 +4,16 @@
 %The basic technical aspects in the problem of three-dimensional scene reconstruction in multi-view stereo was introduced. The problem was extended in the non-static domain. Current software tools to solve the problem are introduced. The current state of the art and trends in the field are quickly surveyed.
 
 Scanning real-life objects and scenes into three-dimensional computer models is an old area of research that is receiving increasing attention while computational processing power increases.
-Especially surface capture of facial expressions or human actions is a popular topic; majority of current literature on dynamic 3D scanning deals with human performance.
+Especially surface capture of nonrigid facial expressions or human actions is a popular topic; majority of current literature on dynamic 3D scanning deals with human performance.
 
 This report introduced the basics of a multi-view stereo vision reconstruction pipeline for static and dynamic scans.
 The steps and concerns involved from taking pictures with plain cameras to reconstructing a three-dimensional geometry and appearance of objects were presented.
-Most reconstruction methods share the same geometric principles on multi-view geometry, but each have their own details in the final steps where a point cloud or topological mesh is produced; to study those in more detail, the cited work presents state-of-the-art methods.
+Most reconstruction methods share the same geometric principles on multi-view geometry, but each have their own details in the final steps where a point cloud or topological mesh is produced; to study those in more detail, the cited work presents history and state-of-the-art methods.
 Care should be taken in each step to minimize reconstruction errors; good lighting and high-quality optics in well positioned cameras guarantees good input data to be processed by clever algorithms.
 
 Dynamic scenes present challenges in every step. Methods for tracking, registration and remodeling of dynamic, non-rigid objects vary, using techniques from optical flow to iterative locally adaptive registration.
 
-Different popular algorithms for reconstructing and tracking scenes or morphing objects was presented.
+Different popular algorithms for reconstructing and tracking scenes or morphing objects were presented.
 One should consider the level of generality needed when constructing a 3D scanning rig; the more constraints and assumptions are set, better quality data can be accomplished.
+A static, fixed array of cameras is able to produce sub-millimeter data, while also a freely moving camera with no prior 3D scanning intentions can be used to recover geometric structure and colors.
 A number of currently available software tools were presented, and some hot applications were shown; the topic can be applied in several fields, and it is increasingly popular in not only experimental fields but also among consumers and hobby enthusiasts.
