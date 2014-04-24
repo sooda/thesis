@@ -43,12 +43,12 @@ konsta.holtta@aalto.fi}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Intro}
+\begin{frame}{non-static object capture using multi-view stereo video}
 \begin{itemize}
 	\item Non-static / dynamic: moving or morphing over time
 	\item $\Rightarrow$ video, maybe not just a simple object
 	\item object: some target of interest in front of a camera
-	\item capture: encode the object's visual properties to a computer \begin{itemize}
+	\item capture: encode the object's visual properties digitally \begin{itemize}
 		\item geometry: 3d surface structure
 		\item texture: (diffuse) color
 		\end{itemize}
@@ -62,22 +62,22 @@ this presentation reviews the parts of the capture pipeline
 
 \begin{frame}{Contents}
 \begin{itemize}
-	\item Motivation
+	\item Intro, motivation
 	\item Imaging basics
 	\item Stereo reconstruction
-	\item Multi-view stereo
 	\item Motion specifics
 	\item Post processing
 	\item Conclusion
 \end{itemize}
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Motivation}
+\kuva{0.8}{lanoire}
+{ \centering { \footnotesize L.A. Noire / joystiq.com} \par }
 \begin{itemize}
-	\item applications in mapping, object replication, entertainment, cultural heritage, medical, crime scenes, ...
+	\item applications in mapping, object replication, entertainment, cultural heritage, medical, crime investigation, ...
 	\item most visible in modern movies and video games
 	\item facial expressions; motion/surface capture
 	\item relatively cheap hardware
@@ -87,19 +87,19 @@ this presentation reviews the parts of the capture pipeline
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Pipeline}
-\begin{itemize}
-\item Calibration: capture camera rig parameters
-\item Imaging: Record the object movement as series of images
-\item 3D Reconstruction \begin{itemize}
-  \item stereo matching, rectification
-  \item feature tracking
-  \item triangulation, point clouds \end{itemize}
-\item Meshing: from point clouds to 3D models
-\item Rendering: draw the model on a computer screen (or use in other ways)
-\end{itemize}
-%\kuva{0.6}{ankka.jpg}
-\end{frame}
+%\begin{frame}{Pipeline}
+%\begin{itemize}
+%\item Calibration: measure camera rig parameters
+%\item Imaging: Record the object movement as series of images
+%\item 3D Reconstruction \begin{itemize}
+%  \item stereo matching, rectification
+%  \item feature tracking
+%  \item triangulation, point clouds \end{itemize}
+%\item Meshing: from point clouds to 3D models
+%\item Rendering: draw the model on a computer screen (or use in other ways)
+%\end{itemize}
+%%\kuva{0.6}{ankka.jpg}
+%\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -157,7 +157,7 @@ x \\ y \\ z
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Movies}
+\begin{frame}{Video concerns}
 \simplefig{h!}{
 \begin{tikzpicture}[scale=1.0]]
 	\draw (0,0) rectangle (6,-1);
@@ -171,13 +171,14 @@ x \\ y \\ z
 	}
 	\draw (0.3, 0) -- (0.3, -2.5);
 	\node at (0.3, -2.6) {e};
-	\node at (-0.3, -0.5) {A};
-	\node at (-0.3, -1.5) {B};
+	\node at (-0.6, -0.5) {cam A};
+	\node at (-0.6, -1.5) {cam B};
 	% P, Z
 \end{tikzpicture}
 }{fig:syncproblems}
 {}
 \begin{itemize}
+	\item Lighting
 	\item Motion blur
 	\item Rolling shutter
 	\item Sub-frame synchronization
@@ -220,7 +221,7 @@ Several cameras imaging the same scene at the same time
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Disparity}
+\begin{frame}{Disparity in stereo vision}
 \simplefig{h!}{
 \begin{tikzpicture}[scale=0.25]
 	% P, Z
@@ -354,7 +355,6 @@ Corresponding points are found on lines. Rectification twists the images so that
 	\item Static can be scanned with a single camera only
 	\item Moving targets need static frames from many angles
 	\item Images must be consistent within a frame
-	\item Reconstruction (usually) for static objects
 	\item Stream of static frames reconstructed, or more sophisticated tracking
 \end{itemize}
 %\kuva{0.6}{ankka.jpg}
@@ -369,24 +369,12 @@ Corresponding points are found on lines. Rectification twists the images so that
 	\item Morph initial model based on frame deformations
 	\item Track local pre-selected features in 2D
 	\item Track features in 3D, deform mesh based on keypoints
-	\item And more and more post-processing
+	\item And more and more post-processing, assumptions on the object properties
 \end{itemize}
 %\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Post process}
-\begin{itemize}
-	\item Actually, assumptions on the object often used
-	\item Initial scan of an object, rest model
-	\item Sometimes features tracked in 2D or 3D (still pre-recorded)
-	\item Feature spaces and parameterizations in extreme cases
-\end{itemize}
-%\kuva{0.6}{ankka.jpg}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%]
 
 \begin{frame}{Texture and topology}
 \begin{itemize}
@@ -407,19 +395,20 @@ Corresponding points are found on lines. Rectification twists the images so that
 \centering { \small (EA sports, FIFA '14; 18 DSLRs) }
 \begin{itemize}
 	\item Shutter delay and jitter, flash sync, remote control
-	\item construction, calibration convenience, bad software,
-	\item Manual work, 3D noise removal, artist work, magic coefficients
+	\item construction issues, calibration convenience, bad software, ...
+	\item Manual work for artists, 3D noise removal, magic coefficients
 \end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Still software}
+\begin{frame}{Software}
 \begin{itemize}
 	\item Libs: OpenCV, Point Cloud Library, Computational Geometry Algorithms Library, ...
 	\item Free: Camera calibration toolbox for Matlab (+OpenCV), Bundler, Sift, SiftGPU, PBA, PMVS/CMVS, VisualSFM, Meshlab, PoissonRecon, CmpMVS, Python photogrammetry toolbox, ...
-	\item Commercial: Photosynth, 123D Catch, Agisoft PhotoScan, CaptiveMotion, MotionScan, Faceshift, 3DF Zephyr Pro, Mova Contour Reality Capture, Pendulum Studio, Pix4DMapper, Acute3D, ...
+	\item Commercial: Photosynth, 123D Catch, Agisoft PhotoScan, CaptiveMotion, DI3D, MotionScan, Faceshift, 3DF Zephyr Pro, Mova Contour Reality Capture, Pendulum Studio, Pix4DMapper, Acute3D, ...
 \end{itemize}
+4D programs very customized
 %\kuva{0.6}{ankka.jpg}
 \end{frame}
 
@@ -451,7 +440,7 @@ Corresponding points are found on lines. Rectification twists the images so that
 
 \begin{frame}{Conclusion}
 \begin{itemize}
-	\item Multi-step pipeline from construction to shooting, reconstruction and post-processing
+	\item 4D scan: multi-step pipeline from construction to shooting, reconstruction and post-processing
 	\item Used method(s) largely application specific
 	\item Lots of software, special applications coming, rising trend
 	\item MVS just one scanning method
