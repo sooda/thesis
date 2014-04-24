@@ -2,7 +2,6 @@ presis.aux
 tex/*.aux
 presis.log
 presis.out
-presis.pdf
 presis.toc
 presis.bbl
 presis.blg
