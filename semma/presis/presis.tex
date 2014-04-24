@@ -9,7 +9,7 @@
 \usepackage{lastpage}
 \usepackage{subfig}
 
-\title{non-static object capture using multi-view stereo video}
+\title{Non-static object capture using multi-view stereo video}
 
 \author{Konsta Hölttä}
 \institute{AS-0.3100 seminar presentation\\
@@ -82,7 +82,6 @@ this presentation reviews the parts of the capture pipeline
 	\item facial expressions; motion/surface capture
 	\item relatively cheap hardware
 \end{itemize}
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -98,7 +97,6 @@ this presentation reviews the parts of the capture pipeline
 %\item Meshing: from point clouds to 3D models
 %\item Rendering: draw the model on a computer screen (or use in other ways)
 %\end{itemize}
-%%\kuva{0.6}{ankka.jpg}
 %\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -117,7 +115,6 @@ u \\ v
 x \\ y \\ z
 \end{pmatrix}
 \end{equation*}
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -152,7 +149,6 @@ x \\ y \\ z
 %	y_{corr} &= y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)
 %\end{align}
 %Brown's distortion model (1966)
-%%\kuva{0.6}{ankka.jpg}
 %\end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -182,7 +178,7 @@ x \\ y \\ z
 	\item Motion blur
 	\item Rolling shutter
 	\item Sub-frame synchronization
-	\item Other issues (23.57(6) FPS, mechanics, wiring, ..)
+	\item Other issues (23.97(6) FPS, mechanics, wiring, ..)
 \end{itemize}
 \end{frame}
 
@@ -207,7 +203,6 @@ $}
 	\item Done for single cameras and camera systems
 	\item Projections closely related to computer graphics in general
 \end{itemize}
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -342,10 +337,9 @@ Corresponding points are found on lines. Rectification twists the images so that
 	\item Two camera case is still pretty dull
 	\item Combine pairs, reconstruct individually, register in 3d
 	\item Several on same baseline, match pairwise, fit least errors
-	\item Use lots, arbitrarily positioned, magic algorithms
+	\item Use lots, arbitrarily positioned; magic algorithms
 	\item Single camera traversing in a scene (SfM)
 \end{itemize}
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -357,7 +351,6 @@ Corresponding points are found on lines. Rectification twists the images so that
 	\item Images must be consistent within a frame
 	\item Stream of static frames reconstructed, or more sophisticated tracking
 \end{itemize}
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -371,7 +364,6 @@ Corresponding points are found on lines. Rectification twists the images so that
 	\item Track features in 3D, deform mesh based on keypoints
 	\item And more and more post-processing, assumptions on the object properties
 \end{itemize}
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -385,7 +377,6 @@ Corresponding points are found on lines. Rectification twists the images so that
 	\item Sometimes features tracked in 2D or 3D (still pre-recorded)
 	\item Feature spaces and parameterizations in extreme cases
 \end{itemize}
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -409,12 +400,11 @@ Corresponding points are found on lines. Rectification twists the images so that
 	\item Commercial: Photosynth, 123D Catch, Agisoft PhotoScan, CaptiveMotion, DI3D, MotionScan, Faceshift, 3DF Zephyr Pro, Mova Contour Reality Capture, Pendulum Studio, Pix4DMapper, Acute3D, ...
 \end{itemize}
 4D programs very customized
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{VisualFSM}
+\begin{frame}{VisualSFM}
 	\kuva{0.8}{visualsfm}
 \end{frame}
 
@@ -446,7 +436,6 @@ Corresponding points are found on lines. Rectification twists the images so that
 	\item MVS just one scanning method
 \end{itemize}
 Many tools integrate some steps or add in their own
-%\kuva{0.6}{ankka.jpg}
 \end{frame}
 
 
