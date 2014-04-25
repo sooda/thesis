@@ -1,0 +1,98 @@
+title
+	o hai. my name is konsta. i'll present you how to scan three dimensional stuff with digital cameras.
+	this seminar work is more or less related to my thesis
+
+\begin{frame}{non-static object capture using multi-view stereo video}
+	lue kalvoist
+	non-static or dynamic, dunno how to choose the word. it just means something that doesn't stay put.
+	object is something that we would like to scan.
+
+\begin{frame}{Contents}
+	the outline of this presentation goes like this.
+	
+\begin{frame}{Motivation}
+	all right, why would we like to 3d scan something? because thats why
+	the picture here is from a video game whose faces are scanned from real humans
+
+\begin{frame}{Cameras}
+	let's begin with a simple camera. what is a camera? it projects a real life scene to a film. modern camera use a digital sensor, of course.
+	you can build your own from a shoe box.
+	regarding to the 3d locations, it flattens the world so that further objects go nearer the image origin as shown.
+
+\begin{frame}{Real cameras}
+	well wasn't that simple then? as you probably know, cameras are not shoe boxes but complicated optical systems.
+	there are quite a few practical issues to take into account when imaging a scene for 3d reconstruction, especially for motion.
+
+\begin{frame}{Video concerns}
+	stereo vision needs several images of a scene at the same time. if something moves between the camera takes, it's not the same scene.
+	for example in the image, red blocks describe the times when one camera takes images, green the others. their fps is under one frame in sync but they are not.
+	also light flicker, too slow shutter times that make images blurry or the common rolling shutter effect in cheap cameras are bad.
+	practical issues are also considered, for example 24 fps isn't 24 because of some historical reasons; some software considers 24 fps as 23.97, some 23.976 etc. which leds to sync problems
+
+\begin{frame}{Calibration, camera parameters}
+	all right. when images are captured, they represent a projection of the world. on the right, a projection matrix. on the left, camera coordinate system.
+	intrinsics and extrinsics are terms that refer to the projection from world to camera plane coordinates.
+	intrinsics consist of e.g. focal length and camera sensor size.
+	extrinsics are essentially a camera location and rotation matrix.
+	the camera locations in a stereo rig are related to each other by calibrating it.
+
+
+\begin{frame}{(Multi view) stereo}
+	multi-view equals n+1 cameras. traditional rigs use a configuration such as in human eyes
+
+\begin{frame}{Disparity in stereo vision}
+	this is the basic principle behind most stereo vision implementations.
+	disparity, that is, difference, between coordinates of a specific point in two images relates directly to the depth value of this pixel.
+	many programs or libraries can compute disparty maps from two calibrated images and convert that to a point cloud.
+
+\begin{frame}{Epipolar geometry}
+	the previous image presented a trivial case, which is .. often not the case.
+	given a pixel in one image, what corresponds it to the others?
+	this search simplifies a lot when transforming the images to a common plane.
+
+\begin{frame}{Really multi-view}
+	stereo is kind of solved problem.
+	by using more cameras at a time (tens of them), a full moving object can be captured if all cameras shoot in sync.
+	there are many algorithms presented on reconstructing a scene from a calibrated or uncalibrated set of images.
+	another viewpoint is a freely moving camera that images a big scene, for example this room, instead of rotating around a small object.
+
+\begin{frame}{From static to dynamic}
+	and a static object is a statue or something.
+	dynamic moves its geometry all the time, and for each video frame, its geometry should be consistent between all the cameras.
+	the simplest way is to record a movie from each camera of a scene at the same time and do reconstructions on all the frames.
+
+\begin{frame}{Dynamic methods}
+	finally we get to the point. what about when the scene to be reconstructed is not just a single set of pictures?
+	well, as just said, the simplest way is to consider each frame set as a geometrically individual object and output a 4D video.
+	others assume that the object pictured stays approximately the same and use a pre-recorded model of its surface, deforming it.
+	some detect features and track them, doing whatever needed on output data.
+	at the first step of reconstruction output, the data is a point cloud.
+
+\begin{frame}{Texture and topology}
+	Reconstruction is done when a dense point cloud is achieved. The points are simply a list, not related to each other.
+	A proper 3D model in practice consists of a surface modeled with triangles that encode the topology, that is, neighbors.
+	Surface reconstruction from point data.
+	Also, vertices only have the color that is exactly at the pixel where it was found. The textures are projected on the model when it has been meshed.
+	Some methods do not even store the mesh as-is but parameterize it in for example linear combinations of facial expressions, simulating muscles.
+
+\begin{frame}{In practice}
+	That's it about the theory. In practice, many nuisances exist still. the cameras should fire at the same time, noise should be removed, and also in the image above the reconstructed geometry of the camera rig itself seen by opposite cameras.
+
+\begin{frame}{Software}
+	There exist a wide range of software tools for this. Free tools are more or less orthogonal and each does their own job; commercial packages are larger pipelines.
+
+\begin{frame}{VisualFSM}
+	Finally, here's an example I did myself. This is a reconstructed point cloud from a set of sixteen high-resolution images. The object is a horse mask.
+
+\begin{frame}{Meshlab}
+	Here you see a textured mesh built on the point cloud data.
+
+\begin{frame}{Meshlab}
+	And a close-up of its eye.
+
+\begin{frame}{Meshlab}
+	Here's the eye without textures. Note the high detail; this could be from a single frame from a video.
+
+\begin{frame}{Conclusion}
+	That's about it of the basic steps of a stereo vision reconstruction pipeline. The methods used vary widely, scientific literature is full of different algorithms for generic and also for more restricted cases. Also, remember that the structure could be scanned with for example a giant laser.
+
