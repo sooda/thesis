@@ -42,6 +42,7 @@ private:
 
 	void create_menus();
 	void create_panels();
+	void readCameraParams();
 	wxSizer* create_imagegrid();
 	void loadImages();
 

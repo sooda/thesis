@@ -52,9 +52,19 @@ void MainFrame::onIdle(wxIdleEvent& ev) {
 void MainFrame::create_panels() {
 	auto sizer = new wxBoxSizer(wxHORIZONTAL);
 	// opts lots thinner than image panel
-	sizer->Add(new OptionsPanel(this), 1, wxEXPAND);
+	sizer->Add(options = new OptionsPanel(this), 1, wxEXPAND);
 	sizer->Add(create_imagegrid(), 4, wxEXPAND);
 	SetSizer(sizer);
+
+	readCameraParams();
+}
+
+void MainFrame::readCameraParams() {
+	if (app.cams.size() == 0)
+		return;
+
+	auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
+	options->setSliderRange(0, 0, aperture.size());
 }
 
 wxSizer* MainFrame::create_imagegrid() {

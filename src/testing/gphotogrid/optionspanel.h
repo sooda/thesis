@@ -7,6 +7,7 @@ class MainFrame;
 class OptionsPanel : public wxPanel {
 public:
 	OptionsPanel(MainFrame* parent);
+	void setSliderRange(int id, int min, int max);
 	void onSlider(wxCommandEvent& event);
 	void onButton(wxCommandEvent& event);
 
