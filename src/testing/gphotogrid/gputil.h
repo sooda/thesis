@@ -2,25 +2,44 @@
 
 namespace gp {
 
-class Aperture {
+class RadioWidget {
 public:
-	Aperture(int value, std::vector<std::string> choices);
-	Aperture(const Aperture&);
+	RadioWidget(int value, std::vector<std::string> choices);
+	RadioWidget(const RadioWidget&) = default;
 	int index() const;
 	void set(int value);
 	const std::string& text() const;
 	const std::vector<std::string>& choices() const;
 	int size() const;
+
 private:
 	int val;
 	std::vector<std::string> data;
 };
 
-template <>
-struct Widget::Traits<Aperture> {
-	static const WidgetType type = WIDGET_RADIO;
-	static Aperture read(Widget& w);
-	static void write(Widget& w, const Aperture& value);
+template <class Value>
+struct RadioTraits {
+	static const Widget::WidgetType type = Widget::WIDGET_RADIO;
+	static Value read(Widget& w) {
+		return Widget::Traits<RadioWidget>::read(w);
+	}
+	static void write(Widget& w, const Value& value) {
+		Widget::Traits<RadioWidget>::write(w, value);
+	}
 };
+
+class Aperture : public RadioWidget {
+public:
+	Aperture(const RadioWidget& r) : RadioWidget(r) {}
+};
+template <>
+struct Widget::Traits<Aperture> : RadioTraits<Aperture> {};
+
+class ShutterSpeed : public RadioWidget {
+public:
+	ShutterSpeed(const RadioWidget& r) : RadioWidget(r) {}
+};
+template <>
+struct Widget::Traits<ShutterSpeed> : RadioTraits<Aperture> {};
 
 }

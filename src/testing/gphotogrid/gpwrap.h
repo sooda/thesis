@@ -77,7 +77,7 @@ public:
 	struct Traits {
 		static const WidgetType type;
 		static V read(Widget& w);
-		static void write(Widget& w, const V&& value);
+		static void write(Widget& w, const V& value);
 	};
 
 	virtual ~Widget();

@@ -36,6 +36,12 @@ void test_single_camera(gp::Context& context, int n) {
 		cam.config()["aperture"].set(ap);
 		gp::Aperture ap2 = cam.config()["aperture"].get<gp::Aperture>();
 		std::cout << ap2.index() << ":" << ap2.text() << std::endl;
+
+		auto ss = cam.config()["shutterspeed"].get<gp::ShutterSpeed>();
+		std::cout << ss.index() << ":" << ss.text() << std::endl;
+		for (auto& x: ss.choices())
+			std::cout << x << " ";
+		std::cout << std::endl;
 	}
 
 	if (n > 1) {

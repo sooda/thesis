@@ -139,7 +139,6 @@ void Widget::set_changed() {
 }
 
 void Camera::set_config(const Widget& cfg) {
-	std::cout << "SET CFG" << std::endl;
 	gp_camera_set_config(camera, cfg.widget, ctx.context);
 }
 

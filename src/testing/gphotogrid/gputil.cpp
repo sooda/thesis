@@ -4,27 +4,28 @@
 
 namespace gp {
 
-Aperture::Aperture(int value, std::vector<std::string> choices) : val(value), data(choices) {
+RadioWidget::RadioWidget(int value, std::vector<std::string> choices) : val(value), data(std::move(choices)) {
 }
-int Aperture::index() const {
+int RadioWidget::index() const {
 	return val;
 }
-void Aperture::set(int value) {
+void RadioWidget::set(int value) {
 	if (value < 0 || value >= (int)data.size())
-		throw std::out_of_range("bad aperture index");
+		throw std::out_of_range("bad radiowidget index");
 	val = value;
 }
-const std::string& Aperture::text() const {
+const std::string& RadioWidget::text() const {
 	return data[val];
 }
-const std::vector<std::string>& Aperture::choices() const {
+const std::vector<std::string>& RadioWidget::choices() const {
 	return data;
 }
-int Aperture::size() const {
+int RadioWidget::size() const {
 	return (int)data.size();
 }
 
-Aperture Widget::Traits<Aperture>::read(Widget& widget) {
+template <>
+RadioWidget Widget::Traits<RadioWidget>::read(Widget& widget) {
 	const char* value;
 	gp_widget_get_value(widget.widget, &value);
 
@@ -43,13 +44,14 @@ Aperture Widget::Traits<Aperture>::read(Widget& widget) {
 		choices.push_back(choice);
 	}
 
-	return Aperture(value_id, std::move(choices));
+	return RadioWidget(value_id, std::move(choices));
 }
 
-void Widget::Traits<Aperture>::write(Widget& widget, const Aperture& value) {
+template <>
+void Widget::Traits<RadioWidget>::write(Widget& widget, const RadioWidget& value) {
 	int len = gp_widget_count_choices(widget.widget);
 	if (len != value.size())
-		throw std::invalid_argument("bad choice");
+		throw std::invalid_argument("bad radiowidget choice");
 	gp_widget_set_value(widget.widget, const_cast<char*>(value.text().c_str()));
 }
 
