@@ -54,19 +54,28 @@ Widget::~Widget() {
 		gp_widget_unref(widget);
 
 	if (parent)
-		gp_widget_unref(parent);
+		gp_widget_unref(parent->widget);
+
+	if (camera)
+		gp_camera_unref(camera->camera);
 }
 
-Widget::Widget(CameraWidget* widget) : widget(widget), parent(nullptr) {
+Widget::Widget(CameraWidget* widget, Camera& camera) :
+	widget(widget), parent(nullptr), camera(&camera) {
+	gp_camera_ref(camera.camera);
 }
 
-Widget::Widget(CameraWidget* widget, Widget& parent) : widget(widget), parent(parent.widget) {
+Widget::Widget(CameraWidget* widget, Widget& parent) :
+	widget(widget), parent(&parent), camera(parent.camera) {
 	gp_widget_ref(parent.widget);
+	gp_camera_ref(camera->camera);
 }
 
-Widget::Widget(Widget&& other) : widget(other.widget), parent(other.parent) {
+Widget::Widget(Widget&& other) :
+	widget(other.widget), parent(other.parent), camera(other.camera) {
 	other.widget = nullptr;
 	other.parent = nullptr;
+	other.camera = nullptr;
 }
 
 Widget Widget::operator[](const char* name_or_label) {
@@ -106,7 +115,7 @@ std::string Widget::Traits<std::string>::read(Widget& widget) {
 }
 
 void Widget::Traits<std::string>::write(Widget& widget, const std::string& value) {
-	gp_widget_get_value(widget.widget, const_cast<char*>(value.c_str()));
+	gp_widget_set_value(widget.widget, const_cast<char*>(value.c_str()));
 }
 
 bool Widget::Traits<bool>::read(Widget& widget) {
@@ -118,6 +127,20 @@ bool Widget::Traits<bool>::read(Widget& widget) {
 void Widget::Traits<bool>::write(Widget& widget, bool value) {
 	int val = (int)value;
 	gp_widget_set_value(widget.widget, &val);
+}
+
+// bubble up the config to the root
+// (todo: store root, not parent?)
+void Widget::set_changed() {
+	if (parent)
+		parent->set_changed();
+	else
+		camera->set_config(*this);
+}
+
+void Camera::set_config(const Widget& cfg) {
+	std::cout << "SET CFG" << std::endl;
+	gp_camera_set_config(camera, cfg.widget, ctx.context);
 }
 
 Camera Context::auto_camera() {
@@ -226,7 +249,7 @@ Widget Camera::config() {
 	int ret;
 	if ((ret = gp_camera_get_config(camera, &w, ctx.context)) < GP_OK)
 		throw Exception("gp_camera_get_config", ret);
-	return Widget(w);
+	return Widget(w, *this);
 }
 
 std::vector<char> Camera::preview() {

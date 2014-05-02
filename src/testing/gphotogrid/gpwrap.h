@@ -1,3 +1,6 @@
+#ifndef GPWRAP_H
+#define GPWRAP_H
+
 /* constant leak from:
 ==30236==    definitely lost: 288 bytes in 3 blocks
 ==30236==    indirectly lost: 38,964 bytes in 99 blocks
@@ -20,6 +23,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <utility>
 
 // raw C api, duplicated so that the C header can be omitted here
 typedef struct _Camera Camera;
@@ -94,19 +98,22 @@ public:
 
 	/* invalid_argument when type does not match */
 	template <class V>
-	void set(const V&& val) {
+	void set(const V& val) {
 		if (type() != Traits<V>::type)
 			throw std::invalid_argument("widget type mismatch");
-		return Traits<V>::write(*this, val);
+		Traits<V>::write(*this, val);
+		set_changed();
 	}
+	Widget(Widget&& other);
 
 protected:
-	Widget(Widget&& other);
 	CameraWidget* widget;
 private:
-	Widget(CameraWidget* widget);
+	void set_changed();
+	Widget(CameraWidget* widget, Camera& cam);
 	Widget(CameraWidget* widget, Widget& parent);
-	CameraWidget* parent;
+	Widget* parent;
+	Camera* camera;
 };
 
 template <>
@@ -123,6 +130,8 @@ struct Widget::Traits<bool> {
 	static void write(Widget& w, bool value);
 };
 
+// XXX TODO FIXME store config here, set_config() with no params
+// another RootWidget
 class Camera {
 public:
 	~Camera();
@@ -131,9 +140,11 @@ public:
 	void save_preview(const std::string& fname);
 	// ctx constructs me
 	friend class Context;
+	friend class Widget;
 
 	Camera(Camera&& other);
 private:
+	void set_config(const Widget& cfg);
 	Camera(::Camera* camera, Context& ctx);
 	Camera(const char *model, const char *port, Context& ctx);
 	::Camera* camera;
@@ -141,3 +152,5 @@ private:
 };
 
 }
+
+#endif

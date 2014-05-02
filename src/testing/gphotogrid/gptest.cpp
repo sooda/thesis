@@ -1,8 +1,11 @@
 #include "gpwrap.h"
+#include "gputil.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
+#include <iterator>
 
 std::string to_str_pad(int i, int pad) {
 	std::stringstream ss;
@@ -16,11 +19,23 @@ void test_single_camera(gp::Context& context, int n) {
 		std::cout << cam.config()["serialnumber"].get<std::string>() << std::endl;
 		std::cout << cam.config()["cameramodel"].get<std::string>() << std::endl;
 		std::cout << cam.config()["main"]["cameramodel"].get<std::string>() << std::endl;
+
 		std::cout << cam.config()["capture"].get<bool>() << std::endl;
 		// why it doesn't get set?
 		// well, takes pics anyway
 		cam.config()["capture"].set<bool>(true);
 		std::cout << cam.config()["capture"].get<bool>() << std::endl;
+
+		gp::Aperture ap = cam.config()["aperture"].get<gp::Aperture>();
+		std::cout << ap.index() << ":" << ap.text() << std::endl;
+		for (auto& x: ap.choices())
+			std::cout << x << " ";
+		std::cout << std::endl;
+
+		ap.set((ap.index() + 1) % ap.size());
+		cam.config()["aperture"].set<gp::Aperture>(ap);
+		gp::Aperture ap2 = cam.config()["aperture"].get<gp::Aperture>();
+		std::cout << ap2.index() << ":" << ap2.text() << std::endl;
 	}
 
 	if (n > 1) {

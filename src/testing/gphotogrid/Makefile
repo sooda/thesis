@@ -6,8 +6,10 @@ CV_LDFLAGS := $(shell pkg-config --libs opencv)
 
 BOOST_LDFLAGS := -lboost_filesystem -lboost_system
 
+GPHOTO2_LDFLAGS := -lgphoto2 -lgphoto2_port
+
 CXXFLAGS := -g -std=c++0x $(WX_CFLAGS) $(CV_CFLAGS)
-LDFLAGS := -std=c++0x $(WX_LDFLAGS) $(CV_LDFLAGS) $(BOOST_LDFLAGS)
+LDFLAGS := -std=c++0x $(WX_LDFLAGS) $(CV_LDFLAGS) $(BOOST_LDFLAGS) $(GPHOTO2_LDFLAGS)
 
 DEPSFLAGS := -MMD -MP
 
@@ -15,10 +17,10 @@ APPS := gphotogrid
 
 all: $(APPS)
 
-gpwraptest:
-	clang++ -g -std=c++0x gpwrap.cpp gptest.cpp -lgphoto2 -lgphoto2_port -Wall -Wextra -o gpwraptest
+gpwraptest: gpwrap.cpp gptest.cpp gputil.cpp gpwrap.h
+	clang++ -g -std=c++0x gpwrap.cpp gptest.cpp gputil.cpp -lgphoto2 -lgphoto2_port -Wall -Wextra -o gpwraptest
 
-gphotogrid: gphotogrid.o imagepanel.o app.o
+gphotogrid: gphotogrid.o imagepanel.o app.o gpwrap.o gputil.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 %.o: %.cpp
