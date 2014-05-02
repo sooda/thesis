@@ -23,7 +23,7 @@ void test_single_camera(gp::Context& context, int n) {
 		std::cout << cam.config()["capture"].get<bool>() << std::endl;
 		// why it doesn't get set?
 		// well, takes pics anyway
-		cam.config()["capture"].set<bool>(true);
+		cam.config()["capture"].set(true);
 		std::cout << cam.config()["capture"].get<bool>() << std::endl;
 
 		gp::Aperture ap = cam.config()["aperture"].get<gp::Aperture>();
@@ -33,7 +33,7 @@ void test_single_camera(gp::Context& context, int n) {
 		std::cout << std::endl;
 
 		ap.set((ap.index() + 1) % ap.size());
-		cam.config()["aperture"].set<gp::Aperture>(ap);
+		cam.config()["aperture"].set(ap);
 		gp::Aperture ap2 = cam.config()["aperture"].get<gp::Aperture>();
 		std::cout << ap2.index() << ":" << ap2.text() << std::endl;
 	}
