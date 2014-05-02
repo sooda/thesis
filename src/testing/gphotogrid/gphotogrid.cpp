@@ -65,6 +65,9 @@ void MainFrame::readCameraParams() {
 
 	auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
 	options->setSliderRange(0, 0, aperture.size());
+
+	auto shutter = app.cams[0].config()["shutterspeed"].get<gp::ShutterSpeed>();
+	options->setSliderRange(1, 0, shutter.size());
 }
 
 wxSizer* MainFrame::create_imagegrid() {
@@ -97,21 +100,29 @@ void MainFrame::create_menus() {
 	Bind(wxEVT_COMMAND_MENU_SELECTED, &MainFrame::onExit, this, wxID_EXIT);
 }
 
-void MainFrame::slider(int n) {
-	std::cout << "slider " << n << std::endl;
+void MainFrame::slider(int id, int value) {
+	std::cout << "slider " << id << " to " << value << std::endl;
 	int i = 0;
-	for (auto& cam: app.cams) {
-		auto cfg = cam.config()["aperture"];
-		auto ap = cfg.get<gp::Aperture>();
-
-		if (n >= 0 && n < ap.size()) {
-			ap.set(n);
-			std::cout << "cam " << i << " new aperture " << ap.text() << std::endl;
-
-			cfg.set(ap);
+	for (int cam = 0; cam < app.cams.size(); cam++) {
+		switch (id) {
+		case 0:
+			setRadioConfig<gp::Aperture>(cam, value, "aperture");
+			break;
+		case 1:
+			setRadioConfig<gp::ShutterSpeed>(cam, value, "shutterspeed");
+			break;
 		}
+	}
+}
+template <class Obj>
+void MainFrame::setRadioConfig(int cam, int value, const char* cfgstr) {
+	auto cfg = app.cams[cam].config()[cfgstr];
+	auto radio = cfg.get<Obj>();
 
-		i++;
+	if (value >= 0 && value < radio.size()) {
+		radio.set(value);
+		cfg.set(radio);
+		std::cout << "cam " << cam << " new " << cfgstr << " " << radio.text() << std::endl;
 	}
 }
 
@@ -119,6 +130,7 @@ void MainFrame::reloadGphoto() {
 	// i hope that this is in the same thread as the render loop
 	// (no race conditions)
 	app.reloadGphoto();
+	readCameraParams();
 }
 
 void MainFrame::refresh() {

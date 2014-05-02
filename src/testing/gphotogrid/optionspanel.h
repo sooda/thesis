@@ -15,7 +15,7 @@ private:
 	MainFrame* main;
 
 	wxButton* btn;
-	wxSlider* slider;
+	std::vector<wxSlider*> sliders;
 };
 
 #endif

@@ -30,12 +30,11 @@ public:
 class MainFrame: public wxFrame {
 public:
 	MainFrame(const wxString& title, App& app);
-	void slider(int n);
+	void slider(int id, int value);
 	void updatePhotos();
 	void refresh();
 	void onIdle(wxIdleEvent& ev);
 	void reloadGphoto();
-
 private:
 	void onExit(wxCommandEvent& event);
 	void onMenu(wxCommandEvent& event);
@@ -44,7 +43,10 @@ private:
 	void create_panels();
 	void readCameraParams();
 	wxSizer* create_imagegrid();
-	void loadImages();
+
+	template <class Obj>
+	void setRadioConfig(int cam, int value, const char* cfgstr);
+	void setShutterSpeed(int cam, int value);
 
 	App& app;
 	std::vector<ImagePanel*> images;
