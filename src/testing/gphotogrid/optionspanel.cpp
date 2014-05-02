@@ -3,18 +3,18 @@
 
 OptionsPanel::OptionsPanel(MainFrame* parent) : wxPanel(parent), main(parent) {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-	sizer->Add(btn = new wxButton(this, wxID_ANY, "foo"),
+	sizer->Add(btn = new wxButton(this, wxID_ANY, "rescan cameras"),
 			0, wxEXPAND);
 	btn->Bind(wxEVT_BUTTON, &OptionsPanel::onButton, this, wxID_ANY);
 
 	sliders.resize(3);
-
-	int id = 0;
-	for (auto& slider: sliders) {
-		sizer->Add(slider = new wxSlider(this, id++, 0, 0, 1,
+	static const char* labels[] = { "aperture", "shutter speed", "iso speed" };
+	for (int i = 0; i < sliders.size(); i++) {
+		sizer->Add(new wxStaticText(this, wxID_ANY, labels[i]));
+		sizer->Add(sliders[i] = new wxSlider(this, i, 0, 0, 0, // val min max
 						wxDefaultPosition, wxDefaultSize, wxSL_LABELS),
-				0, wxEXPAND);
-		slider->Bind(wxEVT_SLIDER, &OptionsPanel::onSlider, this);
+				0, wxEXPAND | wxALL, 3); // no proportion, small border (padding)
+		sliders[i]->Bind(wxEVT_SLIDER, &OptionsPanel::onSlider, this);
 	}
 
 	//sizer->SetSizeHints(this);
