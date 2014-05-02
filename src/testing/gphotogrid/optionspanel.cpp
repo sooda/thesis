@@ -21,8 +21,9 @@ OptionsPanel::OptionsPanel(MainFrame* parent) : wxPanel(parent), main(parent) {
 	SetSizer(sizer);
 }
 
-void OptionsPanel::setSliderRange(int id, int min, int max) {
+void OptionsPanel::setSliderRange(int id, int min, int max, int current) {
 	sliders.at(id)->SetRange(min, max);
+	sliders.at(id)->SetValue(current);
 }
 
 void OptionsPanel::onSlider(wxCommandEvent& evt) {

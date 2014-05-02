@@ -66,13 +66,13 @@ void MainFrame::readCameraParams() {
 	// assume that all cameras are the same, use only zeroth
 
 	auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
-	options->setSliderRange(0, 0, aperture.size() - 1);
+	options->setSliderRange(0, 0, aperture.size() - 1, aperture.index());
 
 	auto shutter = app.cams[0].config()["shutterspeed"].get<gp::ShutterSpeed>();
-	options->setSliderRange(1, 0, shutter.size() - 1);
+	options->setSliderRange(1, 0, shutter.size() - 1, shutter.index());
 
 	auto iso = app.cams[0].config()["iso"].get<gp::Iso>();
-	options->setSliderRange(2, 0, iso.size() - 1);
+	options->setSliderRange(2, 0, iso.size() - 1, iso.index());
 }
 
 wxSizer* MainFrame::create_imagegrid() {
