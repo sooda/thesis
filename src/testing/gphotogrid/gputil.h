@@ -40,6 +40,6 @@ public:
 	ShutterSpeed(const RadioWidget& r) : RadioWidget(r) {}
 };
 template <>
-struct Widget::Traits<ShutterSpeed> : RadioTraits<Aperture> {};
+struct Widget::Traits<ShutterSpeed> : RadioTraits<ShutterSpeed> {};
 
 }
