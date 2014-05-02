@@ -63,11 +63,16 @@ void MainFrame::readCameraParams() {
 	if (app.cams.size() == 0)
 		return;
 
+	// assume that all cameras are the same, use only zeroth
+
 	auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
-	options->setSliderRange(0, 0, aperture.size());
+	options->setSliderRange(0, 0, aperture.size() - 1);
 
 	auto shutter = app.cams[0].config()["shutterspeed"].get<gp::ShutterSpeed>();
-	options->setSliderRange(1, 0, shutter.size());
+	options->setSliderRange(1, 0, shutter.size() - 1);
+
+	auto iso = app.cams[0].config()["iso"].get<gp::Iso>();
+	options->setSliderRange(2, 0, iso.size() - 1);
 }
 
 wxSizer* MainFrame::create_imagegrid() {
@@ -106,23 +111,28 @@ void MainFrame::slider(int id, int value) {
 	for (int cam = 0; cam < app.cams.size(); cam++) {
 		switch (id) {
 		case 0:
-			setRadioConfig<gp::Aperture>(cam, value, "aperture");
+			setRadioConfig<gp::Aperture>(cam, value);
 			break;
 		case 1:
-			setRadioConfig<gp::ShutterSpeed>(cam, value, "shutterspeed");
+			setRadioConfig<gp::ShutterSpeed>(cam, value);
 			break;
+		case 2:
+			setRadioConfig<gp::Iso>(cam, value);
+			break;
+		default:
+			throw std::out_of_range("bad slider index");
 		}
 	}
 }
 template <class Obj>
-void MainFrame::setRadioConfig(int cam, int value, const char* cfgstr) {
-	auto cfg = app.cams[cam].config()[cfgstr];
-	auto radio = cfg.get<Obj>();
+void MainFrame::setRadioConfig(int cam, int value) {
+	auto cfg = app.cams[cam].config()[Obj::gpname];
+	auto radio = cfg.template get<Obj>();
 
 	if (value >= 0 && value < radio.size()) {
 		radio.set(value);
 		cfg.set(radio);
-		std::cout << "cam " << cam << " new " << cfgstr << " " << radio.text() << std::endl;
+		std::cout << "cam " << cam << " new " << Obj::gpname << " " << radio.text() << std::endl;
 	}
 }
 

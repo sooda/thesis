@@ -45,8 +45,7 @@ private:
 	wxSizer* create_imagegrid();
 
 	template <class Obj>
-	void setRadioConfig(int cam, int value, const char* cfgstr);
-	void setShutterSpeed(int cam, int value);
+	void setRadioConfig(int cam, int value);
 
 	App& app;
 	std::vector<ImagePanel*> images;

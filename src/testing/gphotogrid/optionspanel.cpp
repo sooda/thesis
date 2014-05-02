@@ -7,7 +7,7 @@ OptionsPanel::OptionsPanel(MainFrame* parent) : wxPanel(parent), main(parent) {
 			0, wxEXPAND);
 	btn->Bind(wxEVT_BUTTON, &OptionsPanel::onButton, this, wxID_ANY);
 
-	sliders.resize(2);
+	sliders.resize(3);
 
 	int id = 0;
 	for (auto& slider: sliders) {
