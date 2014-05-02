@@ -1,0 +1,5 @@
+*.d
+gphotogrid
+gpwraptest
+.ycm_extra_conf.py
+*.vis

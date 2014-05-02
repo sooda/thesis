@@ -1,8 +1,8 @@
 WX_CFLAGS := $(shell wx-config --cflags)
 WX_LDFLAGS := $(shell wx-config --libs core)
 
-CV_CFLAGS := $(shell pkg-config --cflags opencv)
-CV_LDFLAGS := $(shell pkg-config --libs opencv)
+CV_CFLAGS := # $(shell pkg-config --cflags opencv)
+CV_LDFLAGS := # $(shell pkg-config --libs opencv)
 
 BOOST_LDFLAGS := -lboost_filesystem -lboost_system
 
@@ -20,7 +20,7 @@ all: $(APPS)
 gpwraptest: gpwrap.cpp gptest.cpp gputil.cpp gpwrap.h
 	clang++ -g -std=c++0x gpwrap.cpp gptest.cpp gputil.cpp -lgphoto2 -lgphoto2_port -Wall -Wextra -o gpwraptest
 
-gphotogrid: gphotogrid.o imagepanel.o app.o gpwrap.o gputil.o
+gphotogrid: gphotogrid.o optionspanel.o imagepanel.o app.o gpwrap.o gputil.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 %.o: %.cpp
