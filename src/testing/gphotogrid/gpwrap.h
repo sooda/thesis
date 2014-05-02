@@ -41,6 +41,7 @@ class Context {
 public:
 	Context();
 	Camera auto_camera();
+	std::vector<Camera> all_cameras();
 	~Context();
 
 	friend class Camera;
@@ -48,6 +49,7 @@ private:
 	static void error_func(GPContext *context, const char *msg, void *data);
 	static void msg_func(GPContext *context, const char *msg, void *data);
 	static void status_func(GPContext *context, const char *msg, void *data);
+	static void log_func(int level, const char *domain, const char *str, void *data);
 
 	GPContext* context;
 
@@ -126,11 +128,14 @@ public:
 	~Camera();
 	Widget config();
 	std::vector<char> preview();
+	void save_preview(const std::string& fname);
 	// ctx constructs me
 	friend class Context;
 
+	Camera(Camera&& other);
 private:
 	Camera(::Camera* camera, Context& ctx);
+	Camera(const char *model, const char *port, Context& ctx);
 	::Camera* camera;
 	Context& ctx;
 };

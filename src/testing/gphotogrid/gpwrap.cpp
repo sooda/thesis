@@ -2,6 +2,8 @@
 #include <gphoto2/gphoto2.h>
 #include <iostream>
 #include <algorithm>
+#include <memory>
+#include <fstream>
 
 namespace gp {
 Exception::Exception(const std::string& msg, int gpnum) : 
@@ -14,6 +16,12 @@ Context::Context() : context(gp_context_new()) {
 	gp_context_set_error_func(context, error_func, NULL);
 	gp_context_set_message_func(context, msg_func, NULL);
 	gp_context_set_status_func(context, status_func, NULL);
+	// debug logging is massive
+#if 0
+	// maybe should have a top-level class for this as it's not context specific
+	// typecast because enum vs int in header
+	gp_log_add_func(GP_LOG_DEBUG, (GPLogFunc)log_func, NULL);
+#endif
 }
 
 Context::~Context() {
@@ -35,6 +43,10 @@ void Context::status_func(GPContext* /*context*/, const char* msg, void* /*data*
 		<< msg << std::endl;
 }
 
+void Context::log_func(int level, const char* domain, const char* str, void* /*data*/) {
+	std::cerr << "[gphoto2 log (level=" << level << ", domain=" << domain << "]: "
+		<< str << std::endl;
+}
 Widget::~Widget() {
 	// move ctor nulls this
 	// HOX seems that parent deletes its children without looking at the refcount
@@ -121,14 +133,92 @@ Camera Context::auto_camera() {
 	return Camera(cam, *this);
 }
 
+std::vector<Camera> Context::all_cameras() {
+	CameraList *list;
+	int ret;
+	if ((ret = gp_list_new(&list)) < GP_OK) {
+		throw std::bad_alloc(); // or Exception
+	}
+	if ((ret = gp_camera_autodetect(list, context)) < GP_OK) {
+		gp_list_free(list);
+		throw Exception("gp_camera_autodetect", ret);
+	}
+
+	std::vector<Camera> cams;
+	for (int i = 0, count = ret; i < count; i++) {
+		const char *name, *value;
+		gp_list_get_name(list, i, &name);
+		gp_list_get_value(list, i, &value);
+		std::cout << name << "|" << value << std::endl;
+		// cannot emplace because private ctor
+		cams.push_back(Camera(name, value, *this));
+	}
+	return cams;
+}
+
 Camera::Camera(::Camera* camera, Context& ctx) : camera(camera), ctx(ctx) {
 	gp_context_ref(ctx.context);
+}
+
+// stolen from libphoto2 examples/autodetect.c
+// most of this seems to be in gp_camera_init autodetection too
+Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullptr), ctx(ctx) {
+	// safe deleter to free camera memory
+	auto cam_unref_ignore_error = [](::Camera* c) { gp_camera_unref(c); };
+	typedef std::unique_ptr<::Camera, decltype(cam_unref_ignore_error)> SafeCamera;
+#define GP_OR_THROW(ret, func, ...) \
+	if ((ret = func(__VA_ARGS__)) < GP_OK) throw Exception(#func, ret);
+
+	static GPPortInfoList		*portinfolist = nullptr;
+	static CameraAbilitiesList	*abilities = nullptr;
+	int		ret;
+
+	//if ((ret = gp_camera_new (camera)) < GP_OK)
+	//	throw Exception("gp_camera_new", ret);
+	GP_OR_THROW(ret, gp_camera_new, &camera);
+	SafeCamera cam_deleter(camera, cam_unref_ignore_error);
+
+	if (!abilities) {
+		/* Load all the camera drivers we have... */
+		GP_OR_THROW(ret, gp_abilities_list_new, &abilities);
+		GP_OR_THROW(ret, gp_abilities_list_load, abilities, ctx.context);
+	}
+
+	/* First lookup the model / driver */
+	int model_idx;
+    GP_OR_THROW(model_idx, gp_abilities_list_lookup_model, abilities, model);
+	CameraAbilities my_abilities;
+	GP_OR_THROW(ret, gp_abilities_list_get_abilities, abilities, model_idx, &my_abilities);
+	GP_OR_THROW(ret, gp_camera_set_abilities, camera, my_abilities);
+
+	if (!portinfolist) {
+		/* Load all the port drivers we have... */
+		GP_OR_THROW(ret, gp_port_info_list_new, &portinfolist);
+		GP_OR_THROW(ret, gp_port_info_list_load, portinfolist);
+	}
+
+	/* Then associate the camera with the specified port */
+	int path_idx;
+	GP_OR_THROW(path_idx, gp_port_info_list_lookup_path, portinfolist, port);
+	GPPortInfo myportinfo;
+	GP_OR_THROW(ret, gp_port_info_list_get_info, portinfolist, path_idx, &myportinfo);
+	GP_OR_THROW(ret, gp_camera_set_port_info, camera, myportinfo);
+
+	cam_deleter.release(); // nothing can fail anymore here
+	gp_context_ref(ctx.context);
+}
+
+
+Camera::Camera(Camera&& other) : camera(other.camera), ctx(other.ctx) {
+	gp_context_ref(ctx.context);
+	other.camera = nullptr;
 }
 
 Camera::~Camera() {
 	gp_context_unref(ctx.context);
 	//gp_camera_exit(camera,ctx.context);
-	gp_camera_unref(camera); // freeing also exits it, i guess
+	if (camera)
+		gp_camera_unref(camera); // freeing also exits it, i guess
 }
 
 Widget Camera::config() {
@@ -162,6 +252,12 @@ std::vector<char> Camera::preview() {
 
 	gp_file_unref(file);
 	return buf;
+}
+
+void Camera::save_preview(const std::string& fname) {
+	auto pic = preview();
+	std::ofstream fs(fname);
+	std::copy(pic.begin(), pic.end(), std::ostreambuf_iterator<char>(fs));
 }
 
 }
