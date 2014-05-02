@@ -55,4 +55,8 @@ void Widget::Traits<RadioWidget>::write(Widget& widget, const RadioWidget& value
 	gp_widget_set_value(widget.widget, const_cast<char*>(value.text().c_str()));
 }
 
+const char* Aperture::gpname = "aperture";
+const char* ShutterSpeed::gpname = "shutterspeed";
+const char* Iso::gpname = "iso";
+
 }

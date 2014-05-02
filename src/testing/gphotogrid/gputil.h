@@ -30,6 +30,7 @@ struct RadioTraits {
 
 class Aperture : public RadioWidget {
 public:
+	static const char* gpname; // "aperture"
 	Aperture(const RadioWidget& r) : RadioWidget(r) {}
 };
 template <>
@@ -37,9 +38,18 @@ struct Widget::Traits<Aperture> : RadioTraits<Aperture> {};
 
 class ShutterSpeed : public RadioWidget {
 public:
+	static const char* gpname; // "shutterspeed"
 	ShutterSpeed(const RadioWidget& r) : RadioWidget(r) {}
 };
 template <>
 struct Widget::Traits<ShutterSpeed> : RadioTraits<ShutterSpeed> {};
+
+class Iso : public RadioWidget {
+public:
+	static const char* gpname; // "iso"
+	Iso(const RadioWidget& r) : RadioWidget(r) {}
+};
+template <>
+struct Widget::Traits<Iso> : RadioTraits<Iso> {};
 
 }
