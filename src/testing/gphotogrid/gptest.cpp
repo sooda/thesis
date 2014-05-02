@@ -42,6 +42,12 @@ void test_single_camera(gp::Context& context, int n) {
 		for (auto& x: ss.choices())
 			std::cout << x << " ";
 		std::cout << std::endl;
+
+		auto iso = cam.config()["iso"].get<gp::Iso>();
+		std::cout << iso.index() << ":" << iso.text() << std::endl;
+		for (auto& x: iso.choices())
+			std::cout << x << " ";
+		std::cout << std::endl;
 	}
 
 	if (n > 1) {
