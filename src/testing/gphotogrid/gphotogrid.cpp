@@ -6,6 +6,7 @@
 #include <boost/filesystem.hpp>
 #include <wx/timer.h>
 #include <wx/mstream.h>
+#include <chrono>
 
 bool GfxUi::OnInit()
 {
@@ -27,6 +28,8 @@ MainFrame::MainFrame(const wxString& title, App& app) :
 	//timer = new RenderTimer(*this);
 	//timer->start();
 #else
+	lasttime = Clock::now();
+	frames = 0;
 	Bind(wxEVT_IDLE, &MainFrame::onIdle, this);
 #endif
 }
@@ -147,6 +150,21 @@ void MainFrame::refresh() {
 	updatePhotos();
 	for (auto im: images) {
 		im->Refresh();
+	}
+	framecalc();
+}
+void MainFrame::framecalc() {
+	typedef std::chrono::duration<float> fsec;
+
+	auto clock = Clock::now();
+	fsec fs = clock - lasttime;
+	float secs = fs.count();
+	frames++;
+
+	if (secs > 5.0f) {
+		std::cout << frames << " in " << secs << " secs = " << (frames / secs) << " fps" << std::endl;
+		frames = 0;
+		lasttime = clock;
 	}
 }
 void MainFrame::updatePhotos() {

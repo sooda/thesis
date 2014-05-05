@@ -5,6 +5,7 @@
 #include "imagepanel.h"
 #include "optionspanel.h"
 #include <wx/wx.h>
+#include <chrono>
 
 // image reload loop with a timer instead of idle events
 // seems to hog the events somehow
@@ -53,6 +54,10 @@ private:
 #ifdef LOOP_TIMER
 	RenderTimer* timer;
 #endif
+	typedef std::chrono::high_resolution_clock Clock;
+	Clock::time_point lasttime;
+	int frames;
+	void framecalc();
 };
 
 #endif
