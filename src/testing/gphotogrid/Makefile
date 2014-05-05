@@ -23,6 +23,9 @@ gpwraptest: gpwrap.cpp gptest.cpp gputil.cpp gpwrap.h
 gphotogrid: gphotogrid.o optionspanel.o imagepanel.o app.o gpwrap.o gputil.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
+timelinetest: timelinetest.o timeline.o
+	$(CXX) $(LDFLAGS) $^ -o $@
+
 %.o: %.cpp
 	$(CXX) -c $(CXXFLAGS) $(DEPSFLAGS) $<
 

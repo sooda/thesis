@@ -16,7 +16,7 @@ void ImagePanel::paintEvent(wxPaintEvent&) {
 }
 
 void ImagePanel::paintNow() {
-	wxClientDC dc(this);
+	wxClientDC dc(this); // TODO: Refresh() instead?
 	render(dc);
 }
 

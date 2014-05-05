@@ -1,5 +1,6 @@
 *.d
 gphotogrid
 gpwraptest
+timelinetest
 .ycm_extra_conf.py
 *.vis
