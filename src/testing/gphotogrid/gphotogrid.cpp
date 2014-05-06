@@ -2,6 +2,7 @@
 #include "gphotogrid.h"
 #include "gputil.h"
 #include <iostream>
+#include <sstream>
 #include <wx/timer.h>
 #include <wx/mstream.h>
 
@@ -169,7 +170,7 @@ void MainFrame::framecalc() {
 }
 void MainFrame::updatePhotos() {
 	// if no sources, no update needed
-	if (app.cams.size() == 0)
+	if (app.cams.size() == 0 || !app.previewfeed.enabled())
 		return;
 
 	// all have the same size
@@ -183,6 +184,7 @@ void MainFrame::updatePhotos() {
 		// log timestamps, and slurp further ones, until got the latest
 		do {
 			timeline->insert(i, time_since(capture.second, renderinittime));
+			numpics[i]++;
 		} while (app.previewfeed.getQueue(i).try_pop(capture));
 
 		wxMemoryInputStream stream(&capture.first[0], capture.first.size());
@@ -199,13 +201,21 @@ void MainFrame::updatePhotos() {
 			}
 		}
 	}
+
+	std::stringstream ss;
+	ss << app.cams.size() << " cameras; frames per cam:";
+	for (int i = 0; i < numpics.size(); i++) {
+		ss << " " << i << ":" << numpics[i];
+	}
+	SetStatusText(ss.str());
 }
 
 void MainFrame::enableRender(bool enable) {
 	if (enable) {
 		renderinittime = Clock::now();
-		app.previewfeed.enable();
+		numpics = std::vector<int>(app.cams.size());
 		timeline->clear();
+		app.previewfeed.enable();
 	} else {
 		app.previewfeed.disable();
 	}

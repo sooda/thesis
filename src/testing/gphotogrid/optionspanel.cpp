@@ -12,7 +12,7 @@ OptionsPanel::OptionsPanel(MainFrame* parent) : wxPanel(parent), main(parent) {
 	enablecheck->Bind(wxEVT_CHECKBOX, &OptionsPanel::onCheckbox, this);
 	enablecheck->SetValue(true);
 
-	sizer->Add(synccheck = new wxCheckBox(this, wxID_ANY, "sync grabbers"));
+	sizer->Add(synccheck = new wxCheckBox(this, wxID_ANY, "\"sync\" grabbers"));
 	synccheck->Disable();
 	synccheck->Bind(wxEVT_CHECKBOX, &OptionsPanel::onSyncbox, this);
 
