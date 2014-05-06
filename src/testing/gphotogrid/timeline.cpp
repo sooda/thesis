@@ -192,7 +192,10 @@ void Timeline::paintPoints(wxPaintDC& dc, int ox, int oy, int w, int h) {
 			int x = tick2px(m, w);
 			int y = linepos(it->second, h);
 			dc.DrawCircle(ox + x, oy + y, radius);
-			dc.DrawLine(ox + x, oy + y, ox + x, oy + h);
+			// line from current to bottom looks confusing because the lines overlap the next lines.
+			// so, just draw a line from top to bottom
+			// dc.DrawLine(ox + x, oy + y, ox + x, oy + h);
+			dc.DrawLine(ox + x, oy, ox + x, oy + h);
 		}
 	}
 }

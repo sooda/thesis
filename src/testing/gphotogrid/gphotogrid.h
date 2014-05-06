@@ -12,12 +12,6 @@
 // seems to hog the events somehow
 // #define LOOP_TIMER
 
-class GfxUi : public wxApp {
-public:
-	virtual bool OnInit();
-	App app;
-};
-
 #ifdef LOOP_TIMER
 class MainFrame;
 class RenderTimer : public wxTimer {
@@ -37,6 +31,8 @@ public:
 	void refresh();
 	void onIdle(wxIdleEvent& ev);
 	void reloadGphoto();
+	void enableRender(bool enable);
+	void syncGrabbers(bool sync);
 private:
 	typedef std::chrono::high_resolution_clock Clock;
 
@@ -59,9 +55,12 @@ private:
 #ifdef LOOP_TIMER
 	RenderTimer* timer;
 #endif
-	Clock::time_point lasttime, renderinittime;
+	Clock::time_point lasttime;
 	int frames;
 	void framecalc();
+
+	// background threads for preview image grabbing
+	Clock::time_point renderinittime;
 };
 
 #endif

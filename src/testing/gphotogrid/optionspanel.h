@@ -10,12 +10,16 @@ public:
 	void setSliderRange(int id, int min, int max, int current);
 	void onSlider(wxCommandEvent& event);
 	void onButton(wxCommandEvent& event);
+	void onCheckbox(wxCommandEvent& event);
+	void onSyncbox(wxCommandEvent& event);
 
 private:
 	MainFrame* main;
 
 	wxButton* btn;
 	std::vector<wxSlider*> sliders;
+	wxCheckBox* enablecheck;
+	wxCheckBox* synccheck;
 };
 
 #endif

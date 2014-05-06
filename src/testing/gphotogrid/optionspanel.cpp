@@ -6,6 +6,15 @@ OptionsPanel::OptionsPanel(MainFrame* parent) : wxPanel(parent), main(parent) {
 	sizer->Add(btn = new wxButton(this, wxID_ANY, "rescan cameras"),
 			0, wxEXPAND);
 	btn->Bind(wxEVT_BUTTON, &OptionsPanel::onButton, this, wxID_ANY);
+	btn->Disable();
+
+	sizer->Add(enablecheck = new wxCheckBox(this, wxID_ANY, "enable render"));
+	enablecheck->Bind(wxEVT_CHECKBOX, &OptionsPanel::onCheckbox, this);
+	enablecheck->SetValue(true);
+
+	sizer->Add(synccheck = new wxCheckBox(this, wxID_ANY, "sync grabbers"));
+	synccheck->Disable();
+	synccheck->Bind(wxEVT_CHECKBOX, &OptionsPanel::onSyncbox, this);
 
 	sliders.resize(3);
 	static const char* labels[] = { "aperture", "shutter speed", "iso speed" };
@@ -33,4 +42,14 @@ void OptionsPanel::onSlider(wxCommandEvent& evt) {
 
 void OptionsPanel::onButton(wxCommandEvent&) {
 	main->reloadGphoto();
+}
+
+void OptionsPanel::onCheckbox(wxCommandEvent& evt) {
+	btn->Enable(!evt.IsChecked());
+	synccheck->Enable(!evt.IsChecked());
+	main->enableRender(evt.IsChecked());
+}
+
+void OptionsPanel::onSyncbox(wxCommandEvent& evt) {
+	main->syncGrabbers(evt.IsChecked());
 }

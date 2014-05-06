@@ -2,34 +2,22 @@
 #include "gphotogrid.h"
 #include "gputil.h"
 #include <iostream>
-#include <algorithm>
-#include <boost/filesystem.hpp>
 #include <wx/timer.h>
 #include <wx/mstream.h>
-#include <chrono>
-
-bool GfxUi::OnInit()
-{
-	wxInitAllImageHandlers();
-	// note that frames/panes are owned by wx, not leaked
-	wxFrame *mainframe = new MainFrame("Hello World", app);
-	mainframe->Show(true);
-	return true;
-}
-
-wxIMPLEMENT_APP(GfxUi);
-
 
 MainFrame::MainFrame(const wxString& title, App& app) :
 		wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(1024, 768)), app(app) {
 	create_menus();
 	create_panels();
+
 #ifdef LOOP_TIMER
 	//timer = new RenderTimer(*this);
 	//timer->start();
 #else
-	lasttime = Clock::now();
 	frames = 0;
+	lasttime = Clock::now();
+
+	enableRender(true);
 	Bind(wxEVT_IDLE, &MainFrame::onIdle, this);
 #endif
 }
@@ -53,7 +41,6 @@ void MainFrame::onIdle(wxIdleEvent& ev) {
 #endif
 
 void MainFrame::readCameraParams() {
-
 	timeline->Destroy();
 	timeline = new Timeline(this, app.cams.size());
 	GetSizer()->Add(timeline, 1, wxEXPAND);
@@ -71,7 +58,7 @@ void MainFrame::readCameraParams() {
 		auto iso = app.cams[0].config()["iso"].get<gp::Iso>();
 		options->setSliderRange(2, 0, iso.size() - 1, iso.index());
 	}
-	renderinittime = Clock::now();
+
 	Refresh();
 }
 
@@ -150,8 +137,7 @@ void MainFrame::setRadioConfig(int cam, int value) {
 }
 
 void MainFrame::reloadGphoto() {
-	// i hope that this is in the same thread as the render loop
-	// (no race conditions)
+	assert(!app.previewfeed.enabled());
 	app.reloadGphoto();
 	readCameraParams();
 }
@@ -172,7 +158,7 @@ float MainFrame::time_since(MainFrame::Clock::time_point now, MainFrame::Clock::
 
 void MainFrame::framecalc() {
 	auto clock = Clock::now();
-	float secs = time_since(lasttime, clock);
+	float secs = time_since(clock, lasttime);
 	frames++;
 
 	if (secs > 5.0f) {
@@ -190,20 +176,17 @@ void MainFrame::updatePhotos() {
 	auto newsize = images[0]->GetSize();
 
 	for (int i = 0; i < std::min(app.cams.size(), images.size()); i++) {
-		gp::Camera& cam = app.cams[i];
-		std::vector<char> jpeg;
-
-		try {
-			jpeg = cam.preview();
-		} catch (gp::Exception& ex) {
-			std::cout << "cam " << i << ": " << ex.what() << std::endl;
+		PreviewFeed::TimedJpegBuffer capture;
+		// test if there is anything
+		if (!app.previewfeed.getQueue(i).try_pop(capture))
 			continue;
-		}
-		timeline->insert(i, time_since(Clock::now(), renderinittime));
+		// log timestamps, and slurp further ones, until got the latest
+		do {
+			timeline->insert(i, time_since(capture.second, renderinittime));
+		} while (app.previewfeed.getQueue(i).try_pop(capture));
 
-		wxMemoryInputStream stream(&jpeg[0], jpeg.size());
+		wxMemoryInputStream stream(&capture.first[0], capture.first.size());
 		wxImage im(stream, wxBITMAP_TYPE_JPEG);
-
 		// XXX: aspect ratio correction?
 		im.Rescale(newsize.GetWidth(), newsize.GetHeight(), wxIMAGE_QUALITY_NEAREST);
 
@@ -216,6 +199,19 @@ void MainFrame::updatePhotos() {
 			}
 		}
 	}
+}
+
+void MainFrame::enableRender(bool enable) {
+	if (enable) {
+		renderinittime = Clock::now();
+		app.previewfeed.enable();
+		timeline->clear();
+	} else {
+		app.previewfeed.disable();
+	}
+}
+void MainFrame::syncGrabbers(bool sync) {
+	app.previewfeed.setsync(sync);
 }
 
 void MainFrame::onMenu(wxCommandEvent&) {
