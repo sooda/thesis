@@ -34,6 +34,7 @@ Timeline::Timeline(wxFrame* parent, int lines) : wxPanel(parent),
 
 void Timeline::insert(int line, Timeline::Mark mark) {
 	marks.push_back(std::make_pair(mark, line));
+	Refresh();
 }
 
 void Timeline::onMotion(wxMouseEvent& evt) {
@@ -271,7 +272,9 @@ void Timeline::paintInfo(wxPaintDC& dc, int ox, int oy, int w, int h) {
 	dc.SetTextForeground(textColor);
 	dc.SetTextBackground(backgroundColor);
 	std::string msg = "mouse tick " + float2str(mousetick, 5);
-	if (dragtick != -1)
+	if (dragtick != -1) {
 		msg += " drag start " + float2str(dragtick, 5);
+		msg += " difference " + float2str(mousetick - dragtick, 5);
+	}
 	dc.DrawText(msg, ox, oy);
 }

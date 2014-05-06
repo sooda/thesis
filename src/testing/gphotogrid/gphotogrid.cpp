@@ -52,30 +52,40 @@ void MainFrame::onIdle(wxIdleEvent& ev) {
 }
 #endif
 
-void MainFrame::create_panels() {
-	auto sizer = new wxBoxSizer(wxHORIZONTAL);
-	// opts lots thinner than image panel
-	sizer->Add(options = new OptionsPanel(this), 1, wxEXPAND);
-	sizer->Add(create_imagegrid(), 4, wxEXPAND);
-	SetSizer(sizer);
+void MainFrame::readCameraParams() {
 
-	readCameraParams();
+	timeline->Destroy();
+	timeline = new Timeline(this, app.cams.size());
+	GetSizer()->Add(timeline, 1, wxEXPAND);
+	Layout();
+
+	if (app.cams.size() > 0) {
+		// assume that all cameras are the same, use only zeroth
+
+		auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
+		options->setSliderRange(0, 0, aperture.size() - 1, aperture.index());
+
+		auto shutter = app.cams[0].config()["shutterspeed"].get<gp::ShutterSpeed>();
+		options->setSliderRange(1, 0, shutter.size() - 1, shutter.index());
+
+		auto iso = app.cams[0].config()["iso"].get<gp::Iso>();
+		options->setSliderRange(2, 0, iso.size() - 1, iso.index());
+	}
+	renderinittime = Clock::now();
+	Refresh();
 }
 
-void MainFrame::readCameraParams() {
-	if (app.cams.size() == 0)
-		return;
+void MainFrame::create_panels() {
+	auto horsizer = new wxBoxSizer(wxHORIZONTAL);
+	// opts lots thinner than image panel
+	horsizer->Add(options = new OptionsPanel(this), 1, wxEXPAND);
+	horsizer->Add(create_imagegrid(), 4, wxEXPAND);
+	auto versizer = new wxBoxSizer(wxVERTICAL);
+	versizer->Add(horsizer, 4, wxEXPAND);
+	versizer->Add(timeline = new Timeline(this, app.cams.size()));
+	SetSizer(versizer);
 
-	// assume that all cameras are the same, use only zeroth
-
-	auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
-	options->setSliderRange(0, 0, aperture.size() - 1, aperture.index());
-
-	auto shutter = app.cams[0].config()["shutterspeed"].get<gp::ShutterSpeed>();
-	options->setSliderRange(1, 0, shutter.size() - 1, shutter.index());
-
-	auto iso = app.cams[0].config()["iso"].get<gp::Iso>();
-	options->setSliderRange(2, 0, iso.size() - 1, iso.index());
+	readCameraParams();
 }
 
 wxSizer* MainFrame::create_imagegrid() {
@@ -153,12 +163,16 @@ void MainFrame::refresh() {
 	}
 	framecalc();
 }
-void MainFrame::framecalc() {
-	typedef std::chrono::duration<float> fsec;
 
+float MainFrame::time_since(MainFrame::Clock::time_point now, MainFrame::Clock::time_point before) const {
+	typedef std::chrono::duration<float> fsec;
+	fsec fs = now - before;
+	return fs.count();
+}
+
+void MainFrame::framecalc() {
 	auto clock = Clock::now();
-	fsec fs = clock - lasttime;
-	float secs = fs.count();
+	float secs = time_since(lasttime, clock);
 	frames++;
 
 	if (secs > 5.0f) {
@@ -185,6 +199,7 @@ void MainFrame::updatePhotos() {
 			std::cout << "cam " << i << ": " << ex.what() << std::endl;
 			continue;
 		}
+		timeline->insert(i, time_since(Clock::now(), renderinittime));
 
 		wxMemoryInputStream stream(&jpeg[0], jpeg.size());
 		wxImage im(stream, wxBITMAP_TYPE_JPEG);

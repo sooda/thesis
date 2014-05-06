@@ -4,6 +4,7 @@
 #include "app.h"
 #include "imagepanel.h"
 #include "optionspanel.h"
+#include "timeline.h"
 #include <wx/wx.h>
 #include <chrono>
 
@@ -37,6 +38,8 @@ public:
 	void onIdle(wxIdleEvent& ev);
 	void reloadGphoto();
 private:
+	typedef std::chrono::high_resolution_clock Clock;
+
 	void onExit(wxCommandEvent& event);
 	void onMenu(wxCommandEvent& event);
 
@@ -47,15 +50,16 @@ private:
 
 	template <class Obj>
 	void setRadioConfig(int cam, int value);
+	float time_since(Clock::time_point now, Clock::time_point before) const;
 
 	App& app;
 	std::vector<ImagePanel*> images;
 	OptionsPanel* options;
+	Timeline* timeline;
 #ifdef LOOP_TIMER
 	RenderTimer* timer;
 #endif
-	typedef std::chrono::high_resolution_clock Clock;
-	Clock::time_point lasttime;
+	Clock::time_point lasttime, renderinittime;
 	int frames;
 	void framecalc();
 };
