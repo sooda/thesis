@@ -5,7 +5,7 @@
 #include <sstream>
 
 Timeline::Timeline(wxFrame* parent, int lines) : wxPanel(parent),
-		lines(lines),
+		lines(lines), follow(false),
 		backgroundColor("black"),
 		headColor("dark grey"),
 		majorTickColor("red"),
@@ -14,7 +14,7 @@ Timeline::Timeline(wxFrame* parent, int lines) : wxPanel(parent),
 		cursorBackColor("dark green"),
 		textColor("grey"),
 		markColor("white"),
-		zoomratio(1.5), scrollpanratio(0.1),
+		zoomratio(1.5), scrollpanratio(0.1), followratio(0.9),
 		majorTicks(9), minorTicks(4),
 		start(0.0), length(10.0),
 		mousetick(0.0), dragtick(-1.0) {
@@ -34,7 +34,24 @@ Timeline::Timeline(wxFrame* parent, int lines) : wxPanel(parent),
 
 void Timeline::insert(int line, Timeline::Mark mark) {
 	marks.push_back(std::make_pair(mark, line));
+	if (follow) {
+		// (mark - start) / length = followratio
+		start = mark - followratio * length;
+	}
 	Refresh();
+}
+
+void Timeline::clear() {
+	marks.clear();
+	Refresh();
+}
+
+void Timeline::followInsertions(bool f) {
+	follow = f;
+}
+
+size_t Timeline::size() const {
+	return marks.size();
 }
 
 void Timeline::onMotion(wxMouseEvent& evt) {

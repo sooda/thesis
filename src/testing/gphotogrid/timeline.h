@@ -19,6 +19,9 @@ public:
 
 	Timeline(wxFrame* parent, int lines);
 	void insert(int line, Mark mark);
+	void clear();
+	void followInsertions(bool f);
+	size_t size() const;
 private:
 	void onPaint(wxPaintEvent&);
 	void onSize(wxSizeEvent&);
@@ -42,11 +45,14 @@ private:
 
 	const int lines;
 
+	bool follow;
+
 	// render properties.
 	// TODO meaningful colors, configurable somewhere?
 	wxColor backgroundColor, headColor, majorTickColor, minorTickColor, cursorColor, cursorBackColor, textColor, markColor;
 	double zoomratio;
 	double scrollpanratio;
+	double followratio;
 
 	// small lines on the x axis
 	int majorTicks, minorTicks;

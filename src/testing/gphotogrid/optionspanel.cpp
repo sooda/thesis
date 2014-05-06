@@ -16,6 +16,9 @@ OptionsPanel::OptionsPanel(MainFrame* parent) : wxPanel(parent), main(parent) {
 	synccheck->Disable();
 	synccheck->Bind(wxEVT_CHECKBOX, &OptionsPanel::onSyncbox, this);
 
+	sizer->Add(followcheck = new wxCheckBox(this, wxID_ANY, "autoscroll timeline"));
+	followcheck->Bind(wxEVT_CHECKBOX, &OptionsPanel::onFollowbox, this);
+
 	sliders.resize(3);
 	static const char* labels[] = { "aperture", "shutter speed", "iso speed" };
 	for (int i = 0; i < sliders.size(); i++) {
@@ -52,4 +55,8 @@ void OptionsPanel::onCheckbox(wxCommandEvent& evt) {
 
 void OptionsPanel::onSyncbox(wxCommandEvent& evt) {
 	main->syncGrabbers(evt.IsChecked());
+}
+
+void OptionsPanel::onFollowbox(wxCommandEvent& evt) {
+	main->timelineFollow(evt.IsChecked());
 }

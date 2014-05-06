@@ -33,6 +33,7 @@ public:
 	void reloadGphoto();
 	void enableRender(bool enable);
 	void syncGrabbers(bool sync);
+	void timelineFollow(bool follow);
 private:
 	typedef std::chrono::high_resolution_clock Clock;
 
@@ -51,7 +52,10 @@ private:
 	App& app;
 	std::vector<ImagePanel*> images;
 	OptionsPanel* options;
+
 	Timeline* timeline;
+	std::vector<int> numpics;
+
 #ifdef LOOP_TIMER
 	RenderTimer* timer;
 #endif

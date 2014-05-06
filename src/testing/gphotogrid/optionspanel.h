@@ -12,6 +12,7 @@ public:
 	void onButton(wxCommandEvent& event);
 	void onCheckbox(wxCommandEvent& event);
 	void onSyncbox(wxCommandEvent& event);
+	void onFollowbox(wxCommandEvent& event);
 
 private:
 	MainFrame* main;
@@ -20,6 +21,7 @@ private:
 	std::vector<wxSlider*> sliders;
 	wxCheckBox* enablecheck;
 	wxCheckBox* synccheck;
+	wxCheckBox* followcheck;
 };
 
 #endif

@@ -214,6 +214,10 @@ void MainFrame::syncGrabbers(bool sync) {
 	app.previewfeed.setsync(sync);
 }
 
+void MainFrame::timelineFollow(bool follow) {
+	timeline->followInsertions(follow);
+}
+
 void MainFrame::onMenu(wxCommandEvent&) {
 	std::cout << "menu" << std::endl;
 }
