@@ -15,3 +15,7 @@ void App::reloadGphoto() {
 	std::cout << "CAMS: " << cams.size() << std::endl;
 	previewfeed = PreviewFeed(cams);
 }
+
+size_t App::numcams() const {
+	return cams.size();
+}

@@ -11,6 +11,7 @@ public:
 	App(const std::string& input_cfg);
 	App();
 	void reloadGphoto();
+	size_t numcams() const;
 
 	gp::Context gpcontext;
 	std::vector<gp::Camera> cams;

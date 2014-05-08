@@ -43,11 +43,11 @@ void MainFrame::onIdle(wxIdleEvent& ev) {
 
 void MainFrame::readCameraParams() {
 	timeline->Destroy();
-	timeline = new Timeline(this, app.cams.size());
+	timeline = new Timeline(this, app.numcams());
 	GetSizer()->Add(timeline, 1, wxEXPAND);
 	Layout();
 
-	if (app.cams.size() > 0) {
+	if (app.numcams() > 0) {
 		// assume that all cameras are the same, use only zeroth
 
 		auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
@@ -70,7 +70,7 @@ void MainFrame::create_panels() {
 	horsizer->Add(create_imagegrid(), 4, wxEXPAND);
 	auto versizer = new wxBoxSizer(wxVERTICAL);
 	versizer->Add(horsizer, 4, wxEXPAND);
-	versizer->Add(timeline = new Timeline(this, app.cams.size()));
+	versizer->Add(timeline = new Timeline(this, app.numcams()));
 	SetSizer(versizer);
 
 	readCameraParams();
@@ -109,7 +109,7 @@ void MainFrame::create_menus() {
 void MainFrame::slider(int id, int value) {
 	std::cout << "slider " << id << " to " << value << std::endl;
 	int i = 0;
-	for (int cam = 0; cam < app.cams.size(); cam++) {
+	for (int cam = 0; cam < app.numcams(); cam++) {
 		switch (id) {
 		case 0:
 			setRadioConfig<gp::Aperture>(cam, value);
@@ -170,13 +170,13 @@ void MainFrame::framecalc() {
 }
 void MainFrame::updatePhotos() {
 	// if no sources, no update needed
-	if (app.cams.size() == 0 || !app.previewfeed.enabled())
+	if (app.numcams() == 0 || !app.previewfeed.enabled())
 		return;
 
 	// all have the same size
 	auto newsize = images[0]->GetSize();
 
-	for (int i = 0; i < std::min(app.cams.size(), images.size()); i++) {
+	for (int i = 0; i < std::min(app.numcams(), images.size()); i++) {
 		PreviewFeed::TimedJpegBuffer capture;
 		// test if there is anything
 		if (!app.previewfeed.getQueue(i).try_pop(capture))
@@ -194,7 +194,7 @@ void MainFrame::updatePhotos() {
 
 		images[i]->setImage(im);
 
-		if (i == app.cams.size() - 1) {
+		if (i == app.numcams() - 1) {
 			// copy last image to the rest for testing
 			for (int j = i; j < images.size(); j++) {
 				images[j]->setImage(im);
@@ -203,7 +203,7 @@ void MainFrame::updatePhotos() {
 	}
 
 	std::stringstream ss;
-	ss << app.cams.size() << " cameras; frames per cam:";
+	ss << app.numcams() << " cameras; frames per cam:";
 	for (int i = 0; i < numpics.size(); i++) {
 		ss << " " << i << ":" << numpics[i];
 	}
@@ -213,7 +213,7 @@ void MainFrame::updatePhotos() {
 void MainFrame::enableRender(bool enable) {
 	if (enable) {
 		renderinittime = Clock::now();
-		numpics = std::vector<int>(app.cams.size());
+		numpics = std::vector<int>(app.numcams());
 		timeline->clear();
 		app.previewfeed.enable();
 	} else {
