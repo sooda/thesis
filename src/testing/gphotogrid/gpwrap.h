@@ -23,7 +23,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <utility>
+#include <mutex>
 
 // raw C api, duplicated so that the C header can be omitted here
 typedef struct _Camera Camera;
@@ -134,21 +134,27 @@ struct Widget::Traits<bool> {
 // another RootWidget
 class Camera {
 public:
+	Camera(Camera&& other);
 	~Camera();
+
 	Widget config();
 	std::vector<char> preview();
 	void save_preview(const std::string& fname);
+
 	// ctx constructs me
 	friend class Context;
+	// widgets are able to set configs
 	friend class Widget;
 
-	Camera(Camera&& other);
 private:
 	void set_config(const Widget& cfg);
 	Camera(::Camera* camera, Context& ctx);
 	Camera(const char *model, const char *port, Context& ctx);
+
 	::Camera* camera;
 	Context& ctx;
+
+	std::mutex mutex;
 };
 
 }

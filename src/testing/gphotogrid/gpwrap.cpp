@@ -138,10 +138,6 @@ void Widget::set_changed() {
 		camera->set_config(*this);
 }
 
-void Camera::set_config(const Widget& cfg) {
-	gp_camera_set_config(camera, cfg.widget, ctx.context);
-}
-
 Camera Context::auto_camera() {
 	::Camera* cam;
 	int ret;
@@ -232,11 +228,13 @@ Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullp
 
 
 Camera::Camera(Camera&& other) : camera(other.camera), ctx(other.ctx) {
+	std::lock_guard<std::mutex> g(other.mutex);
 	gp_context_ref(ctx.context);
 	other.camera = nullptr;
 }
 
 Camera::~Camera() {
+	std::lock_guard<std::mutex> g(mutex);
 	gp_context_unref(ctx.context);
 	//gp_camera_exit(camera,ctx.context);
 	if (camera)
@@ -244,6 +242,7 @@ Camera::~Camera() {
 }
 
 Widget Camera::config() {
+	std::lock_guard<std::mutex> g(mutex);
 	CameraWidget *w;
 	int ret;
 	if ((ret = gp_camera_get_config(camera, &w, ctx.context)) < GP_OK)
@@ -251,7 +250,15 @@ Widget Camera::config() {
 	return Widget(w, *this);
 }
 
+void Camera::set_config(const Widget& cfg) {
+	std::lock_guard<std::mutex> g(mutex);
+	int ret;
+	if ((ret = gp_camera_set_config(camera, cfg.widget, ctx.context)) < GP_OK)
+		throw Exception("gp_camera_set_config", ret);
+}
+
 std::vector<char> Camera::preview() {
+	std::lock_guard<std::mutex> g(mutex);
 	CameraFile* file;
 	int ret;
 	if ((ret = gp_file_new(&file)) < GP_OK)
