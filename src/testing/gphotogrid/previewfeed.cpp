@@ -27,7 +27,9 @@ Semaphore& Semaphore::operator=(const Semaphore& other) {
 
 PreviewFeed::PreviewFeed(std::vector<gp::Camera>& cameras) :
 		size(cameras.size()), cameras(&cameras),
-		previewQueues(size), previewLoaders(size) {
+		previewQueues(size), previewLoaders(size), syncer(),
+		threads_running(false), threads_synced(false),
+		round(0) {
 }
 
 PreviewFeed::PreviewFeed(PreviewFeed&& other) :
@@ -42,9 +44,9 @@ PreviewFeed& PreviewFeed::operator=(PreviewFeed&& other) {
 
 	size = other.size;
 	cameras = other.cameras;
-	previewQueues.resize(cameras->size());
+	previewQueues.resize(size);
 	previewLoaders.clear();
-	previewLoaders.resize(cameras->size());
+	previewLoaders.resize(size);
 
 	other.cameras = nullptr;
 
@@ -89,7 +91,7 @@ void PreviewFeed::start_threads() {
 	numDone = Semaphore();
 	round = 0;
 
-	for (int i = 0; i < cameras->size(); i++)
+	for (int i = 0; i < size; i++)
 		previewLoaders[i] = std::thread(&PreviewFeed::previewThread, this, i);
 
 	if (threads_synced)
@@ -99,7 +101,7 @@ void PreviewFeed::start_threads() {
 void PreviewFeed::finish_threads() {
 	threads_running = false;
 
-	for (int i = 0; i < cameras->size(); i++)
+	for (int i = 0; i < size; i++)
 		previewLoaders[i].join();
 
 	if (threads_synced)
