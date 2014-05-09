@@ -19,28 +19,29 @@ OptionsPanel::OptionsPanel(MainFrame* parent) : wxPanel(parent), main(parent) {
 	sizer->Add(followcheck = new wxCheckBox(this, wxID_ANY, "autoscroll timeline"));
 	followcheck->Bind(wxEVT_CHECKBOX, &OptionsPanel::onFollowbox, this);
 
-	sliders.resize(3);
+	selectors.resize(3);
 	static const char* labels[] = { "aperture", "shutter speed", "iso speed" };
-	for (int i = 0; i < sliders.size(); i++) {
+	for (int i = 0; i < selectors.size(); i++) {
 		sizer->Add(new wxStaticText(this, wxID_ANY, labels[i]));
-		sizer->Add(sliders[i] = new wxSlider(this, i, 0, 0, 0, // val min max
-						wxDefaultPosition, wxDefaultSize, wxSL_LABELS),
+		sizer->Add(selectors[i] = new wxChoice(this, i),
 				0, wxEXPAND | wxALL, 3); // no proportion, small border (padding)
-		sliders[i]->Bind(wxEVT_SLIDER, &OptionsPanel::onSlider, this);
+		selectors[i]->Bind(wxEVT_CHOICE, &OptionsPanel::onSelect, this);
 	}
 
 	//sizer->SetSizeHints(this);
 	SetSizer(sizer);
 }
 
-void OptionsPanel::setSliderRange(int id, int min, int max, int current) {
-	sliders.at(id)->SetRange(min, max);
-	sliders.at(id)->SetValue(current);
+void OptionsPanel::setSelections(int id, const std::vector<std::string>& options, int current) {
+	std::vector<wxString> tempcontents(options.begin(), options.end());
+	selectors.at(id)->Set(tempcontents.size(), &tempcontents[0]);
+	selectors.at(id)->SetSelection(current);
 }
 
-void OptionsPanel::onSlider(wxCommandEvent& evt) {
-	wxSlider& slid = *static_cast<wxSlider*>(evt.GetEventObject());
-	main->slider(slid.GetId(), slid.GetValue());
+void OptionsPanel::onSelect(wxCommandEvent& evt) {
+	wxChoice& obj = *static_cast<wxChoice*>(evt.GetEventObject());
+	if (obj.GetSelection() != wxNOT_FOUND)
+		main->slider(obj.GetId(), obj.GetSelection());
 }
 
 void OptionsPanel::onButton(wxCommandEvent&) {
