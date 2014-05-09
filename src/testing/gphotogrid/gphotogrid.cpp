@@ -108,23 +108,30 @@ void MainFrame::create_menus() {
 
 void MainFrame::slider(int id, int value) {
 	std::cout << "slider " << id << " to " << value << std::endl;
+	if (id < 0 || id > 2)
+		throw std::out_of_range("slider index bug");
+
+	std::vector<std::thread> setters(app.numcams());
 	int i = 0;
 	for (int cam = 0; cam < app.numcams(); cam++) {
-		switch (id) {
-		case 0:
-			setRadioConfig<gp::Aperture>(cam, value);
-			break;
-		case 1:
-			setRadioConfig<gp::ShutterSpeed>(cam, value);
-			break;
-		case 2:
-			setRadioConfig<gp::Iso>(cam, value);
-			break;
-		default:
-			throw std::out_of_range("bad slider index");
-		}
+		setters[cam] = std::thread([=]() {
+			switch (id) {
+			case 0:
+				setRadioConfig<gp::Aperture>(cam, value);
+				break;
+			case 1:
+				setRadioConfig<gp::ShutterSpeed>(cam, value);
+				break;
+			case 2:
+				setRadioConfig<gp::Iso>(cam, value);
+				break;
+			}
+		});
 	}
+	for (auto& thr: setters)
+		thr.join();
 }
+
 template <class Obj>
 void MainFrame::setRadioConfig(int cam, int value) {
 	auto cfg = app.cams[cam].config()[Obj::gpname];
