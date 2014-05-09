@@ -41,6 +41,7 @@ void MainFrame::onIdle(wxIdleEvent& ev) {
 }
 #endif
 
+// read params from camera 0 and set the same for others
 void MainFrame::readCameraParams() {
 	timeline->Destroy();
 	timeline = new Timeline(this, app.numcams());
@@ -51,12 +52,18 @@ void MainFrame::readCameraParams() {
 		// assume that all cameras are the same, use only zeroth
 
 		auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
+		for (int i = 1; i < app.numcams(); i++)
+			setRadioConfig<gp::Aperture>(i, aperture.index());
 		options->setSelections(0, aperture.choices(), aperture.index());
 
 		auto shutter = app.cams[0].config()["shutterspeed"].get<gp::ShutterSpeed>();
+		for (int i = 1; i < app.numcams(); i++)
+			setRadioConfig<gp::ShutterSpeed>(i, shutter.index());
 		options->setSelections(1, shutter.choices(), shutter.index());
 
 		auto iso = app.cams[0].config()["iso"].get<gp::Iso>();
+		for (int i = 1; i < app.numcams(); i++)
+			setRadioConfig<gp::Iso>(i, iso.index());
 		options->setSelections(2, iso.choices(), iso.index());
 	}
 
@@ -147,6 +154,9 @@ void MainFrame::setRadioConfig(int cam, int value) {
 void MainFrame::reloadGphoto() {
 	assert(!app.previewfeed.enabled());
 	app.reloadGphoto();
+	for (auto& impanel: images) {
+		impanel->clearImage();
+	}
 	readCameraParams();
 }
 
@@ -200,13 +210,6 @@ void MainFrame::updatePhotos() {
 		im.Rescale(newsize.GetWidth(), newsize.GetHeight(), wxIMAGE_QUALITY_NEAREST);
 
 		images[i]->setImage(im);
-
-		if (i == app.numcams() - 1) {
-			// copy last image to the rest for testing
-			for (int j = i; j < images.size(); j++) {
-				images[j]->setImage(im);
-			}
-		}
 	}
 
 	std::stringstream ss;

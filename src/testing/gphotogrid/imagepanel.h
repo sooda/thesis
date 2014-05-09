@@ -10,6 +10,7 @@ public:
 	void paintNow();
 	void render(wxDC& dc);
 	void setImage(wxImage& im);
+	void clearImage();
 
 private:
 	wxBitmap bitmap;

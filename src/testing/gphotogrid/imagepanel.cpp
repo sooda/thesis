@@ -10,6 +10,12 @@ void ImagePanel::setImage(wxImage& im) {
 	paintNow();
 }
 
+void ImagePanel::clearImage() {
+	bitmap = wxBitmap();
+	SetSize(0, 0);
+	paintNow();
+}
+
 void ImagePanel::paintEvent(wxPaintEvent&) {
 	wxPaintDC dc(this);
 	render(dc);
