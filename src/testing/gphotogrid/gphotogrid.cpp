@@ -43,8 +43,9 @@ void MainFrame::onIdle(wxIdleEvent& ev) {
 
 // read params from camera 0 and set the same for others
 void MainFrame::readCameraParams() {
+	bool fol = timeline->getFollow();
 	timeline->Destroy();
-	timeline = new Timeline(this, app.numcams());
+	timeline = new Timeline(this, app.numcams(), fol);
 	GetSizer()->Add(timeline, 1, wxEXPAND);
 	Layout();
 

@@ -4,8 +4,8 @@
 #include <iomanip>
 #include <sstream>
 
-Timeline::Timeline(wxFrame* parent, int lines) : wxPanel(parent),
-		lines(lines), follow(false),
+Timeline::Timeline(wxFrame* parent, int lines, bool follow) : wxPanel(parent),
+		lines(lines), follow(follow),
 		backgroundColor("black"),
 		headColor("dark grey"),
 		majorTickColor("red"),
@@ -48,6 +48,10 @@ void Timeline::clear() {
 
 void Timeline::followInsertions(bool f) {
 	follow = f;
+}
+
+bool Timeline::getFollow() const {
+	return follow;
 }
 
 size_t Timeline::size() const {

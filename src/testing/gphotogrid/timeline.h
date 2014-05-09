@@ -17,10 +17,11 @@ public:
 	typedef double Mark;
 	typedef double Diff;
 
-	Timeline(wxFrame* parent, int lines);
+	Timeline(wxFrame* parent, int lines, bool follow = false);
 	void insert(int line, Mark mark);
 	void clear();
 	void followInsertions(bool f);
+	bool getFollow() const;
 	size_t size() const;
 private:
 	void onPaint(wxPaintEvent&);
