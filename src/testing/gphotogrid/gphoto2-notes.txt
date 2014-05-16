@@ -1,0 +1,43 @@
+libgphoto2 internals:
+
+- most of the actual work is performed by the actual camera driver, which is ptp for canon eos cams
+- camlibs/ptp2/
+- camlibs/ptp2/config.c
+	- update capture target
+	- prepare/unprepare capture
+	- prepared when the camera is started, unprepared on exit
+- camlibs/ptp2/library.c
+	- actual gp work
+	- camera_capture -> camera_canon_eos_capture
+	- camera_trigger_capture -> ptp_canon_eos_capture -> set remoterelease
+	- all captures prepare capture first if it's not enabled or else update the target to -1
+	- "Get the initial bulk set of event data, otherwise capture might return busy."
+	- capture is essentially the same as trigger capture plus waiting loop for getting the pic
+	- watch out for CPR, CR macros that check result and return on error
+		- cr check result, cpr check ptp result
+- camera style detected from supported ptp operations
+	- only nikon dslr, canon powershot, canon eos
+	- ViewFinderOn / EOS_GetViewFinderData
+	- InitiateReleaseControl / EOS_RemoteRelease
+- ptp_canon_eos_keepdeviceon() randomly sprinkled around
+
+- for some reason, exiting the camera locks its physical button ui up
+	- ... unless the shutter button is pressed ...
+	- ... but then the capture target stays in the memory setting instead of camera
+	- ui opens up again when a new connection is established or the camera is booted or usb cable removed
+
+- many unknown events come from "unknown" ptp property changes that are actually known
+	- menus in camlibs/ptp2/config.c and big lists in ptp.h
+	- "/* From EOS 400D trace. */" important, PTP_DPC_CANON_EOS_* have the same specifiers
+	- d102 shutter speed
+	- d101 aperture
+	- d11b iso
+	- d17c current time in unix timestamp
+	- would be nice to be able to map the ptp id to gphoto widget id
+		- then refresh just it instead of getting full config tree again
+		- (maybe this is optimized in camera_get_config, dunno, it's difficult to read)
+
+
+- lib full of potential dangers with buffer overflows
+	- config values, 1024B buffers
+	- filenames, paths, folders with fixed size buffers, plain strcpy
