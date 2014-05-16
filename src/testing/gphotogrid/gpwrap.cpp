@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <memory>
 #include <fstream>
+#include <cstdlib>
 
 namespace gp {
 Exception::Exception(const std::string& msg, int gpnum) : 
@@ -17,11 +18,14 @@ Context::Context() : context(gp_context_new()) {
 	gp_context_set_message_func(context, msg_func, NULL);
 	gp_context_set_status_func(context, status_func, NULL);
 	// debug logging is massive
-#if 0
-	// maybe should have a top-level class for this as it's not context specific
-	// typecast because enum vs int in header
-	gp_log_add_func(GP_LOG_DEBUG, (GPLogFunc)log_func, NULL);
-#endif
+	const char *debug_enable = getenv("GPWRAP_LOG_DEBUG");
+	static bool debug_created;
+	if (debug_enable && debug_enable[0] == '1' && !debug_created) {
+		debug_created = true;
+		// maybe should have a top-level class for this as it's not context specific
+		// typecast because enum vs int in header
+		gp_log_add_func(GP_LOG_DEBUG, (GPLogFunc)log_func, NULL);
+	}
 }
 
 Context::~Context() {
@@ -287,6 +291,57 @@ void Camera::save_preview(const std::string& fname) {
 	auto pic = preview();
 	std::ofstream fs(fname);
 	std::copy(pic.begin(), pic.end(), std::ostreambuf_iterator<char>(fs));
+}
+
+CameraEvent Camera::wait_event(int timeout) {
+	CameraEventType eventtype;
+	void* eventdata;
+	int ret = gp_camera_wait_for_event(camera, timeout, &eventtype, &eventdata, ctx.context);
+	if (ret < GP_OK)
+		throw Exception("gp_camera_wait_for_event", ret);
+	CameraEvent::EventType t;
+	switch (eventtype) {
+	case GP_EVENT_UNKNOWN: t = CameraEvent::EVENT_UNKNOWN; break;
+	case GP_EVENT_TIMEOUT: t = CameraEvent::EVENT_TIMEOUT; break;
+	case GP_EVENT_FILE_ADDED: t = CameraEvent::EVENT_FILE_ADDED; break;
+	case GP_EVENT_FOLDER_ADDED: t = CameraEvent::EVENT_FOLDER_ADDED; break;
+	case GP_EVENT_CAPTURE_COMPLETE: t = CameraEvent::EVENT_CAPTURE_COMPLETE; break;
+	default: t = (CameraEvent::EventType)(1000 + eventtype);//CameraEvent::EVENT_UNKNOWN;
+	}
+	return CameraEvent(t, eventdata);
+}
+
+CameraEvent::CameraEvent(EventType type, void* data) : etype(type), data(data) {
+}
+
+CameraEvent::~CameraEvent() {
+	free(data);
+}
+
+CameraEvent::EventType CameraEvent::type() const {
+	return etype;
+}
+const char *CameraEvent::typestr() const {
+	static const char *names[] = {
+		"EVENT_UNKNOWN",
+		"EVENT_TIMEOUT",
+		"EVENT_FILE_ADDED",
+		"EVENT_FOLDER_ADDED",
+		"EVENT_CAPTURE_COMPLETE"
+	};
+	return etype >= 0 && etype <= 4 ? names[etype] : "unknown";
+}
+
+std::string CameraEvent::Traits<CameraEvent::EVENT_UNKNOWN>::get(void* v) {
+	return std::string((char*)v);
+}
+std::pair<std::string, std::string> CameraEvent::Traits<CameraEvent::EVENT_FILE_ADDED>::get(void* v) {
+	CameraFilePath* fp = (CameraFilePath*)v;
+	return std::pair<std::string, std::string>(fp->folder, fp->name);
+}
+std::pair<std::string, std::string> CameraEvent::Traits<CameraEvent::EVENT_FOLDER_ADDED>::get(void* v) {
+	CameraFilePath* fp = (CameraFilePath*)v;
+	return std::pair<std::string, std::string>(fp->folder, fp->name);
 }
 
 }

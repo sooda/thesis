@@ -24,6 +24,7 @@
 #include <string>
 #include <vector>
 #include <mutex>
+#include <utility>
 
 // raw C api, duplicated so that the C header can be omitted here
 typedef struct _Camera Camera;
@@ -130,6 +131,52 @@ struct Widget::Traits<bool> {
 	static void write(Widget& w, bool value);
 };
 
+class CameraEvent {
+public:
+	enum EventType {
+		EVENT_UNKNOWN,
+		EVENT_TIMEOUT,
+		EVENT_FILE_ADDED,
+		EVENT_FOLDER_ADDED,
+		EVENT_CAPTURE_COMPLETE
+	};
+	CameraEvent(EventType type, void* data);
+	CameraEvent(CameraEvent&&) = default;
+	~CameraEvent();
+	EventType type() const;
+	const char *typestr() const;
+
+	template <EventType t> class Traits {};
+
+	template <EventType t>
+	typename Traits<t>::type get() {
+		if (etype != t)
+			throw std::invalid_argument("cameraevent type mismatch");
+		return Traits<t>::get(data);
+	}
+private:
+	CameraEvent(const CameraEvent&) = delete;
+	CameraEvent& operator=(const CameraEvent&) = delete;
+	EventType etype;
+	void* data;
+};
+
+template <>
+struct CameraEvent::Traits<CameraEvent::EVENT_UNKNOWN> {
+	typedef std::string type;
+	static type get(void* v);
+};
+template <>
+struct CameraEvent::Traits<CameraEvent::EVENT_FILE_ADDED> {
+	typedef std::pair<std::string, std::string> type;
+	static type get(void* v);
+};
+template <>
+struct CameraEvent::Traits<CameraEvent::EVENT_FOLDER_ADDED> {
+	typedef std::pair<std::string, std::string> type;
+	static type get(void* v);
+};
+
 // XXX TODO FIXME store config here, set_config() with no params
 // another RootWidget
 class Camera {
@@ -140,6 +187,7 @@ public:
 	Widget config();
 	std::vector<char> preview();
 	void save_preview(const std::string& fname);
+	CameraEvent wait_event(int timeout);
 
 	// ctx constructs me
 	friend class Context;

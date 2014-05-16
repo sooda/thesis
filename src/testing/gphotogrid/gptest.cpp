@@ -6,6 +6,8 @@
 #include <iomanip>
 #include <algorithm>
 #include <iterator>
+#include <cstdlib>
+#include <signal.h>
 
 std::string to_str_pad(int i, int pad) {
 	std::stringstream ss;
@@ -88,8 +90,67 @@ void test_many_cameras(gp::Context& context) {
 	}
 }
 
-int main(int argc, char **) {
+void trap_ctrlc(void (*handfunc)(int)) {
+	struct sigaction sigIntHandler;
+
+	sigIntHandler.sa_handler = handfunc;
+	sigemptyset(&sigIntHandler.sa_mask);
+	sigIntHandler.sa_flags = 0;
+
+	sigaction(SIGINT, &sigIntHandler, NULL);
+}
+
+volatile bool running;
+void setquit(int) {
+	running = false;
+}
+
+void test_events(gp::Context& context) {
+	gp::Camera cam(context.auto_camera());
+	running = true;
+	trap_ctrlc(setquit);
+	int evts = 0;
+	while (running) {
+		gp::CameraEvent ev = cam.wait_event(200);
+
+		if (ev.type() != gp::CameraEvent::EVENT_TIMEOUT)
+			std::cout << "#" << evts << ": " << ev.type() << ": " << ev.typestr();
+
+		using ce = gp::CameraEvent;
+		switch (ev.type()) {
+		case ce::EVENT_UNKNOWN:
+			std::cout << ": " << ev.get<ce::EVENT_UNKNOWN>() << std::endl;
+			break;
+		case ce::EVENT_TIMEOUT:
+			break;
+		case ce::EVENT_FILE_ADDED:
+			std::cout << ": " << ev.get<ce::EVENT_FILE_ADDED>().first << " "
+					<< ev.get<ce::EVENT_FILE_ADDED>().second << std::endl;
+			break;
+		case ce::EVENT_FOLDER_ADDED:
+			std::cout << ": " << ev.get<ce::EVENT_FOLDER_ADDED>().first << " "
+					<< ev.get<ce::EVENT_FOLDER_ADDED>().second << std::endl;
+			break;
+		case ce::EVENT_CAPTURE_COMPLETE:
+			break;
+		}
+
+		evts++;
+	}
+	std::cout << "stopping after " << evts << " events" << std::endl;
+}
+
+int main(int argc, char *argv[]) {
 	gp::Context context;
-	test_single_camera(context, argc);
-	test_many_cameras(context);
+
+	if (argc > 1) {
+		std::string arg(argv[1]);
+
+		if (arg == "single" && argc == 3)
+			test_single_camera(context, atoi(argv[2]));
+		else if (arg == "many")
+			test_many_cameras(context);
+		else if (arg == "events")
+			test_events(context);
+	}
 }
