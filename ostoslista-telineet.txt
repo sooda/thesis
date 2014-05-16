@@ -1,0 +1,53 @@
+tilattu tälläisiä:
+
+jalusta http://www.thomann.de/fi/millenium_lichtstativ_lst310.htm
+2x paketti http://www.thomann.de/fi/millenium_lichtstativ_lst310_bundle.htm
+midrange kuulapää joka kameralle http://www.verkkokauppa.com/fi/product/7874/ckjhv/Manfrotto-494-mini-kuulapaa
+super clamp http://www.thomann.de/fi/manfrotto_035.htm
+clampin kierrejuttuadapteri http://www.thomann.de/fi/manfrotto_03638_lightstud.htm
+
+ehkä:
+http://www.ebay.com/itm/DF8001-Flash-Hotshoe-Adapter-converter-for-Canon-EOS-Camera-DSLR-SLR-E-TTL-Canon-/171065248356
+http://www.ebay.com/itm/New-12inch-Male-to-Male-flash-PC-Sync-cable-cord-T1K-/380746593261
+
+---
+
+random pohdintaa:
+
+- 9x kuulapää (ei turhaan pikakiinnityslevyllä vaan ihan kiinteä)
+  - Manfrotto 492 micro, painaa 140g, kantavuus 2kg
+    - digitarvike.fi 39,5e
+    - verkkokauppa.com 48,9e
+    - topshot.fi 44e
+  - manfrotto 494 mini, 220g, kantavuus 4kg
+    - verkkokauppa.com 49,9e
+    - topshot.fi 59e
+
+- 3x tolppa, valojalusta tai kaiutinteline
+  - järeämpi parempi -> ei huoju, paitsi että paksumpaan vaikeampaa kiinnittää asioita (tosin siihen voi porata reikiä)
+  - esim. skytec http://discoland.fi/discokanta_display.php?pkey=1111677865
+    - königmeyer
+    - eurolite
+  - tai labran arri/manfrotto, manfrotto aika ohut jo
+  - thomann, millennium lst-310 joka on myös mocapissa
+
+- 9x tai yli clamppi kameralle
+  - manfrotto/falcon eyes/impact, super clamp
+
+- jalustat kiinni toisiinsa jotenkin, vaikka falcon eyesin vaakapuomilla
+  - ei supervälttämätöntä mutta auttaa huojumiseen
+  - maksimi/minimi vaakaero?
+
+- valot
+  - kokeillaan ensin labran valoja
+  - salama auttaisi liikkuvissa kohteissa
+  - isoja aluevaloja vai niitä dedospotteja?
+  - muutama dedo on pienessä heijastinhupussa, tulee pehmeämpää valoa
+
+- polarisaatiofiltterit valoihin ja objektiiveihin spekulaarien vähentämiseksi
+  - nämä sitten kun tiedetään valot
+
+- tarranauhaa
+  muutama näitä http://www.clasohlson.com/fi/Tarranauha-kaapeleiden-niputukseen/36-5302
+
+- hotshoe-adaptereita? DF-8001 + kaapeli
