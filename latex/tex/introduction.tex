@@ -4,6 +4,12 @@
 %% Leave first page empty
 % (wat?)
 \thispagestyle{empty}
+% kruppa eqs
+% active vs. passive http://en.wikipedia.org/wiki/3D_reconstruction
+algebraic vs geometric error
+(wikipedia: In recent decades, there is an important demand for 3D content for computer graphics, virtual reality and communication, triggering a change in emphasis for the requirements. Many existing systems for constructing 3D models are built around specialized hardware (e.g. stereo rigs) resulting in a high cost, which cannot satisfy the requirement of its new applications. This gap stimulates the use of digital imaging facilities (like a camera). Moore's law also tells us that more work can be done in software. An early method was proposed by Tomasi and Kanade.[1] They used an affine factorization approach to extract 3D from images sequences. However, the assumption of orthographic projection is a significant limitation of this system.)
+[1] Shape and motion from image streams under orthography: A factorization approach
+
 History[edit]
 
 One of the first papers discussing performance-driven animation was published by Lance Williams in 1990. There, he describes 'a means of acquiring the expressions of realfaces, and applying them to computer-generated faces'.[1]
@@ -18,14 +24,30 @@ This work concentrates most on scanning human faces, but the algorithms are kept
 Acquiring structure of static objects is also presented.
 
 Facial motion capture (mocap) is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement.
-Mocap records movements of a human body (or another object tjat is to be recorded) so that the movements can be replayed or analyzed.
+Mocap records movements of a human body (or another object tjat is to be recorded) so that the movements can be replayed or analyzed. Traditional methods only model the joint angles blabla, tracking tens of points in realtime.
 Level of detail varies depending on what is needed; from simple bone movements to deformations of skin and muscles.
 Usually the capture is done on special easily distinguishable markers, typically small retroreflective dots, that are mapped to a model for playback. Playback then interpolates between the recorded positions. [CITE THESE]
 % http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
 
 The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal}.
-(Other applications (uses). Movies. Remedy? Medical [essential physics of, bushberg]!). Landscape/architecture engineering. Crime scenes (police investigation). Topographic mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
+(Other applications (uses). Movies. Remedy? Medical [essential physics of, bushberg]!). Landscape/architecture engineering. Crime scenes (police investigation). Topographic / terrain mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
+
+rockstar games / la noire; camera pairs
+
+polar express / sony imageworks
+
+ea sports / faro
+
+
+static vs dynamic: geometry and texture / gem variations only / geometry and texture variations
+
 Close range photogrammetry
+
+stereopsis
+
+isolated object
+
+camera resectioning
 
 Three-dimensional capture means in general the way of recording a sequence of movements of a real-life target or scene.
 The technical details vary by what information is required and available.
@@ -36,6 +58,10 @@ Small objects have been scanned successfully with a turntable [CITE], and struct
 The movie industry usually knows the structure of the objects that are tracked; a pre-recorded mesh is used as a helping model (also called ``virtual bones'' [CITE] universal capture) to track the object pose [CITE].
 It is obviously easier to map image features to a priori information than to recover a fully unknown structure.
 (A pre-recorded higher resolution texture could be used for pore-level details, then tracking with a good-enough resolution and possibly markers to get wrinkles.)
+
+(( surface capture ))
+
+(( parametric face properties ))
 
 The intention of this work is both capturing the structure and texture of a target and tracking of the target's movement by time.
 The captured data should then be used to reconstruct the same target.

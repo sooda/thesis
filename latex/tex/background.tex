@@ -1,3 +1,11 @@
+DIVIDE TO image acquisition, reconstruction, postprocessing/rendering
+
+surface vs motion capture
+
+lab environment
+
+other uses - street view, autom driving, geodetic systems
+
 % Aikaisempi tutkimus
 \section{Background}
 
@@ -7,13 +15,26 @@
 
 (any point in outdoor methods?)
 
+Pairs vs overlap? bradley: pairs
+
+NASA cams
+
+Perf of cloth animation capture
+
+(Crosseyed stereoscopy, how works)
+
 \subsection{Imaging}
+
+asdfg
 
 \subsubsection{Pinhole camera}
 
-Ideal thin lens projects an image upside down on its film.
+Ideal pinhole model projects an image upside down on its film.
 
-\simplegfx{h}{0.9\textwidth}{pinhole-camera}
+\simplegfx{h}{0.9\textwidth}{pinhole-camera}{lel}
+
+Weak perspective x=fX/Z
+
 {Pinhole camera principle. The box represents a camera; image is formed to the plane on its back.}
 
 \subsubsection{Optics}
@@ -91,7 +112,7 @@ Cheaper, rolling shutter: reading the pixels out happens linearly
 \simplefig{h!}{\bayer{0.7}}{fig:bayerpattern}
 {Bayer pattern, not drawn fully for better visualization. Each square is a single pixel; the grey area represents the image sensor. The gap between pixels is nonzero.}
 
-Physical pixels cover less than the full area of a sensor, as there are gaps between them.
+Physical pixels cover less than the full area of a sensor, as there are gaps between them. Microfacets something something.
 
 
 \subsubsection{Shutter}
@@ -162,6 +183,8 @@ Big sensor
 
 Shallower DOF
 
+Focal length configurable
+
 Lots of resolution
 
 Memory card speed
@@ -171,6 +194,20 @@ gphoto2
 No autofocus in general
 
 Easy sync for single image
+
+\subsubsection{Pocket cameras}
+
+Affordable
+
+Small sensor
+
+Decent resolution
+
+Configurability unknown
+
+Manual mode required
+
+Always a zoom lens, bad for calibration
 
 
 \subsubsection{Camcorders}
@@ -224,7 +261,7 @@ IR patterns and an IR camera (Kinect)
 
 \subsubsection{Light field}
 
-Lytro
+Lytro (NOPE)
 
 \subsubsection{Hybrid systems}
 
@@ -282,7 +319,7 @@ Nyquist-Shannon sampling theorem, what happens when shutter is closed, motion st
 
 Multi view imaging poses lots of challenges, sync is an important one
 
-Time offset / drift / jitter
+Time offset / drift / jitter / lockstep
 
 Offset: Different cameras do not start recording immediately at the same time, which results in one or more cameras being a little late at every frame.
 
@@ -371,7 +408,7 @@ many single planar chessboard pics vs. a single image of an accurate 3d model.
 
 \subsection{Normalization}
 
-The scale of values in the equations above affects the precision [hartley, in defense of .., h&ziss]. A similarity transform can be used to modify the values to a more consistent range.
+The scale of values in the equations above affects the precision [hartley, in defense of .., h+ziss]. A similarity transform can be used to modify the values to a more consistent range.
 
 
 \subsection{Optical flow}
@@ -395,7 +432,7 @@ Light field, structured light, laser scanner
 
 Homogenous point description here, [dubrofsky] homography estimation is nice, also refer hartley/zisserman
 
-Homography definition (mapping of points and lines in $P^2$)
+Homography definition (mapping of points and lines in $P^2$) / panorama homography
 
 The imaging process essentially captures a projection to a flat two-dimensional plane of the camera's view.
 When relating points between different cameras that view the same scene, their relational positions and rotations must be known.
@@ -445,6 +482,10 @@ Le image. Horizontal planar triangle, lines between camera origins etc. lecture1
 \subsubsection{Stereo vision, disparity}
 
 Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
+
+(fund generalization of ess.)
+
+(fund and ess. in global and pixel coords)
 
 Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis. Calibration assumed to be known.
 
@@ -500,6 +541,14 @@ Fundamental matrix relates the corresponding points in stereo images.
 
 Epipole can be interpreted as the location of another camera as seen by other camera.
 
+\subsubsection{something fucky}
+
+snake surrounding stuff
+
+visual hull
+
+salient geometric features for matching
+
 \subsubsection{Correspondence and rectification}
 
 In order to triangulate a real point from two or more photos, the location of the point in all images must be known.
@@ -528,12 +577,16 @@ Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. r
 
 \subsubsection{Reconstruction}
 
+(vipe / visualsfm / kiipeily)
+
 Uv mapping. Manual work. 3d noise removal; ignore points that have no close pair in other clouds.
 
 Rendering: "as usual".
 
-Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed). Still, structured light and/or shading assumptions [shape from single image cues/shading trucco&verri p.225] done too.
+Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed). Still, structured light and/or shading assumptions [shape from single image cues/shading trucco+verri p.225] done too.
 
+
+(video: 3d topology different in each frame; most algos do just stills. simple to combine them to a pre-recorded mesh)
 
 \subsubsection{Reprojection errors}
 
@@ -544,7 +597,17 @@ Compare to algebraic, geometric etc.
 
 A common way to handle feature errors is Random Sample Consensus (RANSAC). Random subsets of the sample space is iterated, and samples that do not fit well to a model that is constructed of a smaller set are ignored. The iteration that matches most samples is selected.
 
+Detail calculation (error on surface ~= avg reprojection error?) compute millimeters
+
+Mesoscopic level shape reconstruction
+
 \subsection{Tracking}
+
+Kalman
+
+Fiducials / AR
+
+perf of cloth anim capture
 
 \subsubsection{Feature / surface tracking}
 
@@ -570,6 +633,8 @@ Matching to a priori model
 
 * SIFT/SURF/Harris feature tracking, reproject
 
+* edgels (edge pixels)
+
 \subsection{3D}
 
 *
@@ -592,6 +657,8 @@ Such feature vectors describe well each possible face, and importantly, they eli
 The results from this method can easily be mapped to other models than the face of the subject, as it is independent on the actual facial geometry and only uses weights for pre-modeled faces, making it interesting in computer animation.
 
 Compare to Facial Action Coding System (FACS) (Hjortsjö 1969), which parameterizes the face in a group of muscular actions. This is similar to grouping vertices in keyframe animation [?].
+
+Expression tracking / 2d capture
 
 
 \subsection{Pre-processing}
