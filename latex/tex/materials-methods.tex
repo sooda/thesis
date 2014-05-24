@@ -1,5 +1,123 @@
 %Tutkimusaineisto ja -menetelmät
-\section{Materials and methods}
+\section{System implementation}
+
+\subsection{Functional specification}
+
+The implementation was specified to be easy to use, portable, flexible and available for both 3D and 4D cases, 4D being a nice-to-have feature.
+Portability and open design was also considered to be important.
+By documenting the selected hardware and its structure, and writing control code in a generic way, it is hoped that the design could be reimplemented and/or refined by others too.
+
+There is a wide variety of different consumer grade digital cameras.
+Some of the main differences are dicussed below.
+
+\subsection{Practicalities}
+
+A general-purpose reconstruction rig has remarkably many practical matters to consider when comparing to the pure mathematical side.
+A mobile rig should be light enough to carry and set up, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration.
+Distance to the photographed target should not be too short in order to not annoy human targets, but a too large setup is difficult to build and needs lots of space.
+When capturing video, the frames should be synchronized among cameras as described in \ref{sec:somethingaboutvideosync}, which might not be possible with a reasonable budget.
+
+% or \subsection{Data recording}
+
+- lens distortion?
+- rigid base, motion blur
+- baseline width, focus, depth, fstop etc
+- compression artifacts are nasty (edge detectors go wild etc.)
+
+\subsection{Camera comparison}
+
+not considered: weatherproofing, lcd/viewfinder/user interface, mirror blackout, autofocus, etc
+
+resolution
+dynamic range
+burst mode speed
+wire remote shutter speed
+dust reduction
+optical stabilizing
+video frame rate, resolution
+usb speed
+usb mass storage
+flash something
+manual mode settings
+shutter lag
+mirror lockup
+weight
+price
+
+
+\subsection{Selected cameras}
+
+\subsubsection{DSLR bodies}
+
+\subsubsection{Lenses}
+GigE/USB3/???
+
+- size
+- resolution
+- speed
+- cmos/ccd
+- configurability
+- noise
+- price
+- availability
+
+\subsection{Hardware construction}
+
+\subsubsection{Specified requirements}
+
+\subsubsection{Mechanical structure}
+
+Aluminium profile system as a frame
+
+Generic camera support screws, 360 angle ball joints?
+
+Adapters for machine vision cameras
+
+Arduino-like adapter HW for sync signals
+
+Connectors, wire
+
+\subsection{Remote shutter synchronization}
+
+\subsubsection{Remote trigger}
+
+The selected Canon EOS 700D has an input port for focus and shutter release, in addition to the integrated shutter button.
+The camera uses a standard 2,5 mm sized stero jack for connecting external remote controllers.
+Both mechanical and electronical remotes in wired and wireless format are available in the market, but no standard devices for triggering several cameras seem to exist.
+Fortunately, the triggering method is widely researched among hobbyists; it is well enough documented in the internet.
+
+The remote release jack is a three-contact connector, where one pin serves as a common ground, and connecting one pin to the ground triggers the camera's focus button, and the third pin releases the shutter when connected to the ground.
+Luk from doc-diy.net [?] describes the camera's trigger circuit internals; the wires supply some current, which is why it's not a good idea to simply connect the remote wires of all cameras together.
+A commonly used method among the DIY community is to use opto-isolators to control each camera individually, isolated from the shared control circuit.
+
+An opto-isolator provides a galvanically separated switch that can be used to ``connect'' the release wire to the camera's ground such that no electrical signal path is shared between the cameras.
+The switch is commonly a phototransistor that is triggered externally by the light transmitted from a LED.
+Both the phototransistor and the LED are installed in a opaque plastic housing.
+The opto-isolator device used in this work is shown in figure \ref{fig:opto-isolator}.
+
+% TODO: fig:opto-isolator in physical form and in a schematic diagram next to each other
+
+\subsubsection{Synchronized trigger implementation}
+
+By connecting each camera to a separate opto-isolator and driving all them from a same source, all cameras can be triggered simultaneously in a safe fashion.
+To fully automate the system, the trigger device should be connected to the computer that downloads the photos from the cameras.
+In this work, a microcontroller prototyping platform called Nucleo-F401RE by STMicroelectronics was used.
+This platform has a built-in USB port for simple communication.
+
+A microcontroller is a tiny computer in a single, usually thumb-sized package containing processor, RAM, program memory and peripherals; all parts required to run a single user-defined application often with no general operating system.
+The popular Arduino microcontroller board is a popular example of a small-sized microcontroller.
+
+A microcontroller was chosen over e.g. a computer-controlled relay board because its flexibility and low price.
+On one hand, such a device is more complicated to set up than a simple switch, but on the other hand, it can be programmed to sequence the cameras in any arbitrary order.
+It can also be used to measure the shutter delay and the actual precise time when each camera takes the picture; each has small unpredictable variations.
+When capturing moving targets, measuring this lag variation could be of interest.
+
+The Nucleo-F401RE is a prototyping board designed around the STM32F401RET6 microcontroller IC.
+This microcontroller ccontains a relatively powerful 32-bit ARM core, space for 512 KB of program code, 96 KB of RAM, 81 I/O pins, and lots of high-performance peripherals not needed in this circuit.
+
+\subsection{Computers used}
+
+any pc will do, the bigger the better
 
 \subsection{Available software tools}
 
@@ -54,61 +172,37 @@
 - http://slowmovideo.granjow.net/
 
 
-\subsection{Hardware construction}
+\subsection{Custom software}
 
-\subsubsection{Frame}
+Parallelized image acquisition from a large set of cameras has not yet established such a state that general purpose software would be easily available.
+Commercial solutions probably exist, but they are often strictly bound to a specific hardware, costly and inflexible.
 
-Aluminium profile system as a frame
+Some custom techniques were used to preview images of all cameras simultaneously, configure the settings of each in parallel, and retrieve the captured images from them in order.
 
-Generic camera support screws, 360 angle ball joints?
+\subsubsection{gphoto2}
 
-Adapters for machine vision cameras
+gphoto2 \cite{gphoto2} is a well-known free application and library for controlling digital cameras on Unix-like operating systems, supporting over a thousand cameras.
+Instead of relying on each camera manufacturer separately for a software development kit, gphoto2 abstracts common operations behind the same interface.
+For example, Canon \cite{canonsdk} and Nikon \cite{nikonsdk}, some of the biggest camera manufacturers, both provide SDKs for controlling their devices remotely.
+To support both vendors, one would have to write code for both APIs.
+API restrictions, licenses blahblah.
 
-Arduino-like adapter HW for sync signals
+Most modern USB cameras use the Picture Transfer Protocol (PTP) \cite{ptpTODO} for setting properties and transferring pictures, which is also what gphoto2 implements.
 
-Connectors, wire
+It turns out that gphoto2 has best support for Canon and Nikon cameras.
 
-\subsubsection{Cameras}
+\subsubsection{Previewing and configuration}
 
-GigE/USB3/???
+Because of the flexible nature of the rig purposes, a simple preview live feed is almost mandatory to properly set up a new configuration.
+A preview matrix of all cameras makes it easy to identify the cameras and to point them to correct direction, and to verify that their settings are the same (e.g. similar brightness in preview video).
+Remote control of all cameras enables to set all settings, such as shutter speed and focus distance, jointly from the same computer instead of clicking on each camera's buttons manually.
 
-- size
-- resolution
-- speed
-- cmos/ccd
-- configurability
-- noise
-- price
-- availability
+\subsubsection{Image acquisition}
 
-\subsection{Camera matrix}
+The cameras cannot be triggered individually via USB even though it is possible, because it is too complex and undeterministic for multi-camera synchronization.
+Instead, the remote release device is triggered via USB that then releases all shutters at the needed precision.
 
-not considered: weatherproofing, lcd/viewfinder/user interface, mirror blackout, autofocus, etc
-
-resolution
-dynamic range
-burst mode speed
-wire remote shutter speed
-dust reduction
-optical stabilizing
-video frame rate, resolution
-usb speed
-usb mass storage
-flash something
-manual mode settings
-shutter lag
-mirror lockup
-weight
-price
-
-\subsection{Practicalities}
-% or \subsection{Data recording}
-
-- lens distortion?
-- rigid base, motion blur
-- baseline width, focus, depth, fstop etc
-- compression artifacts are nasty (edge detectors go wild etc.)
-
+A custom gphoto2-based software is used to download pictures from the cameras. They are able to automatically notify about new files, which are then downloaded in proper locations via USB.
 
 \subsection{Reconstruction}
 
@@ -127,3 +221,5 @@ eigenface / pca / AAM model (?)
 poisson surface vs ball pivoting
 
 visual convex hull, bbox for constraining
+
+\subsubsection{Software pipeline}
