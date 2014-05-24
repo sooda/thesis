@@ -11,6 +11,7 @@
 % active vs. passive http://en.wikipedia.org/wiki/3D_reconstruction
 algebraic vs geometric error
 (wikipedia: In recent decades, there is an important demand for 3D content for computer graphics, virtual reality and communication, triggering a change in emphasis for the requirements. Many existing systems for constructing 3D models are built around specialized hardware (e.g. stereo rigs) resulting in a high cost, which cannot satisfy the requirement of its new applications. This gap stimulates the use of digital imaging facilities (like a camera). Moore's law also tells us that more work can be done in software. An early method was proposed by Tomasi and Kanade.[1] They used an affine factorization approach to extract 3D from images sequences. However, the assumption of orthographic projection is a significant limitation of this system.)
+
 [1] Shape and motion from image streams under orthography: A factorization approach
 
 History[edit]
@@ -26,34 +27,24 @@ Stereo, multiview, structure from motion, blah blah.
 This work concentrates most on scanning human faces, but the algorithms are kept as abstract as possible to make it simple to apply them to other targets too.
 Acquiring structure of static objects is also presented.
 
+
+
 Facial motion capture (mocap) is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement.
-Mocap records movements of a human body (or another object tjat is to be recorded) so that the movements can be replayed or analyzed. Traditional methods only model the joint angles blabla, tracking tens of points in realtime.
-Level of detail varies depending on what is needed; from simple bone movements to deformations of skin and muscles.
-Usually the capture is done on special easily distinguishable markers, typically small retroreflective dots, that are mapped to a model for playback. Playback then interpolates between the recorded positions. [CITE THESE]
+Mocap records movements of a human body (or another object that is to be recorded) so that the movements can be replayed or analyzed. Traditional methods only model the joint angles blabla, tracking tens of points in realtime.
+Level of detail varies, depending on what is needed; from simple bone movements to deformations of skin, muscles and clothing.
+Traditionally, motion capture is done on special easily distinguishable markers, typically small retroreflective spheres, that are mapped to a model for playback. Playback then interpolates between the recorded positions. [CITE THESE]
 % http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
 
-The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal}.
-(Other applications (uses). Movies. Remedy? Medical [essential physics of, bushberg]!). Landscape/architecture engineering. Crime scenes (police investigation). Topographic / terrain mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
+The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; then, The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal} to capture the skin surface of a human head, in order to replicate the head in computer models.
 
-rockstar games / la noire; camera pairs
-
-polar express / sony imageworks
-
-ea sports / faro
-
+(Other applications (uses). Movies. Remedy. Medical [essential physics of, bushberg]!). Landscape/architecture engineering. Crime scenes (police investigation). Topographic / terrain mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
 
 static vs dynamic: geometry and texture / gem variations only / geometry and texture variations
 
-Close range photogrammetry
-
-stereopsis
-
-isolated object
-
-camera resectioning
-
-Three-dimensional capture means in general the way of recording a sequence of movements of a real-life target or scene.
+Three-dimensional motion capture means in general the way of recording a sequence of movements of a real-life target or scene.
 The technical details vary by what information is required and available.
+When time is considered as one additional dimension, sometimes 3D motion captured sequences are called 4D video.
+This reflects in e.g. the names of some software packages \cite{something4dgoogleitup}
 
 Static capture is simple in the way that the time when the pictures are taken does not affect the performance.
 Small objects have been scanned successfully with a turntable [CITE], and structure from motion techniques have recently been presented that impressively recover a structure from pictures taken all over an outdoor location with no a priori information about the camera configurations [CITE].
@@ -66,24 +57,15 @@ It is obviously easier to map image features to a priori information than to rec
 
 (( parametric face properties ))
 
-The intention of this work is both capturing the structure and texture of a target and tracking of the target's movement by time.
-The captured data should then be used to reconstruct the same target.
-A camera rig is constructed to record continuous video from several, carefully decided viewpoints.
-In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
-
 The structure of an object can be extracted relatively easily from distinct features that can be detected with several cameras [CITE].
-Current advances in camera technology and price make it possible for consumers to do pretty sophisticated reconstruction that has been possible only with a large budget of e.g. a movie studio.
+Current advances in camera technology and price make it possible for individual consumers to do pretty sophisticated reconstruction that has been possible only with a large budget of e.g. a movie studio.
 Even software that uses only a smart phone camera and runs on the same phone has been published [CITE, CITE].
-
-The objective of this work is to describe a complete 3D object scanning and reconstruction pipeline with both shape and texture information.
-A rig of cameras is constructed, and a generic software pipeline is developed and presented, for reading generic video stream and producing raw reconstructed textured 3D meshes and/or point clouds for further handling.
-Real-time processing is not considered important, as the data will be post-processed and observed manually and not used as such.
 
 The reconstruction and rendering involves lots of filtering of the raw data and further using high-resolution textures to extract better resolution depth data than what is available with computer vision technologies only.
 By making certain assumptions on the texture, very detailed bump maps can be extracted, for example, by backprojecting the expected 3d mesh to textures and refining. [CITE]
 
 Reconstruction of a static detailed mesh is difficult enough; human faces not only move, but also deform very heavily, which poses even further challenges [CITE].
-We present basic techniques for taking also motion into account, but leave the use of state-of-the-art algorithms for future implementations.
+Basic techniques for taking also motion into account are presented, but the use of state-of-the-art algorithms is left for future implementations.
 It is possible to assume locally smooth movements in most areas; thus, a more intelligent approach should be used than simply reconstructing a new mesh for each frame and using registration to just align them. [CITE]
 
 Many tracking algorithms work in the 2D space using simply the picture data and not the post-processed 3D meshes [CITE].
@@ -91,7 +73,21 @@ Many tracking algorithms work in the 2D space using simply the picture data and 
 
 \subsection{Goal of the thesis}
 
+The objective of this work is to describe a complete 3D object scanning and reconstruction pipeline with both shape and texture information.
+A rig of cameras is constructed, and a generic software pipeline is developed and presented, for reading generic video stream and producing raw reconstructed textured 3D meshes and/or point clouds for further handling.
+Real-time processing is not considered important, as the data will be post-processed and observed manually and not used as such.
+
+or
+
+The intention of this work is both capturing the structure and texture of a target and tracking of the target's movement by time.
+The captured data should then be used to reconstruct the same target.
+A camera rig is constructed to record continuous video from several, carefully decided viewpoints.
+In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
+
+or
+
 The aim of this work is to evaluate both software and hardware aspects in three-dimensional object reconstruction, and to develop such system, targeted to small sized objects.
+Both the geometric properties and color texture were considered.
 Aim is in hardware robustness, ease of use and general extendability. While there are no detailed plans on further use of the machinery, it should support many kinds of studies in the future of its structure and without knowing all implementation issues in detail.
 
 \subsection{Organization of the thesis}
