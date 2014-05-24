@@ -1,4 +1,17 @@
 DIVIDE TO image acquisition, reconstruction, postprocessing/rendering
+ALSO FURTHER AS theory, previous work, previous usage
+
+Close range photogrammetry, stereopsis, isolated object, camera resectioning
+
+
+previous usage in:
+
+	rockstar games / la noire; camera pairs
+
+	polar express / sony imageworks
+
+	ea sports / faro
+
 
 surface vs motion capture
 
@@ -23,19 +36,72 @@ Perf of cloth animation capture
 
 (Crosseyed stereoscopy, how works)
 
-\subsection{Imaging}
-
-asdfg
-
-\subsubsection{Pinhole camera}
-
+Weak perspective x=fX/Z
 Ideal pinhole model projects an image upside down on its film.
 
-\simplegfx{h}{0.9\textwidth}{pinhole-camera}{lel}
+\section{Imaging} \label{sec:imaging} % {{{
+%In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
 
-Weak perspective x=fX/Z
+Digital stereo vision in the end analyses digital images; this section introduces the basic image acquisition steps and concerns that affect reconstruction quality. Cameras are never ideal, and practical algorithms take lens imperfections into account (e.g. \cite{opencv}). Images are commonly taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane, and finally to a discrete grid of numerical values that describe light intensities.
 
-{Pinhole camera principle. The box represents a camera; image is formed to the plane on its back.}
+Practical details, such as depth of field, sharpness, aberrations and others are not considered, as they vary greatly depending on the used hardware and are out of scope of this work.
+It suffices to say that in a practical system the choice of good optics is a key to good quality reconstruction.
+Accuracy and errors depend on not only decidable physical parameters of a stereo imaging rig, such as camera positioning, but also on e.g.~physical construction errors, lens imperfections, camera sensor noise, image compression and algorithmic accuracy. \cite{hollsten2013imagequality, kyto2011method,rieke2009evaluation}.
+
+%In addition to plain photographic cameras, reconstruction can be done using e.g. laser scanners or light field cameras. Those are not covered in this work.
+
+\subsection{Pinhole camera}
+
+\simplegfx{h}{0.6\textwidth}{pinhole-camera}
+{Pinhole camera principle. The box represents a camera; image seen through the small hole is formed to the plane on its back, rotated upside down.}
+
+A physical camera is in its simplest form modeled as a pinhole camera; an ideal device that projects an image upside down on its film through a small aperture.
+Illustration given in image \ref{fig:pinhole-camera}.
+In computer vision, this projection is given as a $3 \times 4$ matrix, when homogeneous coordinates are used.
+Homogeneous coordinates add an extra dimension to the interpretation of coordinates and each point becomes a line that crosses the origin in a dimension one higher than the original.
+In addition, several vector operations become more convenient to manipulate. \cite{hartley03multiview,heyden2005multiple}
+
+The pinhole model (or, perspective projection) states that the world point $(x, y, z)$ is projected to the image plane ($f$ units away from the origin) at $(u, v)$:
+
+\begin{equation}
+\begin{pmatrix}
+u \\ v
+\end{pmatrix}
+=
+-\frac{f}{z} \begin{pmatrix}
+x \\ y \\ z
+\end{pmatrix}
+\end{equation}
+
+Light rays travel through the pinhole camera's aperture to the image plane that is $f$ units behind the pinhole.
+The result can be derived from similar triangles with a common vertex at the aperture.
+Sometimes the sign is inverted, which results in a plane between the pinhole (i.e.~camera origin) and the actual point, where the image is not rotated; this can be more convenient to analyse.
+\cite{hartley03multiview}
+
+Setting the camera to origin and using homogeneous coordinates, the mapping is given with a camera matrix as
+
+\begin{equation}
+\begin{pmatrix}
+u \\ v \\ 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+x \\ y \\ z/f
+\end{pmatrix}
+=
+\begin{pmatrix} \label{eq:cmat}
+	1 & 0 & 0 & 0 \\
+	0 & 1 & 0 & 0 \\
+	0 & 0 & 1/f & 0
+\end{pmatrix}
+\begin{pmatrix}
+x \\ y \\ z \\ 1
+\end{pmatrix}
+\end{equation}
+
+The camera position and rotation in a global coordinate frame can be encoded in a matrix so that the point $(x,y,z)$ in global coordinate frame is first transformed relative to the camera's origin; section \ref{sec:coord} discusses this in more detail.
+
+% }}} imaging
 
 \subsubsection{Optics}
 
