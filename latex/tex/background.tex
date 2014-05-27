@@ -414,11 +414,13 @@ compression artifacts
 
 % }}}
 
-\subsection{Camera selection}
+\subsection{Camera selection} % {{{
+
+general HW availability and ease of use and customizability and price
 
 Good: Smaller sensor; smaller focal length; closer to target; less camera position disparity; smaller rig
 
-Image quality: lens quality, sensor size, pixel count, lightning
+Image quality: lens quality, sensor size, pixel count, lighting
 
 Common sensor sizes in dslr cameras
 
@@ -436,7 +438,7 @@ no anti-shake/image stabilizer  (photogrammetry.doc) in sensor or lens
 
 Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality, e.g. mechanical problems blah blah
 
-sensor vibration to remove dust -> sensor position not very fixed (rieke2009)
+sensor vibration to remove dust -> sensor position not very fixed (rieke2009) % TODO MEASURE!
 
 ring flash bending the lens assembly if attached to it (rieke2009)
 
@@ -476,7 +478,6 @@ Manual mode required
 
 Always a zoom lens, bad for calibration
 
-
 \subsubsection{Camcorders}
 
 Electrical shutter
@@ -499,9 +500,15 @@ Internal hard disk
 
 Interlace vs. progressive recording
 
+\subsubsection{Webcams}
+
+Like camcorders but shit, only good feature is their price
+
+closed design, poor manual settings
+
 \subsubsection{Machine vision cameras}
 
-Well controllable, flexible (in SW terms), still vendor-specific APIs for tuning the settings
+Well controllable, flexible (in SW terms), still vendor-specific APIs for tuning the settings (as is with any other vendors too, but no good general-purpose libs for these as opposed to gphoto2 due to high price = bad availability for consumers; should afford extra time for coding too)
 
 External sync
 
@@ -532,7 +539,9 @@ Lytro (NOPE)
 
 \subsubsection{Hybrid systems}
 
-Use several camera types at the same time? depth camera for more reliable and fast measurements?
+Use several camera types at the same time? depth camera for more reliable and fast measurements? not really done, should we try it?
+
+% }}}
 
 
 \subsection{Hardware}
