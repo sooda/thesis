@@ -1,0 +1,12 @@
+# just some random configuration, i assume that the usb ports might change when
+# replugging them or even when they reboot?
+
+gphoto2 --port usb:002,033 --set-config artist=E
+gphoto2 --port usb:002,032 --set-config artist=D
+gphoto2 --port usb:002,031 --set-config artist=F
+gphoto2 --port usb:002,030 --set-config artist=H
+gphoto2 --port usb:002,029 --set-config artist=G
+gphoto2 --port usb:002,028 --set-config artist=I
+gphoto2 --port usb:001,010 --set-config artist=B
+gphoto2 --port usb:001,009 --set-config artist=A
+gphoto2 --port usb:001,008 --set-config artist=C
