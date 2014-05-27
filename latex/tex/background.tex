@@ -39,7 +39,7 @@ Perf of cloth animation capture
 Weak perspective x=fX/Z
 Ideal pinhole model projects an image upside down on its film.
 
-\section{Imaging} \label{sec:imaging} % {{{
+\subsection{Imaging} \label{sec:imaging} % {{{
 %In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
 
 Digital stereo vision in the end analyses digital images; this section introduces the basic image acquisition steps and concerns that affect reconstruction quality. Cameras are never ideal, and practical algorithms take lens imperfections into account (e.g. \cite{opencv}). Images are commonly taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane, and finally to a discrete grid of numerical values that describe light intensities.
@@ -50,7 +50,7 @@ Accuracy and errors depend on not only decidable physical parameters of a stereo
 
 %In addition to plain photographic cameras, reconstruction can be done using e.g. laser scanners or light field cameras. Those are not covered in this work.
 
-\subsection{Pinhole camera}
+\subsubsection{Pinhole camera}
 
 \simplegfx{h}{0.6\textwidth}{pinhole-camera}
 {Pinhole camera principle. The box represents a camera; image seen through the small hole is formed to the plane on its back, rotated upside down.}
@@ -103,9 +103,14 @@ The camera position and rotation in a global coordinate frame can be encoded in 
 
 % }}} imaging
 
-\subsubsection{Optics}
+\subsubsection{Optics} % {{{
 
-Construction of optical systems is well studied [?,?,?]. Actual camera lenses consist usually of not only a single glass element but many, especially in the case of zoom lenses [?]. In this work, the inner workings of these systems are ignored and equations assume a simple projective model.
+In practice, no actual camera works ideally; imperfections in the lenses project points to positions that differ from those predicted by straight lines in this linear case.
+Lens distortions deviate the rays, and no system is in perfect focus, so that one light ray spreads out as a circle.
+In reconstructing, methods that estimate the points and minimize errors are used, as no model predicts the camera perfectly.
+
+Construction of optical systems is well studied. \cite{kingslake1989history}
+Actual camera lenses consist of not only a single glass element but many, especially in the case of zoom lenses. In this work, the inner workings of these systems are ignored and equations assume a simple projective model, which is a safe assumption when the image is in focus.
 
 The following equation applies for a thin lens while capturing sharp images:
 
@@ -113,17 +118,56 @@ The following equation applies for a thin lens while capturing sharp images:
 	\frac{1}{a} + \frac{1}{b} = \frac{1}{f} \label{eq:focal}
 \end{equation}
 
-where f is the focal length, a is the distance between the lens and the film, and b is the distance between the lens and the imaged source. This is illustrated in figure TODO.
+where f is the focal length of the lens, a is the distance between the lens and the film, and b is the distance between the lens and the imaged source. Figure \ref{fig:focal} example.
 
-The focal length has a direct influence to field of view, as given in figure TODO. Longer focal length (long-focus lens, often referred to as telephoto lens) results to a more zoomed in picture, as opposed to a wide-angle lens. 
+% TODO: fig:focal
+
+%The focal length has a direct influence to field of view, as given in figure TODO. Longer focal length (long-focus lens, often referred to as telephoto lens) results to a more zoomed in picture, as opposed to a wide-angle lens. 
 
 All practical optical systems (lenses) introduce some non-linear distortion that affects the performance of the ideal pinhole model.
-
-Common distortions are the purely radial so-called barrel and pincushion distortions, where the magnification is a nonlinear function of image ray distance from the center of the lens.
+Common distortions are the purely radial so-called barrel and pincushion distortions, where the magnification is a nonlinear function of image ray distance from the center of the lens. % XXX brown model somewhere here
 Fisheye lenses are commonly known to have this kind of effect.
-Tangential distortion is less common, particularly in great magnitudes, and is often ignored. Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not parallel to the image plane.
+Tangential distortion is less common, particularly in great magnitudes, and is often ignored. Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not parallel to the image plane. \cite{kingslake1989history}
 
 Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
+
+It should be noted that the nonlinear optical distortions are different from the inevitable perspective projection distortion that happens when projecting a 3D scene to a 2D plane, which is taken into account in the reconstruction.
+Perspective distortion refers to the illusion that actual parallel lines would not be parallel in a projected image. \cite{SOMEONE}
+
+\simplefig{h}{%
+\includegraphics[width=0.2\textwidth]{gfx/barrel-distortion}
+\includegraphics[width=0.2\textwidth]{gfx/pincushion-distortion}
+}{fig:distortions}
+{Barrel (left) and pincushion distortions that would show up in an image of a grid of straight lines. For a lens with no distortion, the lines would not be curved.}
+
+Distortion should be corrected in software, as the following stereo algorithms assume that the images are free of nonlinear errors, i.e. straight lines in the world should remain straight in 2D images after the projective transformation.
+%In particular, image rectification (discussed later in \ref{sec:rectification} won't work if this straightness does not remain; the assumption that similar features should be found on horizontal lines wouldn't hold on distorted images. \cite{hartley03multiview} 
+
+The radial correction used by the OpenCV library to create a new image of the original pixel values at new positions \cite{opencv} is % FIXME brown model
+
+\begin{align}
+	x_{corr} &= x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\\
+	y_{corr} &= y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)
+\end{align}
+
+% (XXX some software does this in a different way (inverse of this, maybe?)
+
+% TODO: illustrate pixel movements, such as in a vector field likein matlab toolbox
+
+Trucco and Verri \cite{trucco1998introductory} use only the two first coefficients. For tangential distortion:
+
+\begin{align}
+x_{corr} &= x + (2 p_1 x y + p_2 (r^2 + 2 x^2))\\
+y_{corr} &= y + (2 p_2 x y + p_1 (r^2 + 2 y^2))
+\end{align}
+
+$x$ and $y$ are the original coordinates in the distorted image, $x_{corr}$ and $y_{corr}$ are the corrected ones, $k_1$, $k_2$, $k_3$, $p_1$ and $p_2$ are coefficients specific to the distortion, and $r$ equals to the distance to image center located at $(x_c,~y_c)$:
+
+\begin{equation}
+r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
+\end{equation}
+
+%---
 
 Perspective distortion something something viewer location. Normal TV is usually watched at the distance of twice the screen diagonal. At this location, the scene looks normal when taken with a normal lens. A wide-angle scene then looks normal when viewed at a nearer distance. \cite{wilson2004anton}
 
@@ -131,41 +175,13 @@ Perspective distortion something something viewer location. Normal TV is usually
 
 % TODO: custom tikz for exactly specified parameters in barrel/radial
 
-\simplefig{h}{%
-\includegraphics[width=0.3\textwidth]{gfx/barrel-distortion}
-\includegraphics[width=0.3\textwidth]{gfx/pincushion-distortion}
-\includegraphics[width=0.3\textwidth]{gfx/mustache-distortion}
-}{fig:distortions}
-{Left to right: barrel, pincushion and mustache distortions, respectively.}
-
-Distortion should be corrected in software, as the following stereo algorithms assume that the images are free of nonlinear errors, i.e. straight lines in the world should remain straight in 2D images after the projective transformation.
-In particular, image rectification [X] won't work if this straightness does not remain; the assumption that similar features should be found on horizontal lines wouldn't hold on distorted images.
-
-The radial correction used by the OpenCV library is
-
-\begin{align}
-	x_{corr} &= x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\\
-	y_{corr} &= y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)
-\end{align}
-
-Trucco and Verri \cite{trucco1998introductory} use only the two coefficients. For tangent distortion, the formulas are
-
-\begin{align}
-x_{corr} &= x + (2 p_1 x y + p_2 (r^2 + 2 x^2))\\
-y_{corr} &= y + (2 p_2 x y + p_1 (r^2 + 2 y^2))
-\end{align}
-
-where $x$ and $y$ are the original coordinates in the distorted image, $x_{corr}$ and $y_{corr}$ are the corrected ones, $k_1$, $k_2$, $k_3$, $p_1$ and $p_2$ are coefficients specific to the distortion, and $r$ equals to the distance to image center located at $(x_c,~y_c)$:
-
-\begin{equation}
-r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
-\end{equation}
-
 TODO: example pic of a fisheyed image and undistorted one.
 
 % \subsubsection{Aperture}
 
-Aperture size, pixel size, diffraction limits, airy disks, circle of confusion, rayleigh limit
+A few words about aperture size, pixel size, diffraction limits, airy disks, circle of confusion, rayleigh limit
+
+% }}}
 
 \subsubsection{Image sensors}
 
@@ -193,7 +209,7 @@ Physical pixels cover less than the full area of a sensor, as there are gaps bet
 
 \subsubsection{Shutter}
 
-Mechanical vs. electrical (varying ccd charge time)
+Mechanical vs. electrical. varying ccd charge time)
 
 Shutter vs frame rate. More discussed in the section \ref{subsec:video}. Shutter duration that exposes half of the frame time is common in professional motion pictures \cite{wilson2004anton}. While the shutter is closed, the film advances to next frame (in mechanical cameras). Blur makes the human mind think that the movement is smooth. When sampling for 3D reconstruction, the ideal shutter speed would be infinitesimally fast to reduce blur. Movement in between is then interpolated.
 
@@ -435,7 +451,7 @@ Use several camera types at the same time? depth camera for more reliable and fa
 
 \subsubsection{Transport buses and cabling}
 
-\subsubsection{Mechanical supports}
+\subsubsection{(Mechanical something)}
 
 Integral memory cards / disks, offline usage
 
@@ -618,7 +634,7 @@ Epipole can be interpreted as the location of another camera as seen by other ca
 
 \subsubsection{Point matching}
 
-\subsubsection{something fucky}
+%\subsubsection{something fucky}
 
 snake surrounding stuff
 
@@ -661,11 +677,11 @@ Detail calculation (error on surface ~= avg reprojection error?) compute millime
 
 Mesoscopic level shape reconstruction
 
-\subsubsection{Surface mesh generation}
+\subsection{Surface fitting}
+
+\subsubsection{Geometry}
 
 Meshlab
-
-\subsection{Surface fitting}
 
 build mesh from the point clouds that has been built from the pixels
 
