@@ -220,18 +220,21 @@ Physical pixels cover less than the full area of a sensor, as there are gaps bet
 
 % }}}
 
-\subsubsection{Shutter}
+\subsubsection{Shutter} % {{{
 
-Mechanical vs. electrical. varying ccd charge time)
+Mechanical vs. electrical. varying ccd charge time. mechanical moves parts and is slow, wears out. ccd shutter.
 
-Shutter vs frame rate. More discussed in the section \ref{subsec:video}. Shutter duration that exposes half of the frame time is common in professional motion pictures \cite{wilson2004anton}. While the shutter is closed, the film advances to next frame (in mechanical cameras). Blur makes the human mind think that the movement is smooth. When sampling for 3D reconstruction, the ideal shutter speed would be infinitesimally fast to reduce blur. Movement in between is then interpolated.
+Shutter vs frame rate. More discussed in the section \ref{sec:video}. Shutter duration that exposes half of the frame time is common in professional motion pictures \cite{wilson2004anton}. While the shutter is closed, the film advances to next frame (in mechanical cameras). Blur makes the human mind think that the movement is smooth. When sampling for 3D reconstruction, the ideal shutter speed would be infinitesimally fast to reduce blur. Movement in between is then interpolated.
 
-Flash visibility, short flash, flash shared to two frames
+Flash visibility, short flash, flash shared to two frames, X-sync
 
 Image upside down on the sensor, curtain goes physically from top to bottom
 
-Shutter lag (AE/AF even in manual mode maybe?); consistent or not?
+moving the curtain back up, springs? too much detail.
 
+Shutter lag (auto exposure/focus even in manual mode maybe?); consistent or not? sensor sensitivity initing lag?
+
+% }}}
 
 \subsubsection{Light sources}
 
