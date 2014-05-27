@@ -33,7 +33,11 @@ Timeline::Timeline(wxFrame* parent, int lines, bool follow) : wxPanel(parent),
 }
 
 void Timeline::insert(int line, Timeline::Mark mark) {
-	marks.push_back(std::make_pair(mark, line));
+	// assume that the user doesn't insert ordered points
+	//marks.push_back(std::make_pair(mark, line));
+	auto m = std::make_pair(mark, line);
+	auto pos = std::upper_bound(marks.begin(), marks.end(), m);
+	marks.insert(pos, m);
 	if (follow) {
 		// (mark - start) / length = followratio
 		start = mark - followratio * length;
