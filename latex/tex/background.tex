@@ -738,30 +738,88 @@ maybe move this to a paragraph as part of another section.
 
 % }}} normalization
 
-\subsubsection{Binocular disparity}
+\subsubsection{Binocular disparity} % {{{
 
-Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
+%Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
 
-(fund generalization of ess.)
+\simplefig{h!}{
+\begin{tikzpicture}[scale=0.3]
+	% P, Z
+	\draw[fill] (0, 20) circle [radius=0.3];
+	\node at (0, 21) {$P$};
 
-(fund and ess. in global and pixel coords)
+	\draw [<->] (0, 0.5) -- (0, 19.5);
+	\node at (0.5, 10) {$Z$};
 
-Two cameras: ideal stereo setup, such as human eyes; cameras are parallel, looking straight and shifted only in the x (or y) axis. Calibration assumed to be known.
+	% origins, T
+	% TODO: circles, node ends not exactly at those points
+	\draw [<->] (-9.5,0) -- (9.5, 0);
+	\draw[fill] (-10, 0) circle [radius=0.3];
+	\draw[fill] ( 10, 0) circle [radius=0.3];
+	\node at (-10, -1) {$O_l$};
+	\node at (10, -1) {$O_r$};
+	\node at (0, -1) {$T$};
 
-Similar triangles:
+	% headings
+	\draw [->] (-10, 0) -- (-10, 10);
+	\draw [->] (10, 0) -- (10, 10);
+
+	% image planes, at y=4
+	\draw[thick] (-13, 4) -- (-7, 4);
+	\draw[thick] (13, 4) -- (7, 4);
+
+	\draw [<->] (-6, 0.5) -- (-6, 3.5);
+	\node at (-5.5, 2) {$f$};
+
+
+	% intersection points at principals and xs
+	\draw[fill] (-10, 4) circle [radius=0.3];
+	\draw[fill] (10, 4) circle [radius=0.3];
+
+	\node at (-10.5, 3) {$c_l$};
+	\node at (10.5, 3) {$c_r$};
+
+	\node at (-9, 5) {$x_l$};
+	\node at (9, 5) {$x_r$};
+
+
+	% O-to-P
+	\draw (-10, 0) -- (0, 20);
+	\draw (10, 0) -- (0, 20);
+
+
+	% p
+	\draw[fill] (8, 4) circle [radius=0.3];
+	\node at (8, 3) {$p_r$};
+	\draw[fill] (-8, 4) circle [radius=0.3];
+	\node at (-8, 3) {$p_l$};
+\end{tikzpicture}
+}{fig:simplestereo}
+{A very simple stereo setup, picture from above. The image planes (thick lines) are actually imaginary, as a real film in a camera would exist behind the principal point and project the image upside down, as described earlier in \ref{sec:imaging}. The coordinates exist in the world coordinate units. The symbols $O$ are the camera origins ($T$ units between each other); $c$ the principal points; $x$ the image plane coordinates of $p$ w.r.t. the principal points; and $f$ is the focal length. The unknown is $Z$, depth of point $P$.}
+% this figure would need to be bigger and have also the back side planes (sensors) as opposed to the (normalized?) image planes (at f=1?)
+
+%Next, the setup of binocular stereo vision is described. Common stereo vision rigs use the simplest possible case: two identical cameras with a fixed distance, both oriented to the same direction, parallel to the line connecting them, as in figure \ref{fig:simplestereo}.
+
+Assuming known calibration with identical cameras (same focal length and sensor) in a setup described above, visualized in figure \ref{fig:simplestereo}, points can be triangulated as follows:
+
+From similar triangles with a common vertex at $P$, we get (note that $x_r < 0$ as it's to the left, towards to the negative axis, from the corresponding plane's origin)
 
 \begin{align}
-	\frac{Z}{T} &= \frac{Z-f}{T - x_l + x_r} &= \frac{Z-f}{T - d}
-	ZT - Zd &= ZT - fT
-	Z = \frac{fT}{d}
+	\frac{Z}{T} &= \frac{Z-f}{T - x_l + x_r} \\
+	&= \frac{Z-f}{T - d}\\
+	ZT - Zd &= ZT - fT\\
+	Z &= \frac{fT}{d} \label{eq:z}
 \end{align}
 
+The disparity $d$ is the difference of the points in their image planes, $d = x_r - x_l$.
+If the image planes would be fixed as being physically correct, in the back side of the camera origins, the focal length should be negated to keep the correct interpretation and sign because the projected physical image is mirrored in both axes. Image processing between the sensor and a picture file usually inverts this.
 
-Depth inversely proportional to disparity. Algorithms such as those in OpenCV can compute point clouds from disparity images.
+As the equation \ref{eq:z} shows, depth is directly inversely proportional to disparity in this simple case.
+To map the depth to correct units, only focal length $f$ and the baseline $T$ are needed additionally; when using pixel coordinates instead of physical in $d$, also the pixel size should be taken into account.
+All of these are encoded in the camera parameters.
+Algorithms such as those in OpenCV \cite{opencv} can compute point clouds from disparity images.
 
-Two or more cameras
-
-(Should this and the next ones be under a "methods for multi view stereo" section?)
+% }}} binocular disparity
 
 \subsubsection{Epipolar geometry}
 
