@@ -683,33 +683,49 @@ For simplicity, it is often denoted $\alpha_x = m_x f$, $\alpha_y = m_y f$. $R =
 
 % }}} coord systems and transforms
 
-\subsubsection{Camera calibration}
+\subsubsection{Camera calibration} % {{{
 
-Calibration is often specified with a camera projection matrix, or several separate matrices. It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
+Calibration is often specified with a camera projection matrix, or several separate matrices.
+It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example (?).
 
-Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras. Such relationship, known as calibrating the cameras, can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?]. Commonly the points are particular \emph{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
-
-Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern [chuan; zhang] whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration. These usually need several pictures taken with the same camera from different poses.
-
-The checkerboard calibration step can also measure optical distortion at the same time; e.g. opencv[?], matlab camera calib toolbox [?]
+calibration can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?]. Commonly the points are particular \emph{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
 
 TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
 
-Single three-dimensional calibration object is also sufficient blbl
 
-One possible way is direct linear transform (DLT) [hartley/zisserman multiviewgeom]: Solve whole projection matrix instead of individual parameters, decompose projection to intrinsics and extrinsics. For each projected point $\vec x$ from 3d point $\vec X$,
+%In order to accurately measure a scene with a camera, the camera's properties must be known.
+Reconstruction algorithms need to relate points between images; the camera properties are needed.
+Calibrating a camera means to measure its intrinsics and extrinsics in order to map its data to a known coordinate frame.
+Calibration has always to be done, but it does not necessary need to be a manual step before scanning; self-calibration attempts to target this convenience problem. \cite{pollefeys1999hand,hartley03multiview}
 
-\[
-	\vec x = M \vec X
-\]
+%Projective calibration only is too general, as it leaves out some assumptions that can be done about a physical world, such as relative angles and sizes; metric calibration something something. \cite{zisserman1995metric}.
 
-and construct N of these equations and solve for $M$.
+Automatic calibration tools rely on an amount of feature pairs of which the best matches are found, or a known pattern, such as a planar checkerboard pattern \cite{chuang2002performance,zhang2000flexible} whose features are also distinguished with a similar algorithm but a priori knowledge of the object structure is used for precise calibration.
+These usually need several pictures taken with the same camera from different poses.
 
-Methods that dig the matrix out of a single image have certain restrictions, and won't work if e.g. seven points lie on the same plane [longuet-higgins etc.]
+The checkerboard calibration step can also measure optical distortion at the same time. \cite{opencv,camcalmatlab}
 
-XXX see below. Intrinsic, extrinsic. Distortions. Projection matrices. Camera resectioning.
+%TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
 
-many single planar chessboard pics vs. a single image of an accurate 3d model.
+%Single three-dimensional calibration object is also sufficient blbl
+
+One possible way is direct linear transform (DLT)
+\cite{hartley03multiview}: the whole matrix $P$ is solved from $x_i = PX_i$ by constructing a system of equations from the projections of some known points $i$, and minimizing an error metric, as the case is usually overconditioned.
+
+%Methods that dig the matrix out of a single image have certain restrictions, and won't work if e.g. seven points lie on the same plane [longuet-higgins etc.]
+
+%XXX see below. Intrinsic, extrinsic. Distortions. Projection matrices. Camera resectioning.
+
+%many single planar chessboard pics vs. a single image of an accurate 3d model.
+%Single three-dimensional calibration object is also sufficient blbl
+
+
+%The scale of values in the equations above affects the precision [hartley, in defense of .., h,ziss]. A similarity transform can be used to modify the values to a more consistent range; this is called normalization of the data.
+
+%XXX see below. Intrinsic, extrinsic. Distortions. Projection matrices. Camera resectioning.
+
+
+% }}} camera calibration
 
 \subsubsection{Normalization}
 
