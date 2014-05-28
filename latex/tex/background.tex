@@ -821,7 +821,141 @@ Algorithms such as those in OpenCV \cite{opencv} can compute point clouds from d
 
 % }}} binocular disparity
 
-\subsubsection{Epipolar geometry}
+\subsubsection{Epipolar geometry} % {{{
+
+\simplefig{h!}{
+\begin{tikzpicture}[scale=0.5]
+	% cameras
+	\draw[fill] (-11,-1) circle [radius=0.2];
+	\draw[fill] ( 11,-1) circle [radius=0.2];
+	\draw (-11,-1) -- (11, -1);
+	\node at (0, -2) { baseline };
+
+	\node at (-11,-2) {$C_l$};
+	\node at ( 11,-2) {$C_r$};
+
+	% planes
+	\draw (-10,1) -- (-10,7) -- (-5,3) -- (-5,-3) -- cycle;
+	\draw ( 10,1) -- ( 10,7) -- ( 5,3) -- ( 5,-3) -- cycle;
+
+	% 3d pts
+	\draw[fill] ( 0,3) circle [radius=0.2];
+	\draw[fill] ( 0,9) circle [radius=0.2];
+	\node at (0,2) {$A$};
+	\node at (0,8) {$B$};
+
+	% origins via pts
+	\draw (-11,-1) -- (0,3) -- (11,-1);
+	\draw (-11,-1) -- (0,9) -- (11,-1);
+
+	% epis
+	\draw[fill] (-6,-1) circle [radius=0.1];
+	\draw[fill] (6,-1) circle [radius=0.1];
+	\node at (-6,-1.5) { $e_l$ };
+	\node at (6,-1.5) { $e_r$ };
+
+	% projections
+	\draw[fill] (-7.5,0.2727) circle [radius=0.1];
+	\draw[fill] (-7.5,2.1818) circle [radius=0.1];
+	\node at (-8.5, 0.2727) {$A_l$};
+	\node at (-8.5, 2.1818) {$B_l$};
+	% lines from epis
+	\draw (-6,-1) -- +(-2*1.5,2*1.2727);%(-7.5,0.2727);
+	\draw (-6,-1) -- +(-2*1.5,2*3.1818);%(-7.5,2.1818);
+
+	\draw[fill] (7.5,0.2727) circle [radius=0.1];
+	\draw[fill] (7.5,2.1818) circle [radius=0.1];
+	\node at (8.5, 0.2727) {$A_r$};
+	\node at (8.5, 2.1818) {$B_r$};
+	\draw (6,-1) -- +(2*1.5,2*1.2727);%(7.5,0.2727);
+	\draw (6,-1) -- +(2*1.5,2*3.1818);%(7.5,2.1818);
+\end{tikzpicture}
+}{fig:epigeom}
+{Two camera views on same scene.
+World points $A$, $B$ project to planes of different views imaged from $C_l$ and $C_r$ on the left ($A_l$ and $B_l$), and to the right ($A_r$, $B_r$).
+The actual images cover some area of the total projection plane, and the epipolar point may or may not lie visible in the image.
+When $A_l$ is known, its corresponding point $A_r$ (not initially known in practice) is found on the epipolar line joining $e_r$ and $A_r$ in the right image.
+All epipolar lines in a view join in the same point ($e_l$ and $e_r$).}
+% XXX do i want the planes in physical positions too or another pic to visualize it?
+
+% TODO: small algorithm for pairwise windowed point matching on the line
+
+% what?
+Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
+Such relationship, known as calibrating the cameras, can be automatically determined, given by corresponding points that can be distinguished in each image and matched.
+\cite{trucco1998introductory,hartley03multiview}
+
+In stereo vision, the same scene of interest is seen by two or more cameras at the same time.
+The cameras are rarely aligned perfectly such as in the disparity setup described above, however.
+Epipolar geometry encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with the same triangulation.
+
+A point seen by camera $C_l$ at 3D point A could be anywhere on the line between $C_l$'s origin and P, because a certain line passing through the principal point always projects to a point.
+This line is seen as a single point $A_l$.
+From another viewpoint in camera $C_r$, this line equals to some line on B's image plane.
+The real point must be on that line.
+The inverse applies for any point on $C_r$ and a line on $C_l$.
+The lines on the image planes are called epipolar lines.
+
+% FIXME:
+Essential matrix defines how the camera poses differ by the something something points seen by both.
+When $A_l$, $A_r$ encode the points in figure \ref{fig:epigeom} by the corresponding camera coordinates, and the baseline difference (vector from $C_l$ to $C_r$) is marked as $t$, it holds that $(A_l-C_l) \cdot t \times (A_r-C_r) = 0$, as all the vectors are coplanar; the cross product yields a normal to the plane, which is perpendicular to all the vectors, thus the dot product equals 0.
+\cite{hartley03multiview}
+
+Essential matrix is a matrix form of this relation; it includes the relative rotation and translation of the two cameras.
+
+%\begin{align*} \label{eq:essential}
+%	%A_r &= R (A_l - t) \\
+%	%A_r^T R T A_l &= 0 \\
+%	%A_r^T E A_l &= 0
+%	A_l \cdot t \times A_r = 0\\
+%	A_l \cdot t \times R A_r = 0\\
+%	A_l^T T
+%\end{align*}
+
+%where $T$ is the cross-product form of $t$ encoded in a matrix form as below. The essential matrix is obtained as $E = R T$.
+%
+%Le image. lecture11.pdf. O->p dot (O->O' cross O'->p') = 0
+%
+%Cross product expressed in a skew-symmetric matrix form is
+%\begin{equation}
+%\vec a \times \vec b =
+%\begin{pmatrix}
+%	 0   & -a_z &  a_y\\
+%	 a_z &  0   & -a_x\\
+%	-a_y &  a_x & 0
+%\end{pmatrix}
+%\begin{pmatrix}
+%	b_x\\b_y\\b_z
+%\end{pmatrix}
+%= \vec c
+%\end{equation}
+
+Fundamental matrix relates the corresponding points in stereo images; it has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account.
+Inverting the matrix $M_i$ (\ref{sec:coord}) in sensor-to-pixel coordinate transform and using it on pixel coordinates, world coordinates seen by the camera can be obtained. % FIXME equations
+
+%\[
+%\hat pAl = M_p A_l\\
+%\hat A_r = M_p A_r
+%\]
+%
+%and using it on pixel coordinates, the world coords can be obtained, plugging in to the equation \ref{eq:essential}
+%
+%\[
+%A_r^T E A_l = 0\\
+%(M_p^-1 \hat A_r)^T E (M_p^-1 \hat A_l) = 0\\
+%\hat A_r^T M_p^-T E M_p^-1 A_l = 0\\
+%\hat A_r^T F \hat A_l = 0
+%\]
+%
+%the fundamental matrix
+%
+%\[
+%F = M_p^-T E M_p^-1 = M_p^-T R T M_p^-1
+%\]
+
+The fundamental matrix relates the pixels and epipolar lines, and as such it is useful in image processing where the images are described as pixels in a color array (image) and not colored physical coordinates.
+
+%Epipole can be interpreted as the location of another camera as seen by other camera.
 
 A point seen by camera A at 3d point P could be anywhere on the line between A's origin and P.
 This line is seen as a single point.
@@ -830,14 +964,13 @@ The real point must be on that line.
 The inverse applies for any point on B and a line on A.
 The lines on the image planes are called epipolar lines.
 
-
 Essential matrix defines how the camera poses differ by the something something points seen by both. $p_l$, $p_r$ 3d points; vectors from camera origins (camera coordinates!) to the same point
 
 \[
 	p_l^T E p_l = 0
 \]
 
-Le image. lecture11.pdf. O->p dot (O->O' cross O'->p') = 0
+Le image above and lecture11.pdf. O->p dot (O->O' cross O'->p') = 0
 
 Cross product expressed in a skew-symmetric matrix form is
 \begin{equation}
@@ -853,12 +986,11 @@ Cross product expressed in a skew-symmetric matrix form is
 = \vec c
 \end{equation}
 
-
 Fundamental matrix relates the corresponding points in stereo images.
 
-Epipole can be interpreted as the location of another camera as seen by other camera.
+Epipole can be interpreted as the location of another camera as seen by other camera, as seen in the picture.
 
-
+% }}} epipolar geometry
 
 \subsubsection{Point matching}
 
