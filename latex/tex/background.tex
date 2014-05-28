@@ -1,3 +1,9 @@
+snake surrounding stuff
+
+visual hull
+
+salient geometric features for matching
+
 DIVIDE TO image acquisition, reconstruction, postprocessing/rendering
 ALSO FURTHER AS theory, previous work, previous usage
 
@@ -878,7 +884,7 @@ When $A_l$ is known, its corresponding point $A_r$ (not initially known in pract
 All epipolar lines in a view join in the same point ($e_l$ and $e_r$).}
 % XXX do i want the planes in physical positions too or another pic to visualize it?
 
-% TODO: small algorithm for pairwise windowed point matching on the line
+% TODO: small algorithm for pairwise windowed point matching on the line (hox! and link to point matching section maybe)
 
 % what?
 Triangulation or reconstruction of the scene structure given by image pair(s) is usually done on the base of a known relationship between the cameras.
@@ -992,15 +998,32 @@ Epipole can be interpreted as the location of another camera as seen by other ca
 
 % }}} epipolar geometry
 
-\subsubsection{Point matching}
+\subsubsection{Point matching} % {{{
 
-%\subsubsection{something fucky}
+Previously, basics for reconstructing three-dimensional location for a point pair were introduced, assuming known positions for the same point in different images.
+To reconstruct a whole scene from a full image, all pairwise points must be matched, i.e. found that what pixel in one view represents the same object as one in other view.
 
-snake surrounding stuff
+Matching is often also called correspondence searching:
+Given a pixel in one image, what is the corresponding pixel in another image taken from the same scene?
+Pixels correspond to each other if they represent the same physical point.
 
-visual hull
+% FIXME: pairwise feature matching vs. windowed matching
+% TODO some sift descriptor theory, angle histogram stuff
 
-salient geometric features for matching
+To describe the pixel's characteristics, its surrounding environment is encoded as a \textit{feature}, a easily recognizable, unique property vector.
+When discussing about features, not every pixel's neighbourhoods are used; \textit{good} features are those that have strongly distinguishable properties, such as edges and corners.
+
+Edges or corners are essentially high-frequency information in the image that can be interpreted as a 2D discrete function; thus, they can be detected by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found \cite{marr1980theory}
+
+Neighbourhood of a pixel where features are detected is often called a window or a patch.
+
+% this is kind of the pairwise-vs-windowed stuff
+Matching can be done in sparse or dense mode; sparse matching finds a set of features from each image, and tries to match them. Dense matching runs through each pixel of one image and tries to find the same from another one with e.g. template matching \cite{duda1973pattern}; from the coordinate differences in image space between the two images, a disparity map is built. The disparities are then directly transformed to depth values, yielding a point cloud.
+
+Scale-invariant feature transform (SIFT) \cite{lowe1999object} is a commonly used algorithm for local feature detection. A GPU implementation is also available \cite{changchang2007siftgpu}.  Invariance to scaling, translation and rotation makes SIFT useful in describing features that can be matched between unaligned images. Other similar commonly used means are Speede Up Robust Features (SURF) \cite{bay2006surf} Harris corner detector \cite{harris1988combined}.
+
+
+% }}}
 
 \subsubsection{Correspondence and rectification}
 
