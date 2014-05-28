@@ -50,7 +50,9 @@ Accuracy and errors depend on not only decidable physical parameters of a stereo
 
 %In addition to plain photographic cameras, reconstruction can be done using e.g. laser scanners or light field cameras. Those are not covered in this work.
 
-\subsubsection{Pinhole camera}
+% }}} imaging
+
+\subsubsection{Pinhole camera} \label{sec:pinhole} % {{{
 
 \simplegfx{h}{0.6\textwidth}{pinhole-camera}
 {Pinhole camera principle. The box represents a camera; image seen through the small hole is formed to the plane on its back, rotated upside down.}
@@ -101,7 +103,7 @@ x \\ y \\ z \\ 1
 
 The camera position and rotation in a global coordinate frame can be encoded in a matrix so that the point $(x,y,z)$ in global coordinate frame is first transformed relative to the camera's origin; section \ref{sec:coord} discusses this in more detail.
 
-% }}} imaging
+% }}} pinhole
 
 \subsubsection{Optics} % {{{
 
@@ -185,7 +187,7 @@ a real lens system with several individual elements
 
 stabilisation lens
 
-% }}}
+% }}} optics
 
 \subsubsection{Image sensors} % {{{
 
@@ -218,7 +220,7 @@ dust reduction with vibration
 
 Physical pixels cover less than the full area of a sensor, as there are gaps between them.
 
-% }}}
+% }}} image sensors
 
 \subsubsection{Shutter} % {{{
 
@@ -234,7 +236,7 @@ moving the curtain back up, springs? too much detail.
 
 Shutter lag (auto exposure/focus even in manual mode maybe?); consistent or not? sensor sensitivity initing lag?
 
-% }}}
+% }}} shutter
 
 \subsubsection{Light sources} % {{{
 
@@ -254,7 +256,7 @@ light power vs. area, specular lobe and surface properties
 
 Polarization filter
 
-% }}}
+% }}} light sources
 
 \subsubsection{Image download} % {{{
 
@@ -264,7 +266,7 @@ speed calculations, 20+ MB RAW vs fps vs camera buffers vs usb bandwidth vs sepa
 
 usb bulk transfer protocol overhead! how many percents?
 
-% }}}
+% }}} image download
 
 \subsection{Video} % {{{
 
@@ -412,7 +414,7 @@ raw video = such size wow very bloat
 
 compression artifacts
 
-% }}}
+% }}} video
 
 \subsection{Camera selection} % {{{
 
@@ -541,7 +543,7 @@ Lytro (NOPE)
 
 Use several camera types at the same time? depth camera for more reliable and fast measurements? not really done, should we try it?
 
-% }}}
+% }}} camera selection
 
 \subsection{Hardware} % {{{
 
@@ -573,11 +575,12 @@ libgphoto2; googl others for machine vision
 
 support structures out of bounds; just assume that the construction is rigid enough?
 
-% }}}
+% }}} hardware
 
 \subsection{Static 3D reconstruction}
 
 % TODO: combine and structure better the following flattened section list
+% TODO: intro paragraph(s)
 
 \subsubsection{Imaging methods} % {{{
 
@@ -588,7 +591,97 @@ some basic stuff about how 3d structure can be recovered with many different mea
 - every Nth frame free of patterns for texture extraction (zhang snavely curless 2004)
 - maybe not fast enough with common cameras
 
-% }}}
+% }}} imaging methods
+
+\subsubsection{Coordinate systems and transforms} % {{{
+
+% (XXX rename?)
+
+%Homogenous point description here, [dubrofsky] homography estimation is nice, also refer hartley/zisserman
+
+%Homography definition (mapping of points and lines in $P^2$) / panorama homography
+
+The previous imaging section described how to record a view of a scene with a camera. From now on, the term camera refers to a particular camera configuration, which can be a single physical camera moved to different locations.
+No optical system is assumed; at this point, the camera is reduced to the pinhole model \ref{sec:pinhole}.
+
+% FIXME: describe more of these in pinhole and less here, just recap here what pinhole describes?
+% intrinsics into camera workings, join them here to extrinsics
+% TODO pics, coordinate system at place,pose X vs origin (from paper notebook)
+
+The camera is a projective object located somewhere in the imaged scene.
+Its \textit{intrinsic parameters} model the properties of projection, but do not take into account the camera location in any global coordinate system.
+The \textit{extrinsic parameters} contain the camera location and rotation in another global coordinate system, structured as a matrix.
+This is especially advantageous when there are more than one cameras and their coordinates must be related.
+\cite{hartley03multiview,heyden2005multiple}
+This part quickly reviews basic transforms whose results are needed in the later reconstruction steps.
+
+%Calibration is often specified with a camera projection matrix, or several separate matrices.
+%It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
+
+% FIXME especially this should be elsewhere
+\simplefig{h}{%
+\includegraphics[width=0.7\textwidth]{gfx/pinhole3d}
+}{fig:pinhole3d}
+{Pinhole camera geometry. Camera coordinate system origin at O, axis X3 points towards the optical axis, Y1 and Y2 point to image plane axes and R is the principal point, at the image center. The point P projects to Q, as well as everything else on the line joining them. The image plane is f units away from camera origin; f is called the focal length.}
+
+In computer graphics and vision, points and directions are usually described in homogeneous coordinates.
+Translation, perspective projection, rotation, and other operations are conveniently described as matrices by using an additional dimension for points, of which usually the last element is 1: $(x, y, z, 1)$.
+All points $(xw, yw, zw, w)$ map to the same point $(x, y, z)$.
+\cite{dubrofsky2009homography,hartley03multiview}
+
+%Homography definition (mapping of points and lines in $P^2$)
+
+The imaging process essentially captures a projection to a flat two-dimensional plane of the camera's view, as described in section \ref{sec:imaging}.
+When relating points between different cameras that view the same scene, the cameras' relational positions and rotations must be known.
+One of the cameras is often conveniently chosen as the origin of a global coordinate frame, so that its extrinsic parameters become unity transforms (programming libraries often assume this, see e.g. \cite{opencv}).
+Each three-dimensional point in the world is transformed to the small sensor or film inside the camera, which is then digitized to a discrete two-dimensional grid of pixels. The size of this pixel array (i.e. image) is referred to as the camera's resolution.
+
+%Figure \ref{fig:TODO} illustrates this transformation chain, which is encoded as the following equations, given a homogeneous point (4-dimensional vector) $X$ representing a 3D location described in physical (e.g. metric) coordinates:
+
+The transformation chain is encoded as follows, given a homogeneous point (4-dimensional vector) $X$ representing a 3D location described in physical (e.g. metric) coordinates:
+
+\begin{align}
+	x &= P X\\
+	  &= M_i X_s\\ % X_s on the sensor
+	  &= M T R X\\
+	  &= M_i M_p T R X\\ % R, T camera pose, M_4 to camera sensor, M_3 to pixel coords
+\end{align}
+
+$x$ is a 2d pixel in a discrete image, $X_s$ exists on the sensor. $R$, $T$ encode the camera rotation and translation (extrinsics); $M_p$ projects the world coordinates to the camera sensor (film) - still in world coordinates (intrinsics!), and finally the affine $M_i$ transforms the points from the sensor to pixel coordinates on the digital discretized image.
+
+The whole projection $P = M_i M_p T R$ can be used as-is without decomposing it to separate matrices, unless the individual parameters are needed. As the chain consists of several matrices, some of them are defined only up to scale; the coordinate systems' units can be chosen freely. Software packages usually do not decompose the chain, because it is not needed and unique parameters cannot be found because of scaling.
+
+%The external camera parameters are called the extrinsics: camera coordinate system position and rotation (heading) in the global space.
+%Camera position sits at the projection center blah.
+
+The internal parameters, intrinsics, encode how the image is formed on the sensor: they consist of focal length, sensor size and principal point: (last column left out, as it's full of zeroes in 3x4)
+
+\begin{equation}
+	M =
+	\begin{pmatrix}
+		m_x & \gamma & u_0\\
+		0   &    m_y & v_0\\
+		0   &        0 & 1
+	\end{pmatrix}
+\cdot
+	\begin{pmatrix}
+		f & 0 & 0\\
+		0 & f & 0\\
+		0 & 0 & 1
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		\alpha_x & \gamma   & u_0\\
+		0        & \alpha_y & v_0\\
+		0        & 0        & 1
+	\end{pmatrix}
+\end{equation}
+
+For simplicity, it is often denoted $\alpha_x = m_x f$, $\alpha_y = m_y f$. $R = (u_0, v_0)$ is the image center (or principal point). For square pixels, $m_x = m_y$, and for a non-skewed sensor, $\gamma = 0$, which is often the case. \cite{hartley03multiview,szeliski10vision,heyden2005multiple}
+
+%Le image. Horizontal planar triangle, lines between camera origins etc. lecture11.pdf.
+
+% }}} coord systems and transforms
 
 \subsubsection{Camera calibration}
 
@@ -624,57 +717,6 @@ The scale of values in the equations above affects the precision [hartley, in de
 
 Translate centroid to the origin, scale so that average becomes sqrt 2.
 
-
-\subsubsection{Coordinate systems and transforms}
-
-Homogenous point description here, [dubrofsky] homography estimation is nice, also refer hartley/zisserman
-
-Homography definition (mapping of points and lines in $P^2$) / panorama homography
-
-The imaging process essentially captures a projection to a flat two-dimensional plane of the camera's view.
-When relating points between different cameras that view the same scene, their relational positions and rotations must be known.
-One of the cameras is often chosen as the origin of a global coordinate frame.
-Each three-dimensional point in the world is transformed to the small sensor or film inside the camera, which is then digitized to a discrete two-dimensional grid of pixels. The size of this pixel array (i.e. image) is referred to the camera's resolution.
-Figure \ref{fig:TODO} illustrates this transformation chain, which is encoded as the following equation, given a homogenous point (4-dimensional vector) $X$ representing a 3D location described in physical (e.g. metric) coordinates:
-
-\begin{align}
-	x_i &= P X\\
-	  &= M_2 X_s\\ % X_s on the sensor
-	  &= M_2 R T X\\
-	  &= M_3 M_4 R T X\\ % R, T camera pose, M_4 to camera sensor, M_3 to pixel coords
-\end{align}
-
-$p_i$ 2d pixel in discrete image, $X_s$ on the sensor, $T$ is a simple translation matrix from $\vec t$
-
-Note that the projection $P = M_3 M_4 R T$.
-
-The external camera parameters are called the extrinsics: camera coordinate system position and rotation (heading) in the global space.
-Camera position (projection center) blah.
-The internal parameters, intrinsics, encode how the image is formed on the sensor: they consist of focal length, sensor size and principal point:
-\begin{equation}
-	M =
-	\begin{pmatrix}
-		m_x & \gamma & u_0\\
-		0   &    m_y & v_0\\
-		0   &        0 & 1
-	\end{pmatrix}
-	*
-	\begin{pmatrix}
-		f & 0 & 0\\
-		0 & f & 0\\
-		0 & 0 & 1
-	\end{pmatrix}
-	=
-	\begin{pmatrix}
-		\alpha_x & \gamma   & u_0\\
-		0        & \alpha_y & v_0\\
-		0        & 0        & 1
-	\end{pmatrix}
-\end{equation}
-
-For simplicity, we denote $\alpha_x = m_x f$, $\alpha_y = m_y f$. $(u_0, v_0)$ is the image center (or principal point). For square pixels, $m_x = m_y$, and for a non-skewed sensor, $\gamma = 0$, which is often the case.
-
-Le image. Horizontal planar triangle, lines between camera origins etc. lecture11.pdf.
 
 \subsubsection{Binocular disparity}
 
