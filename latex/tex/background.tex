@@ -1037,30 +1037,60 @@ After rectification, the corresponding lines are axis-aligned (horizontal or ver
 Rectified images are twisted so that todo todo, see figure \ref{fig:rectification} compare to epipolar geometry image, epipolar lines become parallel in the rectified images
 % LOL TODO guido gerig image rectification (stereo) slides
 
-% }}}
+% }}} correspondence and rectification
 
-\subsubsection{Multi-view stereo}
+\subsubsection{Multi-view stereo} % {{{
+% (or n-view?)
 
-\subsubsection{Structure from motion}
+The case of more cameras than a single pair uses the same principles in epipolar geometry.
+It brings more restrictions and dimensions; in three dimensions, for example, the fundamental matrix becomes three-dimensional, the trifocal tensor. \cite{hartley03multiview}
+It is also more computationally heavy, as more data must be processed; if no information about camera parameters is available, pairwise checks between the images may become expensive. \cite{wu2013towards}
+
+Multiple baseline stereo is a simple special case for many cameras. When all the cameras lie on the same baseline, calibration is easier and points can be selected by using a minimized sum of errors. \cite{okutomi1993multiple}
+
+The cameras that are used in capturing a scene can be fixed or positioned arbitrarily; in fact, the structure from motion technique \cite{snavely2006photo,fitzgibbon1998automatic} enables to use just one camera that is moved around.
+Accurate and fast reconstructions are still traditionally done with stereo camera pairs, though.
+
+Another common way is to use pairwise cameras for individual reconstructions to build a point cloud for every pair, and then register them together. \cite{bradley2010high}
+
+% }}} multi-view stereo
+
+\subsubsection{Structure from motion} % {{{
 
 Structure from motion (SfM) refers usually to recovering the structure of a scene from the motion of a single camera.
+It can be used for general multi-camera setups too, though.
+The main difference ??? % calibration? bundling? reconstruction different? read up
 For each view, the pose of the camera is determined and the scene structure is extended with the new information in the image.
 (pollefeys)
 
-\subsubsection{Bundle adjustment}
+% }}}
 
-\subsubsection{Reprojection errors}
+\subsubsection{Bundle adjustment} % {{{
 
-The quality of the reconstruction is measured by reprojecting the 3D points back to the cameras and calculating the distance between the projected and original point.
-Minimizing all of the points is very expensive but something something bundle adjustment.
+Bundle adjustment is used to refine the camera parameters.
+
+Several software packages do bundle adjustment as a basic step of their pipeline.
+
+% }}}
+
+\subsubsection{Reprojection errors} % {{{
+
+The quality of the reconstruction is measured by reprojecting the 3D points back to the cameras with the estimated parameters, and calculating the distance between the projected and the matching original point. \cite{hartley03multiview}
+%This is of course possible only for calibrated objects; no precise errors can be recovered from an unknown structure.
+
+Talk about noise here.
+
+Bundle adjustment \cite{wu2011multicore} seeks to optimize all camera parameters at once with good performance, at the cost of more computation.
+
+A common way to handle feature errors is Random Sample Consensus (RANSAC). Random subsets of the sample space is iterated, and samples that do not fit well to a model that is constructed of a smaller set are ignored. The iteration that matches most samples is selected. \cite{hartley03multiview}
 
 Compare to algebraic, geometric etc.
-
-A common way to handle feature errors is Random Sample Consensus (RANSAC). Random subsets of the sample space is iterated, and samples that do not fit well to a model that is constructed of a smaller set are ignored. The iteration that matches most samples is selected.
 
 Detail calculation (error on surface ~= avg reprojection error?) compute millimeters
 
 Mesoscopic level shape reconstruction
+
+% }}}
 
 \subsection{Surface fitting}
 
