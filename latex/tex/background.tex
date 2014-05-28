@@ -1025,17 +1025,19 @@ Scale-invariant feature transform (SIFT) \cite{lowe1999object} is a commonly use
 
 % }}}
 
-\subsubsection{Correspondence and rectification}
+\subsubsection{Correspondence and rectification} % {{{
 
-In order to triangulate a real point from two or more photos, the location of the point in all images must be known.
-Given a pixel in one image, what is the corresponding pixel in another image taken from the same scene?
+% rectification pics
 
+In order to triangulate a real point from two or more photographs, the location of the point in all images must be known.
 Rectification is a process that simplifies this search problem by restricting the search to a single dimension.
 By aligning the cameras such that their images are coplanar, the search only has to be performed on a line that is parallel to the line connecting the camera centers.
-Usually, the calibration between the cameras is known at this point, and foobar.
-After rectification, the corresponding lines are axis-aligned (horizontal or vertical) in both images.
+After rectification, the corresponding lines are axis-aligned (horizontal or vertical) in both images. \cite{hartley03multiview}
 
+Rectified images are twisted so that todo todo, see figure \ref{fig:rectification} compare to epipolar geometry image, epipolar lines become parallel in the rectified images
+% LOL TODO guido gerig image rectification (stereo) slides
 
+% }}}
 
 \subsubsection{Multi-view stereo}
 
