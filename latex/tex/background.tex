@@ -727,12 +727,16 @@ One possible way is direct linear transform (DLT)
 
 % }}} camera calibration
 
-\subsubsection{Normalization}
+\subsubsection{Normalization} % {{{
 
-The scale of values in the equations above affects the precision [hartley, in defense of .., h+ziss]. A similarity transform can be used to modify the values to a more consistent range.
+The scale of values in the equations above affects the precision \cite{hartley1997defense,hartley03multiview}.
+A similarity transform can be used to modify the values to a more consistent range.
 
 Translate centroid to the origin, scale so that average becomes sqrt 2.
 
+maybe move this to a paragraph as part of another section.
+
+% }}} normalization
 
 \subsubsection{Binocular disparity}
 
