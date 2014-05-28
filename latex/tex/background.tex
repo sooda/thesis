@@ -1094,15 +1094,43 @@ Mesoscopic level shape reconstruction
 
 \subsection{Surface fitting}
 
-\subsubsection{Geometry}
+\subsubsection{Data structures} % {{{
 
-Meshlab
+Should some of the main terms be defined in the beginning of the whole thesis? Probably...
 
-build mesh from the point clouds that has been built from the pixels
+A \textit{(polygon) mesh}, a data structure often used to describe 3D models, consists generally of \textit{vertices} connected by \textit{edges}, forming \textit{faces} of objects. Often, the models only consist of triangles, but other polygons are possible too.
+Usually the objects are closed (or ``watertight'') so that all edges are connected to two vertices.
 
-\subsection{Texture reprojection}
+Polygon meshes have an important property that is called \textit{topology} in the context of this thesis.
+It refers to the connectivity information of vertices on a surface, describing neighbours of each point.
+A \textit{point cloud} is a loose term to describe a disorganized set of 3D points with no topology information; that is, a cloud consists only of a list of vertices, with possibly some attributes such as color or normal.
+
+Stanford bunny or something here as an example of 3D model, or just a cube?
+
+% http://en.wikipedia.org/wiki/File:Mesh_overview.svg
+
+Point cloud is a natural output format for 3D reconstruction, as each point in the cloud would map to some pixel in a source image.
+The images and the depth information of the 3D points are not enough for surface information, which is covered next.
+
+% }}}
+
+\subsubsection{Geometry} % {{{
+
+Assuming that the recovered 3D point cloud represents the surface of an object, the next step of interest is to recover the surface topology from the point cloud.
+The point cloud is all geometric information that is available, but the images probably consist of more pixels than the number of points in the point cloud.
+To work with the generated model and to render it properly with colors, it is imporant to recover the topology information.
+
+A commonly used method in implemented reconstruction programs (e.g. \cite{meshlab}) is Poisson surface reconstruction \cite{kazhdan2013screened}.
+
+% }}}
+
+\subsection{Texture reprojection} % {{{
+
+When a polygon mesh is available, it should be rendered in color. The de facto method in computer graphics is to uses \textit{texture mapping} to color pixels in between the vertices.
 
 use the registered raster projections to find out best textures and build uv coordinates
+
+% }}}
 
 \subsubsection{Rendering}
 
