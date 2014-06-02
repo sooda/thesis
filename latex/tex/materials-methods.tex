@@ -1,7 +1,7 @@
 %Tutkimusaineisto ja -menetelmät
 \section{System implementation}
 
-\subsection{Functional specification}
+\subsection{Functional specification} % {{{
 
 The implementation was specified to be easy to use, portable, flexible and available for both 3D and 4D cases, 4D being a nice-to-have feature.
 Portability and open design was also considered to be important.
@@ -10,7 +10,9 @@ By documenting the selected hardware and its structure, and writing control code
 There is a wide variety of different consumer grade digital cameras.
 Some of the main differences are dicussed below.
 
-\subsection{Practicalities}
+% }}}
+
+\subsection{Practicalities} % {{{
 
 A general-purpose reconstruction rig has remarkably many practical matters to consider when comparing to the pure mathematical side.
 A mobile rig should be light enough to carry and set up, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration.
@@ -24,7 +26,9 @@ When capturing video, the frames should be synchronized among cameras as describ
 - baseline width, focus, depth, fstop etc
 - compression artifacts are nasty (edge detectors go wild etc.)
 
-\subsection{Camera comparison}
+% }}}
+
+\subsection{Camera comparison} % {{{
 
 not considered: weatherproofing, lcd/viewfinder/user interface, mirror blackout, autofocus, etc
 
@@ -44,8 +48,9 @@ mirror lockup
 weight
 price
 
+% }}}
 
-\subsection{Selected cameras}
+\subsection{Selected cameras} % {{{
 
 \subsubsection{DSLR bodies}
 
@@ -61,7 +66,9 @@ GigE/USB3/???
 - price
 - availability
 
-\subsection{Hardware construction}
+% }}}
+
+\subsection{Hardware construction} % {{{
 
 \subsubsection{Specified requirements}
 
@@ -77,9 +84,11 @@ Arduino-like adapter HW for sync signals
 
 Connectors, wire
 
+% }}}
+
 \subsection{Remote shutter synchronization}
 
-\subsubsection{Remote trigger}
+\subsubsection{Remote trigger} % {{{
 
 The selected Canon EOS 700D has an input port for focus and shutter release, in addition to the integrated shutter button.
 The camera uses a standard 2,5 mm sized stero jack for connecting external remote controllers.
@@ -97,7 +106,9 @@ The opto-isolator device used in this work is shown in figure \ref{fig:opto-isol
 
 % TODO: fig:opto-isolator in physical form and in a schematic diagram next to each other
 
-\subsubsection{Synchronized trigger implementation}
+% }}}
+
+\subsubsection{Synchronized trigger implementation} % {{{
 
 By connecting each camera to a separate opto-isolator and driving all them from a same source, all cameras can be triggered simultaneously in a safe fashion.
 To fully automate the system, the trigger device should be connected to the computer that downloads the photos from the cameras.
@@ -115,17 +126,87 @@ When capturing moving targets, measuring this lag variation could be of interest
 The Nucleo-F401RE is a prototyping board designed around the STM32F401RET6 microcontroller IC.
 This microcontroller ccontains a relatively powerful 32-bit ARM core, space for 512 KB of program code, 96 KB of RAM, 81 I/O pins, and lots of high-performance peripherals not needed in this circuit.
 
-\subsection{Computers used}
+% }}}
+
+\subsection{Computer requirements} % {{{
 
 any pc will do, the bigger the better
 
+% }}}
+
 \subsection{Available software tools}
 
-\subsubsection{Programs}
+ There is a wide collection of libraries, open-source tools and commercial packages for both automatic reconstruction and generic mesh editing for post-processing the data.
+
+\subsubsection{Libraries} % {{{
+
+There exist several generic computer vision and geometry processing libraries, most common of them being probably OpenCV \cite{opencv}, Point Cloud Library (PCL) \cite{pcl} and Computational Geometry Algorithms Library (CGAL) \cite{cgal}. These are written in the C or C++ languages and they have bindings to several scripting languages too.
+
+OpenCV contains a large set of tools for 2D image processing and extends also to camera calibration and 3D reprojection.
+It is probably the most commonly known and most used computer vision algorithm package.
+
+PCL contains a set of algorithms for filtering, segmentation, registration, visualization, and more for working on data sets that consist of points that may share attributes such as colors and normals. CGAL's scope is in the same field, concentrating on a little more advanced topics.
+
+% }}}
+
+\subsubsection{Free software} % {{{
+
+While libraries can be used to write new tools, many pieces of software are readily available that implement the algorithms presented and are distributed in source code form and/or readily usable binary executables.
+
+Camera Calibration Toolbox for Matlab, also included in OpenCV as a C port, is a more or less standard tool to computation of undistortion maps and intrinsic and extrinsic parameters with checkerboard images using non-linear optimization and homographies. \cite{camcalmatlab}
+
+Bundler is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds. \cite{snavely2006photo}
+
+SiftGPU, a SIFT implementation for graphics processing units. \cite{changchang2007siftgpu} It is built on Sift++ \cite{vedaldi2011sift++}; both are based on difference of gaussians, a method for edge detection \cite{marr1980theory}
+
+Multicore (parallel) bundle adjustment: PBA computes the bundle step in a way that exploits the modern parallel nature of computer processors that have several computing cores. \cite{wu2011multicore}
+
+Patch-based, clustering multi-view stereopsis (PMVS/CMVS) starts from a set of matching keypoints (features) and expands them to a dense patch set iteratively. \cite{furukawa2010accurate,furukawa2012patch}
+
+VisualSFM \cite{wu2013towards} is a common and free but closed-source integration tool simplifying the workflow using external programs.
+
+Meshlab \cite{meshlab} is a portable editor of point clouds and meshes.
+It can be used interactively and scripted to do the same steps automatically.
+In a reconstruction pipeline, it is one of the last processing steps, used for removing outliers or fitting a surface on a point cloud with the poisson surface reconstruction method, and finally projecting the textures to the generated mesh when given the camera parameters in relation to the point cloud pose.
+It can also perform registration between point clouds.
+
+Screened poisson surface reconstruction, or PoissonRecon, is another stand-alone program as an alternative for surface fitting. \cite{kazhdan2013screened}
+
+Cmpmvs is a multi-view reconstruction software for transforming a set of calibrated image data to a full textured mesh, used in a similar way as VisualSFM but using internally a different method based on graph cuts and weakly-supported surfaces.
+\cite{jancosek2011multi}
+
+Python Photogrammetry Toolbox is another pipeline combinator for full 3D reconstruction, popular in archaeological fields. It combines Bundler and PMVS and others. \cite{moulon2011python}
+
+VisualSFM is probably the most common tool in the open source community.
+It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, PBA for camera estimation, and PMVS/CMVS for dense matching.
+A common post step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
+
+%(VisualSFM screenshot here)
+
+% }}}
+
+\subsubsection{Commercial} % {{{
+
+There is a large selection of commercial solutions available. Some companies are devoted to building software on certain applications or constructing whole scanning rigs. Examples include:
+\begin{description}
+\item[Autodesk 123D Catch] is a free web-based application for automatic structureless reconstruction.
+\item[CaptiveMotion] provides a facial capture and retargeting system that can be used with full-body mocap.
+\item[MotionScan] is the technology behind the video game L.A. Noire. \cite{rockstar2011noire} It uses tens of cameras to recover detailed structure.
+\item[Faceshift] encodes a markerless face captuer in a feature space that describes virtual muscle and bone movements.
+\item[3DF Zephyr Pro] is another automatic photo reconstruction system.
+\item[Mova Contour Reality Capture] does high-performance surface capture with a large array of cameras.
+\item[Pendulum Studio] provides a capture system called Alter Ego that integrates with game engines.
+\item[Pix4dMapper] converts aerial images to geometric surface models.
+\item[Acute3d] is targeted for large-scale photogrammetry and cultural heritage digitization.
+\end{description}
+
+% }}}
+
+\subsubsection{Other}
+
+(TODO)
 
 - kinect
-- autodesk 123d catch
-- meshlab + visualsfm (vipe/perttu)
 - meshmixer
 - photofly
 - sfm toolkit
@@ -136,41 +217,26 @@ any pc will do, the bigger the better
 - cyberware
 - geodetic.com
 - v-star
-- captivemotion
 - trimensional
 - pix4d
-- acute3d
 - facade
 - canoma
-- photomodeler
 - fuel3d
 - ms skynet
-- pendulum studio alter ego
 - dimensional imaging
 - bundler based on photosynth?
 - boujou matchmover
 - vookat
 - syntheye
 - pftrack
-- mova contour reality
 - 3d-equaliser
 - photomodel3d
 - janimation head tech
-- motionscan
-- faceshift
 - neven vision
 - ppr (osm bundler)
-- 3df zephyr pro
-- pmvs/cmvs
 - smart3dcapture
-
-\subsubsection{Libraries}
-
-- OpenCV
-- PCL
 - KLT: http://www.inf.ethz.ch/personal/chzach/opensource.html
 - http://slowmovideo.granjow.net/
-
 
 \subsection{Custom software}
 
@@ -204,7 +270,9 @@ Instead, the remote release device is triggered via USB that then releases all s
 
 A custom gphoto2-based software is used to download pictures from the cameras. They are able to automatically notify about new files, which are then downloaded in proper locations via USB.
 
-\subsection{Reconstruction}
+Guidelines for successful pictures/video
+
+\subsection{Full reconstruction}
 
 Both shape and texture are considered in this work. Only diffuse color (albedo) is of interest; more complex material properties are assumed to be captured in other means and not spatially varying.
 
