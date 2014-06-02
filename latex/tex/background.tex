@@ -1112,7 +1112,7 @@ Stanford bunny or something here as an example of 3D model, or just a cube?
 Point cloud is a natural output format for 3D reconstruction, as each point in the cloud would map to some pixel in a source image.
 The images and the depth information of the 3D points are not enough for surface information, which is covered next.
 
-% }}}
+% }}} data structures
 
 \subsubsection{Geometry} % {{{
 
@@ -1122,7 +1122,11 @@ To work with the generated model and to render it properly with colors, it is im
 
 A commonly used method in implemented reconstruction programs (e.g. \cite{meshlab}) is Poisson surface reconstruction \cite{kazhdan2013screened}.
 
-% }}}
+Before fitting a surface on the points, the point data set should be processed either manually or automatically to remove outliers.
+The surrounding scene might contain geometry that is not part of the scanned object, which will affect badly the surface fitting algorithm.
+Manual work is a simple way to delete the points that are not part of the actual object. Automatic methods include (TODO)
+
+% }}} geometry
 
 \subsection{Texture reprojection} % {{{
 
@@ -1130,48 +1134,60 @@ When a polygon mesh is available, it should be rendered in color. The de facto m
 
 use the registered raster projections to find out best textures and build uv coordinates
 
-% }}}
+% }}} textures
 
-\subsubsection{Rendering}
-
-(vipe / visualsfm / kiipeily)
-
-Uv mapping. Manual work. 3d noise removal; ignore points that have no close pair in other clouds.
-
-Rendering: "as usual".
-
-Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed). Still, structured light and/or shading assumptions [shape from single image cues/shading trucco+verri p.225] done too.
-
-
-(video: 3d topology different in each frame; most algos do just stills. simple to combine them to a pre-recorded mesh)
-
-
-\subsection{Tracking}
+\subsection{Tracking} % {{{
 
 Kalman
 
 Fiducials / AR
 
 perf of cloth anim capture
-\subsubsection{Optical flow}
 
-Long history; several mature commercial video editing products. The Matrix.
+Analogous to the case of traditional 2D video consisting of separate discrete frames of pixels, a dynamic stream of 3D data is, in a simple case, individual ``frames'' of point sets.
 
-Uses: Frame time offset compensation by interpolation (morphing), needs features, direction vector estimation
+The dynamic case requires tracking of individual points or objects in order to usefully handle the moved object(s).
+Non-static human motion capture cases in video gaming or movies where post-processing time is available rely on manual work to perfect the quality.
+A realtime case would need to e.g.~automatically register each frame between the previous one to use the geometry's dynamic properties.
+
+The simplest tracking step is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need e.g. topological continuity in the time domain, but recomputes its work on each new point cloud.
+
+Registration and tracking of point clouds or meshes is a large topic on its own; this section reviewes only some of the most common methods presented in the literature. Some work with the reconstructed 3D structure; others use the source images and do additional work.
+
+Disorganised nature of the result data topology in frame-per-frame capture make it challenging to track individual points.
+In three dimensions, a template model is often scanned beforehand that is then morphed to match the target object to keep the topology (i.e.~vertex neighborhood connectivity) constant.
+This technique adapts to both static and rigid cases.
+\cite{bojsen2012tracking,li2009robust}
+
+Common method also for the entertainment industry is to use a pre-determined model of the scanned target or a completely separate character, and deform it on each frame based on the current state of the object, fitting the model's vertices to the scanned set.
+
+Facial animation does not necessarily even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
+
+% }}} tracking
+
+\subsection{Registration} % {{{
+
+Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
 
 
-\subsubsection{2D features}
+When reconstructing an object all over again in consecutive frames, the points might not be fully aligned, and more importantly, they do not share the same model topology, i.e. the vertices have no other relation to the vertices in previous frames than being spatially near each other, accompanied with noise. \cite{zhao2005alignment}
+
+Registration aligns disoriented models (e.g. point clouds, surfaces or triangular meshes, depending on the application) together with a rigid transformation between them so that one becomes the other from a reference coordinate frame's viewpoint.
+Aligning two geometrically \textit{same} objects may not hold if the object deforms in a non-rigid way; when tracking the motion/deformation of a surface, the point sets describe a different geometry and there will always be some error.
+
+A common method is Iterative Closest Point (ICP): iterative refinement approach to move the meshes closer to each other a small step at a time.
+When ICP is used locally, it can be applied to non-rigid cases too. \cite{brown2007global}
+
+% }}} registration
+
+\subsection{2D features / surface tracking} % {{{
 
 * SIFT/SURF/Harris feature tracking, reproject
 
 * edgels (edge pixels)
 
-\subsubsection{3D}
-
-*
-
-
-\subsubsection{Feature / surface tracking}
+In two dimensions, the full reconstruction step can be skipped when using only features in image space, providing real-time performance. \cite{pilet2005real}
+When assuming that a precise object stays in the cameras, features can be detected and tracked locally with no reprojection, while the tracked object is assumed to keep the same topology as a previously scanned model.
 
 Pore-level matching, good resolution needed
 
@@ -1191,35 +1207,68 @@ Corner detector (harris, sift, surf). Color usually not important. Brightness co
 
 Matching to a priori model
 
+% }}} 2d features
+
+\subsection{Optical flow} % {{{
+
+Long history; several mature commercial video editing products. The Matrix.
+
+Uses: Frame time offset compensation by interpolation (morphing), needs features, direction vector estimation
+
+Motion in an image shows as changes in pixel color; it can be perceived as similar pixels flowing to the direction of movement in a pattern.
+A motion vector can be calculated for each pixel, resulting in a vector field; following and interpolating the movement is another way to detect three-dimensional movement.
+\cite{gibson1950perception,horn1981determining,beauchemin1995computation}
+
+By combining the movement tracking to a mesh whose dynamics are modeled physically, motion can be estimated from a single image.
+\cite{decarlo1996integration}
+
+% }}} optical flow
+
+\subsubsection{3D}
+
+Kind of the same thing as registration?
+
 \subsubsection{Kalman}
+
+Is such complexity needed?
 
 \subsection{Motion capture}
 
+Motion capture seeks to fit a sequence of movements to a model by recording the movement and processing the data to be used with the model. \cite{find-a-definition-somewhere}
+
 \subsubsection{4D video}
 
-topologically different 3d models
+The industry uses the term 4D in the context of time-varying 3D data.
 
-\subsubsection{Registration}
+A naive registration to e.g. previous or first frame is possible to average out the object movement if only its local surface movement is of interest.
+Still, this will not produce the same topology for the mesh, as each frame contains different point cloud and is not connected to the previous reconstruction, unless some algorithm that takes this into account is used.
 
-Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
+One possible method to correct the lack of geometric structure is to fit each frame of the mesh to another pre-recorded or pre-modeled mesh. \cite{somewhere,remedysoftware?}
+This can be beneficial because the raw reconstruction quality may be even too high for practical use.
 
+Later usage may need only the tracked positions of specific locations on the surface to deform a mesh in some custom way.
 
-\subsubsection{Morphing}
+\subsubsection{Interpolation / Morphing}
 
+The record rate might not be exactly the same as the playback rate; when the movement is displayed on a screen, the positions of the tracked parts of object are interpolated between recorded keypoints.
+The same stuff in 2D is called morphing: pixel movement is tracked instead of simply blending each pixel between two time points.
+
+Linear, cubic etc. interpolation.
 
 \subsection{Facial surface capture}
 
-Surface capture of human skin is different from static objects: it stretches and shears in a highly non-predicatable way such that both its local geometry and texture changes.
+Surface capture of human skin is different from objects that consist of just connected rigid bodies: it stretches and shears in a highly non-predicatable way such that both its local geometry and texture changes, affected by the sub-surface properties of muscles etc.
 Traditional methods for tracking rigid objects are thus not viable for high quality.
-Some cites here [?] [?]. The deformations can be taken into account with e.g. furukawa etc.
+Joint motion capture has the rigid body assumption.
 
-Several 
+The deformations can be taken into account with e.g. furukawa etc.
 
 \subsubsection{Uncanny valley}
 
 \subsubsection{Expression space}
 
-Some techiques [autodesk faceshift, what other] use pre-recorded facial expressions to identify the subject's pose. They suffer from not being able to accurately describe the temporal changes in finest details, but benefit from densely packed parameterization of facial expressions.
+Some techiques \cite{faceshift,something} use pre-recorded facial expressions to identify the subject's pose.
+They suffer from not being able to accurately describe the temporal changes in finest details, but benefit from densely packed parameterization of facial expressions.
 A separate mesh is stored as a three-dimensional template for each expression (such as happy or angry) and each frame is encoded, as a linear combination of these individual expressions.
 Such feature vectors describe well each possible face, and importantly, they eliminate the need for encoding the movement of each vertex, which can be unnecessarily heavy to compute or store.
 The results from this method can easily be mapped to other models than the face of the subject, as it is independent on the actual facial geometry and only uses weights for pre-modeled faces, making it interesting in computer animation.
@@ -1230,8 +1279,13 @@ Expression tracking / 2d capture
 
 \subsubsection{Rendered facial animation}
 
+google up on bones and stuff
 
 \subsection{Preprocessing}
+
+Now that the reconstruction pipeline theory is covered, some practical hints on data usage before supplying it to the pipeline are presented.
+
+Or should this be before most of the information above?
 
 - sync shit
 
@@ -1242,8 +1296,16 @@ Expression tracking / 2d capture
 
 \subsection{Postprocessing}
 
+Talk about how the stored geometry is different from the rendered one; mathematical models in fragment shaders to use the texture variations / normal maps etc.
+
+Postprocessing: remodel the mesh (face), see what it would look like.
+Refine parameters to get a similar output as in the photos (normal map etc.), backproject.
+Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley).
+(Simply a rendering technique, that level of detail in 3D structure might not be needed).
+Still, structured light and/or shading assumptions [shape from single image cues/shading trucco+verri p.225] done too.
+
+(video: 3d topology different in each frame; most algos do just stills. simple to combine them to a pre-recorded mesh)
+
 \subsubsection{Manual work}
 
 so much
-
-\subsubsection{Motion evaluation}
