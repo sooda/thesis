@@ -1,0 +1,31 @@
+visual sync: record video with two cameras, trigger a flash, measure frame and
+row where it starts. rowidx+row/height ~= time
+
+flash frames in both cams:
+H:	I:
+108	153
+154	199
+177	222
+263	308
+284	329
+327	372
+388	433
+408	453
+428	473
+469	514
+488	533
+507	552
+
+flash position:
+108: 904/1080 px
+153: 866/1080 px
+
+# XXX: exposure time? assume 1/2 of fps time with this 1/4000 setting
+# before this image we have indices [0..this)
+(108 + 904/1080*0.5)/25 = ~4.33674074074074074074
+(153 + 866/1080*0.5)/25 = ~6.13603703703703703704
+diff ~1.7992962962962962963
+
+compare to audio:
+audio: 4.338 vs 6.137, diff 1,799
+seems to be nicely in sync, diff ~1ms within measurement errors
