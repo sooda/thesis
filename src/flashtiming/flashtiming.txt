@@ -29,3 +29,29 @@ diff ~1.7992962962962962963
 compare to audio:
 audio: 4.338 vs 6.137, diff 1,799
 seems to be nicely in sync, diff ~1ms within measurement errors
+
+H/0.1/0108.png 906
+H/0.1/0154.png 225
+H/0.1/0177.png 25
+H/0.1/0263.png 284
+H/0.1/0284.png 229
+H/0.1/0327.png 462
+H/0.1/0388.png 471
+H/0.1/0408.png 760
+H/0.1/0428.png 293
+H/0.1/0469.png 249
+H/0.1/0488.png 459
+H/0.1/0507.png 218
+
+I/0.1/0153.png 859
+I/0.1/0199.png 186
+I/0.1/0222.png 0
+I/0.1/0308.png 243
+I/0.1/0329.png 188
+I/0.1/0372.png 414
+I/0.1/0433.png 421
+I/0.1/0453.png 710
+I/0.1/0473.png 251
+I/0.1/0514.png 207
+I/0.1/0533.png 414
+I/0.1/0552.png 175

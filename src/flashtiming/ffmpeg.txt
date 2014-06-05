@@ -1,0 +1,4 @@
+# video to pics & audio like this:
+# (0.1 refers to the flash power used)
+time ffmpeg -i MVI_0159.MOV -f image2 -r 25 0.1/%04d.png
+ffmpeg -i MVI_0159.MOV 0.1.wav
