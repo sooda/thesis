@@ -3,3 +3,4 @@
 *.vis
 *.o
 *.pyc
+.ycm_extra_conf.py
