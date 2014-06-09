@@ -32,12 +32,6 @@ Kooksi 8GB? 16GB? enemmän? vähemmän? tuskin tarvitaan massiivisesti. Hinta/bi
 http://forums.vr-zone.com/news-around-the-web/2425475-canon-eos-650d-rebel-t4i-problems-high-speed-uhs-i-sd-cards.html
 http://photography-on-the.net/forum/showthread.php?t=1297741
 
-etäohjauksen erikoisliitännät:
-* 10x 2,5mm stereo plug-plug kaapeli
-** esim. yht 15eur farnell 3712552 (PRO SIGNAL - AV02019 - LEAD, 2.5MM STEREO PLG-PLG, 3M)
-* 10x 2,5mm stereo jack/socket
-** esim. yht 16eur farnell 1638670 (MULTICOMP - MJ4435-R - SOCKET, 3.5MM JACK, SMD, 3POLE)
-
 TODO:
 * tolpat, rakennelmat
 * valot, valojen telineet

@@ -1,0 +1,19 @@
+yht ~70 € (+ postit, kaikki euroopan varastoista).
+
+10 * 3712552 (PRO SIGNAL - AV02019 - LEAD, 2.5MM STEREO PLG-PLG, 3M)
+http://fi.farnell.com/pro-signal/av02019/lead-2-5mm-stereo-plg-plg-3m/dp/3712552
+
+10 * 1200141 (LUMBERG - KLB 13 - SOCKET, 2.5MM JACK, CHASSIS)
+http://fi.farnell.com/lumberg/klb-13/socket-2-5mm-jack-chassis/dp/1200141
+
+2 * 2213347 (TWIN INDUSTRIES - TW-E41-1020 - BREADBOARD, SOLDERLESS, 830 TIE POINTS)
+http://fi.farnell.com/twin-industries/tw-e41-1020/breadboard-solderless-830-tie-points/dp/2213347
+
+1 * 2394223 (STMICROELECTRONICS - NUCLEO-F401RE - NUCLEO BOARD, STM32F401RET6 MCU)
+http://fi.farnell.com/stmicroelectronics/nucleo-f401re/nucleo-board-stm32f401ret6-mcu/dp/2394223
+
+1 * 1201477 (CIF - AJP16 - RPB PAD PROTOBOARD 100X160)
+http://fi.farnell.com/cif/ajp16/rpb-pad-protoboard-100x160/dp/1201477
+
+50 * 9339299 (MULTICOMP - MCF 0.25W 220R - RESISTOR, CARBON FILM, 220R, 0.25W, 5%)
+http://fi.farnell.com/multicomp/mcf-0-25w-220r/resistor-carbon-film-220r-0-25w/dp/9339299
