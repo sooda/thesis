@@ -1,78 +1,11 @@
-snake surrounding stuff
+%snake surrounding stuff
 
-visual hull
+%visual hull
 
-salient geometric features for matching
-
-DIVIDE TO image acquisition, reconstruction, postprocessing/rendering
-ALSO FURTHER AS theory, previous work, previous usage
-
-Close range photogrammetry, stereopsis, isolated object, camera resectioning
-
-
-previous usage in:
-
-	rockstar games / la noire; camera pairs
-
-	polar express / sony imageworks
-
-	ea sports / faro
-
-
-surface vs motion capture
-
-lab environment
-
-other uses - street view, autom driving, geodetic systems
+%NASA cams
 
 % Aikaisempi tutkimus
-\section{Background}
-
-(Should the subsections here be separated into several other sections instead of a single big ``background''?)
-
-(corresponding problems in e.g. autonomous driving or harvester machines?)
-
-(any point in outdoor methods?)
-
-Pairs vs overlap? bradley: pairs
-
-NASA cams
-
-Perf of cloth animation capture
-
-(Crosseyed stereoscopy, how works)
-
-Weak perspective x=fX/Z
-Ideal pinhole model projects an image upside down on its film.
-
-\subsection{Applications} % {{{
-
-The application domain for reconstructing three-dimensional fields is wide, and expands constantly with the ever increasing computing power.
-The popularity of handheld computers - smartphones - equipped with relatively good quality cameras is currently an attractive target for 3d scanning software, while the actual reconstruction works in the cloud.
-Kinect, the active infrared-based scanner for the xbox console, has reached a phase where it can be considered ubiquitous in gaming.
-
-The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; it is a good example on what is needed to capture data that changes over time in non-controllable and non-repeatable ways.
-The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al.
-\cite{borshukov05universal} to encode and simulate accurate facial movements in 3D.
-
-Facial surface motion capture (``mocap'') is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement to record performances for replaying them later.
-Mocap records movements of a human body or another object that is to be recorded so that the movements can be replayed or analyzed.
-Recent movies and video games (such as \cite{rockstar2011noire}) have shown that by capturing real motion of facial expressions instead of simulating them produces impressive results.
-Literature on capture of human faces and skin surface motions is large. \cite{deng2007computer}
-Professional quality capture still needs a laboratory environment with a large number of cameras \cite{winder2008technical,motionscan}.
-
-Human performance capture is traditionally done on special easily distinguishable markers, typically small retroreflective patterns, that are mapped to a model for playback. Playback then interpolates between the recorded positions. Advances in camera resolution make it possible to use only texture features without separate markers.
-% http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
-
-Cloth motion is another highly nonrigid application that can be scanned for acquisition of model parameters. \cite{pritchard2003cloth}
-
-Large scale static 3D scanning and texturing of archeologic sceneries is done with combining laser scanning and photographs \cite{lerma2010terrestrial}.
-
-Small objects have been scanned successfully with a turntable \cite{fitzgibbon1998automatic}, and structure from motion techniques have recently been presented that impressively recover a structure from pictures taken all over an outdoor location with no a priori information about the camera configurations. \cite{goesele2007multi,furukawa2010towards}.
-
-Static applications are more developed; while dynamic scanning has lots of interest in scanning faces and human motion, also static cases have received attention in medical applications, landscape/architecture engineering and mapping, and crime scene investigation.
-
-% }}} applications
+\section{Image acquisition}
 
 \subsection{Imaging} \label{sec:imaging} % {{{
 %In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
@@ -88,6 +21,8 @@ Accuracy and errors depend on not only decidable physical parameters of a stereo
 % }}} imaging
 
 \subsubsection{Pinhole camera} \label{sec:pinhole} % {{{
+
+near objects look bigger than distant objects
 
 \simplegfx{h}{0.6\textwidth}{pinhole-camera}
 {Pinhole camera principle. The box represents a camera; image seen through the small hole is formed to the plane on its back, rotated upside down.}
@@ -303,6 +238,7 @@ usb bulk transfer protocol overhead! how many percents?
 
 % }}} image download
 
+
 \subsection{Video} % {{{
 
 Video is consecutive, ordered pictures displayed one after another.
@@ -319,7 +255,9 @@ Another notable point from the capture viewpoint is the shutter speed; in movies
 \cite{wilson2004anton}
 For sharp images that are preferred in reconstruction, this is to be avoided.
 
-\subsubsection{Frame rate effects}
+% }}}
+
+\subsubsection{Frame rate effects} % {{{
 
 More fps = better movement stopping (less motion blur), need also more light or more sensitive sensors. More sensitivity often means also more noise. Noise vs. motion blur trade-off.
 
@@ -338,7 +276,9 @@ Actual FPS in camcorders is slowed down by a factor of 1.001 because of historic
 
 Externally triggered cameras can be configured to record at any arbitrary speed, as long as it's in the limits of the camera speed capabilities.
 
-\subsubsection{Frame rate vs. shutter speed}
+% }}}
+
+\subsubsection{Frame rate vs. shutter speed} % {{{
 
 Picture:
 
@@ -360,7 +300,9 @@ speed
 
 Nyquist-Shannon sampling theorem, what happens when shutter is closed, motion stopping, how eyes like blurred fast motion (more information about movement, less precise by time) [CITE slowmovideo]
 
-\subsubsection{Multi-camera synchronization}
+% }}}
+
+\subsubsection{Multi-camera synchronization} % {{{
 
 Multi view imaging poses lots of challenges, sync is an important one
 
@@ -443,13 +385,15 @@ While this sounds tempting, it might not be computationally feasible, though, be
 
 %Section \ref{sec:tracking} will 
 
-\subsubsection{Video encoding}
+% }}}
+
+\subsubsection{Encoding quality} % {{{
 
 raw video = such size wow very bloat
 
 compression artifacts
 
-% }}} video
+% }}}
 
 \subsection{Camera selection} % {{{
 
@@ -501,20 +445,6 @@ No autofocus in general
 
 Easy sync for single image
 
-\subsubsection{Pocket cameras}
-
-Affordable
-
-Small sensor
-
-Decent resolution
-
-Configurability unknown
-
-Manual mode required
-
-Always a zoom lens, bad for calibration
-
 \subsubsection{Camcorders}
 
 Electrical shutter
@@ -536,6 +466,20 @@ Pro devices: bukkits of money (features; external sync)
 Internal hard disk
 
 Interlace vs. progressive recording
+
+\subsubsection{Pocket cameras}
+
+Affordable
+
+Small sensor
+
+Decent resolution
+
+Configurability unknown
+
+Manual mode required
+
+Always a zoom lens, bad for calibration
 
 \subsubsection{Webcams}
 
@@ -612,12 +556,18 @@ support structures out of bounds; just assume that the construction is rigid eno
 
 % }}} hardware
 
-\subsection{Static 3D reconstruction}
+\section{Static 3D reconstruction}
+
+% previous work! implemented algorithms
+
+Close range photogrammetry, stereopsis, isolated object, camera resectioning
+
+Pairs vs overlap? bradley: pairs
 
 % TODO: combine and structure better the following flattened section list
 % TODO: intro paragraph(s)
 
-\subsubsection{Imaging methods} % {{{
+\subsection{Imaging methods} % {{{
 
 % separate part or part of 3d reconst intro? or combine to intro?
 
@@ -628,7 +578,7 @@ some basic stuff about how 3d structure can be recovered with many different mea
 
 % }}} imaging methods
 
-\subsubsection{Coordinate systems and transforms} % {{{
+\subsection{Coordinate systems and transforms} % {{{
 
 % (XXX rename?)
 
@@ -718,7 +668,7 @@ For simplicity, it is often denoted $\alpha_x = m_x f$, $\alpha_y = m_y f$. $R =
 
 % }}} coord systems and transforms
 
-\subsubsection{Camera calibration} % {{{
+\subsection{Camera calibration} % {{{
 
 Calibration is often specified with a camera projection matrix, or several separate matrices.
 It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example (?).
@@ -762,7 +712,7 @@ One possible way is direct linear transform (DLT)
 
 % }}} camera calibration
 
-\subsubsection{Normalization} % {{{
+\subsection{Normalization} % {{{
 
 The scale of values in the equations above affects the precision \cite{hartley1997defense,hartley03multiview}.
 A similarity transform can be used to modify the values to a more consistent range.
@@ -773,7 +723,19 @@ maybe move this to a paragraph as part of another section.
 
 % }}} normalization
 
-\subsubsection{Binocular disparity} % {{{
+\subsection{Preprocessing} % {{{
+
+Or should this be part of everything else somehow?
+
+- sync shit
+
+- histogram equalization
+
+- brightness equalization between images
+
+% }}}
+
+\subsection{Binocular disparity} % {{{
 
 %Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
 
@@ -856,7 +818,7 @@ Algorithms such as those in OpenCV \cite{opencv} can compute point clouds from d
 
 % }}} binocular disparity
 
-\subsubsection{Epipolar geometry} % {{{
+\subsection{Epipolar geometry} % {{{
 
 \simplefig{h!}{
 \begin{tikzpicture}[scale=0.5]
@@ -1027,7 +989,9 @@ Epipole can be interpreted as the location of another camera as seen by other ca
 
 % }}} epipolar geometry
 
-\subsubsection{Point matching} % {{{
+\subsection{Point matching} % {{{
+
+salient geometric features for matching
 
 Previously, basics for reconstructing three-dimensional location for a point pair were introduced, assuming known positions for the same point in different images.
 To reconstruct a whole scene from a full image, all pairwise points must be matched, i.e. found that what pixel in one view represents the same object as one in other view.
@@ -1054,7 +1018,7 @@ Scale-invariant feature transform (SIFT) \cite{lowe1999object} is a commonly use
 
 % }}}
 
-\subsubsection{Correspondence and rectification} % {{{
+\subsection{Correspondence and rectification} % {{{
 
 % rectification pics
 
@@ -1068,7 +1032,7 @@ Rectified images are twisted so that todo todo, see figure \ref{fig:rectificatio
 
 % }}} correspondence and rectification
 
-\subsubsection{Multi-view stereo} % {{{
+\subsection{Multi-view stereo} % {{{
 % (or n-view?)
 
 The case of more cameras than a single pair uses the same principles in epipolar geometry.
@@ -1084,7 +1048,7 @@ Another common way is to use pairwise cameras for individual reconstructions to 
 
 % }}} multi-view stereo
 
-\subsubsection{Structure from motion} % {{{
+\subsection{Structure from motion} % {{{
 
 Structure from motion (SfM) refers usually to recovering the structure of a scene from the motion of a single camera.
 It can be used for general multi-camera setups too, though.
@@ -1094,7 +1058,7 @@ For each view, the pose of the camera is determined and the scene structure is e
 
 % }}}
 
-\subsubsection{Bundle adjustment} % {{{
+\subsection{Bundle adjustment} % {{{
 
 Bundle adjustment is used to refine the camera parameters.
 
@@ -1102,7 +1066,7 @@ Several software packages do bundle adjustment as a basic step of their pipeline
 
 % }}}
 
-\subsubsection{Reprojection errors} % {{{
+\subsection{Reprojection errors} % {{{
 
 The quality of the reconstruction is measured by reprojecting the 3D points back to the cameras with the estimated parameters, and calculating the distance between the projected and the matching original point. \cite{hartley03multiview}
 %This is of course possible only for calibrated objects; no precise errors can be recovered from an unknown structure.
@@ -1121,7 +1085,8 @@ Mesoscopic level shape reconstruction
 
 % }}}
 
-\subsection{Surface fitting}
+\subsection{Surface fitting} % {{{
+% }}}
 
 \subsubsection{Data structures} % {{{
 
@@ -1157,13 +1122,48 @@ Manual work is a simple way to delete the points that are not part of the actual
 
 % }}} geometry
 
-\subsection{Texture reprojection} % {{{
+\subsubsection{Texture reprojection} % {{{
 
 When a polygon mesh is available, it should be rendered in color. The de facto method in computer graphics is to uses \textit{texture mapping} to color pixels in between the vertices.
 
 use the registered raster projections to find out best textures and build uv coordinates
 
 % }}} textures
+
+\subsection{Postprocessing} % {{{
+
+Talk about how the stored geometry is different from the rendered one; mathematical models in fragment shaders to use the texture variations / normal maps etc.
+
+Postprocessing: remodel the mesh (face), see what it would look like.
+Refine parameters to get a similar output as in the photos (normal map etc.), backproject.
+Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley).
+(Simply a rendering technique, that level of detail in 3D structure might not be needed).
+Still, structured light and/or shading assumptions [shape from single image cues/shading trucco+verri p.225] done too.
+
+(video: 3d topology different in each frame; most algos do just stills. simple to combine them to a pre-recorded mesh)
+
+% }}}
+
+\section{Motion capture}
+
+surface vs motion capture
+
+
+Motion capture seeks to fit a sequence of movements to a model by recording the movement and processing the data to be used with the model. \cite{find-a-definition-somewhere}
+
+\subsection{4D data} % {{{
+
+The industry uses the term 4D in the context of time-varying 3D data.
+
+A naive registration to e.g. previous or first frame is possible to average out the object movement if only its local surface movement is of interest.
+Still, this will not produce the same topology for the mesh, as each frame contains different point cloud and is not connected to the previous reconstruction, unless some algorithm that takes this into account is used.
+
+One possible method to correct the lack of geometric structure is to fit each frame of the mesh to another pre-recorded or pre-modeled mesh. \cite{somewhere,remedysoftware?}
+This can be beneficial because the raw reconstruction quality may be even too high for practical use.
+
+Later usage may need only the tracked positions of specific locations on the surface to deform a mesh in some custom way.
+
+% }}}
 
 \subsection{Tracking} % {{{
 
@@ -1253,38 +1253,72 @@ By combining the movement tracking to a mesh whose dynamics are modeled physical
 
 % }}} optical flow
 
-\subsubsection{3D}
-
-Kind of the same thing as registration?
-
-\subsubsection{Kalman}
+\subsection{Kalman} % {{{
 
 Is such complexity needed?
 
-\subsection{Motion capture}
+% }}}
 
-Motion capture seeks to fit a sequence of movements to a model by recording the movement and processing the data to be used with the model. \cite{find-a-definition-somewhere}
-
-\subsubsection{4D video}
-
-The industry uses the term 4D in the context of time-varying 3D data.
-
-A naive registration to e.g. previous or first frame is possible to average out the object movement if only its local surface movement is of interest.
-Still, this will not produce the same topology for the mesh, as each frame contains different point cloud and is not connected to the previous reconstruction, unless some algorithm that takes this into account is used.
-
-One possible method to correct the lack of geometric structure is to fit each frame of the mesh to another pre-recorded or pre-modeled mesh. \cite{somewhere,remedysoftware?}
-This can be beneficial because the raw reconstruction quality may be even too high for practical use.
-
-Later usage may need only the tracked positions of specific locations on the surface to deform a mesh in some custom way.
-
-\subsubsection{Interpolation / Morphing}
+\subsection{Interpolation / Morphing} % {{{
 
 The record rate might not be exactly the same as the playback rate; when the movement is displayed on a screen, the positions of the tracked parts of object are interpolated between recorded keypoints.
 The same stuff in 2D is called morphing: pixel movement is tracked instead of simply blending each pixel between two time points.
 
 Linear, cubic etc. interpolation.
 
-\subsection{Facial surface capture}
+% }}}
+
+\section{Applications}
+
+Perf of cloth animation capture
+
+other uses - street view, autom driving, geodetic systems
+
+(corresponding problems in e.g. autonomous driving or harvester machines?)
+
+(any point in outdoor methods?)
+
+
+previous usage in:
+
+	rockstar games / la noire; camera pairs
+
+	polar express / sony imageworks
+
+	ea sports / faro
+
+
+
+\subsection{Common uses} % {{{
+
+The application domain for reconstructing three-dimensional fields is wide, and expands constantly with the ever increasing computing power.
+The popularity of handheld computers - smartphones - equipped with relatively good quality cameras is currently an attractive target for 3d scanning software, while the actual reconstruction works in the cloud.
+Kinect, the active infrared-based scanner for the xbox console, has reached a phase where it can be considered ubiquitous in gaming.
+
+The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; it is a good example on what is needed to capture data that changes over time in non-controllable and non-repeatable ways.
+The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al.
+\cite{borshukov05universal} to encode and simulate accurate facial movements in 3D.
+
+Facial surface motion capture (``mocap'') is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement to record performances for replaying them later.
+Mocap records movements of a human body or another object that is to be recorded so that the movements can be replayed or analyzed.
+Recent movies and video games (such as \cite{rockstar2011noire}) have shown that by capturing real motion of facial expressions instead of simulating them produces impressive results.
+Literature on capture of human faces and skin surface motions is large. \cite{deng2007computer}
+Professional quality capture still needs a laboratory environment with a large number of cameras \cite{winder2008technical,motionscan}.
+
+Human performance capture is traditionally done on special easily distinguishable markers, typically small retroreflective patterns, that are mapped to a model for playback. Playback then interpolates between the recorded positions. Advances in camera resolution make it possible to use only texture features without separate markers.
+% http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
+
+Cloth motion is another highly nonrigid application that can be scanned for acquisition of model parameters. \cite{pritchard2003cloth}
+
+Large scale static 3D scanning and texturing of archeologic sceneries is done with combining laser scanning and photographs \cite{lerma2010terrestrial}.
+
+Small objects have been scanned successfully with a turntable \cite{fitzgibbon1998automatic}, and structure from motion techniques have recently been presented that impressively recover a structure from pictures taken all over an outdoor location with no a priori information about the camera configurations. \cite{goesele2007multi,furukawa2010towards}.
+
+Static applications are more developed; while dynamic scanning has lots of interest in scanning faces and human motion, also static cases have received attention in medical applications, landscape/architecture engineering and mapping, and crime scene investigation.
+
+% }}}
+
+\subsection{Facial surface capture} % {{{
 
 Surface capture of human skin is different from objects that consist of just connected rigid bodies: it stretches and shears in a highly non-predicatable way such that both its local geometry and texture changes, affected by the sub-surface properties of muscles etc.
 Traditional methods for tracking rigid objects are thus not viable for high quality.
@@ -1306,35 +1340,13 @@ Compare to Facial Action Coding System (FACS) (Hjortsjö 1969), which parameteri
 
 Expression tracking / 2d capture
 
+\subsubsection{Surface structure assumptions}
+
+Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley).
+
+
 \subsubsection{Rendered facial animation}
 
 google up on bones and stuff
 
-\subsection{Preprocessing}
-
-Now that the reconstruction pipeline theory is covered, some practical hints on data usage before supplying it to the pipeline are presented.
-
-Or should this be before most of the information above?
-
-- sync shit
-
-- histogram equalization
-
-- brightness equalization between images
-
-
-\subsection{Postprocessing}
-
-Talk about how the stored geometry is different from the rendered one; mathematical models in fragment shaders to use the texture variations / normal maps etc.
-
-Postprocessing: remodel the mesh (face), see what it would look like.
-Refine parameters to get a similar output as in the photos (normal map etc.), backproject.
-Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley).
-(Simply a rendering technique, that level of detail in 3D structure might not be needed).
-Still, structured light and/or shading assumptions [shape from single image cues/shading trucco+verri p.225] done too.
-
-(video: 3d topology different in each frame; most algos do just stills. simple to combine them to a pre-recorded mesh)
-
-\subsubsection{Manual work}
-
-so much
+% }}}
