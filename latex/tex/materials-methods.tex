@@ -12,7 +12,13 @@ Some of the main differences are dicussed below.
 
 % }}}
 
-\subsection{Practicalities} % {{{
+\subsubsection{Features} % {{{
+
+Some of the above stuff goes here
+
+% }}}
+
+\subsubsection{Practicalities} % {{{
 
 A general-purpose reconstruction rig has remarkably many practical matters to consider when comparing to the pure mathematical side.
 A mobile rig should be light enough to carry and set up, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration.
@@ -86,9 +92,11 @@ Connectors, wire
 
 % }}}
 
-\subsection{Remote shutter synchronization}
+\subsection{Remote shutter synchronization} % {{{
 
-\subsubsection{Remote trigger} % {{{
+% }}}
+
+\subsubsection{Canon remote trigger} % {{{
 
 The selected Canon EOS 700D has an input port for focus and shutter release, in addition to the integrated shutter button.
 The camera uses a standard 2,5 mm sized stero jack for connecting external remote controllers.
@@ -108,7 +116,7 @@ The opto-isolator device used in this work is shown in figure \ref{fig:opto-isol
 
 % }}}
 
-\subsubsection{Synchronized trigger implementation} % {{{
+\subsubsection{Synchronized multi-trigger implementation} % {{{
 
 By connecting each camera to a separate opto-isolator and driving all them from a same source, all cameras can be triggered simultaneously in a safe fashion.
 To fully automate the system, the trigger device should be connected to the computer that downloads the photos from the cameras.
@@ -128,15 +136,53 @@ This microcontroller ccontains a relatively powerful 32-bit ARM core, space for 
 
 % }}}
 
-\subsection{Computer requirements} % {{{
+\subsection{Custom written software} % {{{
 
-any pc will do, the bigger the better
+Parallelized image acquisition from a large set of cameras has not yet established such a state that general purpose software would be easily available.
+Commercial solutions probably exist, but they are often strictly bound to a specific hardware, costly and inflexible.
+
+Some custom techniques were used to preview images of all cameras simultaneously, configure the settings of each in parallel, and retrieve the captured images from them in order.
 
 % }}}
 
-\subsection{Available software tools}
+\subsubsection{Camera control} % {{{
+
+gphoto2 \cite{gphoto2} is a well-known free application and library for controlling digital cameras on Unix-like operating systems, supporting over a thousand cameras.
+Instead of relying on each camera manufacturer separately for a software development kit, gphoto2 abstracts common operations behind the same interface.
+For example, Canon \cite{canonsdk} and Nikon \cite{nikonsdk}, some of the biggest camera manufacturers, both provide SDKs for controlling their devices remotely.
+To support both vendors, one would have to write code for both APIs.
+API restrictions, licenses blahblah.
+
+Most modern USB cameras use the Picture Transfer Protocol (PTP) \cite{ptpTODO} for setting properties and transferring pictures, which is also what gphoto2 implements.
+
+It turns out that gphoto2's most thorough support is implemented for Canon and Nikon cameras.
+
+% }}}
+
+\subsubsection{Previewing and configuration} % {{{
+
+Because of the flexible nature of the rig purposes, a simple preview live feed is almost mandatory to properly set up a new configuration.
+A preview matrix of all cameras makes it easy to identify the cameras and to point them to correct direction, and to verify that their settings are the same (e.g. similar brightness in preview video).
+Remote control of all cameras enables to set all settings, such as shutter speed and focus distance, jointly from the same computer instead of clicking on each camera's buttons manually.
+
+
+% }}}
+
+\subsubsection{Image acquisition} % {{{
+
+The cameras cannot be triggered individually via USB even though it is possible, because it is too complex and undeterministic for multi-camera synchronization.
+Instead, the remote release device is triggered via USB that then releases all shutters at the needed precision.
+
+A custom gphoto2-based software is used to download pictures from the cameras. They are able to automatically notify about new files, which are then downloaded in proper locations via USB.
+
+Guidelines for successful pictures/video
+
+% }}}
+
+\subsection{3D reconstruction software survey} % {{{
 
  There is a wide collection of libraries, open-source tools and commercial packages for both automatic reconstruction and generic mesh editing for post-processing the data.
+ % }}}
 
 \subsubsection{Free libraries} % {{{
 
@@ -185,7 +231,7 @@ A common post step is to use Meshlab to filter outliers away from the data and t
 
 % }}}
 
-\subsubsection{Commercial} % {{{
+\subsubsection{Commercial programs} % {{{
 
 There is a large selection of commercial solutions available. Some companies are devoted to building software on certain applications or constructing whole scanning rigs. Examples include:
 \begin{description}
@@ -200,9 +246,7 @@ There is a large selection of commercial solutions available. Some companies are
 \item[Acute3d] is targeted for large-scale photogrammetry and cultural heritage digitization.
 \end{description}
 
-% }}}
-
-\subsubsection{Other}
+%\subsubsection{Other}
 
 (TODO)
 
@@ -238,41 +282,10 @@ There is a large selection of commercial solutions available. Some companies are
 - KLT: http://www.inf.ethz.ch/personal/chzach/opensource.html
 - http://slowmovideo.granjow.net/
 
-\subsection{Custom software}
+% }}}
 
-Parallelized image acquisition from a large set of cameras has not yet established such a state that general purpose software would be easily available.
-Commercial solutions probably exist, but they are often strictly bound to a specific hardware, costly and inflexible.
-
-Some custom techniques were used to preview images of all cameras simultaneously, configure the settings of each in parallel, and retrieve the captured images from them in order.
-
-\subsubsection{gphoto2}
-
-gphoto2 \cite{gphoto2} is a well-known free application and library for controlling digital cameras on Unix-like operating systems, supporting over a thousand cameras.
-Instead of relying on each camera manufacturer separately for a software development kit, gphoto2 abstracts common operations behind the same interface.
-For example, Canon \cite{canonsdk} and Nikon \cite{nikonsdk}, some of the biggest camera manufacturers, both provide SDKs for controlling their devices remotely.
-To support both vendors, one would have to write code for both APIs.
-API restrictions, licenses blahblah.
-
-Most modern USB cameras use the Picture Transfer Protocol (PTP) \cite{ptpTODO} for setting properties and transferring pictures, which is also what gphoto2 implements.
-
-It turns out that gphoto2 has best support for Canon and Nikon cameras.
-
-\subsubsection{Previewing and configuration}
-
-Because of the flexible nature of the rig purposes, a simple preview live feed is almost mandatory to properly set up a new configuration.
-A preview matrix of all cameras makes it easy to identify the cameras and to point them to correct direction, and to verify that their settings are the same (e.g. similar brightness in preview video).
-Remote control of all cameras enables to set all settings, such as shutter speed and focus distance, jointly from the same computer instead of clicking on each camera's buttons manually.
-
-\subsubsection{Image acquisition}
-
-The cameras cannot be triggered individually via USB even though it is possible, because it is too complex and undeterministic for multi-camera synchronization.
-Instead, the remote release device is triggered via USB that then releases all shutters at the needed precision.
-
-A custom gphoto2-based software is used to download pictures from the cameras. They are able to automatically notify about new files, which are then downloaded in proper locations via USB.
-
-Guidelines for successful pictures/video
-
-\subsection{Full reconstruction}
+\subsection{Sample reconstruction pipeline} % {{{
+%\subsection{Full reconstruction} % {{
 
 Both shape and texture are considered in this work. Only diffuse color (albedo) is of interest; more complex material properties are assumed to be captured in other means and not spatially varying.
 
@@ -290,4 +303,11 @@ poisson surface vs ball pivoting
 
 visual convex hull, bbox for constraining
 
-\subsubsection{Software pipeline}
+% }}}
+
+\subsection{Computer requirements} % {{{
+
+any pc will do, the bigger the better
+
+% }}}
+

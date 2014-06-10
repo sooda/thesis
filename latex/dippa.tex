@@ -92,8 +92,9 @@ linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
 \clearpage
 % liitteet
 %\phantomsection
-%\addtocontents{toc}{\protect\contentsline{section}{Appendices}{}{appendix}}
 
-\include{tex/appendix}
+\addtocontents{toc}{\protect\contentsline{section}{Appendices}{}{appendix}}
+
+\input{tex/appendix}
 
 \end{document}

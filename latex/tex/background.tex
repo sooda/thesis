@@ -257,6 +257,12 @@ For sharp images that are preferred in reconstruction, this is to be avoided.
 
 % }}}
 
+\subsubsection{Sequence of frames} % {{{ or: video is frames
+
+% put the above here
+
+% }}}
+
 \subsubsection{Frame rate effects} % {{{
 
 More fps = better movement stopping (less motion blur), need also more light or more sensitive sensors. More sensitivity often means also more noise. Noise vs. motion blur trade-off.
@@ -395,17 +401,36 @@ compression artifacts
 
 % }}}
 
-\subsection{Camera selection} % {{{
+\subsection{Digital camera types (-> impl section partly?)} % {{{
 
-general HW availability and ease of use and customizability and price
+This section lists the most common types of cameras available for the typical consumer.
+Good properties are low price, configurability and ease of use.
+Technical qualities usually get better with price.
+For a multi-camera setup with a restricted budget, low price is one of the largest advantage.
+On the other hand, large amounts of manual work should be avoided if possible.
 
-Good: Smaller sensor; smaller focal length; closer to target; less camera position disparity; smaller rig
+Consumer cameras have good availability, but they are targeted for artistic photographs instead of science.
+Machine vision hardware are more controllable and contain no unnecessary parts, but are more expensive and difficult to acquire.
 
-Image quality: lens quality, sensor size, pixel count, lighting
+In general, good technical properties are deep depth of field for sharp images, lots of light, high pixel count, short distance to target. Some good technical properties of cameras that achieve these are listed below.
 
-Common sensor sizes in dslr cameras
+\begin{itemize}
+	\item Small sensor: For an equivalent resolution, smaller sensor better DOF. Larger sensor requires a closer target or longer focal length for filling the frame.
+	\item Small focal length: closer to target, not much space needed
+	\item Aperture: large for good light, small for good DOF
+	\item Fixed focal length lens (prime lens): less moving parts means better calibration
+	\item Large lens: captures more light, resulting in shorter shutter times
+	\item Pixel count: resolution gives more texture accuracy
+	\item Pixel size: larger pixels gather more light
+\end{itemize}
 
-Common sensor sizes in pocket cameras
+All the properties should be looked as a whole; especially large pixel count does not necessarily imply better pictures if the optics is not good enough.
+
+camera position disparity
+
+Common sensor sizes in dslr cameras; APS-C (26-ish mm dia), full frame (30 mm)
+
+Common sensor sizes in pocket cameras; 5 to 10 mm diameter?
 
 Canon / Nikon dslr
 
@@ -415,13 +440,11 @@ lens sharpness, contrast, freq; MTF modulation transfer function for the lens sh
 
 fixed lens (prime) instead of zoom: more or less lab controlled environment -> target position can be adjusted, zoom would be just more parameters to optimize. focal length is important to know; also, mirror vibration might move the zoom over time.
 
-no anti-shake/image stabilizer  (photogrammetry.doc) in sensor or lens
+no anti-shake/image stabilizer (photogrammetry.doc) in sensor or lens
+sensor vibration to remove dust -> sensor position not very fixed (rieke2009) % TODO MEASURE!
+ring flash bending the lens assembly if attached to it (rieke2009)
 
 Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality, e.g. mechanical problems blah blah
-
-sensor vibration to remove dust -> sensor position not very fixed (rieke2009) % TODO MEASURE!
-
-ring flash bending the lens assembly if attached to it (rieke2009)
 
 \subsubsection{DSLRs}
 
@@ -513,8 +536,6 @@ Active measurement (difficult to use several)
 Laser rangers
 
 IR patterns and an IR camera (Kinect)
-
-\subsubsection{(Light field cameras)}
 
 Lytro (NOPE)
 
@@ -712,7 +733,7 @@ One possible way is direct linear transform (DLT)
 
 % }}} camera calibration
 
-\subsection{Normalization} % {{{
+\subsection{Preprocessing/normalization} % {{{
 
 The scale of values in the equations above affects the precision \cite{hartley1997defense,hartley03multiview}.
 A similarity transform can be used to modify the values to a more consistent range.
@@ -720,12 +741,6 @@ A similarity transform can be used to modify the values to a more consistent ran
 Translate centroid to the origin, scale so that average becomes sqrt 2.
 
 maybe move this to a paragraph as part of another section.
-
-% }}} normalization
-
-\subsection{Preprocessing} % {{{
-
-Or should this be part of everything else somehow?
 
 - sync shit
 
@@ -989,7 +1004,7 @@ Epipole can be interpreted as the location of another camera as seen by other ca
 
 % }}} epipolar geometry
 
-\subsection{Point matching} % {{{
+\subsection{Features and point matching} % {{{
 
 salient geometric features for matching
 
@@ -1066,7 +1081,7 @@ Several software packages do bundle adjustment as a basic step of their pipeline
 
 % }}}
 
-\subsection{Reprojection errors} % {{{
+\subsection{Error metrics} % {{{
 
 The quality of the reconstruction is measured by reprojecting the 3D points back to the cameras with the estimated parameters, and calculating the distance between the projected and the matching original point. \cite{hartley03multiview}
 %This is of course possible only for calibrated objects; no precise errors can be recovered from an unknown structure.
@@ -1151,7 +1166,7 @@ surface vs motion capture
 
 Motion capture seeks to fit a sequence of movements to a model by recording the movement and processing the data to be used with the model. \cite{find-a-definition-somewhere}
 
-\subsection{4D data} % {{{
+\subsection{4D data capture} % {{{
 
 The industry uses the term 4D in the context of time-varying 3D data.
 
@@ -1165,7 +1180,7 @@ Later usage may need only the tracked positions of specific locations on the sur
 
 % }}}
 
-\subsection{Tracking} % {{{
+\subsection{Tracking the geometry} % {{{
 
 Kalman
 
@@ -1193,21 +1208,6 @@ Common method also for the entertainment industry is to use a pre-determined mod
 Facial animation does not necessarily even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
 
 % }}} tracking
-
-\subsection{Registration} % {{{
-
-Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
-
-
-When reconstructing an object all over again in consecutive frames, the points might not be fully aligned, and more importantly, they do not share the same model topology, i.e. the vertices have no other relation to the vertices in previous frames than being spatially near each other, accompanied with noise. \cite{zhao2005alignment}
-
-Registration aligns disoriented models (e.g. point clouds, surfaces or triangular meshes, depending on the application) together with a rigid transformation between them so that one becomes the other from a reference coordinate frame's viewpoint.
-Aligning two geometrically \textit{same} objects may not hold if the object deforms in a non-rigid way; when tracking the motion/deformation of a surface, the point sets describe a different geometry and there will always be some error.
-
-A common method is Iterative Closest Point (ICP): iterative refinement approach to move the meshes closer to each other a small step at a time.
-When ICP is used locally, it can be applied to non-rigid cases too. \cite{brown2007global}
-
-% }}} registration
 
 \subsection{2D features / surface tracking} % {{{
 
@@ -1238,6 +1238,21 @@ Matching to a priori model
 
 % }}} 2d features
 
+\subsection{Registration} % {{{
+
+Combining 3D meshes from multiple viewpoints (cameras/camera pairs). Also e.g. ransac for removing noise. Iterative closest point fitting.
+
+
+When reconstructing an object all over again in consecutive frames, the points might not be fully aligned, and more importantly, they do not share the same model topology, i.e. the vertices have no other relation to the vertices in previous frames than being spatially near each other, accompanied with noise. \cite{zhao2005alignment}
+
+Registration aligns disoriented models (e.g. point clouds, surfaces or triangular meshes, depending on the application) together with a rigid transformation between them so that one becomes the other from a reference coordinate frame's viewpoint.
+Aligning two geometrically \textit{same} objects may not hold if the object deforms in a non-rigid way; when tracking the motion/deformation of a surface, the point sets describe a different geometry and there will always be some error.
+
+A common method is Iterative Closest Point (ICP): iterative refinement approach to move the meshes closer to each other a small step at a time.
+When ICP is used locally, it can be applied to non-rigid cases too. \cite{brown2007global}
+
+% }}} registration
+
 \subsection{Optical flow} % {{{
 
 Long history; several mature commercial video editing products. The Matrix.
@@ -1253,13 +1268,13 @@ By combining the movement tracking to a mesh whose dynamics are modeled physical
 
 % }}} optical flow
 
-\subsection{Kalman} % {{{
+\subsection{(Kalman methods)} % {{{
 
 Is such complexity needed?
 
 % }}}
 
-\subsection{Interpolation / Morphing} % {{{
+\subsection{Playback interpolation / morphing} % {{{
 
 The record rate might not be exactly the same as the playback rate; when the movement is displayed on a screen, the positions of the tracked parts of object are interpolated between recorded keypoints.
 The same stuff in 2D is called morphing: pixel movement is tracked instead of simply blending each pixel between two time points.
