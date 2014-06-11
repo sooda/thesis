@@ -579,6 +579,13 @@ support structures out of bounds; just assume that the construction is rigid eno
 
 \section{Static 3D reconstruction}
 
+%[1] Shape and motion from image streams under orthography: A factorization approach
+
+% kruppa eqs
+% active vs. passive http://en.wikipedia.org/wiki/3D_reconstruction
+
+%algebraic vs geometric error
+
 % previous work! implemented algorithms
 
 Close range photogrammetry, stereopsis, isolated object, camera resectioning
@@ -1165,6 +1172,10 @@ Rendered facial animation: google up on bones and stuff.
 surface vs motion capture
 
 Motion capture seeks to fit a sequence of movements to a model by recording the movement and processing the data to be used with the model. \cite{find-a-definition-somewhere}
+
+% It is possible to assume locally smooth movements in most areas; thus, a more intelligent approach should be used than simply reconstructing a new mesh for each frame and using registration to just align them.
+% By making certain assumptions on high-resolution texture, very detailed bump maps can be extracted, for example, by backprojecting the expected 3d mesh to textures and refining. [CITE]
+
 
 \subsection{4D data capture} % {{{
 

@@ -1,8 +1,10 @@
 % Johdanto
 \section{Introduction}
 
-lab environment
+%(wikipedia: In recent decades, there is an important demand for 3D content for computer graphics, virtual reality and communication, triggering a change in emphasis for the requirements. Many existing systems for constructing 3D models are built around specialized hardware (e.g. stereo rigs) resulting in a high cost, which cannot satisfy the requirement of its new applications. This gap stimulates the use of digital imaging facilities (like a camera). Moore's law also tells us that more work can be done in software. An early method was proposed by Tomasi and Kanade.[1] They used an affine factorization approach to extract 3D from images sequences. However, the assumption of orthographic projection is a significant limitation of this system.)
 
+% Performance-Driven Facial Animation, Lance Williams, Computer Graphics, Volume 24, Number 4, August 1990
+%%http://en.wikipedia.org/wiki/Facial_motion_capture
 
 %% Leave first page empty
 % (wat?)
@@ -10,96 +12,86 @@ lab environment
 
 \subsection{Background and motivation}
 
-The application domain for reconstructing three-dimensional fields is wide, and expands constantly with the ever increasing computing power.
+% small intro, what's scanning
+Computer vision is a mature field; the steps of acquiring three-dimensional structure of a real-life scene are well known, and there are several methods available.
+
+Multi-view stereo capture/scanning can be described as acquiring the geometry and color information of a subject from several images taken from different poses.
+A stereo scanning rig is a specially constructed machinery, consisting of two or more cameras, for quickly taking photos from different viewpoints for machine vision processing.
+
+The geometric structure of an object can be extracted from distinct features that can be detected with several cameras.
+
 The popularity of handheld computers - smartphones - equipped with relatively good quality cameras is currently an attractive target for 3d scanning software, while the actual reconstruction works in the cloud.
 Kinect, the active infrared-based scanner for the xbox console, has reached a phase where it can be considered ubiquitous in gaming.
+Current advances in camera technology and price make it possible for individual consumers to do pretty sophisticated reconstruction that has been possible only with a large budget of e.g. a movie studio.
+Even software that uses only a smart phone camera and runs on the same phone has been published.
 
-% kruppa eqs
-% active vs. passive http://en.wikipedia.org/wiki/3D_reconstruction
-algebraic vs geometric error
-(wikipedia: In recent decades, there is an important demand for 3D content for computer graphics, virtual reality and communication, triggering a change in emphasis for the requirements. Many existing systems for constructing 3D models are built around specialized hardware (e.g. stereo rigs) resulting in a high cost, which cannot satisfy the requirement of its new applications. This gap stimulates the use of digital imaging facilities (like a camera). Moore's law also tells us that more work can be done in software. An early method was proposed by Tomasi and Kanade.[1] They used an affine factorization approach to extract 3D from images sequences. However, the assumption of orthographic projection is a significant limitation of this system.)
+% static/dynamic definition, surface vs. motion capture, texture
 
-[1] Shape and motion from image streams under orthography: A factorization approach
+3D scanning can be divided roughly in two: static and dynamic subjects.
+Static case considers a rigid and non-moving subject, while dynamic scanners are used for moving bodies or deforming surfaces such as human skin or clothing.
+Static capture is simple in the way that the time when the pictures are taken does not affect the outcome; a single moving camera can be used.
+Dynamic motion capture has long been used for capturing a human body performance with a large set of static cameras, encoding the positions of separate limbs.
+Capturing also the moving texture (surface capture, as opposed to motion capture) while recording the geometry movement is a related, much more demanding task that has become more popular with the increase in computing power.
 
-History[edit]
+% applications
 
-One of the first papers discussing performance-driven animation was published by Lance Williams in 1990. There, he describes 'a means of acquiring the expressions of realfaces, and applying them to computer-generated faces'.[1]
-%%http://en.wikipedia.org/wiki/Facial_motion_capture
-% subsect intro, subsect overview?
-HOX shorten this section and move some of this to the background section.
-
-Computer vision is a mature field; the steps of acquiring three-dimensional structure of a real-life scene are well known.
-Stereo, multiview, structure from motion, blah blah.
-
-This work concentrates most on scanning human faces, but the algorithms are kept as abstract as possible to make it simple to apply them to other targets too.
-Acquiring structure of static objects is also presented.
-
-
-
-Facial surface motion capture (``mocap'') is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement to record performances for replaying them later.
-Mocap records movements of a human body (or another object that is to be recorded) so that the movements can be replayed or analyzed. Traditional methods only model the joint angles blabla, tracking tens of points in realtime.
-Level of detail varies, depending on what is needed; from simple bone movements to deformations of skin, muscles and clothing.
-Cloth motion is another highly nonrigid application that can be scanned for acquisition of model parameters. \cite{pritchard2003cloth}
+(Other applications (uses). Movies. Remedy. Medical [essential physics of, bushberg]!). Landscape/architecture engineering. Crime scenes (police investigation). Topographic / terrain mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
 
 Large scale static 3D scanning and texturing of archeologic sceneries is done with combining laser scanning and photographs \cite{lerma2010terrestrial}.
 
 Small objects have been scanned successfully with a turntable \cite{fitzgibbon1998automatic}, and structure from motion techniques have recently been presented that impressively recover a structure from pictures taken all over an outdoor location with no a priori information about the camera configurations. \cite{goesele2007multi,furukawa2010towards}.
 
-Static applications are more developed; while dynamic scanning has lots of interest in scanning faces and human motion, also static cases have received attention in medical applications, landscape/architecture engineering and mapping, and crime scene investigation.
+Static applications are more developed; while dynamic scanning has lots of interest in scanning faces and human motion, also static cases have received attention in medical applications, landscape/architecture engineering and mapping, and crime scene investigation. % are they actually?
 
+% on motion capture
 
+Three-dimensional motion capture means in general the way of recording a sequence of movements of a real-life target or scene.
+The technical details vary by what information is required and available.
+When time is considered as one additional dimension, sometimes 3D motion captured sequences are called 4D video.
+This reflects e.g. the names of some software packages \cite{something4dgoogleitup}
+
+Facial surface motion capture (``mocap'') is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement to record performances for replaying them later.
+This capture records movements of a human body (or another object that is to be recorded) so that the movements can be replayed or analyzed. Traditional methods only model the joint angles and consider parts between them as rigid bodies, tracking tens of points in realtime. \cite{todo}
+Level of detail varies, depending on what is needed; from simple bone movements to deformations of skin, muscles and clothing.
+Reconstructing skin and cloth motion is another highly nonrigid application that can be scanned for acquisition of model parameters. \cite{pritchard2003cloth}
+
+Human performance capture is traditionally done with special easily distinguishable markers, typically small retroreflective spheres, that are mapped to a polygonal model for playback.
+Playback then interpolates between the recorded positions.
+Advances in camera resolution make it possible to use only surface texture fiducials without separate markers.
 % http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
-Human performance capture is traditionally done on special easily distinguishable markers, typically small retroreflective spheres, that are mapped to a polygonal model for playback. Playback then interpolates between the recorded positions. Advances in camera resolution make it possible to use only texture features without separate markers.
-% http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
 
+% starting our interests; humans in movies+games
 
-The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down'';
+The Matrix \cite{wachowski99matrix}, a movie famous of its bullet-time scenes, used heavy optical flow processing to ``slow time down'';
 then, The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal} to capture the skin surface of a human head, in order to replicate the head in the form of computer models.
 
 Recent movies and video games (such as \cite{rockstar2011noire}) have shown that by capturing real motion of facial expressions instead of simulating them produces impressive results.
 Literature on capture of human faces and skin surface motions is large. \cite{deng2007computer}
 Professional quality capture still needs a laboratory environment with a large number of cameras \cite{winder2008technical,motionscan}.
 
-
-(Other applications (uses). Movies. Remedy. Medical [essential physics of, bushberg]!). Landscape/architecture engineering. Crime scenes (police investigation). Topographic / terrain mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
-
-static vs dynamic: geometry and texture / gem variations only / geometry and texture variations
-
-Three-dimensional motion capture means in general the way of recording a sequence of movements of a real-life target or scene.
-The technical details vary by what information is required and available.
-When time is considered as one additional dimension, sometimes 3D motion captured sequences are called 4D video.
-This reflects in e.g. the names of some software packages \cite{something4dgoogleitup}
-
-Static capture is simple in the way that the time when the pictures are taken does not affect the performance.
-Small objects have been scanned successfully with a turntable [CITE], and structure from motion techniques have recently been presented that impressively recover a structure from pictures taken all over an outdoor location with no a priori information about the camera configurations [CITE].
-
-The movie industry usually knows the structure of the objects that are tracked; a pre-recorded mesh is used as a helping model (also called ``virtual bones'' [CITE] universal capture) to track the object pose [CITE].
+The movie industry usually knows the structure of the objects that are tracked; a pre-recorded mesh is used as a helping model (also called ``virtual bones'' to track the object pose. \cite{todo} % universal capture
 It is obviously easier to map image features to a priori information than to recover a fully unknown structure.
 (A pre-recorded higher resolution texture could be used for pore-level details, then tracking with a good-enough resolution and possibly markers to get wrinkles.)
 
-(( surface capture ))
-
-(( parametric face properties ))
-
-The structure of an object can be extracted relatively easily from distinct features that can be detected with several cameras [CITE].
-Current advances in camera technology and price make it possible for individual consumers to do pretty sophisticated reconstruction that has been possible only with a large budget of e.g. a movie studio.
-Even software that uses only a smart phone camera and runs on the same phone has been published [CITE, CITE].
+% Realtime capture can be sped up by modeling the face in a parametric space, and mapping video frames to the model.
 
 The reconstruction and rendering involves lots of filtering of the raw data and further using high-resolution textures to extract better resolution depth data than what is available with computer vision technologies only.
-By making certain assumptions on the texture, very detailed bump maps can be extracted, for example, by backprojecting the expected 3d mesh to textures and refining. [CITE]
 
-Reconstruction of a static detailed mesh is difficult enough; human faces not only move, but also deform very heavily, which poses even further challenges [CITE].
-Basic techniques for taking also motion into account are presented, but the use of state-of-the-art algorithms is left for future implementations.
-It is possible to assume locally smooth movements in most areas; thus, a more intelligent approach should be used than simply reconstructing a new mesh for each frame and using registration to just align them. [CITE]
+% XXX less background, more contents and motivation
 
-Many tracking algorithms work in the 2D space using simply the picture data and not the post-processed 3D meshes [CITE].
+Motivation: such uses, very popular, much algorithms, need own scanner wow.
 
+\subsection{Goal and scope of the thesis}
 
-\subsection{Goal of the thesis}
+% should the face stuff be moved under here? probably parts of it?
 
-The objective of this work is to describe a complete 3D object scanning and reconstruction pipeline with both shape and texture information.
-A rig of cameras is constructed, and a generic software pipeline is developed and presented, for reading generic video stream and producing raw reconstructed textured 3D meshes and/or point clouds for further handling.
-Real-time processing is not considered important, as the data will be post-processed and observed manually and not used as such.
+% choices {
+
+The objective of this work is to describe a complete 3D object scanning and reconstruction pipeline for both shape and texture information.
+A digital camera based reconstruction rig is constructed, supported by software tools for acquiring both static image data and video files.
+Feasible readily available programs for reconstructing 3D geometry and texture based on the captured image data is surveyed and presented, for producing textured 3D meshes and/or point clouds for further handling.
+
+Real-time processing is not considered important, as the data will be post-processed and observed manually for maximum quality.
 
 or
 
@@ -114,8 +106,24 @@ The aim of this work is to evaluate both software and hardware aspects in three-
 Both the geometric properties and color texture were considered.
 Aim is in hardware robustness, ease of use and general extendability. While there are no detailed plans on further use of the machinery, it should support many kinds of studies in the future of its structure and without knowing all implementation issues in detail.
 
-\subsection{Organization of the thesis}
+A special case subject for scanning in this work is the human face: an interesting target because of its complex surface material and diverse ability to produce many different expressions.
+Many studies have recently focused on facial 3D reconstruction based on a set of high resolution photographs.
 
-Chapter X describes the mathematical background in image acquisition and the reconstruction problem.
-The properties and structure of the implemented system are shown in chapter Y.
-Usage verification and sample data, and finally the conclusions of the work are described in Z.
+% }
+
+Basic techniques for taking also motion into account are presented, but the use of state-of-the-art algorithms is left for future implementations.
+
+% "a rig is built" or "a rig was built"?
+
+Constructing a rig means studying the theoretical background for the reconstruction process in order to be familiar with the system needs, selecting hardware and setting it up, and writing software for using the selected cameras to automate the scanning process.
+A reconstruction rig consisting of digital cameras can be fixed in an indoor setup, or a more flexible setting that can be transported to a location where it is needed.
+In this work, transportability and flexibility were considered important, and the final product was successful in that it can be packed and transported, set up, and used in a relatively simple manner.
+The rig will be used for future research on image-based reconstruction algorithms.
+
+
+The thesis is organised as follows.
+Theoretical background on the elementary methods used in 3D reconstruction implementations are described in sections A-B, focusing on image acquisition, multi-view 3D reconstruction and 3D motion capture, respectively.
+In section C, the practical design and implementation of the aim of the thesis, the flexible 3D scanning rig, is presented.
+Section D focuses on using the rig for case experiments and testing it on some research questions.
+Feasibility of the rig, possible uses and future work are discussed in chapter E.
+Chapter F gives a conclusion on the work.
