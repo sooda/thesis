@@ -694,7 +694,7 @@ For simplicity, it is often denoted $\alpha_x = m_x f$, $\alpha_y = m_y f$. $R =
 Calibration is often specified with a camera projection matrix, or several separate matrices.
 It may be convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example (?).
 
-calibration can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?]. Commonly the points are particular \emph{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?].
+calibration can be automatically determined, given by X corresponding points that can be distinguished in each image and matched [?]. Commonly the points are particular \emph{features}, commonly very noticiable edges or corners, found with an algorithm such as SIFT [?], SURF [?] or Harris corner detector [?]. % feature correspondences
 
 TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
 
@@ -1157,12 +1157,12 @@ Still, structured light and/or shading assumptions [shape from single image cues
 
 (video: 3d topology different in each frame; most algos do just stills. simple to combine them to a pre-recorded mesh)
 
+Rendered facial animation: google up on bones and stuff.
 % }}}
 
 \section{Motion capture}
 
 surface vs motion capture
-
 
 Motion capture seeks to fit a sequence of movements to a model by recording the movement and processing the data to be used with the model. \cite{find-a-definition-somewhere}
 
@@ -1280,88 +1280,5 @@ The record rate might not be exactly the same as the playback rate; when the mov
 The same stuff in 2D is called morphing: pixel movement is tracked instead of simply blending each pixel between two time points.
 
 Linear, cubic etc. interpolation.
-
-% }}}
-
-\section{Applications}
-
-Perf of cloth animation capture
-
-other uses - street view, autom driving, geodetic systems
-
-(corresponding problems in e.g. autonomous driving or harvester machines?)
-
-(any point in outdoor methods?)
-
-
-previous usage in:
-
-	rockstar games / la noire; camera pairs
-
-	polar express / sony imageworks
-
-	ea sports / faro
-
-
-
-\subsection{Common uses} % {{{
-
-The application domain for reconstructing three-dimensional fields is wide, and expands constantly with the ever increasing computing power.
-The popularity of handheld computers - smartphones - equipped with relatively good quality cameras is currently an attractive target for 3d scanning software, while the actual reconstruction works in the cloud.
-Kinect, the active infrared-based scanner for the xbox console, has reached a phase where it can be considered ubiquitous in gaming.
-
-The Matrix (1999) \cite{wachowski99matrix}, famous of the bullet-time scenes, used heavy optical flow processing to ``slow time down''; it is a good example on what is needed to capture data that changes over time in non-controllable and non-repeatable ways.
-The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al.
-\cite{borshukov05universal} to encode and simulate accurate facial movements in 3D.
-
-Facial surface motion capture (``mocap'') is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement to record performances for replaying them later.
-Mocap records movements of a human body or another object that is to be recorded so that the movements can be replayed or analyzed.
-Recent movies and video games (such as \cite{rockstar2011noire}) have shown that by capturing real motion of facial expressions instead of simulating them produces impressive results.
-Literature on capture of human faces and skin surface motions is large. \cite{deng2007computer}
-Professional quality capture still needs a laboratory environment with a large number of cameras \cite{winder2008technical,motionscan}.
-
-Human performance capture is traditionally done on special easily distinguishable markers, typically small retroreflective patterns, that are mapped to a model for playback. Playback then interpolates between the recorded positions. Advances in camera resolution make it possible to use only texture features without separate markers.
-% http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
-
-Cloth motion is another highly nonrigid application that can be scanned for acquisition of model parameters. \cite{pritchard2003cloth}
-
-Large scale static 3D scanning and texturing of archeologic sceneries is done with combining laser scanning and photographs \cite{lerma2010terrestrial}.
-
-Small objects have been scanned successfully with a turntable \cite{fitzgibbon1998automatic}, and structure from motion techniques have recently been presented that impressively recover a structure from pictures taken all over an outdoor location with no a priori information about the camera configurations. \cite{goesele2007multi,furukawa2010towards}.
-
-Static applications are more developed; while dynamic scanning has lots of interest in scanning faces and human motion, also static cases have received attention in medical applications, landscape/architecture engineering and mapping, and crime scene investigation.
-
-% }}}
-
-\subsection{Facial surface capture} % {{{
-
-Surface capture of human skin is different from objects that consist of just connected rigid bodies: it stretches and shears in a highly non-predicatable way such that both its local geometry and texture changes, affected by the sub-surface properties of muscles etc.
-Traditional methods for tracking rigid objects are thus not viable for high quality.
-Joint motion capture has the rigid body assumption.
-
-The deformations can be taken into account with e.g. furukawa etc.
-
-\subsubsection{Uncanny valley}
-
-\subsubsection{Expression space}
-
-Some techiques \cite{faceshift,something} use pre-recorded facial expressions to identify the subject's pose.
-They suffer from not being able to accurately describe the temporal changes in finest details, but benefit from densely packed parameterization of facial expressions.
-A separate mesh is stored as a three-dimensional template for each expression (such as happy or angry) and each frame is encoded, as a linear combination of these individual expressions.
-Such feature vectors describe well each possible face, and importantly, they eliminate the need for encoding the movement of each vertex, which can be unnecessarily heavy to compute or store.
-The results from this method can easily be mapped to other models than the face of the subject, as it is independent on the actual facial geometry and only uses weights for pre-modeled faces, making it interesting in computer animation.
-
-Compare to Facial Action Coding System (FACS) (Hjortsjö 1969), which parameterizes the face in a group of muscular actions. This is similar to grouping vertices in keyframe animation [?].
-
-Expression tracking / 2d capture
-
-\subsubsection{Surface structure assumptions}
-
-Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley).
-
-
-\subsubsection{Rendered facial animation}
-
-google up on bones and stuff
 
 % }}}
