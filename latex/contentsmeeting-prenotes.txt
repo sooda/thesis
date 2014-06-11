@@ -1,0 +1,58 @@
+intro
+	- katsaus softien perustekniikkaan, naamamenetelmiin, vertaillaan softia ja rakennetaan skannauslaitteisto
+	- background, goal, organization alaotsikkoina?
+
+image acquisition
+	- imaging: basic pinholejuttua ja linssivääristymiä sekä sulkimen ja aukon ja valon tarpeen yhdistelmät; kuva irti sensorilta eli fps:n laskentaa yms kaistanleveyden pohjalta
+	- video: filmissä ja digissä samat framesekvenssit; joka framella oma valotusaika; synkkausongelmat ja niiden ylitsepääseminen ja kalibrointi
+	- kameratyyppien erojen vaikutukset: kennon koko, polttoväli, optiikka, zoom, etäisyys kohteeseen, kennon lukunopeus, konffattavuus, interlace, suljin
+	- hardiksesta väylänopeudet ja tallennusnopeus (rajoittaa mm. fps:ää/resoluutiota), mekaniikasta ehkä rakenteen huojuminen
+
+3d reconstruction
+	- mitä vähintään tarvitaan softalta joka lukee 2d-kuvista stereo-3d:n
+	- perusteet taustan koordinaatistomuunnosten matriiseista / kameroiden asettelusta
+	- perusvaiheet kalibroidusta ideaalistereokeissistä yleistettyyn kahteen kameraan (kalibroituna)
+	- taustaa stereon laajentamisesta mvs/uncalib-sfm-keissiin
+	- menetelmien virheiden/kohinan analysointia pienten objektien skannauksen puitteissa
+	- pistepilvestä kauttaaltaan väritetyksi polygonimalliksi
+	- jälkikäsittely esim. gpu:lla shadereissa tallennetun geometrian lisäksi; tekstuurista normaalimappia (tätä applicationsissa kunnolla)
+
+motion capture
+	- datan formaatit: alussa kustakin framesta pistepilvi erikseen, lopuksi luuanimaatio
+	- 3d-pisteiden uusien paikkojen hakua 2d-kuvasta tehdään rekonstruoidessa myös
+	- rekisteröinti nappaa koko objektin liikkeen; erosta pinnan deformaus
+	- optical flowlla lähdevideon kompensaatiota ja 2d-träkkäystä, emt meshauksesta
+	- videon toistamisen keyframet ja välipisteiden interpolointi jos eri fps (graffa-animaation perusjuttuja)
+
+applications
+	- (vois hajauttaa muualle tästä)
+	- videopelit, leffat, arkkitehtuuri, geologia/arkeologia, 3d-tulostus, ilmakuvaus ja kartoitus, poliisin tutkimusskenet
+	- tässä työssä casena pienten objektien skannaus ja kasvojen pinta-animaatio
+	- kasvoissa on se kurjuus että ihmiset erottavat oikean feikistä tosi hyvin
+	- erikoistapaukseen keskittyessä voi tehdä oletuksia kun materiaali on tunnettu: esim. lokaali kirkkaus pitäisi olla vakio ja kirkkauserot ovat normaalikarttaa (pehmeällä valaistuksella/polarisoivalla filsulla ei tosin käy)
+	- rendattuna kasvot vaativat monimutkaisia materiaalimalleja, niistä voi ehkä mainita mutta out of scope
+
+implementation
+	- speksit että helposti setupattava skannerilaitteisto synkatun kuvadatan hankkimiseen
+	- 3d-rekonstruktiosoftia niin paljon ettei rajoiteta tietyn käyttöön, mut silti yksi tai useampi koko pipeline esimerkkinä ja sampledataa lopuksi
+	- tarjolla olevien kameroiden vertailua, lähinnä dslr ja konenäkö - pokkarit turhan automaattisia
+	- perustelut valitusta kamerasta ja kakkulasta (halpa ja sikatarkka); helppo saatavuus ja itseasiassa käytäntö menee monessa asiassa teoreettisen paremmuuden edelle (softatuki, hinta)
+	- mekaanisen rakenteen valinta - helppo hankkia ja tehdä; toistettavissa vs. itse keksitty putkirakennelma
+	- kameran kaukolaukaisimen toiminta ja useamman sellaisen ohjaus koneelta synkattuna, ehkä salamakenkien luku ja salaman synkkaaminen (tai sitten jatkuvat valot videota varten, joissa väkisinkin ihminen irvistää)
+	- softaa kameroiden asetusten säätämiseen, samanaikaiseen esikatseluun ja kuvien ottamiseen+lataamiseen
+		- (avointa koodia)
+		- koodin rakenne, toimintakuvaus kaavioilla
+		- kameroiden protokolla
+		- kameroiden kinkkisyydet (nappien lukitus etäohjauksessa etc)
+		- laukaisimen automaattiohjausprotokolla
+	- katsaus tarjolla oleviin 3d-rekonstruktiosoftiin
+	- esimerkkipipeline vaikka visualsfm+meshlab-tyyliin, softapakettiin mukaan käännetyt versiot ja perus komentoriviautomaatio
+	- vaatimuksia käytetystä tietokoneesta kuvien lataamiseen vs. rekonstruktioon: lataamiseen käy läppärikin, rekonstruktiossa parasta olla tehokas kone
+
+results
+	- muutamia esimerkkikuvia yleisesti ja läheltä ja niiden analysointia (virhemetriikoita, pisteiden lukumääriä (konffattavissa))
+	- pohdintaa koko järjestelmän tarkkuudesta verrattuna skannattavan objektin kokoon
+
+conclusion
+	- tällänen tehtiin
+	- jatkossa sopis kokeilla kaikennimisiä algoritmeja kunhan kuvadataa on saatavilla

@@ -1,0 +1,47 @@
+intron aliotsikot voi jättää pois jos alle kolme sivua; goal ja työn rajaus on
+todella tärkeä; lukijalle tiedoksi miksi mitä työssä käsitellään ja mihin
+päästään (sekä itseäkin varten).
+
+backgroundin kameratyypeistä lähinnä jonkinlainen taulukko tms; esitetään
+kameran vaihtelevat ominaisuudet ja vertaillaan niitä, eikä esitetä
+alaotsikoissa että mitä eri kamerat osaavat.
+
+huom: algoritmivertailua yleisesti eikä vaikka siten, että yhdestä kuin se
+olisi paras ja mainitaan että muitakin kai olisi.
+
+dipan tiimalasimalli: aluksi leveästi backgroundissa kaikenlaista, sitten
+implementaatio tarkasti ja lopulta analyysiä taas avarammalla tasolla.
+
+static 3d reconstin alaotsikko multiview stereo = calibrated multiview stereo,
+vrt. sfm ja bundle adjust; vähän rinnakkaista. osion alkuun jokin kaaviokuva
+pipelinen järjestyksestä, yksi lause kustakin vaiheesta tukemaan eri
+alaotsikkoja. harkitse calibrated stereo -alaotsikkoa jonka alla kappaleet
+binocular ... multiview.
+
+applications-osan voisi hajauttaa kun se ei oikein sovi tohon. common uses
+menee introon ja discussioniin, facial capture osittain discussioniin ja
+muualle (reconstructionin post).
+
+system implementation on huono otsikko. mieluummin vaikka 3d scanning rig
+implementation.
+
+resultsin ja conclusionsin väliin discussion jos sille on aihetta (3+ sivua).
+mikä results? työn tulos = rakennelma? sehän on jo aiemmassa kohdassa esitelty.
+mittausten results? otsikoksi vaikka experiments. 7 exp, 8 discussion, 8.1 ..,
+8.n future work, 9 conclusion = summary. pitkä pohtiva discussion näyttää että
+kirjoittaja ymmärtää enemmän kuin pinnallisesti.
+
+pohdintaa: mihin laitteisto ei sovellu? näytä kokeellisesti.
+
+experiments: tutkimuskysymykset, koe verifioimaan, vastaukset (ei: kokeillaan
+jotain, tuloksia, pohdintaa ja keksitään kysymyksiä joihin saatiin vastaukset).
+
+conclusion: tärkeät pointit työn lukijan näkökulmasta ilman detaileja, ei
+välttämättä merkittävästi taustaa jos ei relevanttia.
+
+appendixit tukevat työtä ja työstä viitataan niihin (tyyliin kuvat). source
+code pois appendixistä, urlimaininta/referenssi implementationiin. appendixia
+ei välttämättä tarvitse jos osista tulee lyhyitä.
+
+yleisesti: sisällytetään tekstiin vain osia jotka ovat relevantteja, jätä pois
+pidemmät tekstit vaihtoehtoisista tavoista ja ehkä viittaa muualle.
