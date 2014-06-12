@@ -1,0 +1,22 @@
+\begin{tikzpicture}[scale=5]
+
+\def\ka{-0.04}
+\def\kb{-0.02}
+\def\kz{0.94} % 0.8
+
+\foreach \y in {-10,...,10} {
+	\foreach \x in {-10,...,10} {
+	\def\xx{(\x/10)}
+	\def\yy{(\y/10)}
+
+	\def\rr{(\xx*\xx+\yy*\yy)}
+
+	\def\corr{(1.0+\ka*\rr+\kb*\rr*\rr)}
+	\def\xd{\xx*\corr}
+	\def\yd{\yy*\corr}
+
+	\draw [-stealth] ({\xx},{\yy}) -- ({\xd},{\yd});
+	}
+}
+
+\end{tikzpicture}
