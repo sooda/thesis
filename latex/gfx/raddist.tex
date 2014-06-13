@@ -1,3 +1,6 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\begin{document}
 \begin{tikzpicture}[scale=5]
 
 \def\ka{-0.04}
@@ -15,8 +18,10 @@
 	\def\xd{\xx*\corr}
 	\def\yd{\yy*\corr}
 
+	%\draw ({\xx},{\yy}) -- ({\xd},{\yd});
 	\draw [-stealth] ({\xx},{\yy}) -- ({\xd},{\yd});
 	}
 }
 
 \end{tikzpicture}
+\end{document}

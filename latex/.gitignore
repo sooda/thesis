@@ -1,8 +1,8 @@
-dippa.aux
-tex/*.aux
-dippa.log
-dippa.out
+*.aux
+*.log
+*.out
 dippa.pdf
 dippa.toc
 dippa.bbl
 dippa.blg
+gfx/raddist.pdf
