@@ -115,14 +115,28 @@ The camera position and rotation in a global coordinate frame can be encoded in 
 
 %Practical algorithms take lens imperfections into account (e.g. \cite{opencv}).
 
-In practice, no actual camera works ideally; a pinhole-resembling camera could be built, but it would have poor light gathering power and diffraction-limited resolution. \cite{todo}
+In practice, no actual camera works ideally; a pinhole-resembling camera could be built, but it would have poor light gathering power and low resolution limited by diffraction effects. \cite{todo}
 Imperfections in the lenses project points to positions that differ from those predicted by straight lines in this linear case.
 Lens distortions deviate the rays, and no system is in perfect focus, so that one point spreads out as a circle.
 %In reconstructing, methods that estimate the points and minimize errors are used, as no model predicts the camera perfectly.
 
 Construction of optical systems is well studied. \cite{kingslake1989history}
 Actual camera ``lenses'' consist of not only a single glass element (optical lens) but many, especially in the case of zoom lenses whose focal length can be changed.
+As an example, a Canon lens diagram is shown in figure \ref{fig:canonef50mm}.
+There are several lenses, some grouped together, all aligned so that their centers lie parallel to the optical axis.
+Optical stabilization in a camera lens is implemented with a moving element in the middle of the lens.
 %In this work, the inner workings of these systems are ignored and equations assume a simple projective model, which is a safe assumption when the image is in focus.
+
+% http://www.canon.com/camera-museum/lens/ef/data/standard/ef_50_18ii.html?p=2
+%\simplegfx{h!}{0.6\textwidth}{canonef50mm}
+%{Block diagram of Canon EF50mm f/1.8 II lens construction; insides of the lens shown from the side.}
+
+\simplefig{h}{%
+\includegraphics[width=0.4\textwidth]{gfx/canonef50mm-1}
+\includegraphics[width=0.4\textwidth]{gfx/canonef50mm-2}
+}{fig:distortions}
+{A fixed focal length Canon EF50mm f/1.8 II lens. Left: the lens. Right: block diagram of the lens construction, showing the six optical elements. Diagram by Canon Camera Museum.}
+
 
 The following equation applies for a thin lens while capturing sharp images, illustrated in figure \ref{fig:thinlens}:
 
@@ -139,10 +153,13 @@ where f is the focal length of the lens, a is the distance between the lens and 
 
 %The focal length has a direct influence to field of view, as given in figure TODO. Longer focal length (long-focus lens, often referred to as telephoto lens) results to a more zoomed in picture, as opposed to a wide-angle lens. 
 
-All practical optical systems (lenses) introduce some non-linear distortion that affects the performance of the ideal pinhole model.
-Common distortions are the purely radial so-called barrel and pincushion distortions, where the magnification is a nonlinear function of image ray distance from the center of the lens. % XXX brown model somewhere here
-Fisheye lenses are commonly known to have this kind of effect.
-Tangential distortion is less common, particularly in great magnitudes, and is often ignored. Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not parallel to the image plane. \cite{kingslake1989history}
+All practical optical systems introduce some non-linear distortion that affects the performance of the ideal pinhole model.
+Common distortions are the purely radial so-called barrel and pincushion distortions, where the lens magnification is a nonlinear function of image ray distance from the center of the lens. % XXX brown model somewhere here
+\cite{brown1966decentering}
+Extreme short focal length lenses, such as those with a ``fisheye'' distortion lenses are commonly known to have a really noticeable barrel distortion; in fact, a simple barrel distortion model is not enough to correct all of a fisheye distortion.
+Most reconstruction software assume either undistorted images or use a simple distortion model, and give poor results with fisheyes.
+
+Tangential distortion is less common, and it is often ignored. Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not parallel to the image plane. \cite{kingslake1989history}
 
 Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
 
@@ -162,7 +179,7 @@ Perspective distortion refers to the illusion that actual parallel lines would n
 Distortion should be corrected in software, as the following stereo algorithms assume that the images are free of nonlinear errors, i.e. straight lines in the world should remain straight in 2D images after the projective transformation.
 %In particular, image rectification (discussed later in \ref{sec:rectification} won't work if this straightness does not remain; the assumption that similar features should be found on horizontal lines wouldn't hold on distorted images. \cite{hartley03multiview} 
 
-The radial correction used by the OpenCV library to create a new image of the original pixel values at new positions \cite{opencv} is % FIXME brown model
+The radial correction proposed by Brown \cite{brown1966decentering} and used by e.g. the OpenCV library to create a new image of the original pixel values at new positions \cite{opencv} is % FIXME brown model
 
 \begin{align}
 	x_{corr} &= x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\\
@@ -180,7 +197,7 @@ x_{corr} &= x + (2 p_1 x y + p_2 (r^2 + 2 x^2))\\
 y_{corr} &= y + (2 p_2 x y + p_1 (r^2 + 2 y^2))
 \end{align}
 
-$x$ and $y$ are the original coordinates in the distorted image, $x_{corr}$ and $y_{corr}$ are the corrected ones, $k_1$, $k_2$, $k_3$, $p_1$ and $p_2$ are coefficients specific to the distortion, and $r$ equals to the distance to image center located at $(x_c,~y_c)$:
+$x$ and $y$ are the original coordinates in the distorted image, $x_{corr}$ and $y_{corr}$ are the corrected ones, $k_1$, $k_2$, $k_3$, $p_1$ and $p_2$ are coefficients specific to the distortion, and $r$ equals to the distance to image center where the optical axis hits, located at $(x_c,~y_c)$:
 
 \begin{equation}
 r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
@@ -188,54 +205,105 @@ r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
 
 %---
 
-Perspective distortion something something viewer location. Normal TV is usually watched at the distance of twice the screen diagonal. At this location, the scene looks normal when taken with a normal lens. A wide-angle scene then looks normal when viewed at a nearer distance. \cite{wilson2004anton}
+%Perspective distortion something something viewer location.
+%Normal TV is usually watched at the distance of twice the screen diagonal.
+%At this location, the scene looks normal when taken with a normal lens.
+%A wide-angle scene then looks normal when viewed at a nearer distance. \cite{wilson2004anton}
 
 % 14:01:55 <naavis> Kai sillä yritetään emuloida sitä, että katsojan paikalta se leffan kuvakenttä vastais sitä että valkokankaan tilalla on ikkuna.
 
-% TODO: custom tikz for exactly specified parameters in barrel/radial
+% Aperture.
 
-TODO: example pic of a fisheyed image and undistorted one.
+Aperture refers to the size of the hole/lens where light goes through: %  in the pinhole model:
+if it is not infinitesimally small, as in any practical case, there will be some area of the scene that is imaged as sharp and others in front and behind of this area will be blurred.
+This is called depth of field.
+In artistic photos and e.g. portraits it can be preferred to have a small subject in focus to separate it from the background by blurring the background.
+In a reconstruction rig, exactly the opposite is preferred: everything should be in focus.
 
-% \subsubsection{Aperture}
+As the blur happens gradually, a ``circle of confusion'' is often used as a definition of unsharp areas of images.
+A point outside the focal plane shows up on the image sensor as a circle (for circular apertures and lenses); when this circle is significantly more than a pixel size on the sensor, the image is perceived as blurred at this point.
 
-A few words about aperture size, pixel size, diffraction limits, airy disks, circle of confusion, rayleigh limit
+% CoC img http://www.cambridgeincolour.com/tutorials/depth-of-field.htm
 
-a real lens system with several individual elements
+% diffraction
 
-stabilisation lens
+Diffraction is an effect that happens for small apertures.
+When light rays diverge on a small aperture, their different distances traveled make the waves interfere each other and produce a 2D diffraction pattern, called an airy disk. \cite{airydisk}
+
+% rayleigh limit?
 
 % }}} optics
 
 \subsubsection{Image sensors} % {{{
 
-compare to film
+% intro: film vs sensor
 
-photons in, electrons out
+Historically, photographs were saved on a photosensitive film.
+With digital cameras, a rectangular image-sensitive electrical sensor replaces the film.
+The sensor consists of a uniformly spaced grid of small pixel sensors built as an integrated circuit package.
+A pixel, or picture element, represents a single dot on a film; when combined, the dots form a larger picture.
 
-array
+% digital pics
 
-Microlenses/microfacets
+Digital pictures on a computer are commonly represented as rectangular arrays of numbers, or ``raster images''.
+Each number describes the brightness of a single dot on a specific location.
+For a single brightness value per pixel, a grayscale picture would be obtained.
+Color pictures are described with more color channels than one, in e.g. RGB space, the way that most parts of a computer iuse for describing colors.
+A single RGB color encodes the brightness of red, green and blue separately.
 
-CCD (Charge-coupled Device)
+% sensors
 
-Global shutter
+The rectangular image sensor senses the amount of light hitting each pixel and encodes it to an electrical signal.
+The signal is digitized to a brightness value and the camera saves all the pixels' values to a file in mass storage.
+There are two major sensor types: CMOS (Complementary Metal-Oxide Semiconductor) and CCD (Charge-coupled Device).
+CMOS is the type used in most still cameras because of its lower price.
+It has some technical disadvantages, considering movie recording.
+CCD captures a whole image frame at once (``global shutter''), while CMOS reads the sensor a single row at a time, resulting in an effect called ``rolling shutter'' \cite{todo:cmos}.
+CCD has other issues, such as bleeding a strong light source to surrounding pixels and interlacing, i.e. alternating in reading only odd and only even rows in consecutive frames.
 
-CMOS (Complementary Metal-Oxide Semiconductor)
+% noise
 
-Cheaper, rolling shutter: reading the pixels out happens linearly
+As all electronic circuits, also image sensors are subject to signal noise.
+Each pixel receives a more or less random level of signal that shows up as random additive brightness, noticed usually only in low light conditions as its power is orders of mangnitude less than the actual brightness level of the light.
+Black areas suffer from noise more than bright areas.
+Noise increases also with sensor's signal gain, or ``exposure sensitivity'': also digital cameras use the ISO system designed for film speed.
+More sensitive sensor needs less light to produce a bright-looking image by amplifying the signals more.
+This amplification also amplifies the original signal noise, which is why the gain level should be kept as small as possible and the amount of light entering the sensor as much as possible.
+This means using bright lights in the imaged scene or a longer exposure time.
 
-General image quality (noise etc.)
+% sensor movement
 
-image stabilisation
+Some cameras use image stabilisation by moving the sensor around, as opposed to moving the optical elements inside the lens.
+Image stabilisation should be turned off for reconstruction because it affects the calibration: if any element in the image acquisition path moves, calibration parameters also change.
 
-dust reduction with vibration
+The sensor also moves when a camera uses a sensor cleaning mechanism with ultrasonic vibration motor on the sensor.
+
+% colors
+
+A single pixel sensor acquires all light hitting on it, independent of the wavelength.
+Two different methods to retrieve the red, green and blue color bands for each pixel are common in color cameras.
+The most comon method that most cameras use is to interleave red, green and blue in a single sensor by filtering the wavelength that can pass a pixel with a colored film over the sensor, with a special repeating pattern.
+The missing values for other colors bands are interpolated from surrounding pixels.
+A very commonly used pattern is the Bayer filter, illustrated in figure \ref{fig:bayerpattern}.
+Other arrangements of red, green and blue are also common, and it is not mandatory to use these three colors; there exist filters for e.g. cyan, yellow and magenta too.
+
+Another way is to retrieve the three channels with three different sensors, one for each wavelength band, and to guide the light to them with prisms and filters; this is obviously more expensive than a single sensor but results in a more accurate picture as there are all colors available for each pixels.
+
+% ???
+
+Physical pixels cover less than the full area of a sensor, as there are gaps between them.
+
+% support electronics
+
+Next to the pixel sensors and their amplifiers is lots of digital logic for reading out the data and passing it through to an image processor.
+Quality of this support electronics affects some properties, most important of which are analog-digital converter noise and dynamic range, and speed that the image is read out from the sensor.
 
 %\subsubsection{Bayer filter}
 
 \simplefig{h!}{\bayer{0.7}}{fig:bayerpattern}
 {A small subsection of the repeating Bayer pattern, not drawn fully for better visualization. Each square is a single pixel; the grey area represents the image sensor. The gap between pixels is nonzero.}
 
-Physical pixels cover less than the full area of a sensor, as there are gaps between them.
+% Microlenses/microfacets
 
 % }}} image sensors
 
