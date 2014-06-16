@@ -309,40 +309,91 @@ Quality of this support electronics affects some properties, most important of w
 
 \subsubsection{Shutter} % {{{
 
-Mechanical vs. electrical. varying ccd charge time. mechanical moves parts and is slow, wears out. ccd shutter.
+% shutter, why needed
 
-Shutter vs frame rate. More discussed in the section \ref{sec:video}. Shutter duration that exposes half of the frame time is common in professional motion pictures \cite{wilson2004anton}. While the shutter is closed, the film advances to next frame (in mechanical cameras). Blur makes the human mind think that the movement is smooth. When sampling for 3D reconstruction, the ideal shutter speed would be infinitesimally fast to reduce blur. Movement in between is then interpolated.
+An image sensor accumulates the received light to itself and converts its intensity to electrical signal such as voltage.
+A static scene is imaged so that the sensor is exposed to the light passing the optics for a short time, keeping the camera and subject steady.
+Electrical sensors can be ``cleared'' to black rather quickly (unlike an analog film that starts exposing immediately and the effect cannot be undone). Still, good quality cameras use mechanical shutters for photographs.
+Because the rolling shutter effect of a CMOS sensor, it is better to do the reset and readout phases when the sensor is not exposed to light.
 
-Flash visibility, short flash, flash shared to two frames, X-sync, ISO speed
+% mechanical stuff
 
-Image upside down on the sensor, curtain goes physically from top to bottom
+A shutter is a mechanical device that blocks light to the sensor and can be moved quickly out of the way and back.
+There are several types of mechanical constructions for shutters, depending on the application.
+A focal plane shutter, used in most photo cameras, is installed in front of the sensor.
+It consists of two curtains that move to the same direction; one moves out of the way of the sensor to let light pass to it, and another moves to cover it back again when the exposure time has elapsed.
 
-moving the curtain back up, springs? too much detail.
+A digital CMOS exposure and ``electrical shutter'' works like this too; the sensor is reset first, and then the data is read back from it in a similar sequential fashion.
 
-Shutter lag (auto exposure/focus even in manual mode maybe?); consistent or not? sensor sensitivity initing lag?
+A CCD camera would not need a mechanical shutter, because the full image is read out at once.
+Most still cameras have also a movie mode that holds the mechanical shutter open all the time, using the electrical shutter.
+The mechanical shutter can last only a finite amount of actuations (50-200 thousand for a common system camera) as it wears out gradually.
+
+%varying ccd charge time, ???
+%
+
+% vs frame rate
+
+% other
+
+When the camera or the imaged subject moves while exposing the picture, an object gets smeared along the movement on the image, an effect known as ``motion blur'': the image gets blurred where motion happens.
+
+Video film cameras that capture each frame to a separate part of film used a spinning wheel with a window in it, called rotary disc shutter.\cite{wilson2004anton}
+This rotates at a precise speed synchronized to the frame rate, displaying a consistent time for each frame.
+The size of the window constitutes to the amount of light and motion blur. More discussed in the section \ref{sec:video}.
+
+When taking a picture, the camera does not instantly start to expose the image.
+Each camera has a specific \emph{shutter lag} that is the time that elapses between the shutter button is pressed and when the shutter moves out of the way.
+Some sources include in this term also the time for the camera to focus the lens and measure sensitivity settings which can be a significantly long time.
+
+Shutter speed has small variations over time when the camera ages and some parts wear out.
+Some variation also exists among same camera model from factory variations.
+The variations among several cameras must be taken into account when using a flash unit instead of continuous light: the short duration of the bright flash of light should happen when all the cameras imaging the same scene have opened, but not yet closed, their shutters.
+
+%Shutter lag (auto exposure/focus even in manual mode maybe?)
 
 % }}} shutter
 
 \subsubsection{Light sources} % {{{
 
-%In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
+In addition to multiple cameras at different locations and poses to encode a subject's geometry, an uniform and soft lightning is also required to minimize bright reflection difficulties in the texture.
+A large variety of different studio lights are available in the market for different lighting situations, emitting either continuous light or short bright flashes.
+
+Because most reconstruction methods assume a relatively diffuse lighting, called \emph{brightness constancy} (i.e. the brightness and color of a surface looks the same from all viewing directions), they perform poorly when a light shines off a surface so that its specular highlight is at a different geometric location in different images.
+
+Some surfaces are more \emph{diffuse} than others.
+Diffuse means a surface that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more \emph{specular} surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
+Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law, a lighting model. \cite{lamberttodo}
+Specular highlight or specular reflections refer to a mirror reflection of the lamp on the imaged surface.
+
+[Some specular lobe picture here and definitions of the rendering equation, probably.]
+
+Commonly used but vague terms such as ``soft'' and ``hard'' lighting refer to the size and power of light sources: bright spotlights are hard, and larger and relatively less bright lamps are soft.
+Softness can be added by increasing the light's area while holding its power constant, such as reflecting a light off a large surface or adding a white cloth between it and the imaged subject.
+Effects of a soft versus hard light are illustrated in figure \ref{fig:lighthardness}.
 
 
-Area lights, flood flashes around the target
+Powerful flash light sources use usually a gas-filled tube that is excited with high voltage to produce a short, bright burst of light.
+Flashes are good for portrait photographers because the subject sees the bright light only for a short moent; thus, the light does not annoy the subject.
+Short bursts of light are also good for stopping motion: motion blur happens when the camera sees movement over time, but it only sees the light that enters the scene and reflects to the lens.
+If light enters the scene only for a short while, no motion blur is possible.
 
-As much light as possible but eyes gonna hurt
+Consumer flashes output a short spike of light, with a duration of a few milliseconds.
+When attached to a flash, many DSLR cameras refuse to use a shorter exposure time than around 1/200 s.
+There is a limit on the movement speed of the shutter mechanics.
+A short exposure is taken so that the opening and closing curtains move at the same time, exposing only a short band of the sensor to light at a time.
+The flash does not usually last long enough for the whole sensor to expose, resulting in a partly bright and partly dark image.
+Some more expensive models support ``X-sync'', where several shorter flash bursts are fired in sequence, resulting in a longer overall light pulse.
 
-dark contact lenses if available (remedy)
+%dark contact lenses if available (remedy)
 
-bodies' own flashes maybe not uniform enough; too many flashes i guess
+%bodies' own flashes maybe not uniform enough; too many flashes i guess
 
-softbox or umbrella
-
-light power vs. area, specular lobe and surface properties
+%softbox or umbrella
 
 %\subsubsection{Specular highlights}
 
-Polarization filter
+%Polarization filter
 
 % }}} light sources
 
@@ -376,6 +427,12 @@ For sharp images that are preferred in reconstruction, this is to be avoided.
 % }}}
 
 \subsubsection{Sequence of frames} % {{{ or: video is frames
+
+More discussed in the section \ref{sec:video}.
+Shutter duration that exposes half of the frame time is common in professional motion pictures \cite{wilson2004anton}.
+While the shutter is closed, the film advances to next frame (in mechanical cameras).
+Blur makes the human mind think that the movement is smooth.
+When sampling for 3D reconstruction, the ideal shutter speed would be infinitesimally fast to reduce blur.
 
 % put the above here
 
