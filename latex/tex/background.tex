@@ -356,15 +356,20 @@ The variations among several cameras must be taken into account when using a fla
 
 \subsubsection{Light sources} % {{{
 
-In addition to multiple cameras at different locations and poses to encode a subject's geometry, an uniform and soft lightning is also required to minimize bright reflection difficulties in the texture.
+In addition to multiple cameras at different locations and poses to encode a subject's geometry, a uniform and soft lightning is also required to minimize bright reflection difficulties in the texture.
 A large variety of different studio lights are available in the market for different lighting situations, emitting either continuous light or short bright flashes.
 
-Because most reconstruction methods assume a relatively diffuse lighting, called \emph{brightness constancy} (i.e. the brightness and color of a surface looks the same from all viewing directions), they perform poorly when a light shines off a surface so that its specular highlight is at a different geometric location in different images.
+Because most reconstruction methods fundamentally assume a relatively diffuse lighting, a property called \emph{brightness constancy} (i.e. the brightness and color of a surface looks the same from all viewing directions), they perform poorly when a light shines off a surface so that its specular highlight is at a different geometric location in different images.
 
 Some surfaces are more \emph{diffuse} than others.
-Diffuse means a surface that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more \emph{specular} surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
-Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law, a lighting model. \cite{lamberttodo}
+Diffuse means a material that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more \emph{specular} surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
+Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in figure \ref{fig:lambertcosine}. \cite{lamberttodo}
+A Lambertian surface's BRDF is constant among the viewing direction.
 Specular highlight or specular reflections refer to a mirror reflection of the lamp on the imaged surface.
+
+\begin{equation} \label{eq:lambertcosine}
+	I_D = L \dot N I_L = |N| |L| \cos \alpha = \alpha
+\end{equation}
 
 [Some specular lobe picture here and definitions of the rendering equation, probably.]
 
@@ -372,8 +377,7 @@ Commonly used but vague terms such as ``soft'' and ``hard'' lighting refer to th
 Softness can be added by increasing the light's area while holding its power constant, such as reflecting a light off a large surface or adding a white cloth between it and the imaged subject.
 Effects of a soft versus hard light are illustrated in figure \ref{fig:lighthardness}.
 
-
-Powerful flash light sources use usually a gas-filled tube that is excited with high voltage to produce a short, bright burst of light.
+Powerful flash light sources use usually a gas-filled tube (Xenon) that is excited with high voltage to produce a short, bright burst of light.
 Flashes are good for portrait photographers because the subject sees the bright light only for a short moent; thus, the light does not annoy the subject.
 Short bursts of light are also good for stopping motion: motion blur happens when the camera sees movement over time, but it only sees the light that enters the scene and reflects to the lens.
 If light enters the scene only for a short while, no motion blur is possible.
@@ -391,14 +395,43 @@ Some more expensive models support ``X-sync'', where several shorter flash burst
 
 %softbox or umbrella
 
-%\subsubsection{Specular highlights}
-
 %Polarization filter
 
 % }}} light sources
 
 \subsubsection{Image download} % {{{
 
+% data path intro
+
+The image information travels from the scene through the optics to the image sensor's surface, via an analog/digital converter, the camera's processor(s) and finally to a memory card or straight to a computer's storage via a wired or wireless connection.
+Many parts in this equation contribute to the rate of which the images can be taken, usually measured in frames per second (FPS).
+
+% fps
+
+An average DSLR can achieve around five frames per second of full resolution footage, while more expensive models can reach over 10 FPS.
+A digital still camera can often record video too, at a lower resolution and a higher FPS.
+DSLR video modes achieve a higher frame rate, and they use the sensor's full size but skip some of its lines when recording video, getting the same field of view as still images but sometimes resulting in significant aliasing patterns. \cite{todo}
+
+% sample speed calculations
+
+For example, recent Canon DSLRs such as 650D and 700D feature an 18 megapixel CMOS sensor having a resolution of 5184 by 3456 pixels and a 14-bit analog/digital converter, resulting in approximately 31 megabytes of raw data.
+For a moderate 5 FPS, the sensor generates thus about 150 MB of data per second.
+
+% files
+
+The files saved by these cameras are compressed in a proprietary lossless format and contain also metadata about certain camera settings.
+Lossless compression maintains image quality and reduces file size depending on the complexity of the frame.
+Some manufacturers encode the brightness values through a lookup table, and it's common to use a compression scheme known from standard file compressions, or a specific lossless image compression.
+
+Video files are almost always saved as compressed, the H264 format being common for recent cameras.
+Common bitrate for a full-hd (1920 by 1080 pixels) 24 FPS video is about 5-6 MB/s.
+
+% storage
+
+Files are commonly stored to an internal memory memory of the camera, to a removable memory card, or directly to a PC via a cable.
+Files not directly transferred to a PC can be moved later by removing the memory card, or via USB connection that most consumer cameras support.
+
+%http://majid.info/blog/is-the-nikon-d70-nef-raw-format-truly-lossless/
 USB hub(s) because N cameras, single laptop
 
 speed calculations, 20+ MB RAW vs fps vs camera buffers vs usb bandwidth vs separate hubs
