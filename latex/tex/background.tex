@@ -270,6 +270,7 @@ Noise increases also with sensor's signal gain, or ``exposure sensitivity'': als
 More sensitive sensor needs less light to produce a bright-looking image by amplifying the signals more.
 This amplification also amplifies the original signal noise, which is why the gain level should be kept as small as possible and the amount of light entering the sensor as much as possible.
 This means using bright lights in the imaged scene or a longer exposure time.
+Longer exposure time influences more motion blur, though.
 
 % sensor movement
 
@@ -440,7 +441,7 @@ Machine vision cameras often use a higher speed connection, such as the newer US
 For example, the 1 Gbit/s Ethernet connection can transfer a raw 12-bit full-hd stream at
 
 \[
-	\frac{1 Gbit/s}{1920 * 1080 px * 12 bit/px} \approx 43 \frac{1}{s}
+	\frac{1 \text{Gbit}/s}{1920 * 1080 \text{ px} * 12 \text{bit}/\text{px}} \approx 43 \frac{1}{s}
 \]
 
 where Gbit is $1024^3$ bits.
@@ -452,101 +453,131 @@ Manufacturers often use some kind of compression to achieve higher rates.
 
 \subsection{Video} % {{{
 
-Video is consecutive, ordered pictures displayed one after another.
+Video is ordered electronic pictures displayed one after another.
 
-Hox ALL-I (intra) vs. IPB (intra-predict-bidirpredict)
+
+%Hox ALL-I (intra) vs. IPB (intra-predict-bidirpredict)
 
 Humans perceive motion when a previously seen object is seen again in a nearby location or similar position.
 Current digital video technology encodes motion in a sequence of still images, usually displayed in constant rate.
 Three dimensional motion is usually no different: it is encoded as discrete poses in sequence.
 In order to do object capture in stereo, video material from two or more of cameras is used to initially capture a sequence of still photos.
 
-When scanning a scene continuously, a camera grabs frames using the same principles as in photos, but does it in sequence, at a speed that is called frame rate.
-Another notable point from the capture viewpoint is the shutter speed; in movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more information about the scene movement is encoded per frame than when grabbing infinitesimally short times.
-\cite{wilson2004anton}
-For sharp images that are preferred in reconstruction, this is to be avoided.
-
 % }}}
 
 \subsubsection{Sequence of frames} % {{{ or: video is frames
 
-More discussed in the section \ref{sec:video}.
-Shutter duration that exposes half of the frame time is common in professional motion pictures \cite{wilson2004anton}.
-While the shutter is closed, the film advances to next frame (in mechanical cameras).
-Blur makes the human mind think that the movement is smooth.
-When sampling for 3D reconstruction, the ideal shutter speed would be infinitesimally fast to reduce blur.
+When scanning a scene continuously, a camera grabs frames using the same principles as in photos, but does it in sequence, at a speed that is called frame rate.
+Each picture of a video stream is a frame.
+In interlaced video, two frames make up a whole picture that covers all pixels.
+Interlacing alternates between odd and even lines to increase update rate, and was invented for CRT displays.
+Many CCD video cameras still produce interlaced stream.
+Video that contains full frames only is called progressive.
 
-% put the above here
+In movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more information about the scene movement is encoded per frame than when grabbing infinitesimally short times.
+A common shutter speed relates to frame rate such that a frame is exposed half the time between frames.
+\cite{wilson2004anton}
+For sharp images that are preferred in 3D reconstruction, motion blur should be avoided.
+Ideal shutter speed would be infinitesimally small, but practically the most short possible cannot be used becauses of the amount of light available.
+
+Film cameras and some professional video cameras use a rotary disc shutter that has an opaque 180 degree sector.
+This is why having half the exposure time of frame rate is sometimes called ``180 degree shutter''.
+While the light is blocked, film is mechanically advanced to the next frame.
+Digital video analogously downloads data from the image sensor and clears it during this time.
 
 % }}}
 
 \subsubsection{Frame rate effects} % {{{
 
-More fps = better movement stopping (less motion blur), need also more light or more sensitive sensors. More sensitivity often means also more noise. Noise vs. motion blur trade-off.
+For a constant speed scene, a higher FPS usually means better stopping of motion because of shorter shutter speed and less movement between frames.
+For optical flow computation, a long enough time should be passed for reliable motion vectors, though.
 
-Interlaced video = twice the amount of *pictures*, two pictures per frame
+Interlaced video was invented to increase the update speed of cathode ray tube (CRT) displays, reducing apparent flicker.
+Progressive video means a format where each picture is a full frame.
+Interlacing has twice as high update speed as progressive, because each picture encodes only half of the images.
+The pictures alternate between odd and even lines only, resulting in tearing artifacts when imaging moving subjects (shown in figure \ref{fig:interlacetearing})
+Some CCD sensors employ a technology that scans the image in interlaced frames.
 
-Film: 24 FPS traditionally
+\simplegfx{h!}{0.9\textwidth}{interlace}
+{Interlaced rendering. From left to right: even lines only, odd lines only and full picture combined. Only 20 lines used.}
 
-PAL. 25 FPS (50 Hz line current frequency in Europe)
+Consumer video cameras and video-capable pocket cameras and DSLRs typically offer several choices of frame rate. Traditionally, the movie industry has used 24 FPS; 25 (PAL) and 30 (NTSC) are common alternatives used in TV broadcast, some cameras being capable to twice the speed on a lower resolution.
 
-NTSC. 30 FPS (60 Hz line current frequency in the US)
-
-Actual FPS in camcorders is slowed down by a factor of 1.001 because of historical reasons relating to black and white / color TV backwards compabilities [REF].
+Actual FPS in camcorders is slowed down by a factor of 1.001 because of historical reasons relating to black and white / color TV backwards compabilities.
 30 and 24 FPS refer often actually to approximately 29.970 and 23.976 FPS, respectively.
 
-24 frames per second is often transformed to 30 by carefully repeating some frames [REF].
-
 Externally triggered cameras can be configured to record at any arbitrary speed, as long as it's in the limits of the camera speed capabilities.
+Synchronized machine vision cameras do not record video on their own, but instead just listen to a synchronization signal and output frames on its rate.
 
 % }}}
 
 \subsubsection{Frame rate vs. shutter speed} % {{{
 
-Picture:
+\simplefig{h!}{
+\begin{tikzpicture}[scale=1.5]
+	\def\nframes{5}
+	\draw (0,0) rectangle (6,-3);
+	\draw (0,-1) -- (6,-1);
+	\draw (0,-2) -- (6,-2);
+	\foreach \x in {0,...,\nframes} {
+		% time ticks
+		%\draw (\x*1, 0) -- (\x*1, -2.5);
+		\node at (\x*1, -3.6) {{\x}t};
 
-\begin{verbatim}
+		% exposure blocks
+		\draw [fill=red] (\x*1, 0) rectangle (\x*1+1.0, -1);
+		\draw [fill=red] (\x*1, -1) rectangle (\x*1+0.5, -2);
+		\draw [fill=red] (\x*1, -2) rectangle (\x*1+0.25, -3);
+	}
+	\node at (-0.3, -0.5) {1/1};
+	\node at (-0.3, -1.5) {1/2};
+	\node at (-0.3, -2.5) {1/4};
+\end{tikzpicture}
+}{fig:shutterspeed}
+{Shutter speed compared to frame rate. For an always open shutter, the camera records everything. 1/2 is a ``normal'' rate, 1/4 resulting in slightly less motion blur.}
 
-   those bars are actually just 1 pixel markers when shutter opens
-   v   v   v ...
+What happens when the shutter is closed cannot be recorded.
+The Nyquist-Shannon sampling theorem states that events higher than half the sampling rate cannot be distinguished from the signal.
+In reality, repetitive motions rarely happen in reconstruction videos, but the fact that information about the subject between frames is lost cannot be circumvented.
+Commonly, motion is simply interpolated between their positions in different frames.
+For a large displacement, this interpolation can be inaccurate enough to need manual fixing.
 
-shutter
-speed
-1/30   |---|---|---|---|---|---|---|---|---|--- full block
-1/60   |-- |-- |-- |-- |-- |-- |-- |-- |-- |--
-1/90   |-  |-  |-  |-  |-  |-  |-  |-  |-  |-
+Motion blur encodes more information about object travel but gets less precise by time.
 
-   0   1   2   3   4   5   6   7   8   9
-
-30 FPS, 10 frames = 1/3 s
-\end{verbatim}
-
-Nyquist-Shannon sampling theorem, what happens when shutter is closed, motion stopping, how eyes like blurred fast motion (more information about movement, less precise by time) [CITE slowmovideo]
+slowmovideo 
+\cite{slowmovideo}
 
 % }}}
 
 \subsubsection{Multi-camera synchronization} % {{{
 
-Multi view imaging poses lots of challenges, sync is an important one
+%Time offset / drift / jitter / lockstep
 
-Time offset / drift / jitter / lockstep
+Synchronized recording of multiple view video is more complicated than shooting still photos simultaneously.
+Cameras should be synchronized, i.e. locked to hold their shutters open at the same time during each frame.
+When cameras open their shutter in a different time, they effectively shoot a different scene (assuming moving subjects in the scene), breaking one of the most fundamental assumptions of stereo vision: that the images encode geometrically same objects.
+This can be compensated to some degree with optical flow if hard syncing is not possible. \cite{bradley2009synchronization}
 
-Offset: Different cameras do not start recording immediately at the same time, which results in one or more cameras being a little late at every frame.
+Synchronization issues can be divided in three major concepts, assuming N cameras each having its own video file: offset, drift and jitter.
+Offset is the time difference relating start time of two streams.
+Drift is a property of one single camera that advertises to record at some speed and actually works at some other speed.
+Jitter is the random difference between frames for a same camera.
+For an actual video camera, drift and jitter are negligible; offset originates from pressing record buttons at a different time.
+If the cameras take pictures only when instructed, such as machine vision cameras, a clock generator becomes another source of jitter.
+If the offset between two cameras is not an exact multiple of the frame speed, they effectively cannot have any frames that would display exactly the same scene.
 
-Drift: A camera does not record at exactly the advertised speed, e.g. one camera's internal clock is sligtly faster than that of another.
+Frame accurate offset sync with clapperboards works by matching the clap sound to visual cues in the video.
+Cameras that record audio to the same video file do not need visual cues and can be synced together by matching the sound stream only.
+This is the method used in making movies when editing a final version with multiple cameras used.
+It still leaves a maximum of half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
 
-Jitter: the difference between frames for a same camera might not be exactly the same during recording, but a more or less random delta time is added to each delay.
-
-Le pic:
+Synchronizing all the cameras that shoot the same scene might be a big issue in practice, depending on the gear used.
+Professional grade cameras can be synced to a single clock generator, so that they all operate on the same frequency and phase.
+The same method is used when shooting with machine vision cameras that have external trigger input.
+This still leaves a small phase difference caused by unequal transmission paths from the clock generator.
+Synchronizable camcorders are very expensive, and consumer-grade hardware usually lacks all possibilities to properly sync frequency or offset, not to mention frequency drift or frame jitter.
 
 \begin{verbatim}
-Offset
-
-cam A  |   |   |   |   |
-cam B   |   |   |   |   |
-   0t  1t  2t  3t  4t time -->
-
-
 Drift
 
 normal   |   |   |   |   |   |   |
@@ -561,20 +592,7 @@ jitterin |    |  |   | |      |    |
 	 0t  1t  2t  3t  4t  5t  6t time -->
 \end{verbatim}
 
-In the scope of this paper, we consider drift and jitter negligible.
-Offset may be recovered by several means.
-Often used techniques are starting flash (does not need an audio track) [REF], clapperboard [REF], strobe sync'd to fps, genlock.
-
-TODO: investigate if the errors have been researched or if they are meaningful at all.
-
-Synchronizing all the cameras that shoot the same scene might not a trivial issue in practice, depending on the gear used.
-Professional grade cameras can be synced to a single clock generator, so that they all operate on the same frequency and phase.
-The same method is used when shooting with machine vision cameras that have external trigger input.
-This still leaves a small phase difference caused by unequal transmission paths from the clock generator.
-Synchronizable camcorders are very expensive, though, and consumer-grade hardware usually lacks all possibilities to properly sync frequency or phase, not to mention frequency drift or frame jitter.
-Clapperboard is a ubiquitous and simple way to sync video and audio, but it still leaves a maximum of half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
-When cameras open their shutter in a different time, they effectively shoot a different scene, breaking one of the most fundamental assumptions of stereo vision: that the images encode geometrically same objects.
-This can be compensated to some degree with optical flow \cite{bradley2009synchronization}.
+%Often used techniques are starting flash (does not need an audio track) [REF], clapperboard [REF], strobe sync'd to fps, genlock.
 
 \simplefig{h!}{
 \begin{tikzpicture}[scale=1.5]
@@ -600,7 +618,6 @@ Frame period is t, and the cameras have a constant exposure time offset of an ar
 
 Faster frame rate encodes information more often, which is preferable as longer distances of pixels of same objects are more difficult to match when tracking objects; faster shutter speeds help to reduce motion blur.
 Fast shutter (i.e.~short exposure) obviously needs to be compensated by using more sensitive sensors or more light to get equivalently bright images.
-Noise vs. motion blur is a common tradeoff that has to be made when building a stereo vision system.
 
 Video recording and motion tracking are best considered orthogonal issues; while a single static case can be scanned in three dimensions, so can be also each frame of a sequence, separately.
 While this sounds tempting, it might not be computationally feasible, though, because the reconstruction must be started all over again for each frame and the topology is uncorrelated between the frames.
@@ -612,9 +629,14 @@ While this sounds tempting, it might not be computationally feasible, though, be
 
 \subsubsection{Encoding quality} % {{{
 
-raw video = such size wow very bloat
+Raw video consumes too much data to be feasible to use normally.
+Thus, a range of compression algorithms have been invented, most of them lossy.
+Reconstruction from frames extracted from a compressed video can not be as good as from separately saved stills.
 
-compression artifacts
+Compression introduces loss of detail and artifacts typical to each algorithm, often visible as blocks or blurring.
+
+Some expensive cameras can record raw video, and others can be tricked to that.
+Canon DSLRs can be ``hacked'' to dump the raw stream to a memory card, but only some models support the faster CF cards that can keep up with the amount of data.
 
 % }}}
 

@@ -1,4 +1,4 @@
-SRC := dippa.tex $(wildcard tex/*.tex) $(wildcard gfx/*.tex) gfx/raddist.pdf
+SRC := dippa.tex $(wildcard tex/*.tex) $(wildcard gfx/*.tex) gfx/raddist.pdf gfx/interlace.pdf
 
 all: dippa.pdf
 	okular dippa.pdf
@@ -17,6 +17,9 @@ fullclean:
 
 gfx/raddist.pdf: gfx/raddist.tex
 	pdflatex -output-directory gfx gfx/raddist
+
+gfx/interlace.pdf: gfx/interlace.tex
+	pdflatex -output-directory gfx $<
 
 dippa.pdf: $(SRC)
 	pdflatex dippa
