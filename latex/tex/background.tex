@@ -431,15 +431,24 @@ Common bitrate for a full-hd (1920 by 1080 pixels) 24 FPS video is about 5-6 MB/
 Files are commonly stored to an internal memory memory of the camera, to a removable memory card, or directly to a PC via a cable.
 Files not directly transferred to a PC can be moved later by removing the memory card, or via USB connection that most consumer cameras support.
 
+Memory cards used by consumer grade cameras (CF, SD) can support speeds up to 125 MB/s and capacities in tens of gigabytes.
+The speed of USB 2.0 high-speed specification is 480 Mbit/s; bus protocol's overhead limits effective data throughput to around 80 \%.
+Computers typically have several USB hosts each capable to the maximum transfer rate.
+To speed up download from multiple devices, the devices should be connected evenly to all hosts to fully divide the workload.
+
+Machine vision cameras often use a higher speed connection, such as the newer USB 3.0, IEEE 1394 (FireWire), fast Ethernet or Camera Link to achieve realtime lossless transfer of high-resolution images.
+For example, the 1 Gbit/s Ethernet connection can transfer a raw 12-bit full-hd stream at
+
+\[
+	\frac{1 Gbit/s}{1920 * 1080 px * 12 bit/px} \approx 43 \frac{1}{s}
+\]
+
+where Gbit is $1024^3$ bits.
+Manufacturers often use some kind of compression to achieve higher rates.
+
 %http://majid.info/blog/is-the-nikon-d70-nef-raw-format-truly-lossless/
-USB hub(s) because N cameras, single laptop
-
-speed calculations, 20+ MB RAW vs fps vs camera buffers vs usb bandwidth vs separate hubs
-
-usb bulk transfer protocol overhead! how many percents?
 
 % }}} image download
-
 
 \subsection{Video} % {{{
 
