@@ -363,10 +363,12 @@ A large variety of different studio lights are available in the market for diffe
 Because most reconstruction methods fundamentally assume a relatively diffuse lighting, a property called \emph{brightness constancy} (i.e. the brightness and color of a surface looks the same from all viewing directions), they perform poorly when a light shines off a surface so that its specular highlight is at a different geometric location in different images.
 
 Some surfaces are more \emph{diffuse} than others.
+Surfaces can be modeled as diffuse and specular components that are functions of light direction and viewing angle, relating from their microgeometry. \cite{nayar1991surface} % XXX 1991 or -89?
 Diffuse means a material that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more \emph{specular} surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
 Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in figure \ref{fig:lambertcosine}. \cite{lamberttodo}
 A Lambertian surface's BRDF is constant among the viewing direction.
 Specular highlight or specular reflections refer to a mirror reflection of the lamp on the imaged surface.
+
 
 \begin{equation} \label{eq:lambertcosine}
 	I_D = L \dot N I_L = |N| |L| \cos \alpha = \alpha
