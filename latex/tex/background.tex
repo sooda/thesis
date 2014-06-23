@@ -360,7 +360,11 @@ The variations among several cameras must be taken into account when using a fla
 In addition to multiple cameras at different locations and poses to encode a subject's geometry, a uniform and soft lightning is also required to minimize bright reflection difficulties in the texture.
 A large variety of different studio lights are available in the market for different lighting situations, emitting either continuous light or short bright flashes.
 
+% XXX pic of brightness constancy: same object from two views, patch windows
 Because most reconstruction methods fundamentally assume a relatively diffuse lighting, a property called \emph{brightness constancy} (i.e. the brightness and color of a surface looks the same from all viewing directions), they perform poorly when a light shines off a surface so that its specular highlight is at a different geometric location in different images.
+
+\simplegfx{h!}{0.7\textwidth}{brdfdiagram}
+{BRDF of a surface is a function of surface normal $n$, light direction $\omega_i$ and viewing direction $\omega_o$.}
 
 Some surfaces are more \emph{diffuse} than others.
 Surfaces can be modeled as diffuse and specular components that are functions of light direction and viewing angle, relating from their microgeometry. \cite{nayar1991surface} % XXX 1991 or -89?
@@ -368,6 +372,7 @@ Diffuse means a material that reflects light uniformly to all directions, depend
 Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in figure \ref{fig:lambertcosine}. \cite{lamberttodo}
 A Lambertian surface's BRDF is constant among the viewing direction.
 Specular highlight or specular reflections refer to a mirror reflection of the lamp on the imaged surface.
+Surfaces modeled in computer graphics are often relighted with functions of surface normal and light and view directions, given as unit vectors, as in figure \ref{fig:brdfdiagram}.
 
 
 \begin{equation} \label{eq:lambertcosine}
