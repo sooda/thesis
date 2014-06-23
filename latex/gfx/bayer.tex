@@ -6,6 +6,8 @@
 \newcommand*{\dy}{0.5}
 \newcommand*{\dz}{0.33}
 
+% ++(a,b) is relative movement from the previous position
+
 % coords for colored or gray top
 \newcommand*{\mytopbox}{ -- ++(\dx,\dy) -- ++(\dx,-\dy) -- ++(-\dx,-\dy) -- cycle}
 % coords for the left wall
@@ -15,19 +17,22 @@
 % draw the outline first, then the inner edges separately. this prevents
 % annoying small ticks in the joined corners where faces overlap. (see the
 % tikz manual about the line-to operation's smoothness)
-\newcommand*{\myfullbox}{
-	% top side
+\newcommand*{\myfullbox}[1]{
+	(##1)
+	% top side clockwise
 	-- ++(\dx,\dy) -- ++(\dx,-\dy) -- ++(0,-\dz)
 	% bottom
 	-- ++(-\dx,-\dy) -- ++(-\dx,\dy) -- ++(0,\dz) -- cycle
-	% the inner three
+	% the inner three: \ | /
+	% tikz scale parameter goes bonkers with cycle if first coord is not repeated
+	(##1)
 	++(0,0) -- ++(\dx,-\dy)
 	++(0,0) -- ++(0,-\dz)
 	++(0,\dz) -- ++(\dx,\dy)
 }
 
 % draw the boxes
-\newcommand*{\mybox}[2]{\draw [fill=##1] (##2) \myfullbox}
+\newcommand*{\mybox}[2]{\draw [fill=##1] \myfullbox{##2}}
 \newcommand*{\mytop}[2]{\draw [fill=##1] (##2) \mytopbox}
 \newcommand*{\leftside}[2]{\draw [fill=##1] (##2) \myleftbox}
 \newcommand*{\rightside}[2]{\draw [fill=##1] (##2) \myrightbox}
