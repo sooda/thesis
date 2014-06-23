@@ -640,153 +640,144 @@ Canon DSLRs can be ``hacked'' to dump the raw stream to a memory card, but only 
 
 % }}}
 
-\subsection{Digital camera types (-> impl section partly?)} % {{{
+\subsection{Digital camera types} % {{{
 
-This section lists the most common types of cameras available for the typical consumer.
-Good properties are low price, configurability and ease of use.
+% intro on camera types and wanted options
+
+This section lists the most common types of cameras available for the typical consumer and their properties that have most effect on reconstruction quality.
+Good properties are image quality, configurability, ease of use and low price.
 Technical qualities usually get better with price.
 For a multi-camera setup with a restricted budget, low price is one of the largest advantage.
 On the other hand, large amounts of manual work should be avoided if possible.
 
-Consumer cameras have good availability, but they are targeted for artistic photographs instead of science.
-Machine vision hardware are more controllable and contain no unnecessary parts, but are more expensive and difficult to acquire.
+% comparison on some properties
 
-In general, good technical properties are deep depth of field for sharp images, lots of light, high pixel count, short distance to target. Some good technical properties of cameras that achieve these are listed below.
+Consumer cameras have good availability, but they are targeted for artistic photographs instead of science.
+They are divided roughly in two categories: DSLRs and compact (pocket, or point-and-shoot) cameras.
+Machine vision hardware are more controllable and contain no unnecessary bulky parts, but are more expensive, difficult to acquire and need proprietary control tools.
+
+In general, good technical properties are deep depth of field for sharp images, lots of light, high pixel count, short distance to target.
+Practical features also count, such as availability of external power supply instead of batteries.
+Some technical properties of cameras that affect quality the most are listed below.
 
 \begin{itemize}
-	\item Small sensor: For an equivalent resolution, smaller sensor better DOF. Larger sensor requires a closer target or longer focal length for filling the frame.
-	\item Small focal length: closer to target, not much space needed
-	\item Aperture: large for good light, small for good DOF
-	\item Fixed focal length lens (prime lens): less moving parts means better calibration
-	\item Large lens: captures more light, resulting in shorter shutter times
-	\item Pixel count: resolution gives more texture accuracy
-	\item Pixel size: larger pixels gather more light
+	\item Sensor size: For an equivalent resolution, smaller sensor leads to deeper depth of field. Larger sensor requires a closer target or longer focal length for filling the frame, which leads to shallow DOF.
+	\item Focal length: smaller focal length results to less distance needed between camera and the subject, leading to smaller rig.
+	\item Aperture size: Smaller aperture leads to deeper depth of field, but requires longer exposure times for equivalent amount of light.
+	\item Fixed focal length lens (prime lens): less moving parts means better calibration.
+	\item Lens size: a bigger lens captures more light, resulting in shorter exposure times.
+	\item Pixel count: resolution gives more texture accuracy.
+	\item Pixel size: larger pixels gather more light.
 \end{itemize}
 
 All the properties should be looked as a whole; especially large pixel count does not necessarily imply better pictures if the optics is not good enough.
 
-camera position disparity
+Resolution, or pixel count, is declared in million pixels, or megapixels (Mpix).
+Resolution and image size are related via pixel size that declares the physical size of one photosite on the sensor.
+Newest consumer DSLRs can have a resolution of up to 20 megapixels.
 
-Common sensor sizes in dslr cameras; APS-C (26-ish mm dia), full frame (30 mm)
+%camera position disparity
 
-Common sensor sizes in pocket cameras; 5 to 10 mm diameter?
+% XXX pocket/compact camera naming
 
-Canon / Nikon dslr
+% sensors
 
+Typical sensor sizes for different camera types are:
+
+\begin{itemize}
+	\item System cameras use ``full-frame'' (36x24 mm) or APS-C (1.5-1.6x crop of full frame, i.e.~about 22x15 mm), resolution usually over 15 Mpix
+	\item Compact cameras typically use a small sensor, approximately 1/2.3" (6.2x4.6 mm), resolution about 10 Mpix
+	\item Typical smartphones use sizes between 1/3"-1/4" (less than 4.8x3.6 mm), resolution typically between 3 to 8 Mpix
+	\item Sizes used by industrial machine vision cameras vary by application, typically in 5 to 10 mm range having resolutions from 0.5 to over 10 Mpix.
+\end{itemize}
+
+DSLRs usually benefit from bigger pixel size to get better light sensitivity, and the shallow DOF is commonly appreciated because of its artistic value.
+
+sensor vibration to remove dust -> sensor position not very fixed \cite{rieke2009}. % TODO MEASURE!
+no image stabilizer in sensor or lens \cite{photogrammetry.doc}
+ring flash bending the lens assembly if attached to it \cite{rieke2009}.
+
+% APS-C (26-ish mm dia), full frame (30 mm)
 % http://www.agisoft.ru/forum/index.php?topic=1411.60
 
-lens sharpness, contrast, freq; MTF modulation transfer function for the lens sharpness / perceptual mpix
+% lenses
+% MILC/CSC?
+System cameras (DSLRs, MILCs) have by definition interchangeable lenses, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed.
+Those accompany a zoom lens; zooms are more complex systems and therefore more expensive to reach a good image quality.
+Calibration is also a problem with moving elements that rarely align to precisely same setting.
+With a DSLR lens that has a moving mirror and shutter, the mechanical movement could move the zoom lens each time a little, changing the lens parameters.
 
-fixed lens (prime) instead of zoom: more or less lab controlled environment -> target position can be adjusted, zoom would be just more parameters to optimize. focal length is important to know; also, mirror vibration might move the zoom over time.
+System cameras have a large selection of fixed focal length (``prime'') lenses.
+The lack of zoom of a prime lens is acceptable in a lab environment, where the distance to the subject can be adjusted as necessary.
 
-no anti-shake/image stabilizer (photogrammetry.doc) in sensor or lens
-sensor vibration to remove dust -> sensor position not very fixed (rieke2009) % TODO MEASURE!
-ring flash bending the lens assembly if attached to it (rieke2009)
+Lens sharpness is defined via their performance to high contrast, measured with modulation transfer function (MTF).
+Perceptual pixel count relates to lens contrast; a high pixel count sensor for a poor quality lens is only useful for observing that the lens blurs sharp targets.
 
-Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality, e.g. mechanical problems blah blah
+Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality
 
-\subsubsection{DSLRs}
+% shutters
 
-Intended for single pictures
+System cameras usually use a mechanical focal plane shutter, and SLRs have an additional mirror to direct the image to a viewfinder.
+The mirror moves away when exposing the image.
+Some compact cameras have a leaf shutter in the lens, but most use digital shutters, resulting in rolling shutter artifacts for moving subjects.
 
-Mechanical shutter
+% storage speed
+Storage size and speed and camera processing power in general follows camera price well.
+High-quality capture of short motions is aided by continuous burst mode that can achieve anything between 2 and over 10 frames per second, depending on camera model and price.
+Professional-level DSLRs can handle over 10 continuous raw full frames per second, while entry-level DSLRs handle around five;
+compact cameras are generally a little slower.
+Overall storage speed is determined by several factors.
+Immediate readout speed from the sensor is affected by sensor, A/D converters and processor speed.
+Writeout to the mass storage medium is done from the camera's RAM, which can usually hold several pictures.
+Top storage medium speed varies by price.
+Best CF cards (used only in professional DSLRs) can write at about 150 MB/s, while SD cards reach 90 MB/s.
 
-Big sensor
+Reading the pictures to a computer can be done via USB or a memory card reader; the latter method is inconvenient as the card must be removed from the camera and placed to a reader manually, while a card reader usually is faster than a camera directly.
 
-Shallower DOF
+Machine vision hardware usually has temporary memory for only one frame that is read out immediately.
+For high speed video, this needs relatively large amounts of auxiliary hardware to save the raw frames, roughly a gigabit connection per camera, plus hard drives that can save the data fast enough.
 
-Focal length configurable
+% software support
+Major consumer manufacturers provide software development kits (SDK) for controlling their cameras remotely at some degree, and industrial devices always have an accompanying SDK.
 
-Lots of resolution
+Consumer SDKs by Canon, Nikon and Sony are relatively capable and can change any property of the camera that can be changed manually, e.g. aperture, shutter speed and ISO rating.
+They can also take pictures remotely and download them, and display a live view preview for some models.
 
-Memory card speed
+Gphoto2 is a free software alternative that aims to control camera's file system and properties, independently of camera maker and model.
+It has mature support for over a thousand cameras and camera-equipped mobile phones.
+It consists of two parts: a software library that can be embedded into other programs, and a command-line tool for using the library directly.
 
-gphoto2
+For Canon, there is also a third-party open source firmware add-on that aims to enhance the user interface, and to hack additional experimental features such as RAW video recording.
+Another third-party add-on is the Canon Hacker's Development Kit (CHDK), a firmware for Canon's compact cameras.
 
-No autofocus in general
+% triggering
+For a multi-camera setup, reliable remote trigger is important.
+It must be possible to ``press'' the shutter release remotely to take a picture (or to start video recording).
+Industrial cameras are designed to be remotely controllable, and system cameras have input sockets for remote trigger buttons.
+Others have limited offer, mainly supporting infrared remote if anything.
+As a special case, CHDK supports a hacked remote release via USB port.
 
-Easy sync for single image
+% camera comparison
 
-\subsubsection{Camcorders}
+Summarizing for the most popular camera types in the market:
 
-Electrical shutter
+\begin{itemize}
+	\item System cameras with bigger sensors are good for artistic still photos, have excellent configurablility with lots of hardware available, and decent software support. Designed for single pictures, these often lack in video features.
+	\item Industrial machine vision cameras have small sensors, support interchangeable lenses and need custom or expensive software to control
+	\item Camcorders are only good for video recording, have properties for film editing but have poor resolution for still pictures. Electrical shutter, some interlaced. Deeper DOF. Only pro devices have external sync.
+	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Some do shoot RAW images. Most lack external AC supplies. Resolution is less than in system cameras, and high-resolution cameras perform worse in low light because of smaller pixel size.
+	\item Others (smartphones, webcams) have poorly documented features and bad lenses that are hidden by overly compressing jpeg images.
+\end{itemize}
 
-Ok fps
-
-More features for video
-
-Autofocus (not needed here)
-
-Better (deeper) DOF for video
-
-Usually zoom lens
-
-Consumer devices: affordable
-
-Pro devices: bukkits of money (features; external sync)
-
-Internal hard disk
-
-Interlace vs. progressive recording
-
-\subsubsection{Pocket cameras}
-
-Affordable
-
-Small sensor
-
-Decent resolution
-
-Configurability unknown
-
-Manual mode required
-
-Always a zoom lens, bad for calibration
-
-\subsubsection{Webcams}
-
-Like camcorders but shit, only good feature is their price
-
-closed design, poor manual settings
-
-\subsubsection{Machine vision cameras}
-
-Well controllable, flexible (in SW terms), still vendor-specific APIs for tuning the settings (as is with any other vendors too, but no good general-purpose libs for these as opposed to gphoto2 due to high price = bad availability for consumers; should afford extra time for coding too)
-
-External sync
-
-Raw data
-
-Data bandwidth, auxiliary hardware
-
-Expensive
-
-- vendor-specific apis
-- probably easier to control
-- expensive
-- raw images (high bandwidth)
-- usually fixed lens
-\subsubsection{Depth cameras}
-
-In addition to stereo depth...
-
-Active measurement (difficult to use several)
-
-Laser rangers
-
-IR patterns and an IR camera (Kinect)
-
-Lytro (NOPE)
-
-\subsubsection{Hybrid systems}
-
-Use several camera types at the same time? depth camera for more reliable and fast measurements? not really done, should we try it?
+In addition to multiview stereo, there are cameras that can image depth directly.
+Laser range finders are common in automation industry, and have great precision and high price.
+Active infrared cameras such as the Kinect (sensor manufactured by PrimeSense) project an infrared pattern of dots to the camera's view and estimate depth in coarse blobs, resulting in an easy-to-use depth camera with poor accuracy.
 
 % }}} camera selection
 
 \subsection{Hardware} % {{{
 
-do i need this section?
+do i need this section? maybe partly to implementation discussion
 
 \subsubsection{Image storage}
 
@@ -816,6 +807,7 @@ support structures out of bounds; just assume that the construction is rigid eno
 
 % }}} hardware
 
+\clearpage
 \section{Static 3D reconstruction}
 
 %[1] Shape and motion from image streams under orthography: A factorization approach
@@ -1406,6 +1398,7 @@ Still, structured light and/or shading assumptions [shape from single image cues
 Rendered facial animation: google up on bones and stuff.
 % }}}
 
+\clearpage
 \section{Motion capture}
 
 surface vs motion capture
