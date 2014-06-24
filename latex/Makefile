@@ -1,4 +1,9 @@
-SRC := dippa.tex $(wildcard tex/*.tex) $(wildcard gfx/*.tex) gfx/raddist.pdf gfx/interlace.pdf
+SRC := dippa.tex \
+	$(wildcard tex/*.tex) \
+	$(wildcard gfx/*.tex) \
+	gfx/raddist.pdf \
+	gfx/interlace.pdf \
+	gfx/focalplaneshutter.pdf
 
 all: dippa.pdf
 	okular dippa.pdf
@@ -19,6 +24,9 @@ gfx/raddist.pdf: gfx/raddist.tex
 	pdflatex -output-directory gfx gfx/raddist
 
 gfx/interlace.pdf: gfx/interlace.tex
+	pdflatex -output-directory gfx $<
+
+gfx/focalplaneshutter.pdf: gfx/focalplaneshutter.tex
 	pdflatex -output-directory gfx $<
 
 dippa.pdf: $(SRC)
