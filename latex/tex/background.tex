@@ -979,6 +979,8 @@ One possible way is direct linear transform (DLT)
 %XXX see below. Intrinsic, extrinsic. Distortions. Projection matrices. Camera resectioning.
 
 %many single planar chessboard pics vs. a single image of an accurate 3d model.
+%chessboards easier to manufacture at a high precision, just print out and stick to flat surface
+%cv::stereocalibrate, cv::calibratecamera
 %Single three-dimensional calibration object is also sufficient blbl
 
 
@@ -1404,6 +1406,8 @@ use the registered raster projections to find out best textures and build uv coo
 \subsection{Postprocessing} % {{{
 
 Talk about how the stored geometry is different from the rendered one; mathematical models in fragment shaders to use the texture variations / normal maps etc.
+
+Error removal; strip outliers that do not have nearby pairs; small disconnected islands.
 
 Postprocessing: remodel the mesh (face), see what it would look like.
 Refine parameters to get a similar output as in the photos (normal map etc.), backproject.
