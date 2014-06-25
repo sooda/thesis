@@ -13,6 +13,18 @@ linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
 \usepackage{amsfonts,amssymb,amsbsy,amsmath}
 \usepackage{tikz}
 
+% (ugly) euro symbol from €
+\usepackage[official]{eurosym}
+\DeclareUnicodeCharacter{20AC}{\euro{}}
+%or:
+%\usepackage{marvosym}
+%\DeclareUnicodeCharacter{20AC}{\EUR{}}
+\usepackage{textcomp}
+
+% micro sign µ
+\usepackage{siunitx}
+\sisetup{math-micro=\text{µ},text-micro=µ}
+
 \input{gfx/bayer}
 % \simplefig{pos-specifier}{contents}{labelname}{caption}
 \newcommand{\simplefig}[4]{%

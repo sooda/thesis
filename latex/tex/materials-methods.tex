@@ -38,39 +38,90 @@ When capturing video, the frames should be synchronized among cameras as describ
 
 not considered: weatherproofing, lcd/viewfinder/user interface, mirror blackout, autofocus, etc
 
-resolution
-dynamic range
-burst mode speed
-wire remote shutter speed
-dust reduction
-optical stabilizing
-video frame rate, resolution
-usb speed
-usb mass storage
-flash something
-manual mode settings
-shutter lag
-mirror lockup
-weight
-price
+The section \ref{sec:cameratypes} presents in more detail the properties necessary for reconstruction.
+
+Reliability on configurability and controllability was considered important.
+Cheaper cameras fit more into a budget, but they might not be properly controllable.
+External shutter release mechanisms have been researched more on DSLRs;
+the manufacturers do not provide official specifications of the release connector pinouts, but they have been reverse-engineered for many models by individual tinkerers.
+Zoom-only lenses and lack of raw processing, fast processors, manual modes etc.~leave cheaper compact cameras out of the comparison.
+More expensive models do have comparable features, but their prices rise into the same range as with DSLRs that are more understood.
+
+Canon DSLRs have been used previously on commercial setups [infiniterealities, ten24, capture lab likeness capture rig (ea sports/fifa example), remedy].
+Commercial video capture setups use specialized machine vision devices and partly custom software to export data into suitable format.
+
+Machine vision devices need several high performance computers for reliable multi-camera capture.
+Where each camera outputs approximately 1 Gbit/s of data, approximately one hard disk per camera is needed if the capture is long enough and does not fit in a computer's RAM, increasing the system cost and complexity.
+Best mechanical hard disks have sequential write speed that just exceeds 1 Gbit/s;
+newer solid-state disks (SSD) generally are two to four times faster.
+
+For covering all the bandwidth, an expansion card would be needed per camera, count depending on the camera protocol. According to specifications, USB 3.0 has a maximum transmission rate of 5 Gbit/s, Camera Link supports 5.44 Gbit/s in base and full configuration, FireWire up to 3,2 Gbit/s and GigE only 1 Gbit/s.
+Additionally, actual data transfer speeds are less than the theoretical max rate advertised because of protocol and operating system overhead.
+Most PC motherboards can accommodate only a few cards, requiring several PCs.
+
+\begin{itemize}
+\item CMOS/CCD sensor. CMOS suffers from rolling shutter in video mode, while CCD is more expensive and rare.
+\item Resolution and sensor size. Higher resolution covers more detail, until airy disk size is reached. Larger sensor is more sensitive to light and therefore results in lower noise.
+\item Lens quality. High resolution is only useful if the lens is sharp enough to fully use the pixel count.
+\item Dynamic range, i.e. bit depth of the processing pipeline. JPEG pictures have only 8 bits per color channel, whereas DSLRs and industrial cameras use more, often 12 to 14 bits per pixel (in raw image, that contains the raw bayer pattern before interpolation)
+\item Continuous speed. Controlled by many factors, the rate at which full-size pictures can be taken; image processing speed and memory card write speed have most effect.
+\item Dust reduction. If enabled for some consumer cameras, it is implemented as high-frequency vibration of the sensor on camera bootup. Because it moves the sensor, it may affect calibration. (Not sure.)
+\item Optical stabilization works by moving a glass element inside the lens or the sensor itself, effectively moving the image on the sensor, having a bad effect on calibration.
+\item Video frame rate, resolution and compression. Cameras that support raw usually only use raw for still pictures and compress the video, as raw video is often unnecessary in the consumer market and uses lots of space. For image processing, each frame should be as little compressed as possible. Some DSLRs support ALL-I format, which contains only full keyframes (still compressed, but not predicted from other actual frames).
+\item Usb speed. Retrieving saved image or video data takes less time for faster interfaces.
+\item External flash. Practically all system cameras can be wired to an external flash lamp; only some compact cameras support this. Industrial cameras are externally triggered and require custom wiring.
+\item Shutter lag. Lag measured between ordering the camera to take the picture to the actual moment where exposure starts should be consistent, and preferably small.
+\item Weight and size. A smaller and lighter camera requires less bulky support structures.
+\item Price. With a fixed budget, cheaper cameras can cover a larger area of the subject at a time because more cameras fit in the budget.
+\item Availability. For an easily replicable system, it should be simple to purchase the hardware.
+\item Configurability. Obviously, aperture, shutter speed and others should be manually controllable and repeatable without automatic features.
+\item Low noise. Sensor noise shows immediately in the image quality, complicating correspondence and others.
+\end{itemize}
 
 % }}}
 
+Prices for compact cameras that have the required features go up to the same price range as DSLRs or even higher, i.e. 500 EUR and up.
+
 \subsection{Selected cameras} % {{{
 
-\subsubsection{DSLR bodies}
+%The camera was selected based on 
+Precise information on all hardware used can be found in appendix \ref{app:hardwareused}.
 
-\subsubsection{Lenses}
-GigE/USB3/???
+\subsubsection{Canon EOS 700D DSLR}
 
-- size
-- resolution
-- speed
-- cmos/ccd
-- configurability
-- noise
-- price
-- availability
+Canon EOS 700D body (or Rebel T5i in US) is among the newest of Canon's consumer range, with a price at about 600EUR.
+Key features important for reconstruction are:
+
+\begin{itemize}
+	\item 18 Mpix APS-C sized (22.3 x 14.9 mm, or 1.62 crop factor) CMOS sensor, with about 4,3 x 4,3 $\text{\si\micro m}$ pixel size
+	\item 14-bit DIGIC 5 processor
+	\item Continuous shooting at 5 frames per second
+	\item 1080p30 or 720p60 video recording
+\end{itemize}
+
+Large pixel count combined to a sharp lens is useful in bringing in a lot of detail.
+The sensor's pixel size is not unnecessarily small but not as large as in full frame cameras.
+High dynamic range with 14 bits per pixel is more than enough, as most reconstruction programs use 8-bit JPEG images.
+The 5 fps continuous speed for full-size images can be used for testing high resolution motion, but the video abilities should be reasonable for motion testing.
+Raw video recording should be also possible. % TODO: test this
+
+The sensor is labeled ``Hybrid CMOS'', a new Canon's technology that embeds phase-detection autofocus pixels in the sensor for fast continuous autofocusing in video mode.
+
+The camera also features a tilting LCD screen that has provided to be useful when looking the camera from the front.
+
+An important consideration was the ability to use the third-party Magic Lantern firmware add-on;
+it was originally designed for improved user interfaces for video recording, but has been extended for other features too.
+Firstly, it provides experimental support for raw video recording and other hacks; additionally, being open source, it can be modified for any custom purposes, such as multi-camera synchronization aids.
+
+The camera uses SD cards for mass storage. A high-speed class 10 UHS-I card was selected; manufacturer claims 45 MB/s write speed.
+
+Additionally, AC power adapters were chosen to operate the cameras without the need for charging batteries.
+Canon sells adapters that plug in the camera's battery holder, providing continuous power at the expense of an additional cable per camera.
+
+\subsubsection{Canon EF 50mm f/1.8 II}
+
+Canon's EF mount 50mm f/1.8 II lens (priced at about 110EUR) is commonly known for its excellent, sharp image quality at a low price.
+Its build quality is poor and mostly plastic, which may not please professional photographers, but does not matter for laboratory environment.
 
 % }}}
 

@@ -1,13 +1,43 @@
-\section{List of hardware used}
+\section{List of hardware used} \label{app:hardwareused}
 
-cams, lenses, remote board, supports, hubs, power supplies
+\begin{itemize}
+	\item DSLR body (9 units in total): Canon EOS 700D
+	\item Lens (one for each camera): Canon EF 50mm f/1.8 II
+	\item Power adapter (one for each): Canon ACK-E8
+	\item Memory card (one for each): Transcend SDHC class 10 UHS-I 16GB
+	\item USB hub (3 units): D-link DUB-H4
+	\item Remote board: custom built around ST Nucleo-F401RE, see next section \ref{app:remotetrigger}
+	\item Stand (four units): Millenium LST-310, a sturdy three-legged lighting stand with a pole that can be zoomed several meters high.
+	\item Ball head (one for each): Manfrotto 494
+	\item Clamp (one for each): Manfrotto 035 Super Clamp, with Manfrotto 036-38 studs
+	\item Velcro strap etc. for fastening things
+\end{itemize}
 
-\section{Remote trigger}
 
-some pictures
+\section{Remote trigger} \label{app:remotetrigger}
+
+The remote trigger consists of a Nucleo-F401RE microcontroller platform by ST microelectronics, and supporting hardware for connecting the cameras.
+Each camera connects to the trigger via a 2,5mm stereo plug, as the cameras have a standard 2,5mm jack for remote trigger.
+To secure the cameras from each other, the remote wires are connected with opto-isolators (TLP621-2).
+
+some pictures here.
 
 \subsection{Schematic}
 
+
 \subsection{Circuit board layout}
 
+A complete PCB was not designed because of the simplicity of the system.
+Instead, the parts were soldered on a piece of perfboard, a piece of PCB with pre-drilled regular grid of holes with copper pads.
+
+pictures here too.
+
 \subsection{Parts list}
+
+\begin{itemize}
+	\item ST Microelectronics Nucleo-F401RE microcontroller platform
+	\item 10 x stereo 2,5 mm jack
+	\item 10 x stereo 2,5mm male-male 3 meter cable
+	\item 10 x TLP621-2 opto-isolator
+	\item (usb cable, wire, buttons?)
+\end{itemize}
