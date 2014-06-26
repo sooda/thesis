@@ -768,6 +768,21 @@ It consists of two parts: a software library that can be embedded into other pro
 For Canon, there is also a third-party open source firmware add-on that aims to enhance the user interface, and to hack additional experimental features such as RAW video recording.
 Another third-party add-on is the Canon Hacker's Development Kit (CHDK), a firmware for Canon's compact cameras.
 
+For machine vision cameras, manufacturers provide their own software packages, in addition to sometimes specifying that the camera complies to a standard.
+The standards specify data formats, image streaming and control methods.
+Key standards for industrial cameras are:
+
+\begin{itemize}
+	\item Camera Link, partly proprietary (but significantly reverse-engineered) serial transfer protocol
+	\item GigE vision, standard interface for video data over gigabit Ethernet connection; licensed so that writing open source software based on the standard is not possible (not including reverse-engineered efforts)
+	\item IIDC/DCAM, Instrumentation \& Industrial Digital Camera or 1394-based Digital Camera Specification, data format standard used in IEEE 1394 (FireWire) cameras; open specification
+	\item USB3 Vision, a standard for the USB 3 bus
+\end{itemize}
+
+A standard-compliant industrial camera enables to use readily available software, reducing the need for in-house software and protecting from vendor lock-in.
+Some of the largest manufacturers that offer standards-compliant cameras are Point Grey, Basler, Allied Vision, Imaging Source.
+Coriander \cite{} is a free user interface for controlling IIDC cameras.
+
 % triggering
 For a multi-camera setup, reliable remote trigger is important.
 It must be possible to ``press'' the shutter release remotely to take a picture (or to start video recording).
@@ -781,7 +796,7 @@ Summarizing for the most popular camera types in the market:
 
 \begin{itemize}
 	\item System cameras with bigger sensors are good for artistic still photos, have excellent configurablility with lots of hardware available, and decent software support. Designed for single pictures, these often lack in video features.
-	\item Industrial machine vision cameras have small sensors, support interchangeable lenses and need custom or expensive software to control
+	\item Industrial machine vision cameras have small sensors, support interchangeable lenses and need a lot of additional hardware, and custom or expensive software to control
 	\item Camcorders are only good for video recording, have properties for film editing but have poor resolution for still pictures. Electrical shutter, some interlaced. Deeper DOF. Only pro devices have external sync.
 	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Some do shoot RAW images. Most lack external AC supplies. Resolution is less than in system cameras, and high-resolution cameras perform worse in low light because of smaller pixel size.
 	\item Others (smartphones, webcams) have poorly documented features and bad lenses that are hidden by overly compressing jpeg images.

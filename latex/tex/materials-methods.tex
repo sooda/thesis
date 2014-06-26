@@ -76,20 +76,26 @@ Most PC motherboards can accommodate only a few cards, requiring several PCs.
 \item Availability. For an easily replicable system, it should be simple to purchase the hardware.
 \item Configurability. Obviously, aperture, shutter speed and others should be manually controllable and repeatable without automatic features.
 \item Low noise. Sensor noise shows immediately in the image quality, complicating correspondence and others.
+\item Remote trigger. All DSLRs have usually wired and wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol. Some protocols may have global commands to send throughout a group of cameras. (FireWire?) Otherwise, software trigger suffers from jitter from operating system and protocol randomness.
 \end{itemize}
-
-% }}}
 
 Prices for compact cameras that have the required features go up to the same price range as DSLRs or even higher, i.e. 500 EUR and up.
 
+Having a much smaller production rate than larger manufacturers that target consumers (such as Canon or Nikon), industrial cameras have a broad price range from a few hundred euros to thousands, well correlated with pixel count and frame rate.
+Lens prices for industrial C-mounts are moderate, at around 200-300 EUR.
+
+% }}}
+
 \subsection{Selected cameras} % {{{
 
-%The camera was selected based on 
 Precise information on all hardware used can be found in appendix \ref{app:hardwareused}.
+
+A DSLR is a good choice because of moderate price compared to image quality, and availability of usable software.
+Canon was chosen because of previously acquired knowledge of the manufacturer, previously proven work using the same maker [infiniterealities, ten24, capture lab likeness capture rig (ea sports/fifa example), remedy] and firmware customizability \cite{magiclantern}. % this also above in practicalities
 
 \subsubsection{Canon EOS 700D DSLR}
 
-Canon EOS 700D body (or Rebel T5i in US) is among the newest of Canon's consumer range, with a price at about 600EUR.
+Canon EOS 700D body (or Rebel T5i in US), introduced in 2013, is among the newest of Canon's consumer range, with a price at about 600EUR.
 Key features important for reconstruction are:
 
 \begin{itemize}
@@ -108,6 +114,9 @@ Raw video recording should be also possible. % TODO: test this
 The sensor is labeled ``Hybrid CMOS'', a new Canon's technology that embeds phase-detection autofocus pixels in the sensor for fast continuous autofocusing in video mode.
 
 The camera also features a tilting LCD screen that has provided to be useful when looking the camera from the front.
+
+Older models of the same product line can still be found in the market, such as 650D or 600D. 700D has a newr processor and thus faster processing speed, faster memory card controller and others. Resolution of the sensor has stayed same since 550D, introduced in 2010.
+At the same time also cheaper new models are available, such as 1200D. At a reduced price, less processing power is provided, resulting in slower operation but otherwise the cameras share mostly same features.
 
 An important consideration was the ability to use the third-party Magic Lantern firmware add-on;
 it was originally designed for improved user interfaces for video recording, but has been extended for other features too.
