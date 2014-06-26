@@ -1,3 +1,5 @@
+// led means focus triggered
+
 #include "mbed.h"
 //#include "serial_api.h"
 
@@ -28,27 +30,61 @@ BusOut shutter(
 		PA_10 // I
 );
 
-const int mask = 0x1ff; // 9 bits
+const int MASK = 0x1ff; // 9 bits
 
 Serial ser(SERIAL_TX, SERIAL_RX);
 
+#define STATE_NONE 0
+#define STATE_FOCUS 1
+#define STATE_SHOOT 2
+#define STATE_RESET 3
+
+volatile int recvstate; // start at none
 volatile int recvmask;
 int workmask;
+int workstate;
+
 
 void recvfunc() {
-	workmask <<= 1;
 	int c = ser.getc();
 	ser.putc(c);
-	if (c == '1')
+	switch (c) {
+	case '1':
+		workmask <<= 1;
 		workmask |= 1;
-	else if (c == ' ' || c == '\r' || c == '\n') {
-		recvmask = workmask;
+		break;
+	case '0':
+		workmask <<= 1;
+		break;
+	case 'F':
+		workstate = STATE_FOCUS;
+		break;
+	case 'S':
+		workstate = STATE_SHOOT;
+		break;
+	case 'R':
 		workmask = 0;
+		recvmask = 0;
+		workstate = STATE_RESET;
+		recvstate = workstate;
+		break;
+	case ' ': /* fallthrough */
+	case '\n':
+		recvmask = workmask;
+		recvstate = workstate;
+		workmask = 0;
+		break;
 	}
 }
 
 void butnfunc() {
-	recvmask = mask;
+	if (focus == 0) {
+		focus = MASK;
+	} else {
+		shutter = MASK;
+		wait(5.2);
+		shutter = 0;
+	}
 }
 
 int main() {
@@ -68,18 +104,28 @@ int main() {
 	button.fall(butnfunc);
 
 	for (;;) {
-		while (recvmask == 0)
-			;
-		int m = recvmask;
-		recvmask = 0;
-		led = 1;
+		int st, rmask;
+		while ((st = recvstate) == STATE_NONE) {
+			// wait
+		}
+		rmask = recvmask;
+		recvstate = STATE_NONE;
 
-		focus = m & mask;
-		wait(0.5);
-		shutter = m & mask;
-		wait(0.1);
-		shutter = 0;
-		focus = 0;
-		led = 0;
+		switch (st) {
+		case STATE_FOCUS:
+			if (rmask)
+				led = 1;
+			focus = rmask & MASK;
+			break;
+		case STATE_SHOOT:
+			shutter = rmask & MASK;
+			break;
+		case STATE_RESET:
+			focus = 0;
+			shutter = 0;
+			led = 0;
+			break;
+		}
+		//wait(0.5);
 	}
 }
