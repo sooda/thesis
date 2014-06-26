@@ -82,7 +82,7 @@ void butnfunc() {
 		focus = MASK;
 	} else {
 		shutter = MASK;
-		wait(5.2);
+		wait(0.2);
 		shutter = 0;
 	}
 }
