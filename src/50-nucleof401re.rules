@@ -1,0 +1,4 @@
+#ATTRS{bInterfaceClass}=="10", \
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374b", \
+    MODE:="0666", \
+    SYMLINK+="ttynucleo%n"
