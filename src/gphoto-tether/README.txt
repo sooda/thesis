@@ -26,8 +26,6 @@ forallp.sh:
 	same as above, but in in parallel
 interesting-settings.txt:
 	settings for readconfig.sh, see below
-multiconv.sh:
-	parallel test for downscaling many images
 multihax-order.py:
 	interleave pictures taken from all cameras consecutively
 multihax-run.sh:
