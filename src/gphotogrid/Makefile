@@ -32,6 +32,6 @@ timelinetest: timelinetest.o timeline.o
 -include *.d
 
 clean:
-	rm -f *.o $(APPS)
+	rm -f *.o *.d $(APPS)
 
 .PHONY: all clean
