@@ -13,7 +13,7 @@ LDFLAGS := -std=c++0x $(WX_LDFLAGS) $(CV_LDFLAGS) $(BOOST_LDFLAGS) $(GPHOTO2_LDF
 
 DEPSFLAGS := -MMD -MP
 
-APPS := gphotogrid
+APPS := gphotogrid gpwraptest paraphotos
 
 all: $(APPS)
 
