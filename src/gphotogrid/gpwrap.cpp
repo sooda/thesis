@@ -193,9 +193,6 @@ Camera::Camera(::Camera* camera, Context& ctx) : camera(camera), ctx(ctx) {
 // stolen from libphoto2 examples/autodetect.c
 // most of this seems to be in gp_camera_init autodetection too
 Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullptr), ctx(ctx) {
-	// safe deleter to free camera memory
-	auto cam_unref_ignore_error = [](::Camera* c) { gp_camera_unref(c); };
-	typedef std::unique_ptr<::Camera, decltype(cam_unref_ignore_error)> SafeCamera;
 #define GP_OR_THROW(ret, func, ...) \
 	if ((ret = func(__VA_ARGS__)) < GP_OK) throw Exception(#func, ret);
 
@@ -207,7 +204,7 @@ Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullp
 	//if ((ret = gp_camera_new (camera)) < GP_OK)
 	//	throw Exception("gp_camera_new", ret);
 	GP_OR_THROW(ret, gp_camera_new, &camera);
-	SafeCamera cam_deleter(camera, cam_unref_ignore_error);
+	std::unique_ptr<::Camera, int (*)(::Camera*)> cam_deleter(camera, gp_camera_unref);
 
 	if (!abilities) {
 		/* Load all the camera drivers we have... */
