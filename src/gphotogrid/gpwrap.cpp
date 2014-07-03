@@ -149,17 +149,39 @@ void Widget::set_changed() {
 		camera->set_config(*this);
 }
 
-Camera Context::auto_camera() {
-	::Camera* cam;
-	int ret;
-	if ((ret = gp_camera_new(&cam)) < GP_OK)
-		throw Exception("gp_camera_new", ret);
 
-	if ((ret = gp_camera_init(cam, context)) < GP_OK) {
-		gp_camera_unref(cam);
+
+template<typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
+// libgphoto has a nasty way of initializing objects by taking a reference to a
+// pointer.  Wrap it to return a readily constructed object, even in a safe
+// unique_ptr with a proper unref deleter, throwing exceptions on errors.  we'd
+// throw the exception later anyway if the construction would fail.
+// (the gp_foo_unref() and gp_foo_free() probably return always GP_OK)
+template <class GpObject, class GpCtor, class GpDtor>
+std::unique_ptr<GpObject, GpDtor> gp_new_unique(GpCtor ctor, const char* ctorname, GpDtor dtor) {
+	GpObject* obj;
+	int ret = ctor(&obj);
+	if (ret < GP_OK)
+		throw Exception(ctorname, ret);
+	return std::unique_ptr<GpObject, GpDtor>(obj, dtor);
+}
+
+#define GP_NEW_UNIQUE(obj, ctorname) \
+	gp_new_unique<obj>(ctorname ## _new, #ctorname "_new", ctorname ## _unref)
+
+Camera Context::auto_camera() {
+	//auto cam = gp_new_unique<::Camera>(gp_camera_new, "gp_camera_init", gp_camera_unref);
+	auto cam = GP_NEW_UNIQUE(::Camera, gp_camera);
+	int ret;
+
+	if ((ret = gp_camera_init(cam.get(), context)) < GP_OK) {
 		throw Exception("gp_camera_init", ret);
 	}
-	return Camera(cam, *this);
+	return Camera(cam.release(), *this);
 }
 
 std::vector<Camera> Context::all_cameras() {
