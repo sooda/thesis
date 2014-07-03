@@ -18,10 +18,7 @@ void dnload(gp::Camera& cam, const std::string& name,
 
 struct Notifylocks {
 	Semaphore readycount;
-	// Semaphore usersnotified;
-	std::condition_variable usernotified;
-	std::mutex notifmutex;
-	int notifycount;
+	Semaphore usersnotified;
 };
 
 enum Verbosity {
@@ -34,7 +31,6 @@ enum Verbosity {
 void download_task(gp::Camera& cam, Notifylocks& locks, bool& running) {
 	std::string name(cam.config()["artist"].get<std::string>());
 	int evts = 0;
-	int notifycount = 0;
 
 	std::string localdir = "files/" + name;
 	mkdir(localdir.c_str(), 0777);
@@ -43,12 +39,8 @@ void download_task(gp::Camera& cam, Notifylocks& locks, bool& running) {
 
 	std::cout << name << " running..." << std::endl;
 	locks.readycount.notify_one();
-	{
-		std::unique_lock<std::mutex> lk(locks.notifmutex);
-		locks.usernotified.wait(lk,
-				[&locks, notifycount]{ return locks.notifycount > notifycount; });
-		notifycount++;
-	}
+	locks.usersnotified.wait();
+
 	while (running) {
 		gp::CameraEvent ev = cam.wait_event(200);
 
@@ -73,12 +65,7 @@ void download_task(gp::Camera& cam, Notifylocks& locks, bool& running) {
 			std::cout << name << " downloaded" << std::endl;
 
 			locks.readycount.notify_one();
-			{
-				std::unique_lock<std::mutex> lk(locks.notifmutex);
-				locks.usernotified.wait(lk,
-						[&locks, notifycount]{ return locks.notifycount > notifycount; });
-				notifycount++;
-			}
+			locks.usersnotified.wait();
 			}
 			break;
 		case ce::EVENT_FOLDER_ADDED: {
@@ -101,8 +88,7 @@ void allready_notifier(Notifylocks& locks, int n, bool& running) {
 	while (running) {
 		locks.readycount.wait(n);
 		std::cout << "All ready" << std::endl;
-		locks.notifycount++;
-		locks.usernotified.notify_all();
+		locks.usersnotified.notify_all(n);
 	}
 }
 
@@ -123,7 +109,6 @@ void do_download(std::vector<gp::Camera>& cams) {
 
 	bool running = true;
 	Notifylocks locks;
-	locks.notifycount = 0;
 
 	std::thread notifier(allready_notifier, std::ref(locks), cams.size(), std::ref(running));
 
