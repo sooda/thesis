@@ -44,13 +44,14 @@ class Camera;
 
 class Context {
 public:
-	Context();
+	Context(bool use_messages=true);
 	Camera auto_camera();
 	std::vector<Camera> all_cameras();
 	~Context();
 
 	friend class Camera;
 private:
+	void init_messages();
 	static void error_func(GPContext *context, const char *msg, void *data);
 	static void msg_func(GPContext *context, const char *msg, void *data);
 	static void status_func(GPContext *context, const char *msg, void *data);

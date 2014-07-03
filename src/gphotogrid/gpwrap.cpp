@@ -16,7 +16,11 @@ Exception::Exception(const std::string& msg, int gpnum) :
 			+ " (" + gp_result_as_string(gpnum) + ")")
 {}
 
-Context::Context() : context(gp_context_new()) {
+Context::Context(bool use_messages) : context(gp_context_new()) {
+	if (use_messages)
+		init_messages();
+}
+void Context::init_messages() {
 	gp_context_set_error_func(context, error_func, NULL);
 	gp_context_set_message_func(context, msg_func, NULL);
 	gp_context_set_status_func(context, status_func, NULL);
