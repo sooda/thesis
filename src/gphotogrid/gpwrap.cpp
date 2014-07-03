@@ -5,6 +5,9 @@
 #include <memory>
 #include <fstream>
 #include <cstdlib>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 namespace gp {
 Exception::Exception(const std::string& msg, int gpnum) : 
@@ -312,6 +315,44 @@ CameraEvent Camera::wait_event(int timeout) {
 	default: t = (CameraEvent::EventType)(1000 + eventtype);//CameraEvent::EVENT_UNKNOWN;
 	}
 	return CameraEvent(t, eventdata);
+}
+
+void Camera::save_file(const std::string& folder, const std::string& name,
+		const std::string& localfile, bool delete_from_cam) {
+	int ret;
+
+	int fd = open(localfile.c_str(), O_CREAT | O_WRONLY, 0644); // TODO smart handle
+	std::cout << "OPEN FD: " << fd << std::endl;
+	if (fd == -1)
+		throw std::runtime_error("huh? open() failed");
+
+	CameraFile *filep;
+	if ((ret = gp_file_new_from_fd(&filep, fd)) < GP_OK) {
+		close(fd);
+		throw Exception("gp_file_new_from_fd", ret);
+	}
+	std::unique_ptr<CameraFile, int (*)(CameraFile*)> file(filep, gp_file_unref);
+#if 0
+	auto cam_unref_ignore_error = [](CameraFile* c) { gp_file_unref(c); };
+	typedef std::unique_ptr<::Camera, decltype(file_unref_ignore_error)> SafeCamera;
+	SafeFile file_deleter(file, file_unref_ignore_error);
+#endif
+
+	if ((ret = gp_camera_file_get(camera, folder.c_str(), name.c_str(),
+			 GP_FILE_TYPE_NORMAL, file.get(), ctx.context)) < GP_OK) {
+		close(fd);
+		throw Exception("gp_camera_file_get", ret);
+	}
+
+	if (delete_from_cam) {
+		if ((ret = gp_camera_file_delete(camera, folder.c_str(),
+						name.c_str(), ctx.context)) < GP_OK) {
+			close(fd);
+			throw Exception("gp_camera_file_delete", ret);
+		}
+	}
+
+	close(fd);
 }
 
 CameraEvent::CameraEvent(EventType type, void* data) : etype(type), data(data) {

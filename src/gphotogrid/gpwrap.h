@@ -188,6 +188,8 @@ public:
 	std::vector<char> preview();
 	void save_preview(const std::string& fname);
 	CameraEvent wait_event(int timeout);
+	void save_file(const std::string& folder, const std::string& name,
+			const std::string& localfile, bool delete_from_cam=false);
 
 	// ctx constructs me
 	friend class Context;
