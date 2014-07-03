@@ -19,6 +19,7 @@
 #include <condition_variable>
 
 #include <sys/stat.h>
+#include <unistd.h>
 
 // Note: the
 // "Downloading 'IMG_NNNN.JPG' from folder '/store_XXXXXXXX/DCIM/100CANON'..."
@@ -39,13 +40,14 @@ struct Notifylocks {
 
 struct Config {
 	Verbosity verboselevel;
+	std::string filedir;
 };
 
 // Downloader task for one camera: listen to events, print, and download files
 void download_task(gp::Camera& cam, Notifylocks& locks, Config cfg, bool& running) {
 	std::string name(cam.config()["artist"].get<std::string>());
 
-	std::string localdir = "files/" + name;
+	std::string localdir = cfg.filedir + "/" + name;
 	mkdir(localdir.c_str(), 0777);
 	int evts = 0;
 
@@ -80,9 +82,10 @@ void download_task(gp::Camera& cam, Notifylocks& locks, Config cfg, bool& runnin
 						<< pathinfo.second << std::endl;
 			}
 			// camera folder and file name separately
-			cam.save_file(pathinfo.first, pathinfo.second, localdir + "/" + pathinfo.second);
+			std::string localdest(localdir + "/" + pathinfo.second);
+			cam.save_file(pathinfo.first, pathinfo.second, localdest);
 			if (cfg.verboselevel >= VERBOSE_NORMAL)
-				std::cout << name << " downloaded..." << std::endl;
+				std::cout << name << " downloaded " << localdest << "..." << std::endl;
 
 			locks.readycount.notify_one();
 			// TODO: download queue and try_wait, not to clog gphoto event
@@ -143,7 +146,8 @@ void setquit(int) {
 // Actual work; start download threads and wait for exit
 void do_download(std::vector<gp::Camera>& cams, Config config) {
 	std::cout << "Found " << cams.size() << " camera"
-		<< (cams.size() > 1 ? "s" : "") << ", starting." << std::endl;
+		<< (cams.size() > 1 ? "s" : "") << ", starting to save under "
+		<< config.filedir << "/" << std::endl;
 
 	bool running = true;
 	Notifylocks locks;
@@ -166,13 +170,31 @@ void do_download(std::vector<gp::Camera>& cams, Config config) {
 		t.join();
 	notifier.join();
 }
-void app(Config config) {
+bool preparedir(std::string dir) {
+	if (mkdir(dir.c_str(), 0777) != 0 && errno != EEXIST) {
+		std::cout << "Cannot create picture folder" << std::endl;
+		perror("mkdir");
+		return false;
+	}
+	std::string test = dir + "/testdir";
+	if (mkdir(test.c_str(), 0777) != 0) {
+		std::cout << "Cannot create camera folders" << std::endl;
+		perror("mkdir");
+		return false;
+	}
+	rmdir(test.c_str());
+	return true;
+}
+int app(Config config) {
+	if (!preparedir(config.filedir))
+		return 4;
 	gp::Context gpcontext(config.verboselevel >= VERBOSE_TALKATIVE);
 	std::vector<gp::Camera> cams(gpcontext.all_cameras());
 	if (!cams.empty())
 		do_download(cams, config);
 	else
 		std::cout << "No cameras." << std::endl;
+	return 0;
 }
 
 void usage(const char* program) {
@@ -186,7 +208,10 @@ void usage(const char* program) {
 		<< "              2=talkative, also libgphoto events" << std::endl
 		<< "              3=high, also unknown events" << std::endl
 		<< std::endl
-		<< "    (other args omitted)" << std::endl
+		<< "    FOLDER: download pics under this folder (must exist)" << std::endl
+		<< std::endl
+		<< "Export GPWRAP_LOG_DEBUG=1 to print debug messages in verb level >=2."
+		<< std::endl
 	;
 }
 
@@ -215,7 +240,13 @@ int main(int argc, char *argv[]) {
 			}
 			config.verboselevel = (Verbosity)level;
 			i++;
+		} else {
+			config.filedir = argv[i];
 		}
 	}
-	app(config);
+	if (config.filedir == "") {
+		std::cout << "error: no folder given" << std::endl;
+		return 3;
+	}
+	return app(config);
 }
