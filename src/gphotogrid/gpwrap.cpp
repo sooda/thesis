@@ -182,6 +182,7 @@ std::vector<Camera> Context::all_cameras() {
 		// cannot emplace because private ctor
 		cams.push_back(Camera(name, value, *this));
 	}
+	gp_list_free(list);
 	return cams;
 }
 
