@@ -202,7 +202,10 @@ private:
 	::Camera* camera;
 	Context& ctx;
 
+	// gphoto2 isn't thread safe; e.g. config while preview crashes
 	std::mutex mutex;
+	// get_config can go initially wrong when gphoto2 is loading libs
+	static std::mutex configmutex;
 };
 
 }

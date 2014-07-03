@@ -245,7 +245,10 @@ Camera::~Camera() {
 		gp_camera_unref(camera); // freeing also exits it, i guess
 }
 
+std::mutex Camera::configmutex;
+
 Widget Camera::config() {
+	std::lock_guard<std::mutex> cg(configmutex);
 	std::lock_guard<std::mutex> g(mutex);
 	CameraWidget *w;
 	int ret;
