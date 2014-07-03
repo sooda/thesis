@@ -17,10 +17,10 @@ APPS := gphotogrid gpwraptest paraphotos
 
 all: $(APPS)
 
-gpwraptest: gpwrap.cpp gptest.cpp gputil.cpp gpwrap.h
-	clang++ -g -std=c++0x gpwrap.cpp gptest.cpp gputil.cpp -lgphoto2 -lgphoto2_port -Wall -Wextra -o gpwraptest
+gpwraptest: gpwrap.cpp gptest.cpp gputil.cpp gpwrap.h signalhandler.cpp
+	clang++ -g -std=c++0x gpwrap.cpp gptest.cpp gputil.cpp signalhandler.cpp -lgphoto2 -lgphoto2_port -Wall -Wextra -o gpwraptest
 
-paraphotos: paraphotos.o gpwrap.o gputil.o
+paraphotos: paraphotos.o gpwrap.o gputil.o signalhandler.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 gphotogrid: gphotogrid.o optionspanel.o imagepanel.o timeline.o previewfeed.o gfxui.o app.o gpwrap.o gputil.o

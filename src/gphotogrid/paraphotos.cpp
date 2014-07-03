@@ -1,11 +1,11 @@
 #include "gpwrap.h"
 #include "gputil.h"
 #include "semaphore.h"
+#include "signalhandler.h"
 
 #include <vector>
 #include <iostream>
 
-#include <signal.h>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
@@ -104,16 +104,6 @@ void allready_notifier(Notifylocks& locks, int n, bool& running) {
 		locks.notifycount++;
 		locks.usernotified.notify_all();
 	}
-}
-
-void trap_ctrlc(void (*handfunc)(int)) {
-	struct sigaction sigIntHandler;
-
-	sigIntHandler.sa_handler = handfunc;
-	sigemptyset(&sigIntHandler.sa_mask);
-	sigIntHandler.sa_flags = 0;
-
-	sigaction(SIGINT, &sigIntHandler, NULL);
 }
 
 struct {

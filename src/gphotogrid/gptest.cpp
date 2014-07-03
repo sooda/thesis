@@ -1,5 +1,6 @@
 #include "gpwrap.h"
 #include "gputil.h"
+#include "signalhandler.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -7,7 +8,6 @@
 #include <algorithm>
 #include <iterator>
 #include <cstdlib>
-#include <signal.h>
 
 std::string to_str_pad(int i, int pad) {
 	std::stringstream ss;
@@ -88,16 +88,6 @@ void test_many_cameras(gp::Context& context) {
 		}
 		i++;
 	}
-}
-
-void trap_ctrlc(void (*handfunc)(int)) {
-	struct sigaction sigIntHandler;
-
-	sigIntHandler.sa_handler = handfunc;
-	sigemptyset(&sigIntHandler.sa_mask);
-	sigIntHandler.sa_flags = 0;
-
-	sigaction(SIGINT, &sigIntHandler, NULL);
 }
 
 volatile bool running;
