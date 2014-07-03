@@ -1,5 +1,6 @@
 #include "gpwrap.h"
 #include "gputil.h"
+#include "semaphore.h"
 
 #include <vector>
 #include <iostream>
@@ -15,28 +16,51 @@ void dnload(gp::Camera& cam, const std::string& name,
 		const std::string& folder, const std::string& file) {
 }
 
-void download_task(gp::Camera& cam, bool& running) {
+struct Notifylocks {
+	Semaphore readycount;
+	// Semaphore usersnotified;
+	std::condition_variable usernotified;
+	std::mutex notifmutex;
+	int notifycount;
+};
+
+enum Verbosity {
+	VERBOSE_SILENT,
+	VERBOSE_NORMAL,
+	VERBOSE_TALKATIVE,
+	VERBOSE_HIGH
+};
+
+void download_task(gp::Camera& cam, Notifylocks& locks, bool& running) {
 	std::string name(cam.config()["artist"].get<std::string>());
 	int evts = 0;
+	int notifycount = 0;
 
 	std::string localdir = "files/" + name;
 	mkdir(localdir.c_str(), 0777);
 
-	bool verbose = false;
+	Verbosity verboselevel = VERBOSE_SILENT;
 
 	std::cout << name << " running..." << std::endl;
+	locks.readycount.notify_one();
+	{
+		std::unique_lock<std::mutex> lk(locks.notifmutex);
+		locks.usernotified.wait(lk,
+				[&locks, notifycount]{ return locks.notifycount > notifycount; });
+		notifycount++;
+	}
 	while (running) {
 		gp::CameraEvent ev = cam.wait_event(200);
 
-		if (ev.type() != gp::CameraEvent::EVENT_TIMEOUT) {
-			if (ev.type() != gp::CameraEvent::EVENT_UNKNOWN || verbose)
+		if (ev.type() != gp::CameraEvent::EVENT_TIMEOUT && verboselevel > VERBOSE_NORMAL) {
+			if (ev.type() != gp::CameraEvent::EVENT_UNKNOWN || verboselevel == VERBOSE_HIGH)
 				std::cout << name << "#" << evts << ": " << ev.type() << ": " << ev.typestr();
 		}
 
 		using ce = gp::CameraEvent;
 		switch (ev.type()) {
 		case ce::EVENT_UNKNOWN:
-			if (verbose)
+			if (verboselevel == VERBOSE_HIGH)
 				std::cout << ": " << ev.get<ce::EVENT_UNKNOWN>() << std::endl;
 			break;
 		case ce::EVENT_TIMEOUT:
@@ -47,6 +71,14 @@ void download_task(gp::Camera& cam, bool& running) {
 			//		<< pathinfo.second << std::endl;
 			cam.save_file(pathinfo.first, pathinfo.second, localdir + "/" + pathinfo.second);
 			std::cout << name << " downloaded" << std::endl;
+
+			locks.readycount.notify_one();
+			{
+				std::unique_lock<std::mutex> lk(locks.notifmutex);
+				locks.usernotified.wait(lk,
+						[&locks, notifycount]{ return locks.notifycount > notifycount; });
+				notifycount++;
+			}
 			}
 			break;
 		case ce::EVENT_FOLDER_ADDED: {
@@ -62,6 +94,16 @@ void download_task(gp::Camera& cam, bool& running) {
 		evts++;
 	}
 	std::cout << name << " stopping after " << evts << " events" << std::endl;
+	locks.readycount.notify_one();
+}
+
+void allready_notifier(Notifylocks& locks, int n, bool& running) {
+	while (running) {
+		locks.readycount.wait(n);
+		std::cout << "All ready" << std::endl;
+		locks.notifycount++;
+		locks.usernotified.notify_all();
+	}
 }
 
 void trap_ctrlc(void (*handfunc)(int)) {
@@ -89,18 +131,25 @@ void do_download(std::vector<gp::Camera>& cams) {
 	std::cout << "Found " << cams.size() << " camera"
 		<< (cams.size() > 1 ? "s" : "") << "." << std::endl;
 
-	std::vector<std::thread> threads;
 	bool running = true;
-	for (auto& cam: cams) {
-		threads.emplace_back(download_task, std::ref(cam), std::ref(running));
-	}
+	Notifylocks locks;
+	locks.notifycount = 0;
+
+	std::thread notifier(allready_notifier, std::ref(locks), cams.size(), std::ref(running));
+
+	std::vector<std::thread> threads;
+	for (auto& cam: cams)
+		threads.emplace_back(download_task, std::ref(cam), std::ref(locks), std::ref(running));
 
 	trap_ctrlc(setquit);
+
 	std::unique_lock<std::mutex> guard(stopsignal.mutex);
 	stopsignal.cv.wait(guard, []{ return stopsignal.stop; });
+
 	running = false;
 	for (auto& t: threads)
 		t.join();
+	notifier.join();
 }
 
 int main(int argc, char *argv[]) {
