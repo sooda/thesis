@@ -41,6 +41,7 @@ struct Notifylocks {
 struct Config {
 	Verbosity verboselevel;
 	std::string filedir;
+	bool delete_on_download;
 };
 
 // Downloader task for one camera: listen to events, print, and download files
@@ -83,7 +84,7 @@ void download_task(gp::Camera& cam, Notifylocks& locks, Config cfg, bool& runnin
 			}
 			// camera folder and file name separately
 			std::string localdest(localdir + "/" + pathinfo.second);
-			cam.save_file(pathinfo.first, pathinfo.second, localdest);
+			cam.save_file(pathinfo.first, pathinfo.second, localdest, cfg.delete_on_download);
 			if (cfg.verboselevel >= VERBOSE_NORMAL)
 				std::cout << name << " downloaded " << localdest << "..." << std::endl;
 
@@ -208,6 +209,8 @@ void usage(const char* program) {
 		<< "              2=talkative, also libgphoto events" << std::endl
 		<< "              3=high, also unknown events" << std::endl
 		<< std::endl
+		<< "    -d: delete file on camera after download (default no)" << std::endl
+		<< std::endl
 		<< "    FOLDER: download pics under this folder (must exist)" << std::endl
 		<< std::endl
 		<< "Export GPWRAP_LOG_DEBUG=1 to print debug messages in verb level >=2."
@@ -218,7 +221,8 @@ void usage(const char* program) {
 int main(int argc, char *argv[]) {
 	Config config;
 	config.verboselevel = VERBOSE_SILENT;
-	std::string h("-h"), v("-v");
+	config.delete_on_download = false;
+	std::string h("-h"), v("-v"), d("-d");
 	for (int i = 1; i < argc; i++) {
 		if (argv[i] == h) {
 			usage(argv[0]);
@@ -240,6 +244,8 @@ int main(int argc, char *argv[]) {
 			}
 			config.verboselevel = (Verbosity)level;
 			i++;
+		} else if (argv[i] == d) {
+			config.delete_on_download = true;
 		} else {
 			config.filedir = argv[i];
 		}
