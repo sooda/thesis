@@ -199,6 +199,7 @@ Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullp
 #define GP_OR_THROW(ret, func, ...) \
 	if ((ret = func(__VA_ARGS__)) < GP_OK) throw Exception(#func, ret);
 
+	// FIXME free these?
 	static GPPortInfoList		*portinfolist = nullptr;
 	static CameraAbilitiesList	*abilities = nullptr;
 	int		ret;
