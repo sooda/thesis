@@ -44,24 +44,44 @@ struct Config {
 	std::string filedir;
 	bool delete_on_download;
 	bool name_seqid; // name by sequence id instead of camera-original name
+	bool order_mode; // order directories by shot scene instead of by camera
 };
 
 // rename file, preserving its suffix
-std::string rename_to_number(std::string filename, int replace_num) {
+std::string replace_namepart(std::string filename, std::string replace) {
 	size_t suffix_start = filename.find(".");
 	// no suffix? replace whole string
 	if (suffix_start == std::string::npos)
-		return std::to_string(replace_num);
-	filename.replace(0, suffix_start, std::to_string(replace_num));
+		return replace;
+	filename.replace(0, suffix_start, replace);
 	return filename;
+}
+std::string replace_namepart(std::string filename, int replace) {
+	return replace_namepart(filename, std::to_string(replace));
+}
+
+std::string local_filename(std::string original, Config& cfg,
+		std::string camname, int seqid) {
+	// order:          FOLDER/<shot-sequence-id>/<camname>.suffix
+	// !order && seq:  FOLDER/<camname>/<seqid>.suffix
+	// !order && !seq: FOLDER/<camname>/original.suffix
+	std::string foldername(cfg.order_mode
+			? std::to_string(seqid)
+			: camname);
+
+	std::string localfile(cfg.order_mode
+			? replace_namepart(original, camname)
+			: cfg.name_seqid ? replace_namepart(original, seqid) : original);
+
+	std::string localdir(cfg.filedir + "/" + foldername);
+	mkdir(localdir.c_str(), 0777);
+	return localdir + "/" + localfile;
 }
 
 // Downloader task for one camera: listen to events, print, and download files
 void download_task(gp::Camera& cam, Notifylocks& locks, Config cfg, bool& running) {
 	std::string name(cam.config()["artist"].get<std::string>());
 
-	std::string localdir = cfg.filedir + "/" + name;
-	mkdir(localdir.c_str(), 0777);
 	int evts = 0;
 
 	if (cfg.verboselevel >= VERBOSE_NORMAL)
@@ -94,11 +114,8 @@ void download_task(gp::Camera& cam, Notifylocks& locks, Config cfg, bool& runnin
 				std::cout << ": " << pathinfo.first << " "
 						<< pathinfo.second << std::endl;
 			}
+			std::string localdest = local_filename(pathinfo.second, cfg, name, locks.sequenceid);
 			// camera folder and file name separately
-			std::string filename = cfg.name_seqid
-				? rename_to_number(pathinfo.second, locks.sequenceid)
-				: pathinfo.second;
-			std::string localdest(localdir + "/" + filename);
 			cam.save_file(pathinfo.first, pathinfo.second, localdest, cfg.delete_on_download);
 			if (cfg.verboselevel >= VERBOSE_NORMAL)
 				std::cout << name << " downloaded " << pathinfo.second
@@ -228,10 +245,10 @@ void usage(const char* program) {
 		<< std::endl
 		<< "    -n: rename images by sequence number instead of camera originals" << std::endl
 		<< std::endl
-		<< "    -s: shot ordering mode. by default, pics go to" << std::endl
+		<< "    -o: order cameras by shot. by default, pics go to" << std::endl
 		<< "        FOLDER/<camname>/<filename>" << std::endl
 		<< "        but with this, FOLDER/<sequence-id>/<camname> is used" << std::endl
-		<< "        (implies -n)" << std::endl
+		<< "        (-n ignored in this mode)" << std::endl
 		<< std::endl
 		<< "    FOLDER: download pics under this folder (must exist)" << std::endl
 		<< std::endl
@@ -241,10 +258,8 @@ void usage(const char* program) {
 }
 
 int main(int argc, char *argv[]) {
-	Config config;
-	config.verboselevel = VERBOSE_SILENT;
-	config.delete_on_download = false;
-	std::string h("-h"), v("-v"), d("-d"), n("-n");
+	Config config{};
+	std::string h("-h"), v("-v"), d("-d"), n("-n"), o("-o");
 	for (int i = 1; i < argc; i++) {
 		if (argv[i] == h) {
 			usage(argv[0]);
@@ -270,6 +285,8 @@ int main(int argc, char *argv[]) {
 			config.delete_on_download = true;
 		} else if (argv[i] == n) {
 			config.name_seqid = true;
+		} else if (argv[i] == o) {
+			config.order_mode = true;
 		} else {
 			config.filedir = argv[i];
 		}
