@@ -36,13 +36,25 @@ enum Verbosity {
 struct Notifylocks {
 	Semaphore readycount;
 	Semaphore usernotified;
+	int sequenceid;
 };
 
 struct Config {
 	Verbosity verboselevel;
 	std::string filedir;
 	bool delete_on_download;
+	bool name_seqid; // name by sequence id instead of camera-original name
 };
+
+// rename file, preserving its suffix
+std::string rename_to_number(std::string filename, int replace_num) {
+	size_t suffix_start = filename.find(".");
+	// no suffix? replace whole string
+	if (suffix_start == std::string::npos)
+		return std::to_string(replace_num);
+	filename.replace(0, suffix_start, std::to_string(replace_num));
+	return filename;
+}
 
 // Downloader task for one camera: listen to events, print, and download files
 void download_task(gp::Camera& cam, Notifylocks& locks, Config cfg, bool& running) {
@@ -83,10 +95,14 @@ void download_task(gp::Camera& cam, Notifylocks& locks, Config cfg, bool& runnin
 						<< pathinfo.second << std::endl;
 			}
 			// camera folder and file name separately
-			std::string localdest(localdir + "/" + pathinfo.second);
+			std::string filename = cfg.name_seqid
+				? rename_to_number(pathinfo.second, locks.sequenceid)
+				: pathinfo.second;
+			std::string localdest(localdir + "/" + filename);
 			cam.save_file(pathinfo.first, pathinfo.second, localdest, cfg.delete_on_download);
 			if (cfg.verboselevel >= VERBOSE_NORMAL)
-				std::cout << name << " downloaded " << localdest << "..." << std::endl;
+				std::cout << name << " downloaded " << pathinfo.second
+					<< " -> " << localdest << "..." << std::endl;
 
 			locks.readycount.notify_one();
 			// TODO: download queue and try_wait, not to clog gphoto event
@@ -123,11 +139,10 @@ void download_task(gp::Camera& cam, Notifylocks& locks, Config cfg, bool& runnin
 // Especially useful in waiting for the last download to finish so that
 // the program can be exited
 void allready_notifier(Notifylocks& locks, int n, bool& running) {
-	int iter = 0;
 	while (running) {
 		locks.readycount.wait(n);
-		std::cout << "All ready (#" << iter << ")" << std::endl;
-		iter++;
+		std::cout << "All ready (#" << locks.sequenceid << ")" << std::endl;
+		locks.sequenceid++;
 		locks.usernotified.notify_all(n);
 	}
 }
@@ -151,7 +166,7 @@ void do_download(std::vector<gp::Camera>& cams, Config config) {
 		<< config.filedir << "/" << std::endl;
 
 	bool running = true;
-	Notifylocks locks;
+	Notifylocks locks{};
 
 	std::thread notifier(allready_notifier, std::ref(locks), cams.size(), std::ref(running));
 
@@ -211,6 +226,13 @@ void usage(const char* program) {
 		<< std::endl
 		<< "    -d: delete file on camera after download (default no)" << std::endl
 		<< std::endl
+		<< "    -n: rename images by sequence number instead of camera originals" << std::endl
+		<< std::endl
+		<< "    -s: shot ordering mode. by default, pics go to" << std::endl
+		<< "        FOLDER/<camname>/<filename>" << std::endl
+		<< "        but with this, FOLDER/<sequence-id>/<camname> is used" << std::endl
+		<< "        (implies -n)" << std::endl
+		<< std::endl
 		<< "    FOLDER: download pics under this folder (must exist)" << std::endl
 		<< std::endl
 		<< "Export GPWRAP_LOG_DEBUG=1 to print debug messages in verb level >=2."
@@ -222,7 +244,7 @@ int main(int argc, char *argv[]) {
 	Config config;
 	config.verboselevel = VERBOSE_SILENT;
 	config.delete_on_download = false;
-	std::string h("-h"), v("-v"), d("-d");
+	std::string h("-h"), v("-v"), d("-d"), n("-n");
 	for (int i = 1; i < argc; i++) {
 		if (argv[i] == h) {
 			usage(argv[0]);
@@ -246,6 +268,8 @@ int main(int argc, char *argv[]) {
 			i++;
 		} else if (argv[i] == d) {
 			config.delete_on_download = true;
+		} else if (argv[i] == n) {
+			config.name_seqid = true;
 		} else {
 			config.filedir = argv[i];
 		}
