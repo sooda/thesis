@@ -142,5 +142,7 @@ int main(int argc, char *argv[]) {
 			test_many_cameras(context);
 		else if (arg == "events")
 			test_events(context);
+		else if (arg == "help")
+			std::cout << "single N, many, events" << std::endl;
 	}
 }
