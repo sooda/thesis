@@ -287,8 +287,16 @@ int main(int argc, char *argv[]) {
 			config.name_seqid = true;
 		} else if (argv[i] == o) {
 			config.order_mode = true;
+		} else if (argv[i][0] == '-') {
+			std::cout << "error: unknown argument: " << argv[i] << std::endl;
+			return 1;
 		} else {
-			config.filedir = argv[i];
+			if (config.filedir == "") {
+				config.filedir = argv[i];
+			} else {
+				std::cout << "error: duplicate folder " << argv[i] << std::endl;
+				return 1;
+			}
 		}
 	}
 	if (config.filedir == "") {
