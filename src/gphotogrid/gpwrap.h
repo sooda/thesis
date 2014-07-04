@@ -1,22 +1,6 @@
 #ifndef GPWRAP_H
 #define GPWRAP_H
 
-/* constant leak from:
-==30236==    definitely lost: 288 bytes in 3 blocks
-==30236==    indirectly lost: 38,964 bytes in 99 blocks
-==9534==    at 0x4C2A820: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==9534==    by 0x811DEA9: ???
-==9534==    by 0x6AF42F5: ???
-==9534==    by 0x5C79714: ??? (in /usr/lib/libgphoto2_port.so.10.1.1)
-==9534==    by 0x60A1DBA: ??? (in /usr/lib/libltdl.so.7.3.0)
-==9534==    by 0x60A1857: ??? (in /usr/lib/libltdl.so.7.3.0)
-==9534==    by 0x60A2338: lt_dlforeachfile (in /usr/lib/libltdl.so.7.3.0)
-==9534==    by 0x5C79B38: gp_port_info_list_load (in /usr/lib/libgphoto2_port.so.10.1.1)
-==9534==    by 0x4E3D6A1: gp_camera_init (in /usr/lib/libgphoto2.so.6.0.0)
-*/
-
-// TODO noncopyables etc
-
 // http://libgphoto2.sourcearchive.com/documentation/2.4.10.1-2ubuntu5/gphoto2-widget_8h_ac2407563a7f8c22de8df8d5009f0e4e1.html1
 // http://www.gphoto.org/doc/api/gphoto2-camera_8h.html
 //
@@ -33,6 +17,9 @@ struct _CameraWidget;
 
 namespace gp {
 
+// Note on pointers: the objects could store unique_ptrs to the C API with
+// deleters specified as the unref/free functions; that would need at least the
+// deleter type to be also specified in the template. TODO: investigate.
 
 // Gphoto exception: something went wrong in the library, retval was != GP_OK
 // Some places could use return values instead of these for perf, and preparing
@@ -85,7 +72,8 @@ private:
 class Widget;
 class CameraEvent;
 // Camera is the most interesting thing here and constructs the other friends.
-// Please keep Camera alive if you plan to save its widgets afterwards.
+// Camera is thread-safe via a mutex. Please keep Camera alive if you plan to
+// save its widgets afterwards.
 class Camera {
 public:
 	// constructed by camera only and cannot be copied
@@ -102,7 +90,7 @@ public:
 	std::vector<char> preview();
 	void save_preview(const std::string& fname);
 
-	CameraEvent wait_event(int timeout);
+	CameraEvent wait_event(int timeout_msec);
 
 	// download a previously shot file and save it locally
 	void save_file(const std::string& folder, const std::string& name,
@@ -113,7 +101,7 @@ public:
 	friend class Widget;
 
 private:
-	Camera(_Camera* camera, Context& ctx);
+	Camera(Context& ctx);
 	Camera(const char *model, const char *port, Context& ctx);
 
 	void set_config(_CameraWidget* rootwindow);
@@ -167,7 +155,8 @@ public:
 	// cannot touch set_config directly.
 	friend class Camera;
 
-	// get a child widget; recursive (by libgphoto)
+	// get a child widget; recursive (by libgphoto); look first by name, then
+	// by label. throw out_of_range if not found
 	Widget operator[](const std::string& name_or_label);
 	Widget operator[](const char* name_or_label);
 	WidgetType type();
@@ -271,7 +260,7 @@ public:
 	// get something by type(). return value is just data behind the internal
 	// pointer, safe to keep alive without this event
 	template <EventType E>
-	typename Traits<E>::type get() {
+	typename Traits<E>::type get() const {
 		if (etype != E)
 			throw std::invalid_argument("cameraevent type mismatch");
 		return Traits<E>::get(data);
@@ -289,17 +278,17 @@ private:
 template <>
 struct CameraEvent::Traits<CameraEvent::EVENT_UNKNOWN> {
 	typedef std::string type;
-	static type get(void* v);
+	static type get(const void* v);
 };
 template <>
 struct CameraEvent::Traits<CameraEvent::EVENT_FILE_ADDED> {
 	typedef std::pair<std::string, std::string> type;
-	static type get(void* v);
+	static type get(const void* v);
 };
 template <>
 struct CameraEvent::Traits<CameraEvent::EVENT_FOLDER_ADDED> {
 	typedef std::pair<std::string, std::string> type;
-	static type get(void* v);
+	static type get(const void* v);
 };
 
 }

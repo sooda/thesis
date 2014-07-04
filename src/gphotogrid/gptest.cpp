@@ -27,6 +27,12 @@ void test_single_camera(gp::Context& context, int n) {
 		// well, takes pics anyway
 		cam.config()["capture"].set(true);
 		std::cout << cam.config()["capture"].get<bool>() << std::endl;
+		{
+			// test root widget dtoring before children
+			auto cap = [&]{ return cam.config()["capture"]; }();
+			std::cout << cap.get<bool>() << std::endl;
+			cap.set(cap.get<bool>());
+		}
 
 		gp::Aperture ap = cam.config()["aperture"].get<gp::Aperture>();
 		std::cout << ap.index() << ":" << ap.text() << std::endl;
@@ -36,17 +42,18 @@ void test_single_camera(gp::Context& context, int n) {
 
 		ap.set((ap.index() + 1) % ap.size());
 		cam.config()["aperture"].set(ap);
+		auto cfg = cam.config();
 
-		gp::Aperture ap2 = cam.config()[gp::Aperture::gpname].get<gp::Aperture>();
+		gp::Aperture ap2 = cfg[gp::Aperture::gpname].get<gp::Aperture>();
 		std::cout << ap2.index() << ":" << ap2.text() << std::endl;
 
-		auto ss = cam.config()[gp::ShutterSpeed::gpname].get<gp::ShutterSpeed>();
+		auto ss = cfg[gp::ShutterSpeed::gpname].get<gp::ShutterSpeed>();
 		std::cout << ss.index() << ":" << ss.text() << std::endl;
 		for (auto& x: ss.choices())
 			std::cout << x << " ";
 		std::cout << std::endl;
 
-		auto iso = cam.config()[gp::Iso::gpname].get<gp::Iso>();
+		auto iso = cfg[gp::Iso::gpname].get<gp::Iso>();
 		std::cout << iso.index() << ":" << iso.text() << std::endl;
 		for (auto& x: iso.choices())
 			std::cout << x << " ";
