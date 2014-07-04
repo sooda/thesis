@@ -27,9 +27,9 @@
 #include <utility>
 
 // raw C api, duplicated so that the C header can be omitted here
-typedef struct _Camera Camera;
-typedef struct _GPContext GPContext;
-typedef struct _CameraWidget CameraWidget;
+struct _Camera;
+struct _GPContext;
+struct _CameraWidget;
 
 namespace gp {
 
@@ -52,12 +52,12 @@ public:
 	friend class Camera;
 private:
 	void init_messages();
-	static void error_func(GPContext *context, const char *msg, void *data);
-	static void msg_func(GPContext *context, const char *msg, void *data);
-	static void status_func(GPContext *context, const char *msg, void *data);
+	static void error_func(_GPContext *context, const char *msg, void *data);
+	static void msg_func(_GPContext *context, const char *msg, void *data);
+	static void status_func(_GPContext *context, const char *msg, void *data);
 	static void log_func(int level, const char *domain, const char *str, void *data);
 
-	GPContext* context;
+	_GPContext* context;
 
 };
 
@@ -109,11 +109,11 @@ public:
 	Widget(Widget&& other);
 
 protected:
-	CameraWidget* widget;
+	_CameraWidget* widget;
 private:
 	void set_changed();
-	Widget(CameraWidget* widget, Camera& cam);
-	Widget(CameraWidget* widget, Widget& parent);
+	Widget(_CameraWidget* widget, Camera& cam);
+	Widget(_CameraWidget* widget, Widget& parent);
 	Widget* parent;
 	Camera* camera;
 };
@@ -199,10 +199,10 @@ public:
 
 private:
 	void set_config(const Widget& cfg);
-	Camera(::Camera* camera, Context& ctx);
+	Camera(_Camera* camera, Context& ctx);
 	Camera(const char *model, const char *port, Context& ctx);
 
-	::Camera* camera;
+	_Camera* camera;
 	Context& ctx;
 
 	// gphoto2 isn't thread safe; e.g. config while preview crashes
