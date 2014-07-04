@@ -61,6 +61,19 @@ private:
 
 };
 
+// widgets are owned by the top-level widget (haven't found any docs on that
+// except the source code itself) and when the top-level one dies, it frees all
+// children recursively.
+//
+// maintain a pointer to the raw master root widget here and fiddle with its
+// reference count when dealing with the children too, so we're safe if the
+// root gp::Widget dies. the root is called a 'window' by libgphoto.
+//
+// (the c++ Widget root might get destroyed before its children; it's fine
+// because gp refcounts.)
+//
+// The c++ camera must exist during the lifetime of Widgets.
+
 class Widget {
 public:
 	enum WidgetType {
@@ -90,7 +103,8 @@ public:
 	WidgetType type();
 	//Widget* as_typed();
 
-	/* invalid_argument when type does not match */
+	// the return value of get() is just data and safe to store after the widget has gone
+	// invalid_argument when type does not match
 	template <class V>
 	V get() {
 		if (type() != Traits<V>::type)
@@ -98,7 +112,7 @@ public:
 		return Traits<V>::read(*this);
 	}
 
-	/* invalid_argument when type does not match */
+	// invalid_argument when type does not match
 	template <class V>
 	void set(const V& val) {
 		if (type() != Traits<V>::type)
@@ -114,7 +128,7 @@ private:
 	void set_changed();
 	Widget(_CameraWidget* widget, Camera& cam);
 	Widget(_CameraWidget* widget, Widget& parent);
-	Widget* parent;
+	_CameraWidget* root;
 	Camera* camera;
 };
 
@@ -198,7 +212,7 @@ public:
 	friend class Widget;
 
 private:
-	void set_config(const Widget& cfg);
+	void set_config(_CameraWidget* rootwindow);
 	Camera(_Camera* camera, Context& ctx);
 	Camera(const char *model, const char *port, Context& ctx);
 

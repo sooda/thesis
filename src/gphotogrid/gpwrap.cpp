@@ -58,35 +58,34 @@ void Context::log_func(int level, const char* domain, const char* str, void* /*d
 	std::cerr << "[gphoto2 log (level=" << level << ", domain=" << domain << "]: "
 		<< str << std::endl;
 }
+
 Widget::~Widget() {
-	// move ctor nulls this
-	// HOX seems that parent deletes its children without looking at the refcount
-	if (widget && !parent)
-		gp_widget_unref(widget);
-
-	if (parent)
-		gp_widget_unref(parent->widget);
-
-	if (camera)
-		gp_camera_unref(camera->camera);
+	// move ctor nulls the ptrs; its null marks a dead Widget
+	// gp's parent deletes its children without looking at the refcount, no
+	// need to unref the children, just the root
+	if (widget) {
+		if (!root) // hello this is root
+			gp_widget_unref(widget);
+		else
+			gp_widget_unref(root);
+	}
 }
 
 Widget::Widget(CameraWidget* widget, Camera& camera) :
-	widget(widget), parent(nullptr), camera(&camera) {
-	gp_camera_ref(camera.camera);
+	widget(widget), root(nullptr), camera(&camera) {
+	// this is the master window widget, already got one ref
+	// don't gp_camera_ref, assume that it exists because we hold gp::Camera
 }
 
 Widget::Widget(CameraWidget* widget, Widget& parent) :
-	widget(widget), parent(&parent), camera(parent.camera) {
-	gp_widget_ref(parent.widget);
-	gp_camera_ref(camera->camera);
+	widget(widget), root(parent.root ? parent.root : parent.widget), camera(parent.camera) {
+	gp_widget_ref(root);
 }
 
 Widget::Widget(Widget&& other) :
-	widget(other.widget), parent(other.parent), camera(other.camera) {
+	widget(other.widget), root(other.root), camera(other.camera) {
 	other.widget = nullptr;
-	other.parent = nullptr;
-	other.camera = nullptr;
+	// other's dtor does nothing now
 }
 
 Widget Widget::operator[](const char* name_or_label) {
@@ -140,16 +139,12 @@ void Widget::Traits<bool>::write(Widget& widget, bool value) {
 	gp_widget_set_value(widget.widget, &val);
 }
 
-// bubble up the config to the root
-// (todo: store root, not parent?)
+// tell the camera to save the whole config window
+// (todo: more performance by caching stuff?
+// saving several in a row might be inefficient)
 void Widget::set_changed() {
-	if (parent)
-		parent->set_changed();
-	else
-		camera->set_config(*this);
+	camera->set_config(root ? root : widget);
 }
-
-
 
 template<typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args) {
@@ -279,10 +274,10 @@ Widget Camera::config() {
 	return Widget(w, *this);
 }
 
-void Camera::set_config(const Widget& cfg) {
+void Camera::set_config(CameraWidget* rootwindow) {
 	std::lock_guard<std::mutex> g(mutex);
 	int ret;
-	if ((ret = gp_camera_set_config(camera, cfg.widget, ctx.context)) < GP_OK)
+	if ((ret = gp_camera_set_config(camera, rootwindow, ctx.context)) < GP_OK)
 		throw Exception("gp_camera_set_config", ret);
 }
 
