@@ -10,6 +10,7 @@
 #include <unistd.h>
 
 namespace gp {
+
 Exception::Exception(const std::string& msg, int gpnum) : 
 	std::runtime_error("gphoto2 error " + msg
 			+ ":" + std::to_string(gpnum)
@@ -86,6 +87,10 @@ Widget::Widget(Widget&& other) :
 	widget(other.widget), root(other.root), camera(other.camera) {
 	other.widget = nullptr;
 	// other's dtor does nothing now
+}
+
+Widget Widget::operator[](const std::string& name_or_label) {
+	return (*this)[name_or_label.c_str()];
 }
 
 Widget Widget::operator[](const char* name_or_label) {
@@ -192,6 +197,7 @@ std::vector<Camera> Context::all_cameras() {
 		const char *name, *value;
 		gp_list_get_name(list.get(), i, &name);
 		gp_list_get_value(list.get(), i, &value);
+		// XXX: remove this debug message?
 		std::cout << name << "|" << value << std::endl;
 		// cannot emplace because private ctor
 		cams.push_back(Camera(name, value, *this));
@@ -308,7 +314,7 @@ void Camera::save_preview(const std::string& fname) {
 
 CameraEvent Camera::wait_event(int timeout) {
 	CameraEventType eventtype;
-	void* eventdata;
+	void* eventdata = nullptr;
 	int ret = gp_camera_wait_for_event(camera, timeout, &eventtype, &eventdata, ctx.context);
 	if (ret < GP_OK)
 		throw Exception("gp_camera_wait_for_event", ret);
