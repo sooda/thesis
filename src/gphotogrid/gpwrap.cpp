@@ -41,23 +41,20 @@ Context::~Context() {
 }
 
 void Context::error_func(GPContext* /*context*/, const char *msg, void* /*data*/) {
-	std::cerr << "!!! gphoto2 context error:\n"
-		<< msg << std::endl;
+	std::cerr << "!!! gphoto2 context error: " << msg << std::endl;
 }
 
 void Context::msg_func(GPContext* /*context*/, const char* msg, void* /*data*/) {
-	std::cerr << "!!! gphoto2 context message:\n"
-		<< msg << std::endl;
+	std::cerr << "!!! gphoto2 context message: " << msg << std::endl;
 }
 
 void Context::status_func(GPContext* /*context*/, const char* msg, void* /*data*/) {
-	std::cerr << "!!! gphoto2 context status:\n"
-		<< msg << std::endl;
+	std::cerr << "!!! gphoto2 context status:" << msg << std::endl;
 }
 
 void Context::log_func(int level, const char* domain, const char* str, void* /*data*/) {
-	std::cerr << "[gphoto2 log (level=" << level << ", domain=" << domain << "]: "
-		<< str << std::endl;
+	std::cerr << "[gphoto2 log (level=" << level << ", domain=" << domain
+		<< "]: " << str << std::endl;
 }
 
 Widget::~Widget() {
