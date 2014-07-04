@@ -170,6 +170,7 @@ std::unique_ptr<GpObject, GpDtor> gp_new_unique(GpCtor ctor, const char* ctornam
 	return std::unique_ptr<GpObject, GpDtor>(obj, dtor);
 }
 
+// the gp_ prefix is also common among all funcs, but mandatory for clarity
 #define GP_NEW_UNIQUE(obj, ctorname) \
 	gp_new_unique<obj>(ctorname ## _new, #ctorname "_new", ctorname ## _unref)
 
@@ -185,26 +186,21 @@ Camera Context::auto_camera() {
 }
 
 std::vector<Camera> Context::all_cameras() {
-	CameraList *list;
+	auto list = GP_NEW_UNIQUE(CameraList, gp_list);
 	int ret;
-	if ((ret = gp_list_new(&list)) < GP_OK) {
-		throw std::bad_alloc(); // or Exception
-	}
-	if ((ret = gp_camera_autodetect(list, context)) < GP_OK) {
-		gp_list_free(list);
+	if ((ret = gp_camera_autodetect(list.get(), context)) < GP_OK) {
 		throw Exception("gp_camera_autodetect", ret);
 	}
 
 	std::vector<Camera> cams;
 	for (int i = 0, count = ret; i < count; i++) {
 		const char *name, *value;
-		gp_list_get_name(list, i, &name);
-		gp_list_get_value(list, i, &value);
+		gp_list_get_name(list.get(), i, &name);
+		gp_list_get_value(list.get(), i, &value);
 		std::cout << name << "|" << value << std::endl;
 		// cannot emplace because private ctor
 		cams.push_back(Camera(name, value, *this));
 	}
-	gp_list_free(list);
 	return cams;
 }
 
@@ -223,10 +219,8 @@ Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullp
 	static CameraAbilitiesList	*abilities = nullptr;
 	int		ret;
 
-	//if ((ret = gp_camera_new (camera)) < GP_OK)
-	//	throw Exception("gp_camera_new", ret);
-	GP_OR_THROW(ret, gp_camera_new, &camera);
-	std::unique_ptr<::Camera, int (*)(::Camera*)> cam_deleter(camera, gp_camera_unref);
+	auto cam = GP_NEW_UNIQUE(::Camera, gp_camera);
+	camera = cam.get();
 
 	if (!abilities) {
 		/* Load all the camera drivers we have... */
@@ -254,7 +248,7 @@ Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullp
 	GP_OR_THROW(ret, gp_port_info_list_get_info, portinfolist, path_idx, &myportinfo);
 	GP_OR_THROW(ret, gp_camera_set_port_info, camera, myportinfo);
 
-	cam_deleter.release(); // nothing can fail anymore here
+	cam.release(); // nothing can fail anymore here
 	gp_context_ref(ctx.context);
 }
 
@@ -294,27 +288,20 @@ void Camera::set_config(const Widget& cfg) {
 
 std::vector<char> Camera::preview() {
 	std::lock_guard<std::mutex> g(mutex);
-	CameraFile* file;
+	auto file = GP_NEW_UNIQUE(CameraFile, gp_file);
 	int ret;
-	if ((ret = gp_file_new(&file)) < GP_OK)
-		throw Exception("gp_file_new", ret);
 
-	if ((ret = gp_camera_capture_preview(camera, file, ctx.context)) < GP_OK) {
-		gp_file_unref(file);
+	if ((ret = gp_camera_capture_preview(camera, file.get(), ctx.context)) < GP_OK)
 		throw Exception("gp_camera_capture_preview", ret);
-	}
 
 	const char *rawbuf;
 	size_t nbytes;
-	if ((ret = gp_file_get_data_and_size(file, &rawbuf, &nbytes)) < GP_OK) {
-		gp_file_unref(file);
+	if ((ret = gp_file_get_data_and_size(file.get(), &rawbuf, &nbytes)) < GP_OK)
 		throw Exception("gp_file_get_data_and_size", ret);
-	}
 
 	std::vector<char> buf(nbytes);
 	std::copy(rawbuf, rawbuf + nbytes, &buf[0]);
 
-	gp_file_unref(file);
 	return buf;
 }
 
