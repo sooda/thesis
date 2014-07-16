@@ -1,10 +1,12 @@
 WX_CFLAGS := $(shell wx-config --cflags)
 WX_LDFLAGS := $(shell wx-config --libs core)
 
+# not using cv currently
 CV_CFLAGS := # $(shell pkg-config --cflags opencv)
 CV_LDFLAGS := # $(shell pkg-config --libs opencv)
 
-BOOST_LDFLAGS := -lboost_filesystem -lboost_system
+# neither any filesystem things
+BOOST_LDFLAGS := # -lboost_filesystem -lboost_system
 
 GPHOTO2_LDFLAGS := -lgphoto2 -lgphoto2_port
 
@@ -13,28 +15,34 @@ LDFLAGS := -std=c++11 $(WX_LDFLAGS) $(CV_LDFLAGS) $(BOOST_LDFLAGS) $(GPHOTO2_LDF
 
 DEPSFLAGS := -MMD -MP
 
-APPS := gphotogrid gpwraptest paraphotos
+APPS := gpwraptest gphotogrid timelinetest paraphotos
+
+SRC_GPWRAPTEST := gpwrap.cpp gptest.cpp gputil.cpp gpwrap.h signalhandler.cpp
+SRC_PARAPHOTOS := paraphotos.cpp gpwrap.cpp gputil.cpp signalhandler.cpp
+SRC_GPHOTOGRID := gphotogrid.cpp optionspanel.cpp imagepanel.cpp timeline.cpp previewfeed.cpp gfxui.cpp app.cpp gpwrap.cpp gputil.cpp
+SRC_TIMELINETEST := timelinetest.cpp timeline.cpp
+BUILDDIR = build
 
 all: $(APPS)
 
-gpwraptest: gpwrap.cpp gptest.cpp gputil.cpp gpwrap.h signalhandler.cpp
-	clang++ -g -std=c++11 gpwrap.cpp gptest.cpp gputil.cpp signalhandler.cpp -lgphoto2 -lgphoto2_port -Wall -Wextra -o gpwraptest
-
-paraphotos: paraphotos.o gpwrap.o gputil.o signalhandler.o
+gpwraptest: $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SRC_GPWRAPTEST))
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-gphotogrid: gphotogrid.o optionspanel.o imagepanel.o timeline.o previewfeed.o gfxui.o app.o gpwrap.o gputil.o
+gphotogrid: $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SRC_GPHOTOGRID))
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-timelinetest: timelinetest.o timeline.o
+timelinetest: $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SRC_TIMELINETEST))
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-%.o: %.cpp
-	$(CXX) -c $(CXXFLAGS) $(DEPSFLAGS) $<
+paraphotos: $(patsubst %.cpp,$(BUILDDIR)/%.o,$(SRC_PARAPHOTOS))
+	$(CXX) $(LDFLAGS) $^ -o $@
+
+$(BUILDDIR)/%.o: %.cpp
+	$(CXX) -c $(CXXFLAGS) $(DEPSFLAGS) $< -o $@
 
 -include *.d
 
 clean:
-	rm -f *.o *.d $(APPS)
+	rm -f build/*.o build/*.d $(APPS)
 
 .PHONY: all clean
