@@ -207,6 +207,16 @@ void MainFrame::updatePhotos() {
 		wxMemoryInputStream stream(&capture.first[0], capture.first.size());
 		wxImage im(stream, wxBITMAP_TYPE_JPEG);
 		// XXX: aspect ratio correction?
+		if (i < app.camOrientations.size()) {
+			if (app.camOrientations[i] == "90")
+				im = im.Rotate90();
+			else if (app.camOrientations[i] == "-90"
+					|| app.camOrientations[i] == "270")
+				im = im.Rotate90(false);
+			else if (app.camOrientations[i] == "180"
+					|| app.camOrientations[i] == "-180")
+				im = im.Rotate180();
+		}
 		im.Rescale(newsize.GetWidth(), newsize.GetHeight(), wxIMAGE_QUALITY_NEAREST);
 		images[i]->setImage(im, i < app.camNames.size() ? app.camNames[i] : "");
 	}
