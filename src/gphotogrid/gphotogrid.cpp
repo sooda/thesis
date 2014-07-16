@@ -208,8 +208,7 @@ void MainFrame::updatePhotos() {
 		wxImage im(stream, wxBITMAP_TYPE_JPEG);
 		// XXX: aspect ratio correction?
 		im.Rescale(newsize.GetWidth(), newsize.GetHeight(), wxIMAGE_QUALITY_NEAREST);
-
-		images[i]->setImage(im, app.camNames[i]);
+		images[i]->setImage(im, i < app.camNames.size() ? app.camNames[i] : "");
 	}
 
 	std::stringstream ss;
