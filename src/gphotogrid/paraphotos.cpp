@@ -37,6 +37,7 @@ struct Notifylocks {
 	Semaphore readycount;
 	Semaphore usernotified;
 	int sequenceid;
+	Notifylocks() : readycount(), usernotified(), sequenceid() {}
 };
 
 struct Config {
@@ -183,7 +184,7 @@ void do_download(std::vector<gp::Camera>& cams, Config config) {
 		<< config.filedir << "/" << std::endl;
 
 	bool running = true;
-	Notifylocks locks{};
+	Notifylocks locks;
 
 	std::thread notifier(allready_notifier, std::ref(locks), cams.size(), std::ref(running));
 
@@ -258,7 +259,7 @@ void usage(const char* program) {
 }
 
 int main(int argc, char *argv[]) {
-	Config config{};
+	Config config = Config();
 	std::string h("-h"), v("-v"), d("-d"), n("-n"), o("-o");
 	for (int i = 1; i < argc; i++) {
 		if (argv[i] == h) {

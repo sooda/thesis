@@ -248,7 +248,7 @@ void Timeline::paintHeadBck(wxPaintDC& dc, int ox, int oy, int w, int h) {
 }
 
 // x axis ticks and label hints
-void Timeline::paintHeading(wxPaintDC& dc, int ox, int oy, int w, int h) {
+void Timeline::paintHeading(wxPaintDC& dc, int ox, int oy, int w, int /*h*/) {
 	dc.SetTextForeground(backgroundColor);
 	dc.SetTextBackground(headColor);
 
@@ -264,7 +264,7 @@ void Timeline::paintHeading(wxPaintDC& dc, int ox, int oy, int w, int h) {
 // ticks at uniform spacing
 void Timeline::paintTicks(wxPaintDC& dc, int ox, int oy, int w, int nticks, bool text) {
 	wxSize em(dc.GetTextExtent("m"));
-	int emw(em.GetWidth()), emh(em.GetHeight());
+	int emh(em.GetHeight());
 
 	double resolution = length / (nticks + 1);
 	int in_tick = start / resolution;
@@ -280,7 +280,7 @@ void Timeline::paintTicks(wxPaintDC& dc, int ox, int oy, int w, int nticks, bool
 // index column for the horizontal lines
 void Timeline::paintIndices(wxPaintDC& dc, int ox, int oy, int w, int h) {
 	wxSize em(dc.GetTextExtent("m"));
-	int emw(em.GetWidth()), emh(em.GetHeight());
+	int emh(em.GetHeight());
 
 	dc.SetPen(headColor);
 	dc.SetBrush(headColor);
@@ -296,7 +296,7 @@ void Timeline::paintIndices(wxPaintDC& dc, int ox, int oy, int w, int h) {
 }
 
 // mouse cursor information
-void Timeline::paintInfo(wxPaintDC& dc, int ox, int oy, int w, int h) {
+void Timeline::paintInfo(wxPaintDC& dc, int ox, int oy, int /*w*/, int /*h*/) {
 	dc.SetTextForeground(textColor);
 	dc.SetTextBackground(backgroundColor);
 	std::string msg = "mouse tick " + float2str(mousetick, 5);

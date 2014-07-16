@@ -53,17 +53,17 @@ void MainFrame::readCameraParams() {
 		// assume that all cameras are the same, use only zeroth
 
 		auto aperture = app.cams[0].config()["aperture"].get<gp::Aperture>();
-		for (int i = 1; i < app.numcams(); i++)
+		for (size_t i = 1; i < app.numcams(); i++)
 			setRadioConfig<gp::Aperture>(i, aperture.index());
 		options->setSelections(0, aperture.choices(), aperture.index());
 
 		auto shutter = app.cams[0].config()["shutterspeed"].get<gp::ShutterSpeed>();
-		for (int i = 1; i < app.numcams(); i++)
+		for (size_t i = 1; i < app.numcams(); i++)
 			setRadioConfig<gp::ShutterSpeed>(i, shutter.index());
 		options->setSelections(1, shutter.choices(), shutter.index());
 
 		auto iso = app.cams[0].config()["iso"].get<gp::Iso>();
-		for (int i = 1; i < app.numcams(); i++)
+		for (size_t i = 1; i < app.numcams(); i++)
 			setRadioConfig<gp::Iso>(i, iso.index());
 		options->setSelections(2, iso.choices(), iso.index());
 	}
@@ -120,8 +120,7 @@ void MainFrame::slider(int id, int value) {
 		throw std::out_of_range("slider index bug");
 
 	std::vector<std::thread> setters(app.numcams());
-	int i = 0;
-	for (int cam = 0; cam < app.numcams(); cam++) {
+	for (size_t cam = 0; cam < app.numcams(); cam++) {
 		setters[cam] = std::thread([=]() {
 			switch (id) {
 			case 0:
@@ -194,7 +193,7 @@ void MainFrame::updatePhotos() {
 	// all have the same size
 	auto newsize = images[0]->GetSize();
 
-	for (int i = 0; i < std::min(app.numcams(), images.size()); i++) {
+	for (size_t i = 0; i < std::min(app.numcams(), images.size()); i++) {
 		PreviewFeed::TimedJpegBuffer capture;
 		// test if there is anything
 		if (!app.previewfeed.getQueue(i).try_pop(capture))
@@ -215,7 +214,7 @@ void MainFrame::updatePhotos() {
 
 	std::stringstream ss;
 	ss << app.numcams() << " cameras; frames per cam:";
-	for (int i = 0; i < numpics.size(); i++) {
+	for (size_t i = 0; i < numpics.size(); i++) {
 		ss << " " << i << ":" << numpics[i];
 	}
 	SetStatusText(ss.str());

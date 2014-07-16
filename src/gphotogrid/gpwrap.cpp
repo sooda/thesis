@@ -134,36 +134,35 @@ Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullp
 	// FIXME free these? or init in the context already?
 	static GPPortInfoList		*portinfolist = nullptr;
 	static CameraAbilitiesList	*abilities = nullptr;
-	int ret;
 
 	auto cam = GP_NEW_UNIQUE(::Camera, gp_camera);
 	camera = cam.get();
 
 	if (!abilities) {
 		/* Load all the camera drivers we have... */
-		ret = GP_OR_THROW(gp_abilities_list_new, &abilities);
-		ret = GP_OR_THROW(gp_abilities_list_load, abilities, ctx.context);
+		GP_OR_THROW(gp_abilities_list_new, &abilities);
+		GP_OR_THROW(gp_abilities_list_load, abilities, ctx.context);
 	}
 
 	/* First lookup the model / driver */
 	int model_idx;
     model_idx = GP_OR_THROW(gp_abilities_list_lookup_model, abilities, model);
 	CameraAbilities my_abilities;
-	ret = GP_OR_THROW(gp_abilities_list_get_abilities, abilities, model_idx, &my_abilities);
-	ret = GP_OR_THROW(gp_camera_set_abilities, camera, my_abilities);
+	GP_OR_THROW(gp_abilities_list_get_abilities, abilities, model_idx, &my_abilities);
+	GP_OR_THROW(gp_camera_set_abilities, camera, my_abilities);
 
 	if (!portinfolist) {
 		/* Load all the port drivers we have... */
-		ret = GP_OR_THROW(gp_port_info_list_new, &portinfolist);
-		ret = GP_OR_THROW(gp_port_info_list_load, portinfolist);
+		GP_OR_THROW(gp_port_info_list_new, &portinfolist);
+		GP_OR_THROW(gp_port_info_list_load, portinfolist);
 	}
 
 	/* Then associate the camera with the specified port */
 	int path_idx;
 	path_idx = GP_OR_THROW(gp_port_info_list_lookup_path, portinfolist, port);
 	GPPortInfo myportinfo;
-	ret = GP_OR_THROW(gp_port_info_list_get_info, portinfolist, path_idx, &myportinfo);
-	ret = GP_OR_THROW(gp_camera_set_port_info, camera, myportinfo);
+	GP_OR_THROW(gp_port_info_list_get_info, portinfolist, path_idx, &myportinfo);
+	GP_OR_THROW(gp_camera_set_port_info, camera, myportinfo);
 
 	cam.release(); // nothing can fail anymore here
 	gp_context_ref(ctx.context);

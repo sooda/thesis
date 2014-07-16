@@ -21,7 +21,7 @@ OptionsPanel::OptionsPanel(MainFrame* parent) : wxPanel(parent), main(parent) {
 
 	selectors.resize(3);
 	static const char* labels[] = { "aperture", "shutter speed", "iso speed" };
-	for (int i = 0; i < selectors.size(); i++) {
+	for (size_t i = 0; i < selectors.size(); i++) {
 		sizer->Add(new wxStaticText(this, wxID_ANY, labels[i]));
 		sizer->Add(selectors[i] = new wxChoice(this, i),
 				0, wxEXPAND | wxALL, 3); // no proportion, small border (padding)
