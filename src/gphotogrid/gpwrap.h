@@ -81,6 +81,7 @@ public:
 	~Camera();
 	Camera(const Camera&) = delete;
 	Camera& operator=(const Camera&) = delete;
+	Camera& operator=(Camera&&);
 
 	Widget config();
 
@@ -107,7 +108,7 @@ private:
 	void set_config(_CameraWidget* rootwindow);
 
 	_Camera* camera;
-	Context& ctx;
+	Context* ctx; // pointer and not a ref because move assignment
 
 	// gphoto2 isn't thread safe; e.g. config while preview crashes
 	std::mutex mutex;

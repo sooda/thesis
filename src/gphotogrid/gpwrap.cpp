@@ -106,7 +106,7 @@ std::vector<Camera> Context::all_cameras() {
 // CAMERA
 // ======
 
-Camera::Camera(Context& ctx) : ctx(ctx) {
+Camera::Camera(Context& ctx) : ctx(&ctx) {
 	auto cam = GP_NEW_UNIQUE(::Camera, gp_camera);
 	int ret;
 
@@ -127,7 +127,7 @@ static int check_retval(int ret, const char *funcname) {
 
 // stolen from libphoto2 examples/autodetect.c
 // most of this seems to be in gp_camera_init autodetection too
-Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullptr), ctx(ctx) {
+Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullptr), ctx(&ctx) {
 	// TODO: use this macro elsewhere too?
 
 	// store port info and camera abilities as it seems that they never change.
@@ -171,13 +171,23 @@ Camera::Camera(const char *model, const char *port, Context& ctx) : camera(nullp
 
 Camera::Camera(Camera&& other) : camera(other.camera), ctx(other.ctx) {
 	std::lock_guard<std::mutex> g(other.mutex);
-	gp_context_ref(ctx.context);
+	gp_context_ref(ctx->context);
 	other.camera = nullptr;
+}
+
+Camera& Camera::operator=(Camera&& other) {
+	if (this != &other) {
+		std::lock_guard<std::mutex> g(mutex);
+		std::lock_guard<std::mutex> go(other.mutex);
+		std::swap(camera, other.camera);
+		std::swap(ctx, other.ctx);
+	}
+	return *this;
 }
 
 Camera::~Camera() {
 	std::lock_guard<std::mutex> g(mutex);
-	gp_context_unref(ctx.context);
+	gp_context_unref(ctx->context);
 	
 	if (camera)
 		gp_camera_unref(camera); // XXX: freeing also exits it, i guess
@@ -191,7 +201,7 @@ Widget Camera::config() {
 
 	CameraWidget *w;
 	int ret;
-	if ((ret = gp_camera_get_config(camera, &w, ctx.context)) < GP_OK)
+	if ((ret = gp_camera_get_config(camera, &w, ctx->context)) < GP_OK)
 		throw Exception("gp_camera_get_config", ret);
 
 	return Widget(w, *this);
@@ -201,7 +211,7 @@ void Camera::set_config(CameraWidget* rootwindow) {
 	std::lock_guard<std::mutex> g(mutex);
 
 	int ret;
-	if ((ret = gp_camera_set_config(camera, rootwindow, ctx.context)) < GP_OK)
+	if ((ret = gp_camera_set_config(camera, rootwindow, ctx->context)) < GP_OK)
 		throw Exception("gp_camera_set_config", ret);
 }
 
@@ -211,7 +221,7 @@ std::vector<char> Camera::preview() {
 	auto file = GP_NEW_UNIQUE(CameraFile, gp_file);
 	int ret;
 
-	if ((ret = gp_camera_capture_preview(camera, file.get(), ctx.context)) < GP_OK)
+	if ((ret = gp_camera_capture_preview(camera, file.get(), ctx->context)) < GP_OK)
 		throw Exception("gp_camera_capture_preview", ret);
 
 	const char *rawbuf;
@@ -234,7 +244,7 @@ void Camera::save_preview(const std::string& fname) {
 CameraEvent Camera::wait_event(int timeout_msec) {
 	CameraEventType eventtype;
 	void* eventdata = nullptr;
-	int ret = gp_camera_wait_for_event(camera, timeout_msec, &eventtype, &eventdata, ctx.context);
+	int ret = gp_camera_wait_for_event(camera, timeout_msec, &eventtype, &eventdata, ctx->context);
 	if (ret < GP_OK)
 		throw Exception("gp_camera_wait_for_event", ret);
 
@@ -274,14 +284,14 @@ void Camera::save_file(const std::string& folder, const std::string& name,
 	std::unique_ptr<CameraFile, int (*)(CameraFile*)> file(filep, gp_file_unref);
 
 	if ((ret = gp_camera_file_get(camera, folder.c_str(), name.c_str(),
-			 GP_FILE_TYPE_NORMAL, filep, ctx.context)) < GP_OK) {
+			 GP_FILE_TYPE_NORMAL, filep, ctx->context)) < GP_OK) {
 		close(fd);
 		throw Exception("gp_camera_file_get", ret);
 	}
 
 	if (delete_from_cam) {
 		if ((ret = gp_camera_file_delete(camera, folder.c_str(),
-						name.c_str(), ctx.context)) < GP_OK) {
+						name.c_str(), ctx->context)) < GP_OK) {
 			close(fd);
 			throw Exception("gp_camera_file_delete", ret);
 		}
