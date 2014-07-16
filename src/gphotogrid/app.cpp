@@ -22,6 +22,7 @@ void App::sortCams() {
 	std::string camname;
 	for (int i = 0; ifs >> camname; i++)
 		order.push_back(camname);
+
 	auto nth = [](const std::vector<std::string>& v, const std::string& x) {
 		return std::find(v.begin(), v.end(), x) - v.begin();
 	};
@@ -36,9 +37,15 @@ void App::sortCams() {
 void App::reloadGphoto() {
 	previewfeed.disable();
 	cams.clear();
+
 	cams = gpcontext.all_cameras();
 	std::cout << "CAMS: " << cams.size() << std::endl;
 	sortCams();
+
+	camNames.clear();
+	for (auto& c: cams)
+		camNames.push_back(c.config()["artist"].get<std::string>());
+
 	previewfeed = PreviewFeed(cams);
 }
 

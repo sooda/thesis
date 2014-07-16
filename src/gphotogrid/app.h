@@ -15,6 +15,7 @@ public:
 
 	gp::Context gpcontext;
 	std::vector<gp::Camera> cams;
+	std::vector<std::string> camNames;
 	PreviewFeed previewfeed;
 
 private:
