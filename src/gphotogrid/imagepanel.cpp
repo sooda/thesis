@@ -4,8 +4,9 @@ ImagePanel::ImagePanel(wxFrame* parent) : wxPanel(parent) {
 	Bind(wxEVT_PAINT, &ImagePanel::paintEvent, this);
 }
 
-void ImagePanel::setImage(wxImage& im) {
+void ImagePanel::setImage(wxImage& im, const std::string& l) {
 	bitmap = wxBitmap(im);
+	label = l;
 	SetSize(im.GetSize());
 	paintNow();
 }
@@ -27,6 +28,13 @@ void ImagePanel::paintNow() {
 }
 
 void ImagePanel::render(wxDC& dc) {
-	if (bitmap.IsOk())
+	if (bitmap.IsOk()) {
 		dc.DrawBitmap(bitmap, 0, 0, false);
+		dc.SetTextForeground("red");
+		dc.SetTextBackground("black");
+		wxFont font = dc.GetFont();
+		font.SetPixelSize(wxSize(0, 20));
+		dc.SetFont(font);
+		dc.DrawText(label, 0, 0);
+	}
 }

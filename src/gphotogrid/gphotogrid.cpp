@@ -209,7 +209,7 @@ void MainFrame::updatePhotos() {
 		// XXX: aspect ratio correction?
 		im.Rescale(newsize.GetWidth(), newsize.GetHeight(), wxIMAGE_QUALITY_NEAREST);
 
-		images[i]->setImage(im);
+		images[i]->setImage(im, app.camNames[i]);
 	}
 
 	std::stringstream ss;

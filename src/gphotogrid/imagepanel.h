@@ -9,11 +9,12 @@ public:
 	void paintEvent(wxPaintEvent&);
 	void paintNow();
 	void render(wxDC& dc);
-	void setImage(wxImage& im);
+	void setImage(wxImage& im, const std::string& label);
 	void clearImage();
 
 private:
 	wxBitmap bitmap;
+	std::string label;
 };
 
 #endif
