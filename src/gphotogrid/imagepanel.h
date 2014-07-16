@@ -9,7 +9,7 @@ public:
 	void paintEvent(wxPaintEvent&);
 	void paintNow();
 	void render(wxDC& dc);
-	void setImage(wxImage& im, const std::string& label);
+	void setImage(const wxImage& im, const std::string& label);
 	void clearImage();
 
 private:

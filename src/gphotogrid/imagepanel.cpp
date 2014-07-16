@@ -4,7 +4,7 @@ ImagePanel::ImagePanel(wxFrame* parent) : wxPanel(parent) {
 	Bind(wxEVT_PAINT, &ImagePanel::paintEvent, this);
 }
 
-void ImagePanel::setImage(wxImage& im, const std::string& l) {
+void ImagePanel::setImage(const wxImage& im, const std::string& l) {
 	bitmap = wxBitmap(im);
 	label = l;
 	SetSize(im.GetSize());
