@@ -16,6 +16,9 @@ public:
 	gp::Context gpcontext;
 	std::vector<gp::Camera> cams;
 	PreviewFeed previewfeed;
+
+private:
+	void sortCams();
 };
 
 #endif
