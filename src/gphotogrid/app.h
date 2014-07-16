@@ -16,10 +16,13 @@ public:
 	gp::Context gpcontext;
 	std::vector<gp::Camera> cams;
 	std::vector<std::string> camNames;
+	std::vector<std::string> camOrientations; // "0", "90", "-90", "180"
 	PreviewFeed previewfeed;
 
 private:
 	void sortCams();
+	void loadNames();
+	void loadOrientations();
 };
 
 #endif

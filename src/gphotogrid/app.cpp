@@ -41,12 +41,28 @@ void App::reloadGphoto() {
 	cams = gpcontext.all_cameras();
 	std::cout << "CAMS: " << cams.size() << std::endl;
 	sortCams();
+	loadNames();
+	loadOrientations();
+	previewfeed = PreviewFeed(cams);
+}
 
+void App::loadNames() {
 	camNames.clear();
 	for (auto& c: cams)
 		camNames.push_back(c.config()["artist"].get<std::string>());
+}
 
-	previewfeed = PreviewFeed(cams);
+void App::loadOrientations() {
+	std::ifstream ifs("camera_orientation.txt");
+	if (!ifs.is_open()) {
+		std::cout << "All cameras oriented normally, no camera_order.txt given" << std::endl;
+		return;
+	}
+	camOrientations.clear();
+	std::string orientation;
+	for (int i = 0; ifs >> orientation; i++)
+		camOrientations.push_back(orientation);
+
 }
 
 size_t App::numcams() const {
