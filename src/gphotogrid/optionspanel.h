@@ -16,6 +16,7 @@ public:
 	void onCheckbox(wxCommandEvent& event);
 	void onSyncbox(wxCommandEvent& event);
 	void onFollowbox(wxCommandEvent& event);
+	void onTimelinebox(wxCommandEvent& event);
 
 private:
 	MainFrame* main;
@@ -25,6 +26,7 @@ private:
 	wxCheckBox* enablecheck;
 	wxCheckBox* synccheck;
 	wxCheckBox* followcheck;
+	wxCheckBox* timelinecheck;
 };
 
 #endif

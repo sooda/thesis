@@ -34,6 +34,7 @@ public:
 	void enableRender(bool enable);
 	void syncGrabbers(bool sync);
 	void timelineFollow(bool follow);
+	void timelineEnable(bool enable);
 private:
 	typedef std::chrono::high_resolution_clock Clock;
 

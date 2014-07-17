@@ -43,11 +43,13 @@ void MainFrame::onIdle(wxIdleEvent& ev) {
 
 // read params from camera 0 and set the same for others
 void MainFrame::readCameraParams() {
-	bool fol = timeline->getFollow();
-	timeline->Destroy();
-	timeline = new Timeline(this, app.numcams(), fol);
-	GetSizer()->Add(timeline, 1, wxEXPAND);
-	Layout();
+	if (timeline) {
+		bool fol = timeline->getFollow();
+		timeline->Destroy();
+		timeline = new Timeline(this, app.numcams(), fol);
+		GetSizer()->Add(timeline, 1, wxEXPAND);
+		Layout();
+	}
 
 	if (app.numcams() > 0) {
 		// assume that all cameras are the same, use only zeroth
@@ -200,7 +202,8 @@ void MainFrame::updatePhotos() {
 			continue;
 		// log timestamps, and slurp further ones, until got the latest
 		do {
-			timeline->insert(i, time_since(capture.second, renderinittime));
+			if (timeline)
+				timeline->insert(i, time_since(capture.second, renderinittime));
 			numpics[i]++;
 		} while (app.previewfeed.getQueue(i).try_pop(capture));
 
@@ -233,7 +236,8 @@ void MainFrame::enableRender(bool enable) {
 	if (enable) {
 		renderinittime = Clock::now();
 		numpics = std::vector<int>(app.numcams());
-		timeline->clear();
+		if (timeline)
+			timeline->clear();
 		app.previewfeed.enable();
 	} else {
 		app.previewfeed.disable();
@@ -244,7 +248,19 @@ void MainFrame::syncGrabbers(bool sync) {
 }
 
 void MainFrame::timelineFollow(bool follow) {
-	timeline->followInsertions(follow);
+	if (timeline)
+		timeline->followInsertions(follow);
+}
+
+void MainFrame::timelineEnable(bool enable) {
+	if (enable) {
+		timeline = new Timeline(this, app.numcams());
+		GetSizer()->Add(timeline, 1, wxEXPAND);
+	} else {
+		timeline->Destroy();
+		timeline = nullptr;
+	}
+	Layout();
 }
 
 void MainFrame::onMenu(wxCommandEvent&) {
