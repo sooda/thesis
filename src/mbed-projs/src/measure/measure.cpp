@@ -4,8 +4,8 @@ DigitalOut myled(LED1);
 DigitalIn button(USER_BUTTON);
 
 // topmost one
-DigitalOut focus(PC_9);
-DigitalOut shutter(PB_8);
+DigitalOut focus(PB_8);
+DigitalOut shutter(PC_9);
 
 // lowest in column 2
 InterruptIn hotshoe(PC_4);
