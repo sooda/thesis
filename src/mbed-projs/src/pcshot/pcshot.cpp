@@ -5,31 +5,33 @@
 
 DigitalOut led(LED1); // PA_5
 InterruptIn button(USER_BUTTON); // PC_13
-// PC_5 misbehaves, or the camera (OLD?)J
-BusOut focus(
-		PB_8, // A
-		PA_6, // B
-		PB_6, // C
-		PA_9, // D
-		PB_10,// E
-		PC_6, // F
-		PA_12,// G
-		PB_12,// H
-		PB_1  // I
-);
+
 BusOut shutter(
-		PC_9, // A
-		PB_9, // B
-		PA_7, // C
-		PC_7, // D
-		PA_8, // E
-		PC_8, // F
-		PC_5, // G
-		PA_11,// H
-		PB_2  // I
+		PC_9, // 1/A
+		PB_9, // 2/B
+		PA_7, // 3/C
+		PC_7, // 4/D
+		PA_8, // 5/E
+		PC_8, // 6/F
+		PC_5, // 7/G
+		PA_11,// 8/H
+		PB_2, // 9/I
+		PB_15 //10/J
+);
+BusOut focus(
+		PB_8, // 1/A
+		PA_6, // 2/B
+		PB_6, // 3/C
+		PA_9, // 4/D
+		PB_10,// 5/E
+		PC_6, // 6/F
+		PA_12,// 7/G
+		PB_12,// 8/H
+		PB_1, // 9/I
+		PB_14 //10/J
 );
 
-const int MASK = 0x1ff; // 9 bits
+const int MASK = 0x3ff; // 10 bits
 
 Serial ser(SERIAL_TX, SERIAL_RX);
 
@@ -125,6 +127,5 @@ int main() {
 			led = 0;
 			break;
 		}
-		//wait(0.5);
 	}
 }
