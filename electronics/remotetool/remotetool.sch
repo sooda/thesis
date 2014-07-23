@@ -4967,7 +4967,7 @@ type RDH, grid 15 mm</description>
 <label x="-160.02" y="-83.82" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="SHUTTER6" class="0">
+<net name="FOCUS6" class="0">
 <segment>
 <pinref part="R12" gate="G$1" pin="1"/>
 <wire x1="157.48" y1="-127" x2="154.94" y2="-127" width="0.1524" layer="91"/>
@@ -4979,7 +4979,7 @@ type RDH, grid 15 mm</description>
 <label x="-116.84" y="-63.5" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="FOCUS6" class="0">
+<net name="SHUTTER6" class="0">
 <segment>
 <pinref part="R11" gate="G$1" pin="1"/>
 <wire x1="157.48" y1="-96.52" x2="154.94" y2="-96.52" width="0.1524" layer="91"/>
@@ -4991,7 +4991,7 @@ type RDH, grid 15 mm</description>
 <label x="-116.84" y="-60.96" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="SHUTTER8" class="0">
+<net name="FOCUS8" class="0">
 <segment>
 <pinref part="R16" gate="G$1" pin="1"/>
 <wire x1="157.48" y1="-208.28" x2="154.94" y2="-208.28" width="0.1524" layer="91"/>
@@ -5003,7 +5003,7 @@ type RDH, grid 15 mm</description>
 <label x="-116.84" y="-78.74" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="FOCUS8" class="0">
+<net name="SHUTTER8" class="0">
 <segment>
 <pinref part="R15" gate="G$1" pin="1"/>
 <wire x1="157.48" y1="-177.8" x2="154.94" y2="-177.8" width="0.1524" layer="91"/>
@@ -5017,18 +5017,6 @@ type RDH, grid 15 mm</description>
 </net>
 <net name="FOCUS10" class="0">
 <segment>
-<pinref part="R19" gate="G$1" pin="1"/>
-<wire x1="160.02" y1="-251.46" x2="157.48" y2="-251.46" width="0.1524" layer="91"/>
-<label x="144.78" y="-251.46" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="NUCLEO2" gate="G$1" pin="26"/>
-<wire x1="-129.54" y1="-91.44" x2="-119.38" y2="-91.44" width="0.1524" layer="91"/>
-<label x="-116.84" y="-91.44" size="1.778" layer="95"/>
-</segment>
-</net>
-<net name="SHUTTER10" class="0">
-<segment>
 <pinref part="R20" gate="G$1" pin="1"/>
 <wire x1="160.02" y1="-281.94" x2="157.48" y2="-281.94" width="0.1524" layer="91"/>
 <label x="142.24" y="-281.94" size="1.778" layer="95"/>
@@ -5039,7 +5027,7 @@ type RDH, grid 15 mm</description>
 <label x="-116.84" y="-93.98" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="SHUTTER9" class="0">
+<net name="FOCUS9" class="0">
 <segment>
 <pinref part="R18" gate="G$1" pin="1"/>
 <wire x1="45.72" y1="-281.94" x2="43.18" y2="-281.94" width="0.1524" layer="91"/>
@@ -5051,7 +5039,7 @@ type RDH, grid 15 mm</description>
 <label x="-116.84" y="-88.9" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="FOCUS9" class="0">
+<net name="SHUTTER9" class="0">
 <segment>
 <pinref part="R17" gate="G$1" pin="1"/>
 <wire x1="45.72" y1="-251.46" x2="43.18" y2="-251.46" width="0.1524" layer="91"/>
@@ -5063,7 +5051,7 @@ type RDH, grid 15 mm</description>
 <label x="-116.84" y="-86.36" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="SHUTTER7" class="0">
+<net name="FOCUS7" class="0">
 <segment>
 <pinref part="R14" gate="G$1" pin="1"/>
 <wire x1="43.18" y1="-208.28" x2="40.64" y2="-208.28" width="0.1524" layer="91"/>
@@ -5075,7 +5063,7 @@ type RDH, grid 15 mm</description>
 <label x="-116.84" y="-73.66" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="FOCUS7" class="0">
+<net name="SHUTTER7" class="0">
 <segment>
 <pinref part="R13" gate="G$1" pin="1"/>
 <wire x1="43.18" y1="-177.8" x2="40.64" y2="-177.8" width="0.1524" layer="91"/>
@@ -5163,6 +5151,18 @@ type RDH, grid 15 mm</description>
 <pinref part="PWRLED" gate="G$1" pin="1"/>
 <pinref part="RLED2" gate="G$1" pin="1"/>
 <wire x1="-101.6" y1="0" x2="-88.9" y2="0" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="SHUTTER10" class="0">
+<segment>
+<pinref part="R19" gate="G$1" pin="1"/>
+<wire x1="160.02" y1="-251.46" x2="157.48" y2="-251.46" width="0.1524" layer="91"/>
+<label x="144.78" y="-251.46" size="1.778" layer="95"/>
+</segment>
+<segment>
+<pinref part="NUCLEO2" gate="G$1" pin="26"/>
+<wire x1="-129.54" y1="-91.44" x2="-119.38" y2="-91.44" width="0.1524" layer="91"/>
+<label x="-116.84" y="-91.44" size="1.778" layer="95"/>
 </segment>
 </net>
 </nets>
