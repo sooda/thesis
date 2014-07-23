@@ -5,29 +5,28 @@
 
 DigitalOut led(LED1); // PA_5
 InterruptIn button(USER_BUTTON); // PC_13
-// PC_5 misbehaves, or the camera
-// PD8 undefined?
-BusOut focus  (
-		PC_9, // A column 1
-		PC_8, // B column 2
-		PB_9, // C column 1
-		PA_12,// D column 2
-		PA_7, // E column 1
-		PC_7, // F ...
-		PA_8, // G
-		PB_4, // H
-		PB_3  // I
+// PC_5 misbehaves, or the camera (OLD?)J
+BusOut focus(
+		PB_8, // A
+		PA_6, // B
+		PB_6, // C
+		PA_9, // D
+		PB_10,// E
+		PC_6, // F
+		PA_12,// G
+		PB_12,// H
+		PB_1  // I
 );
 BusOut shutter(
-		PB_8, // A column 1
-		PC_6, // B column 2
-		PA_6, // C column 1
-		PA_11,// D column 2
-		PB_6, // E column 1
-		PA_9, // F ...
-		PB_10,// G
-		PB_5, // H
-		PA_10 // I
+		PC_9, // A
+		PB_9, // B
+		PA_7, // C
+		PC_7, // D
+		PA_8, // E
+		PC_8, // F
+		PC_5, // G
+		PA_11,// H
+		PB_2  // I
 );
 
 const int MASK = 0x1ff; // 9 bits
