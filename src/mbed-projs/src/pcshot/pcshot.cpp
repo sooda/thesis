@@ -70,7 +70,7 @@ void recvfunc() {
 		recvstate = workstate;
 		break;
 	case ' ': /* fallthrough */
-	case '\n':
+	case '\r':
 		recvmask = workmask;
 		recvstate = workstate;
 		workmask = 0;
