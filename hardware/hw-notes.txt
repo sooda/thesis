@@ -1,0 +1,30 @@
+hardware list:
+	- 9x Canon EOS 700D
+	- 9x Canon EF 50mm f/1.8 II lenses, no need to remove from the bodies
+	- 9x Transcend 16GB memory cards, keep inside the cams
+	- 9x Canon ACK-E8, power adapters because nobody wants to recharge batteries (that wire mess though...)
+	- 3x D-link DUB-H4 usb hubs, remote powered but the power supplies don't seem to be needed for just the cams
+	- 1x custom trigger box, connect with a mini usb
+	- 9x wires for the cameras; usb to a hub, and 2,5mm stereo plug cable for the trigger
+	- 4x Millenium LST-310 stand
+	- 9x Manfrotto 494 ball head
+	- 9x Manfrotto 035 Super Clamp, with Manfrotto 036-38 studs for attaching the ball heads to the stands
+	- Lots of velcro straps
+
+storage:
+	- cases for cameras and other sensitive items
+	- bags for the stands: one bag fits two
+	- TODO: power cables, clamps, ballheads to stand bags or cases?
+
+building:
+	1. fix the stands where needed
+	2. screw the cameras, ball heads and clamps together and to the stands
+	3. connect the wires (power, usb, trigger) to the cameras; run them along the stands
+	4. connect the power adapters to extension cords (can be replaced with batteries if using only for a few shots)
+	5. connect the other ends of the trigger cables to the trigger box; connect a usb cable to the box
+	6. use the velcro straps to fasten the dangling wires so that they stay away from the photos
+	7. divide the hubs evenly for the cams, one hub per three or so; try to find different master hubs from a computer so that they would share the load well
+	8. aim the cameras to the target, setup lighting and start shooting
+
+unpacking:
+	- just repeat the build steps in reverse order
