@@ -81,6 +81,7 @@ void recvfunc() {
 void butnfunc() {
 	if (focus == 0) {
 		focus = MASK;
+		wait(0.2); // debounce
 	} else {
 		shutter = MASK;
 		wait(0.2);
