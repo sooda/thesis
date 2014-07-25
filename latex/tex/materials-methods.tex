@@ -136,23 +136,56 @@ Its build quality is poor and mostly plastic, which may not please professional 
 
 \subsection{Hardware construction} % {{{
 
-\subsubsection{Specified requirements}
+\subsubsection{Mechanical choices}
 
-\subsubsection{Mechanical structure}
+With flexibility and mobility as requirements, the system should be built of removable parts that need no modifications to the environment, such as screwing bolts to nearby walls.
+The separate parts should be small enough for transportation, but large enough for rigidity and build simplicity.
 
-Aluminium profile system as a frame
+Two major designs were considered: a frame consisting of industrial aluminium profile system, or individual tripod stands available in most photography stores meant for supporting lights.
+For connecting the cameras, a custom profile could make use of also custom built parts; also, photography stores sell screws and clamps meant for connecting cameras, lights and other hardware.
 
-Generic camera support screws, 360 angle ball joints?
+Extruded aluminium profiles such as those by MiniTec, Item or Bosch Rexroth consist of square tube with a T-shaped slot running along each side, sometimes called T-slot systems.
+The profile systems are commonly used in assembly lines and other automation installations in factories, but also in smaller assemblies; mechanical details vary by manufacturer but most supply a large catalog of connection brackets, hinges, screws etc. that allow much flexibility in the frame design.
+A hobbyist-targeted manufacturer is OpenBuilds that targets open source projects, such as 3D printers and CNC routers.
+The cost of such profile is around 10-20 EUR/m, with varying prices for connecting pieces; availability varies by supplier.
 
-Adapters for machine vision cameras
+Ready-made light or speaker stands come in a variety of sizes and share a common design with an extendable center rod and three legs.
+Typical light stands have an universal mount in one end of the rod for fastening a lamp.
+Speaker stands do not have a similar standard; in general, they are heavier and thicker to support a larger mass.
+Most photography studio stores offer a variety of light stands; some have a similar range of speaker stands.
 
-Arduino-like adapter HW for sync signals
+A custom aluminium profile system has its benefits in rigidity and positional flexibility, because it can be built in any shape.
+On the other hand, one rigid shape is more difficult to modify when such a change is needed.
+Standard light or speaker stands are good because of their availability in normal stores.
+A stand consisting of mostly round rods lacks flat surfaces and slots that could be used for fastening parts together.
+For that purpose, special clamps and ball heads are sold separately.
 
-Connectors, wire
+Machine vision cameras do not generally use same tripod screws aimed for consumer market, but are screwed on with custom bases.
+
+\subsubsection{Selected design}
+
+The selected method was to use ready-made, heavy duty lighting stands.
+Millenium LST-310 (sold by Thomann) is a sturdy three-legged lighting stand with a pole that can be zoomed several meters high.
+Additionally, it has a horizontal bar at the top that was removed as useless.
+The same tripod is used in other projects in the same lab and was found useful.
+The relatively heavy weight (10 kg) makes the support structures steady. % FIXME weight
+
+Four of these stands were bought, and testing was done with three, with three cameras in each.
+
+For flexibility, each camera should be able to rotate in at least to horizontal or vertical pose, with arbitrary aiming position.
+For that, Manfrotto 494 ball heads were used, connected to the tripod rod with Manfrotto 035 Super Clamps. Figure \ref{fig:TODO}.
+
+The total structure of all nine cameras divided in three supports (figure \ref{fig:TODO}) takes up relatively little space, and is flexible enough to move around for any office-size subject.
+
+Wires and power adapters are fastened to the stand legs in long-term use to reduce wires running on the floor.
 
 % }}}
 
 \subsection{Remote shutter synchronization} % {{{
+
+For a rig with dynamic subjects, the cameras have to be synchronized to record the same data, as described in \ref{sec:videosomething}.
+Photo synchronization was done with a remote mechanism provided by the camera, by driving the remote control of all cameras simultaneously.
+In video recording mode, the same remote wire can be used with 3rd-party firmware to start recording.
 
 % }}}
 
@@ -160,39 +193,94 @@ Connectors, wire
 
 The selected Canon EOS 700D has an input port for focus and shutter release, in addition to the integrated shutter button.
 The camera uses a standard 2,5 mm sized stero jack for connecting external remote controllers.
-Both mechanical and electronical remotes in wired and wireless format are available in the market, but no standard devices for triggering several cameras seem to exist.
+Wired and wireless electronic remotes are available in the market, but no standard devices for triggering several cameras are available. % seem to exist.
 Fortunately, the triggering method is widely researched among hobbyists; it is well enough documented in the internet.
 
-The remote release jack is a three-contact connector, where one pin serves as a common ground, and connecting one pin to the ground triggers the camera's focus button, and the third pin releases the shutter when connected to the ground.
-Luk from doc-diy.net [?] describes the camera's trigger circuit internals; the wires supply some current, which is why it's not a good idea to simply connect the remote wires of all cameras together.
+The remote release jack is a three-contact connector, where one pin serves as a common ground, and connecting another pin to the ground triggers the camera's focus button, and the third pin releases the shutter when connected to the ground.
+Luk from doc-diy.net \cite{docdiy} describes the camera's trigger circuit internals; the wires supply some current that flows back to the camera via the ground pin, which is why the cameras should be separated from each other electrically insteaad of connecting the similar remote wires of all cameras together.
 A commonly used method among the DIY community is to use opto-isolators to control each camera individually, isolated from the shared control circuit.
 
-An opto-isolator provides a galvanically separated switch that can be used to ``connect'' the release wire to the camera's ground such that no electrical signal path is shared between the cameras.
+An opto-isolator provides a galvanically separated switch that can be used to electrically ``connect'' the release wire to the camera's ground such that no electrical signal path is shared between the cameras.
 The switch is commonly a phototransistor that is triggered externally by the light transmitted from a LED.
 Both the phototransistor and the LED are installed in a opaque plastic housing.
-The opto-isolator device used in this work is shown in figure \ref{fig:opto-isolator}.
+As an example, the opto-isolator device used in this work is shown in figure \ref{fig:opto-isolator}.
+The particular device works in open collector setting, exposing an open collector pin and an emitter of the transistor.
+Another popular setting is powered device that outputs a voltage signal from a power supply.
 
 % TODO: fig:opto-isolator in physical form and in a schematic diagram next to each other
 
 % }}}
 
-\subsubsection{Synchronized multi-trigger implementation} % {{{
+\subsection{Synchronized multi-trigger implementation} % {{{
 
-By connecting each camera to a separate opto-isolator and driving all them from a same source, all cameras can be triggered simultaneously in a safe fashion.
+By connecting each camera to a separate opto-isolator and driving all of them from a same source, all cameras are triggered simultaneously in a safe fashion.
 To fully automate the system, the trigger device should be connected to the computer that downloads the photos from the cameras.
+
+\subsubsection{Platform}
+
 In this work, a microcontroller prototyping platform called Nucleo-F401RE by STMicroelectronics was used.
 This platform has a built-in USB port for simple communication.
 
-A microcontroller is a tiny computer in a single, usually thumb-sized package containing processor, RAM, program memory and peripherals; all parts required to run a single user-defined application often with no general operating system.
-The popular Arduino microcontroller board is a popular example of a small-sized microcontroller.
+A microcontroller (MCU) is a tiny computer in a single, usually fingernail-sized package containing a microprocessor, RAM, program memory and peripherals; all parts required to run a single user-defined application often with no general operating system.
+The Arduino microcontroller board is another popular example.
 
-A microcontroller was chosen over e.g. a computer-controlled relay board because its flexibility and low price.
+A MCU was chosen over e.g. a computer-controlled relay board because of its flexibility and low price.
 On one hand, such a device is more complicated to set up than a simple switch, but on the other hand, it can be programmed to sequence the cameras in any arbitrary order.
 It can also be used to measure the shutter delay and the actual precise time when each camera takes the picture; each has small unpredictable variations.
 When capturing moving targets, measuring this lag variation could be of interest.
 
-The Nucleo-F401RE is a prototyping board designed around the STM32F401RET6 microcontroller IC.
-This microcontroller ccontains a relatively powerful 32-bit ARM core, space for 512 KB of program code, 96 KB of RAM, 81 I/O pins, and lots of high-performance peripherals not needed in this circuit.
+\subsubsection{Hardware}
+
+\simplegfx{h}{0.6\textwidth}{nucleo}
+{STM32 Nucleo-F401RE microcontroller development board.}
+
+The Nucleo-F401RE (figure \ref{fig:nucleo}) is a prototyping board designed around the STM32F401RET6 microcontroller IC.
+This MCU contains a relatively powerful 32-bit ARM core, space for 512 KB of program code, 96 KB of RAM, 51 general-purpose I/O pins available on the board, and other peripherals such as timers and analog/digital converters.
+
+STMicroelectronics advertises the Mbed programming environment for the board as an option for writing software for the MCU.
+Mbed provides libraries and a simple code editor that works in a web browser.
+The toolchain that compiles the binary for the board works also via the browser in a cloud service, but it can be also installed locally.
+All MCU-side code was developed using the Mbed libraries.
+
+The trigger was constructed for ten cameras, functionally transferring trigger pulses from a PC to all cameras synchronously through opto-isolators and 2,5 mm stereo cables connecting to the cameras.
+For each output, a Toshiba TLP621-2 dual opto-isolator was used. An output pin in the microcontroller drives an LED of the opto, connecting the corresponding transistor. Schematic of one camera is shown in figure \ref{fig:singleopto}.
+Each LED is driven through a current-limiting resistor of 220 ohms, resulting in about 10 milliamps of LED current with the LED voltage drop of 1.15 V specified by Toshiba datasheet, matching the specified test condition.
+This results in tens of milliamps of maximum collector current, which is orders of magnitude more than that of supplied by the camera.
+The cameras have shown to consistently respond to this signal well.
+
+The circuit was initially constructed on a solderless protoboard, or ``breadboard'', shown in figure \ref{fig:camsremote-proto}.
+After proving that the circuit worked, a proper circuit board was built and installed in a case.
+Board layout is shown in figure \ref{fig:triggerboard} and the built case without final lid in figure \ref{fig:camsremote}.
+
+\simplegfx{h}{0.6\textwidth}{singleopto} % TODO: disconnect ground from the camera side
+{A single optocoupler pair for shutter and focus of a camera, including the current-limiting resistors and a pin header connector for the camera signals.}
+
+\simplegfx{h}{0.6\textwidth}{triggerboard}
+{Printed circuit board layout for the trigger box.}
+
+\simplegfx{h}{0.6\textwidth}{camsremote-proto}
+{Remote trigger tool prototype on a solderless breadboard.}
+
+\simplegfx{h}{0.6\textwidth}{camsremote}
+{Remote trigger tool in a case, with lid removed.}
+
+\subsubsection{Code}
+
+The MCU code, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no drivers.
+Communication protocol consists of flags for setting focus or shutter mode and entering bit flags that describe what cameras should be affected, in text mode.
+The code also monitors a single button that can be used to trigger all cameras simultaneously.
+
+Software on a host PC was implemented as small command-line Python scripts.
+The host controls the trigger's outputs individually, driving all the outputs simultaneously in normal mode.
+Sequential or other forms of triggering are possible but not meaningful in normal use.
+For example, as each camera is able to record five full-resolution frames per second burst, interleaving the nine cameras results in 45 FPS full-resolution imagery.
+
+The same MCU can be reprogrammed with another firmware at any time; it was used also for measuring shutter delay of one camera.
+An input pin of the MCU was connected to the hot shoe flash present in the camera body.
+Assuming a negligible delay between the flash trigger signal and the actual photo exposure, the time between shutter button and signal from the flash connector is the shutter delay.
+The camera was set up to all manual settings and manual focus.
+Measurements matched consistently the 75 millisecond delay found in various sources, repeated shots varying less than a millisecond.
+This suggests that even fast moving subjects can be captured properly.
 
 % }}}
 
@@ -305,6 +393,8 @@ There is a large selection of commercial solutions available. Some companies are
 \item[Pix4dMapper] converts aerial images to geometric surface models.
 \item[Acute3d] is targeted for large-scale photogrammetry and cultural heritage digitization.
 \end{description}
+
+% TODO vicon; bradley face capture explains some.
 
 %\subsubsection{Other}
 
