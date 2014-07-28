@@ -3,7 +3,8 @@ SRC := dippa.tex \
 	$(wildcard gfx/*.tex) \
 	gfx/raddist.pdf \
 	gfx/interlace.pdf \
-	gfx/focalplaneshutter.pdf
+	gfx/focalplaneshutter.pdf \
+	gfx/img-get-process.pdf
 
 all: dippa.pdf
 	okular dippa.pdf
@@ -28,6 +29,9 @@ gfx/interlace.pdf: gfx/interlace.tex
 
 gfx/focalplaneshutter.pdf: gfx/focalplaneshutter.tex
 	pdflatex -output-directory gfx $<
+
+gfx/img-get-process.pdf: gfx/img-get-process.dot
+	dot -Tpng $< > $@
 
 dippa.pdf: $(SRC)
 	pdflatex dippa

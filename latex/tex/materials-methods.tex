@@ -96,20 +96,29 @@ Canon was chosen because of previously acquired knowledge of the manufacturer, p
 \subsubsection{Canon EOS 700D DSLR}
 
 Canon EOS 700D body (or Rebel T5i in US), introduced in 2013, is among the newest of Canon's consumer range, with a price at about 600EUR.
-Key features important for reconstruction are:
+Key features important for reconstruction are shown in table \ref{tab:eos700dfeatures}.
 
-\begin{itemize}
-	\item 18 Mpix APS-C sized (22.3 x 14.9 mm, or 1.62 crop factor) CMOS sensor, with about 4,3 x 4,3 $\text{\si\micro m}$ pixel size
-	\item 14-bit DIGIC 5 processor
-	\item Continuous shooting at 5 frames per second
-	\item 1080p30 or 720p60 video recording
-\end{itemize}
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l l}
+		Sensor type & CMOS\\
+		Sensor size & APS-C 22.3 x 14.9 mm\\
+		Pixel size & 4,3 x 4,3 $\text{\si\micro m}$\\
+		Image resolution & 5184 by 3456 pixels (17,9 million) \\
+		Processor & Canon Digital Imaging Core (DIGIC) 5\\
+		Bits per pixel & 14\\
+		Shooting speed & five frames per second\\
+		Video mode & 1080p in 30 FPS or 720p in 60 FPS
+	\end{tabular}
+	\caption{Canon EOS 700D key features}
+	\label{tab:eos700dfeatures}
+\end{table}
 
 Large pixel count combined to a sharp lens is useful in bringing in a lot of detail.
 The sensor's pixel size is not unnecessarily small but not as large as in full frame cameras.
-High dynamic range with 14 bits per pixel is more than enough, as most reconstruction programs use 8-bit JPEG images.
-The 5 fps continuous speed for full-size images can be used for testing high resolution motion, but the video abilities should be reasonable for motion testing.
-Raw video recording should be also possible. % TODO: test this
+Dynamic range with 14 bits per pixel is more than enough, as most reconstruction programs use 8-bit JPEG images.
+The 5 FPS continuous speed for full-size images can be used for testing high resolution motion, but the video abilities should be reasonable for motion testing.
+Raw video recording is also possible with modified camera firmware.
 
 The sensor is labeled ``Hybrid CMOS'', a new Canon's technology that embeds phase-detection autofocus pixels in the sensor for fast continuous autofocusing in video mode.
 
@@ -129,8 +138,16 @@ Canon sells adapters that plug in the camera's battery holder, providing continu
 
 \subsubsection{Canon EF 50mm f/1.8 II}
 
-Canon's EF mount 50mm f/1.8 II lens (priced at about 110EUR) is commonly known for its excellent, sharp image quality at a low price.
-Its build quality is poor and mostly plastic, which may not please professional photographers, but does not matter for laboratory environment.
+Canon's EF-mounting 50mm f/1.8 II lens (priced at about 110 EUR), shown in figure \ref{fig:canonef50mmlens} is commonly known for its excellent, sharp image quality at a low price.
+The lens was introduced in 1990.
+Despite the poor plastic build quality, its glass is very good and it is well known as one of the best portrait lenses.
+The lens changes between autofocus and manual focus modes with a mechanical switch, and the focus ring in manual focus mode is loose enough that it might need to be locked with tape if left on for a long time shooting to hold its position for a calibrated setup.
+
+\simplefig{h}{%
+\includegraphics[width=0.4\textwidth]{gfx/canonef50mm-1}
+%\includegraphics[width=0.4\textwidth]{gfx/canonef50mm-2}
+}{fig:canonef50mmlens}
+{Canon EF 50mm f/1.8 II, a fixed focus lens chosen for the rig}
 
 % }}}
 
@@ -243,37 +260,46 @@ The toolchain that compiles the binary for the board works also via the browser 
 All MCU-side code was developed using the Mbed libraries.
 
 The trigger was constructed for ten cameras, functionally transferring trigger pulses from a PC to all cameras synchronously through opto-isolators and 2,5 mm stereo cables connecting to the cameras.
-For each output, a Toshiba TLP621-2 dual opto-isolator was used. An output pin in the microcontroller drives an LED of the opto, connecting the corresponding transistor. Schematic of one camera is shown in figure \ref{fig:singleopto}.
+For each output, a Toshiba TLP621-2 dual opto-isolator was used, mainly because they were readily available in the lab.
+An output pin in the microcontroller drives an LED of the opto, connecting the corresponding transistor.
+Schematic of one camera is shown in figure \ref{fig:singleopto}.
 Each LED is driven through a current-limiting resistor of 220 ohms, resulting in about 10 milliamps of LED current with the LED voltage drop of 1.15 V specified by Toshiba datasheet, matching the specified test condition.
-This results in tens of milliamps of maximum collector current, which is orders of magnitude more than that of supplied by the camera.
+This results in tens of milliamps of maximum available collector current, which is orders of magnitude more than that of supplied by the camera. % TODO write this better
 The cameras have shown to consistently respond to this signal well.
 
 The circuit was initially constructed on a solderless protoboard, or ``breadboard'', shown in figure \ref{fig:camsremote-proto}.
-After proving that the circuit worked, a proper circuit board was built and installed in a case.
+After proving that the circuit worked, a proper circuit board was built and installed in an extruded metal enclosure.
 Board layout is shown in figure \ref{fig:triggerboard} and the built case without final lid in figure \ref{fig:camsremote}.
+Full schematic for the whole circuit is available in the appendix. \ref{app:fullschematic}
+The circuit was drawn with the Cadsoft EAGLE pcb design software; complete schematic and layout files are available in \url { http://github.com/sooda/TODO-URL-HERE }.
 
-\simplegfx{h}{0.6\textwidth}{singleopto} % TODO: disconnect ground from the camera side
+The circuit board was designed to fit in an enclosure that has inside dimensions of 5 by 3.9 inches.
+The used housing has a removable lid, but any box with a height of 1.4 inches (35 mm) or more should fit.
+
+\simplegfx{h}{0.8\textwidth}{singleopto} % TODO: disconnect ground from the camera side
 {A single optocoupler pair for shutter and focus of a camera, including the current-limiting resistors and a pin header connector for the camera signals.}
 
-\simplegfx{h}{0.6\textwidth}{triggerboard}
-{Printed circuit board layout for the trigger box.}
+\simplegfx{h}{0.8\textwidth}{triggerboard}
+{Printed circuit board layout for the trigger box. Full schematic available in the appendix. \ref{app:fullschematic}}
 
-\simplegfx{h}{0.6\textwidth}{camsremote-proto}
+\simplegfx{h}{0.8\textwidth}{camsremote-proto}
 {Remote trigger tool prototype on a solderless breadboard.}
 
-\simplegfx{h}{0.6\textwidth}{camsremote}
-{Remote trigger tool in a case, with lid removed.}
+\simplegfx{h}{0.8\textwidth}{camsremote}
+{Remote trigger tool in a case, with lid removed. TODO better pic.}
 
 \subsubsection{Code}
 
-The MCU code, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no drivers.
+The MCU code, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no special drivers.
 Communication protocol consists of flags for setting focus or shutter mode and entering bit flags that describe what cameras should be affected, in text mode.
 The code also monitors a single button that can be used to trigger all cameras simultaneously.
+The used Mbed library does not actually turn all pins on at exactly the same time but in succession.
+This is not a problem because of the high clock speed of the processor; expected variance from each camera is supposed to be much longer than the time between the first and last pin state change. % TODO measure
 
-Software on a host PC was implemented as small command-line Python scripts.
-The host controls the trigger's outputs individually, driving all the outputs simultaneously in normal mode.
+Control software for the host PC was implemented as small command-line Python scripts.
+The host controls the trigger's outputs individually, normally driving all the outputs simultaneously.
 Sequential or other forms of triggering are possible but not meaningful in normal use.
-For example, as each camera is able to record five full-resolution frames per second burst, interleaving the nine cameras results in 45 FPS full-resolution imagery.
+For example, as each camera is able to record five full-resolution frames per second in burst, interleaving the nine cameras results in short 45 FPS full-resolution imagery.
 
 The same MCU can be reprogrammed with another firmware at any time; it was used also for measuring shutter delay of one camera.
 An input pin of the MCU was connected to the hot shoe flash present in the camera body.
@@ -282,48 +308,94 @@ The camera was set up to all manual settings and manual focus.
 Measurements matched consistently the 75 millisecond delay found in various sources, repeated shots varying less than a millisecond.
 This suggests that even fast moving subjects can be captured properly.
 
+The programs are available in \url { http://github.com/sooda/TODO-URL-HERE } with source code.
+
 % }}}
 
-\subsection{Custom written software} % {{{
+\subsection{Custom camera control software} % {{{
 
 Parallelized image acquisition from a large set of cameras has not yet established such a state that general purpose software would be easily available.
 Commercial solutions probably exist, but they are often strictly bound to a specific hardware, costly and inflexible.
 
 Some custom techniques were used to preview images of all cameras simultaneously, configure the settings of each in parallel, and retrieve the captured images from them in order.
 
+Like the MCU board layout and firmware, also all programs and their sources can be downloaded from \url { http://github.com/sooda/TODO-URL-HERE }.
+
 % }}}
 
-\subsubsection{Camera control} % {{{
+\subsubsection{Camera control library} % {{{
 
-gphoto2 \cite{gphoto2} is a well-known free application and library for controlling digital cameras on Unix-like operating systems, supporting over a thousand cameras.
+gphoto2 \cite{gphoto2} is a well-known free and open-source application and library in the C programming language for controlling digital cameras on Unix-like operating systems, supporting over a thousand cameras.
 Instead of relying on each camera manufacturer separately for a software development kit, gphoto2 abstracts common operations behind the same interface.
-For example, Canon \cite{canonsdk} and Nikon \cite{nikonsdk}, some of the biggest camera manufacturers, both provide SDKs for controlling their devices remotely.
+For example, Canon \cite{canonsdk} and Nikon \cite{nikonsdk}, some of the biggest camera manufacturers, both provide SDKs for controlling their devices remotely via a USB connection.
 To support both vendors, one would have to write code for both APIs.
-API restrictions, licenses blahblah.
+In addition, development kits provided by the vendors may be more restrictive and may not be fully available.
+Canon provides a Digital Imaging Developer Programme that requires registration to be able to download the camera control library.
 
-Most modern USB cameras use the Picture Transfer Protocol (PTP) \cite{ptpTODO} for setting properties and transferring pictures, which is also what gphoto2 implements.
+Ggphoto2 implements the Picture Transfer Protocol (PTP) \cite{ptpTODO} for setting properties and transferring pictures.
+Details on list of configurable properties and sequences for capturing pictures and preview vary among manufacturers, and gphoto2 has most thorough support for Canon and Nikon cameras.
 
-It turns out that gphoto2's most thorough support is implemented for Canon and Nikon cameras.
+A ``wrapper'' code was written in C++ for libgphoto2 to automate memory and resource management and to write the programs themselves in clean C++.
+The library itself is also not thread-safe: if a camera is used in to computer threads simultaneously, unexpected errors happen.
+Proper locking was written for the wrapper to prevent more than one executing threads from accessing a camera simultaneously.
+The library initialisation was also protected, because it loads camera resources only after first use; if many cameras are tried to initialise at the same time, another error would occur.
+
 
 % }}}
 
 \subsubsection{Previewing and configuration} % {{{
 
+\simplegfx{h}{0.8\textwidth}{gphotogrid}
+{A custom built program for displaying a preview feed of many cameras in a grid and configuring exposure time, aperture, and sensitivity. (TODO update later with the finished one)}
+
 Because of the flexible nature of the rig purposes, a simple preview live feed is almost mandatory to properly set up a new configuration.
-A preview matrix of all cameras makes it easy to identify the cameras and to point them to correct direction, and to verify that their settings are the same (e.g. similar brightness in preview video).
-Remote control of all cameras enables to set all settings, such as shutter speed and focus distance, jointly from the same computer instead of clicking on each camera's buttons manually.
+A preview matrix of all cameras makes it easy to identify the cameras and to point them to correct direction, and to verify that their settings are the same by judging from the image quality.
+The program is shown in figure \ref{fig:gphotogrid} and is found in the github repository under the name \emph{gphotogrid}.
+It is written in C++ and uses the wxWidgets GUI library.
+The gphoto library provides an interface for reading a camera preview frame at a good speed of several frames per second, speed depending on the number of cameras used in parallel because of USB bus limits.
+A preview feed is connected to each camera to download the frames as fast as possible, and the user interface displays them as a grid, with configurable camera order.
+
+Remote control of all cameras is required to set all settings, such as shutter speed and focus distance, jointly from the same computer instead of clicking on each camera's buttons manually.
+The preview matrix program allows to to change exposure time, aperture size and ISO sensitivity.
+
+The gphoto2 library and command-line program or the EOS 700D camera has a bug that locks the camera's physical user interface when configuring the cameras and even quitting the program:
+it appears that this is a safety feature that is left on and probably gphoto2 does not release it properly.
+When setting or getting any configuration, the camera screen turns off and all buttons stop responding until the camera is rebooted, USB cable is unplugged, or if gphoto2 touches the camera's filesystem.
+Listing the files is thus enough and it has no side effects, and a workaround script was written to perform it for all connected cameras.
+
+Other small command-line scripts were written using the gphoto2 command-line tool:
+
+\begin{itemize}
+\item config: reset common parameters to defaults for all cameras
+\item forallp: run gphoto with user supplied arguments for all cameras in parallel
+post-download-by-camid: download all previously shot files stored in the cameras to directories named by camera artist name
+readconfig: read and copy settings from one camera to all others currently connected
+release-uilock: unlock the physical user interface of connected cameras by fetching a listing the filesystem; a workaround for the Canon glitch described above
+\end{itemize}
 
 
 % }}}
 
 \subsubsection{Image acquisition} % {{{
 
-The cameras cannot be triggered individually via USB even though it is possible, because it is too complex and undeterministic for multi-camera synchronization.
-Instead, the remote release device is triggered via USB that then releases all shutters at the needed precision.
+A command-line tool called \emph{paraphotos} for downloading the images in realtime in parallel from each camera was developed in C++ using the libgphoto2 library.
+The cameras send a notification when a new photo is taken with the shutter button or the remote release.
+When this new file is found, it is downloaded and named by a running index and camera name.
+The user is notified when all cameras have finished for a single shoot; also, when the program is requested to quit, it first waits until the last pending download is finished.
+Each download task runs in a separate thread, as well as the notifying task; figure \ref{fig:img-get-process} shows simplified code control flow.
 
-A custom gphoto2-based software is used to download pictures from the cameras. They are able to automatically notify about new files, which are then downloaded in proper locations via USB.
+\simplegfx{h}{0.8\textwidth}{img-get-process}
+{FIXME: this is ugly. Simplified flow graph of the paraphotos program control flow.}
 
-Guidelines for successful pictures/video
+% FIXME this here or under the main gphoto section?
+The cameras are identified by a name written to the configuration set under a property called \emph{artist}, found at least in Canon DSLRs.
+The artist name can be set either via USB or from the camera's physical user interface, and it is supposedly originally meant for writing the camera owner's name in the image file's metadata.
+For the camera rig, a single letter was used for each camera, ordered from A to I.
+A separate configuration property is most robust; USB port name can be used as an alternative to identify the cameras, but the port name changes when the cameras are plugged in another way when rebuilding the rig or using another computer.
+
+Almost the same functionality could be achieved with the gphoto2 command-line utility; using the library directly with C++ resulted in more clean code and probably faster operation.
+
+Guidelines for successful pictures/video?
 
 % }}}
 

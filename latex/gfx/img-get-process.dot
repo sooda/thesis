@@ -1,0 +1,56 @@
+digraph {
+	start;
+	end;
+
+	node [shape=box]; // default is an answer style
+
+	subgraph decisionstyle {
+		node [shape=diamond];
+		wantquit;
+		waitevent;
+		fileadded;
+
+		wantquit2;
+		alldone;
+		report;
+	}
+
+	start -> wantquit;
+	subgraph cluster_0 {
+		label="download process";
+
+
+		wantquit [label="quit requested?"];
+		wantquit -> end [label="yes"];
+		wantquit -> waitevent [label="no"];
+
+		waitevent [label="event available?"];
+		waitevent -> wantquit [label="no"];
+		waitevent -> fileadded [label="yes"];
+
+		fileadded [label="file add event?"];
+		fileadded -> wantquit [label="no"];
+		fileadded -> download [label="yes"];
+
+		download [label="download file"];
+		download -> wantquit;
+	}
+
+	start -> wantquit2;
+
+	subgraph cluster_1 {
+		label="sync process";
+
+		wantquit2 [label="quit requested?"];
+		wantquit2 -> end [label="yes"];
+		wantquit2 -> alldone [label="no"];
+
+		alldone [label="all cams done one pic?"];
+		alldone -> wantquit2 [label="no"];
+		alldone -> report [label="yes"];
+
+		report [label="report user"];
+		report -> wantquit2;
+	}
+
+}
