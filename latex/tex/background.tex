@@ -856,7 +856,6 @@ Close range photogrammetry, stereopsis, isolated object, camera resectioning
 
 Pairs vs overlap? bradley: pairs
 
-% TODO: combine and structure better the following flattened section list
 % TODO: intro paragraph(s)
 
 \subsection{Imaging methods} % {{{
@@ -1306,6 +1305,8 @@ Matching can be done in sparse or dense mode; sparse matching finds a set of fea
 
 Scale-invariant feature transform (SIFT) \cite{lowe1999object} is a commonly used algorithm for local feature detection. A GPU implementation is also available \cite{changchang2007siftgpu}.  Invariance to scaling, translation and rotation makes SIFT useful in describing features that can be matched between unaligned images. Other similar commonly used means are Speede Up Robust Features (SURF) \cite{bay2006surf} Harris corner detector \cite{harris1988combined}.
 
+While SIFT being probably the most popular, other corner detectors are also used, such as Harris and difference-of-gaussian-based (DoG) methods.
+
 
 % }}}
 
@@ -1337,23 +1338,43 @@ Accurate and fast reconstructions are still traditionally done with stereo camer
 
 Another common way is to use pairwise cameras for individual reconstructions to build a point cloud for every pair, and then register them together. \cite{bradley2010high}
 
+Some suggest to find a set of initial features and expand them to nearby pixels (accuratedense, regiongrowing)
+
 % }}} multi-view stereo
 
 \subsection{Structure from motion} % {{{
 
-Structure from motion (SfM) refers usually to recovering the structure of a scene from the motion of a single camera.
-It can be used for general multi-camera setups too, though.
-The main difference ??? % calibration? bundling? reconstruction different? read up
-For each view, the pose of the camera is determined and the scene structure is extended with the new information in the image.
-(pollefeys)
+The structure from motion (SfM) problem, also called structure and motion, uses the scene feature matches between different views to determine both the scene structure and the camera motion between the views.
+The camera does not have to physically move; the method is often used for a multi-camera reconstruction with a static rig.
+Before SfM, the images should have been rectified and features matched; the algorithm works on point locations instead of input images.
 
-% }}}
+SfM begins with two reference views that are used to retrieve an initial reconstruction, and extends each new view into the set iteratively.
+Lastly, a bundle adjustment method is used to globally optimize the scene parameters.
+The relation between the views need not be previously calibrated; the process determines camera poses.
+In fact, many reconstruction applications use structure from motion as an initial step with bundle adjustment to determine calibration and proceeds to dense reconstruction.
 
-\subsection{Bundle adjustment} % {{{
+The initial stage builds a reference frame and structure for the selected features (points).
+% pollefeys tutorial builds the frame using the epipolar geometry, determined as previously in section \ref{sec:epipolar}.
+The structure is determined with triangulation as in section \ref{sec:binocular}.
+In practice, perfect reconstruction cannot be achieved due to noise, and the points are found by minimizing a reprojection error to the extent of a specified threshold limit.
 
-Bundle adjustment is used to refine the camera parameters.
+After a coordinate frame is built as a basis using two views, the next camera views are iteratively added to obtain an initial estimate of the camera poses and the selected scene feature positions.
+Scene features can be matched between only last few views if the camera motion is known to be continuous;
+the matches can also be done between all possible image pairs, which is feasible if there is lots of overlap.
 
-Several software packages do bundle adjustment as a basic step of their pipeline.
+As a last step, bundle adjustment globally optimizes the bundles of light rays from the scene to all cameras.
+Several algorithms and implementations are available, while the basic idea and the underlying problem is the same:
+a cost function is used to optimize jointly all camera parameter estimates such that the reprojection errors are minimized through all views.
+Pollefeys \cite{tutorial} gives the following formula to minimize:
+
+\begin{equation}
+	\text{min}_{P_k, M_i} \sum_k=1^m \sum_i=1^n D(m_{ki}, P_k M_i)^2
+\end{equation}
+
+when the goal is to find the projection matrices $P_k$ and the 3D points $M_i$ for all views $k$ and points $i$, where $D(a,b)$ is the Euclidean distance and $m_i$ the known, fixed matching 2D image feature positions for each unknown 3D point $M_i$.
+
+
+% others?
 
 % }}}
 
