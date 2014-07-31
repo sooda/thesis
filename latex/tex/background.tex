@@ -10,20 +10,19 @@
 % TODO: image of a scene, a camera and a computer, all connected
 
 Digital stereo vision in the end analyses digital images for depth cues.
-A digital photograph is variations in light on an image sensor that gets digitized.
+A digital photograph is variations in light on an image sensor that has been digitized.
 In front of a sensor is a lens system that projects an image to the sensor.
 
-This section describes the theory for basic image acquisition steps and concerns that affect reconstruction quality.
+This section describes the theory for basic image acquisition steps and main concerns that affect reconstruction quality.
 
 %At first, the pipeline from a real-life scene to an image file on a computer is described.
 %Then, the theory is extended to video, i.e. capturing motion as a sequence of images.
 %Next, major properties of interest of commercial cameras are discussed. Finally, 
 
-Reconstruction accuracy and errors depend on not only decidable physical parameters of a stereo imaging rig, such as camera positioning, but also on e.g.~physical construction errors, lens imperfections, camera sensor noise, image compression and algorithmic accuracy. \cite{hollsten2013imagequality, kyto2011method,rieke2009evaluation}.
+Reconstruction accuracy and errors depend on not only decidable physical parameters of a stereo imaging rig, such as camera positioning accuracy, but also on e.g. lens imperfections, camera focus, camera sensor noise, image compression and algorithmic accuracy. \cite{hollsten2013imagequality, kyto2011method,rieke2009evaluation}.
 
 \subsection{Imaging} \label{sec:imaging} % {{{
 
-This section introduces the basic image acquisition steps and concerns that affect reconstruction quality.
 Images are commonly taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane, and finally to a discrete grid of numerical values that describe light intensities.
 %In addition to plain photographic cameras, reconstruction can be done using e.g. laser scanners or light field cameras. Those are not covered in this work.
 
@@ -36,15 +35,15 @@ Images are commonly taken with digital cameras that project a three-dimensional 
 % What's a pinhole camera, what projection means.
 
 \simplegfx{h}{0.6\textwidth}{pinhole-camera}
-{Pinhole camera principle. The box represents a camera; image seen through the small hole is formed to the plane on its back, rotated upside down.}
+{Pinhole camera principle. The box represents a camera; image seen through the small hole is formed to the planar film or sensor on its back, rotated upside down, as rays of light go from the subject through the hole.}
 
-A physical camera is in its simplest form modeled as a pinhole camera; an ideal device that projects an image upside down on its film through a small aperture.
+A physical camera is in its simplest form modeled as a pinhole camera; an ideal device that projects an image upside down on its film through an infinitesimal aperture.
 Illustration given in image \ref{fig:pinhole-camera}.
 The term \emph{projection} is the representation of three-dimensional objects on a flat surface, seen from a single point such as the human eye.
 A cube projected on a plane is shown in figure \ref{fig:perspproj}.
 
 \simplegfx{h}{0.6\textwidth}{perspproj}
-{Perspective projection: a cube seen from origin O projected on a plane; point P projects to p. In a camera, the rays of light travel through a common point to the projection plane that is behind the origin, as opposed to this picture.}
+{Perspective projection: a cube seen from origin O projected on a plane; point P projects to p. In a camera, the rays of light travel through a common point to the film that is behind the origin; a virtual projection film between the origin and the object is often used for simplicity.}
 
 % http://en.wikipedia.org/wiki/Perspective_projection rays of light etc.
 
@@ -56,12 +55,14 @@ In a traditional right-handed system, X increases right, Y upwards and Z towards
 All coordinates throughout this work are expressed in a 3D cartesian system, unless noted otherwise.
 
 \simplegfx{h}{0.6\textwidth}{coordsys}
-{A 3D cartesian coordinate system. Origin at O, point location encoded in the triplet (x,y,z) as individual lengths along the X, Y and Z axes, respectively.}
+{A 3D cartesian coordinate system. Origin at O, point location encoded in the triplet $(x,y,z)$ as individual lengths along the X, Y and Z axes, respectively.}
 
 % Points, projection equation.
 
-Light rays travel through the pinhole camera's aperture to the image plane that is $f$ units behind the pinhole.
-The pinhole model (or, perspective projection) states that the world point $(x, y, z)$ is projected to the 2D image plane ($f > 0$ units away from the origin) at $(u, v)$:
+\subsubsection{Pinhole math that should go to next main section}
+
+Light rays travel through the pinhole camera's aperture to the image plane that is $f$ units behind the aperture, while the camera origin is set to the aperture.
+The pinhole model (or, perspective projection) states that the world point $(x, y, z)$ is projected to the 2D image plane at $(u, v)$:
 
 \begin{equation}
 \begin{pmatrix}
@@ -75,7 +76,7 @@ x \\ y
 
 The result can be derived from similar triangles with a common vertex at the aperture; figure \ref{fig:pinhole3d}.
 
-Sometimes the sign is inverted, which results in a plane between the pinhole (i.e.~camera origin) and the actual point, where the image is not rotated; this can be more convenient to analyse.
+Sometimes the sign is inverted, which results in a plane on the other side of the origin where the actual point lies, where the image is not rotated; this can be more convenient to analyse.
 \cite{hartley03multiview}
 
 % Matrices, homogeneous coordinates.
@@ -93,6 +94,10 @@ Setting the camera to origin and using homogeneous coordinates, the mapping is g
 u \\ v \\ 1
 \end{pmatrix}
 =
+\begin{pmatrix}
+xf/z \\ yf/z \\ 1
+\end{pmatrix}
+\sim
 \begin{pmatrix}
 x \\ y \\ z/f
 \end{pmatrix}
@@ -134,11 +139,11 @@ Optical stabilization in a camera lens is implemented with a moving element in t
 \simplefig{h}{%
 \includegraphics[width=0.4\textwidth]{gfx/canonef50mm-1}
 \includegraphics[width=0.4\textwidth]{gfx/canonef50mm-2}
-}{fig:distortions}
-{A fixed focal length Canon EF50mm f/1.8 II lens. Left: the lens. Right: block diagram of the lens construction, showing the six optical elements. Diagram by Canon Camera Museum.}
+}{fig:canonef50mm}
+{A fixed focal length Canon EF 50mm f/1.8 II lens. Left: the lens. Right: block diagram of the lens construction, showing the six optical elements. Diagram by Canon Camera Museum.}
 
 
-The following equation applies for a thin lens while capturing sharp images, illustrated in figure \ref{fig:thinlens}:
+The following equation applies for a thin lens and image in focus, illustrated in figure \ref{fig:thinlens}:
 
 \begin{equation}
 	\frac{1}{a} + \frac{1}{b} = \frac{1}{f} \label{eq:focal}
@@ -147,28 +152,51 @@ The following equation applies for a thin lens while capturing sharp images, ill
 \simplefig{h!}{\input{gfx/lens.tex}}{fig:thinlens}
 { thin lens sample: a=6, b=3, f=2 }
 
-where f is the focal length of the lens, a is the distance between the lens and the imaged subject, and b is the distance between the lens and the camera's image sensor. Figure \ref{fig:focal} example.
+where f is the focal length of the lens, a is the distance between the lens and the imaged subject, and b is the distance between the lens and the camera's image sensor. Figure \ref{fig:thinlens} shows an example where the lens magnifies the subject at a factor of less than one, making it smaller on the camera film.
 % hox, optical axis
 % TODO: fig:focal
 
 %The focal length has a direct influence to field of view, as given in figure TODO. Longer focal length (long-focus lens, often referred to as telephoto lens) results to a more zoomed in picture, as opposed to a wide-angle lens. 
 
+% Aperture.
+
+Aperture refers to the size of the hole where light effectively goes through: %  in the pinhole model:
+if it is not infinitesimally small, as in any practical case, there will be some area of the scene that is imaged as sharp and others in front and behind of this area will be blurred.
+This effect is called \emph{depth of field}.
+In artistic photos and e.g. portraits, it can be preferred to have a small subject in focus to separate it from the background by blurring the background.
+In a reconstruction rig, exactly the opposite is preferred: everything should be in focus.
+
+As the blur happens gradually, a ``circle of confusion'' is often used as a definition of unsharp areas of images.
+A point outside the focal plane shows up on the image sensor as a circle (for circular apertures and lenses); when this circle is significantly larger than the pixel size on the sensor, the image is perceived as blurred at this point.
+
+% CoC img http://www.cambridgeincolour.com/tutorials/depth-of-field.htm
+
+% diffraction
+
+Diffraction is an effect that happens for small apertures.
+When light rays diverge on a small aperture, their different distances traveled make the waves interfere each other and produce a 2D diffraction pattern, called an airy disk.
+
+% rayleigh limit?
+
+
 All practical optical systems introduce some non-linear distortion that affects the performance of the ideal pinhole model.
-Common distortions are the purely radial so-called barrel and pincushion distortions, where the lens magnification is a nonlinear function of image ray distance from the center of the lens. % XXX brown model somewhere here
+Common distortions are the purely radial so-called barrel and pincushion distortions, where the lens magnification is a nonlinear function of image ray distance from the center of the lens.
+% XXX brown model somewhere here
 \cite{brown1966decentering}
 Extreme short focal length lenses, such as those with a ``fisheye'' distortion lenses are commonly known to have a really noticeable barrel distortion; in fact, a simple barrel distortion model is not enough to correct all of a fisheye distortion.
-Most reconstruction software assume either undistorted images or use a simple distortion model, and give poor results with fisheyes.
+Most reconstruction software assume either undistorted images or use a simple distortion model, and give poor results with exotic lenses.
 
-Tangential distortion is less common, and it is often ignored. Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not parallel to the image plane. \cite{kingslake1989history}
+Tangential distortion is less significant, and it is often ignored. Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not being parallel to the image plane. \cite{kingslake1989history}
 
 Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
 
-It should be noted that the nonlinear optical distortions are different from the inevitable perspective projection distortion that happens when projecting a 3D scene to a 2D plane, which is taken into account in the reconstruction.
-Perspective distortion refers to the illusion that actual parallel lines would not be parallel in a projected image. \cite{SOMEONE}
+%It should be noted that the nonlinear optical distortions are different from the inevitable perspective projection distortion that happens when projecting a 3D scene to a 2D plane, which is taken into account in the reconstruction.
+%Perspective distortion refers to the illusion that actual parallel lines would not be parallel in a projected image. \cite{SOMEONE}
 
 %\simplefig{h!}{\input{gfx/raddist.tex}}{fig:raddist}
 \simplegfx{h!}{0.6\textwidth}{raddist}
-{Barrel-type radial distortion: lines point from destination image pixels to locations to sample from in original image.}
+{Barrel-type radial distortion: lines point from destination image pixels to locations to sample from in original image.
+The distortion is significantly larger near the borders.}
 
 \simplefig{h}{%
 \includegraphics[width=0.2\textwidth]{gfx/barrel-distortion}
@@ -179,29 +207,34 @@ Perspective distortion refers to the illusion that actual parallel lines would n
 Distortion should be corrected in software, as the following stereo algorithms assume that the images are free of nonlinear errors, i.e. straight lines in the world should remain straight in 2D images after the projective transformation.
 %In particular, image rectification (discussed later in \ref{sec:rectification} won't work if this straightness does not remain; the assumption that similar features should be found on horizontal lines wouldn't hold on distorted images. \cite{hartley03multiview} 
 
-The radial correction proposed by Brown \cite{brown1966decentering} and used by e.g. the OpenCV library to create a new image of the original pixel values at new positions \cite{opencv} is % FIXME brown model
+The radial correction proposed by Brown \cite{brown1966decentering} and used by e.g. the OpenCV library \cite{opencv} to create a new image of the original pixel values at new positions is
 
-\begin{align}
+\begin{align} \label{equ:radialdist} \begin{split}
 	x_{corr} &= x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\\
 	y_{corr} &= y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)
-\end{align}
+\end{split} \end{align}
 
 % (XXX some software does this in a different way (inverse of this, maybe?)
 
 % TODO: illustrate pixel movements, such as in a vector field likein matlab toolbox
 
-Trucco and Verri \cite{trucco1998introductory} use only the two first coefficients. For tangential distortion:
+Trucco and Verri \cite{trucco1998introductory} use only the two first coefficients. For tangential distortion, the correction has the following form:
 
-\begin{align}
+\begin{align} \label{equ:tangdist} \begin{split}
 x_{corr} &= x + (2 p_1 x y + p_2 (r^2 + 2 x^2))\\
 y_{corr} &= y + (2 p_2 x y + p_1 (r^2 + 2 y^2))
-\end{align}
+\end{split} \end{align}
 
-$x$ and $y$ are the original coordinates in the distorted image, $x_{corr}$ and $y_{corr}$ are the corrected ones, $k_1$, $k_2$, $k_3$, $p_1$ and $p_2$ are coefficients specific to the distortion, and $r$ equals to the distance to image center where the optical axis hits, located at $(x_c,~y_c)$:
+In eq. \ref{equ:radialdist} and \ref{equ:tangdist}, $x$ and $y$ are the original coordinates in the distorted image, $x_{corr}$ and $y_{corr}$ are the corrected ones, $k_1$, $k_2$, $k_3$, $p_1$ and $p_2$ are coefficients specific to the distortion, and $r$ equals to the distance to image center where the optical axis hits, located at $(x_c,~y_c)$:
 
 \begin{equation}
 r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
 \end{equation}
+
+The image size is often normalized such that the coordinates $x$ and $y$ range from $-1$ to $1$, making the distortion parameters universal for all image resolutions.
+
+Because digital images consist of a discrete pixel array, the pixel coordinates given by the undistortion do not necessarily lie on exact pixel positions;
+the sampling should then interpolate between neighboring pixels, instead of taking the nearest color.
 
 %---
 
@@ -212,26 +245,6 @@ r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
 
 % 14:01:55 <naavis> Kai sillä yritetään emuloida sitä, että katsojan paikalta se leffan kuvakenttä vastais sitä että valkokankaan tilalla on ikkuna.
 
-% Aperture.
-
-Aperture refers to the size of the hole/lens where light goes through: %  in the pinhole model:
-if it is not infinitesimally small, as in any practical case, there will be some area of the scene that is imaged as sharp and others in front and behind of this area will be blurred.
-This is called depth of field.
-In artistic photos and e.g. portraits it can be preferred to have a small subject in focus to separate it from the background by blurring the background.
-In a reconstruction rig, exactly the opposite is preferred: everything should be in focus.
-
-As the blur happens gradually, a ``circle of confusion'' is often used as a definition of unsharp areas of images.
-A point outside the focal plane shows up on the image sensor as a circle (for circular apertures and lenses); when this circle is significantly more than a pixel size on the sensor, the image is perceived as blurred at this point.
-
-% CoC img http://www.cambridgeincolour.com/tutorials/depth-of-field.htm
-
-% diffraction
-
-Diffraction is an effect that happens for small apertures.
-When light rays diverge on a small aperture, their different distances traveled make the waves interfere each other and produce a 2D diffraction pattern, called an airy disk. \cite{airydisk}
-
-% rayleigh limit?
-
 % }}} optics
 
 \subsubsection{Image sensors} % {{{
@@ -239,72 +252,73 @@ When light rays diverge on a small aperture, their different distances traveled 
 % intro: film vs sensor
 
 Historically, photographs were saved on a photosensitive film.
-With digital cameras, a rectangular image-sensitive electrical sensor replaces the film.
+With digital cameras, a rectangular electrical sensor replaces the film.
 The sensor consists of a uniformly spaced grid of small pixel sensors built as an integrated circuit package.
 A pixel, or picture element, represents a single dot on a film; when combined, the dots form a larger picture.
 
 % digital pics
 
-Digital pictures on a computer are commonly represented as rectangular arrays of numbers, or ``raster images''.
-Each number describes the brightness of a single dot on a specific location.
-For a single brightness value per pixel, a grayscale picture would be obtained.
-Color pictures are described with more color channels than one, in e.g. RGB space, the way that most parts of a computer iuse for describing colors.
-A single RGB color encodes the brightness of red, green and blue separately.
+Digital pictures on a computer are commonly represented as rectangular arrays of numbers, or \emph{raster images}.
+Each number describes the intensity of a single dot on a specific location.
+For a single intensity value per pixel, a grayscale picture would be obtained.
+
+Color pictures are described with more intensity channels than one, in e.g. RGB space, the way that most parts of a computer use for describing colors.
+A single RGB color encodes the values of red, green and blue separately.
 
 % sensors
 
 The rectangular image sensor senses the amount of light hitting each pixel and encodes it to an electrical signal.
-The signal is digitized to a brightness value and the camera saves all the pixels' values to a file in mass storage.
+The signal is digitized to a brightness value and the camera saves all the pixel values to a file in mass storage.
 There are two major sensor types: CMOS (Complementary Metal-Oxide Semiconductor) and CCD (Charge-coupled Device).
 CMOS is the type used in most still cameras because of its lower price.
-It has some technical disadvantages, considering movie recording.
+
+%It has some technical disadvantages, considering movie recording.
 CCD captures a whole image frame at once (``global shutter''), while CMOS reads the sensor a single row at a time, resulting in an effect called ``rolling shutter'' \cite{todo:cmos}.
-CCD has other issues, such as bleeding a strong light source to surrounding pixels and interlacing, i.e. alternating in reading only odd and only even rows in consecutive frames.
+CCD has other issues, such as bleeding a strong light source to surrounding pixels and interlacing, i.e.~alternating in reading only odd and only even rows in consecutive frames.
 
 % noise
 
 As all electronic circuits, also image sensors are subject to signal noise.
-Each pixel receives a more or less random level of signal that shows up as random additive brightness, noticed usually only in low light conditions as its power is orders of mangnitude less than the actual brightness level of the light.
+Each pixel receives a more or less random level of signal that shows up as random additive brightness, noticed usually only in low light conditions as its power is much less than the actual brightness level of the light.
 Black areas suffer from noise more than bright areas.
 Noise increases also with sensor's signal gain, or ``exposure sensitivity'': also digital cameras use the ISO system designed for film speed.
-More sensitive sensor needs less light to produce a bright-looking image by amplifying the signals more.
-This amplification also amplifies the original signal noise, which is why the gain level should be kept as small as possible and the amount of light entering the sensor as much as possible.
+More sensitive sensor needs less light to produce a bright-looking image by amplifying the signals more before digitization.
+This amplification also amplifies the original signal noise, which is why the gain level should be kept as small as possible and the amount of light entering the sensor as large as possible.
 This means using bright lights in the imaged scene or a longer exposure time.
 Longer exposure time influences more motion blur, though.
 
 % sensor movement
 
 Some cameras use image stabilisation by moving the sensor around, as opposed to moving the optical elements inside the lens.
-Image stabilisation should be turned off for reconstruction because it affects the calibration: if any element in the image acquisition path moves, calibration parameters also change.
+In any case, image stabilisation should be turned off for reconstruction because it affects the calibration: if any element in the image acquisition path moves, calibration parameters also change.
 
 The sensor also moves when a camera uses a sensor cleaning mechanism with ultrasonic vibration motor on the sensor.
 
 % colors
 
-A single pixel sensor acquires all light hitting on it, independent of the wavelength.
+A single pixel sensor acquires all light hitting it, independent of the wavelength.
 Two different methods to retrieve the red, green and blue color bands for each pixel are common in color cameras.
-The most comon method that most cameras use is to interleave red, green and blue in a single sensor by filtering the wavelength that can pass a pixel with a colored film over the sensor, with a special repeating pattern.
+The most common method that most cameras use is to interleave red, green and blue in a single sensor by filtering the wavelength that can pass a pixel with a colored film over the sensor, with a special repeating pattern.
 The missing values for other colors bands are interpolated from surrounding pixels.
-A very commonly used pattern is the Bayer filter, illustrated in figure \ref{fig:bayerpattern}.
+The most popular interleaving pattern is the Bayer filter, illustrated in figure \ref{fig:bayerpattern}.
 Other arrangements of red, green and blue are also common, and it is not mandatory to use these three colors; there exist filters for e.g. cyan, yellow and magenta too.
 
 Another way is to retrieve the three channels with three different sensors, one for each wavelength band, and to guide the light to them with prisms and filters; this is obviously more expensive than a single sensor but results in a more accurate picture as there are all colors available for each pixels.
 
+\simplefig{h}{\bayer{0.6}}{fig:bayerpattern}
+{A small subsection of the repeating Bayer pattern, not drawn fully for better visualization. Each square is a single pixel; the grey area represents the image sensor. The gap between pixels is nonzero.}
+
 % ???
 
-Physical pixels cover less than the full area of a sensor, as there are gaps between them.
+Physical pixels cover less than the full area of a sensor, as there are gaps between them;
+microlenses between the pixel sites direct the light hitting the gaps to the neighboring pixels.
 
 % support electronics
 
-Next to the pixel sensors and their amplifiers is lots of digital logic for reading out the data and passing it through to an image processor.
+Next to the pixel sensors and their amplifiers is digital logic for reading out the data and passing it through to an image processor.
 Quality of this support electronics affects some properties, most important of which are analog-digital converter noise and dynamic range, and speed that the image is read out from the sensor.
-
-%\subsubsection{Bayer filter}
-
-\simplefig{h!}{\bayer{0.7}}{fig:bayerpattern}
-{A small subsection of the repeating Bayer pattern, not drawn fully for better visualization. Each square is a single pixel; the grey area represents the image sensor. The gap between pixels is nonzero.}
-
-% Microlenses/microfacets
+A so-called raw image file can be saved with more expensive cameras contains the raw sensor data with very little processing done;
+when a raw file is not used, the camera processes the image with device-specific correction filters and applies e.g.~white balance correction, and finally saves the image as a standard image file such as JPEG.
 
 % }}} image sensors
 
@@ -312,10 +326,10 @@ Quality of this support electronics affects some properties, most important of w
 
 % shutter, why needed
 
-An image sensor accumulates the received light to itself and converts its intensity to electrical signal such as voltage.
+An image sensor accumulates the received light and converts its intensity to electrical signals.
 A static scene is imaged so that the sensor is exposed to the light passing the optics for a short time, keeping the camera and subject steady.
 Electrical sensors can be ``cleared'' to black rather quickly (unlike an analog film that starts exposing immediately and the effect cannot be undone). Still, good quality cameras use mechanical shutters for photographs.
-Because the rolling shutter effect of a CMOS sensor, it is better to do the reset and readout phases when the sensor is not exposed to light.
+Because of the rolling shutter effect of a CMOS sensor, it is better to do the reset and readout phases when the sensor is not exposed to light.
 
 % mechanical stuff
 
@@ -330,15 +344,16 @@ Modern curtains do not actually have whole planes but folding metal pieces to sa
 
 A shutter is a mechanical device that blocks light to the sensor and can be moved quickly out of the way and back.
 There are several types of mechanical constructions for shutters, depending on the application.
-A focal plane shutter, used in most photo cameras, is installed in front of the sensor.
+A focal plane shutter, used in most system cameras, is installed in front of the sensor.
 It consists of two curtains that move to the same direction; one moves out of the way of the sensor to let light pass to it, and another moves to cover it back again when the exposure time has elapsed.
-Figure \ref{focalplaneshutter}.
+Figure \ref{fig:focalplaneshutter}.
 A \emph{rolling shutter} effect is produced with very high shutter speeds, where the limit of curtain movement speed prohibits fully opened shutter and the closing curtain starts to move before the first has stopped, exposing only a narrow band of the sensor at a time.
 
-A digital CMOS exposure and ``electrical shutter'' works like this too; the sensor is reset first, and then the data is read back from it in a similar sequential fashion.
+A digital CMOS exposure and ``electrical shutter'' works like this too; the sensor is reset and read row by row sequentially; this produces a strong rolling shutter effect especially in short exposures and in video.
 
 A CCD camera would not need a mechanical shutter, because the full image is read out at once.
 Most still cameras have also a movie mode that holds the mechanical shutter open all the time, using the electrical shutter.
+
 The mechanical shutter can last only a finite amount of actuations (50-200 thousand for a common system camera) as it wears out gradually.
 
 %varying ccd charge time, ???
@@ -350,25 +365,26 @@ The mechanical shutter can last only a finite amount of actuations (50-200 thous
 
 When the camera or the imaged subject moves while exposing the picture, an object gets smeared along the movement on the image, an effect known as ``motion blur'': the image gets blurred where motion happens.
 
-Video film cameras that capture each frame to a separate part of film used a spinning wheel with a window in it, called rotary disc shutter.\cite{wilson2004anton}
-This rotates at a precise speed synchronized to the frame rate, displaying a consistent time for each frame.
-The size of the window constitutes to the amount of light and motion blur. More discussed in the section \ref{sec:video}.
+Video film cameras that capture each frame to a separate part of film used a spinning wheel with a window in it, called rotary disc shutter. \cite{wilson2004anton}
+This rotates at a precise speed synchronized to the frame rate, displaying a for a consistent duration for each frame.
+The size of the window constitutes to the amount of light and motion blur. Video is more discussed in the section \ref{sec:video}.
 
 When taking a picture, the camera does not instantly start to expose the image.
-Each camera has a specific \emph{shutter lag} that is the time that elapses between the shutter button is pressed and when the shutter moves out of the way.
-Some sources include in this term also the time for the camera to focus the lens and measure sensitivity settings which can be a significantly long time.
+Each camera has a specific \emph{shutter lag} that is the time that elapses between when the shutter button is pressed and when the shutter moves out of the way.
+Some sources include in this term also the time for the camera to focus the lens and measure sensitivity settings which can be a significantly longer time.
 
 Shutter speed has small variations over time when the camera ages and some parts wear out.
-Some variation also exists among same camera model from factory variations.
+Some difference also exists among same camera model from factory variations.
+Even a single camera cannot be exactly consistent in e.g. unpredictable firmware causes if it has not been taken into account in the design.
 The variations among several cameras must be taken into account when using a flash unit instead of continuous light: the short duration of the bright flash of light should happen when all the cameras imaging the same scene have opened, but not yet closed, their shutters.
 
 %Shutter lag (auto exposure/focus even in manual mode maybe?)
 
 % }}} shutter
 
-\subsubsection{Light sources} % {{{
+\subsubsection{Lighting} % {{{
 
-In addition to multiple cameras at different locations and poses to encode a subject's geometry, a uniform and soft lightning is also required to minimize bright reflection difficulties in the texture.
+In addition to multiple cameras at different locations and poses to encode a subject's geometry, a uniform and soft lighting is also required to minimize bright reflection difficulties in the texture.
 A large variety of different studio lights are available in the market for different lighting situations, emitting either continuous light or short bright flashes.
 
 % XXX pic of brightness constancy: same object from two views, patch windows
@@ -378,7 +394,10 @@ Because most reconstruction methods fundamentally assume a relatively diffuse li
 {BRDF of a surface is a function of surface normal $n$, light direction $\omega_i$ and viewing direction $\omega_o$.}
 
 Some surfaces are more \emph{diffuse} than others.
-Surfaces can be modeled as diffuse and specular components that are functions of light direction and viewing angle, relating from their microgeometry. \cite{nayar1991surface} % XXX 1991 or -89?
+Surfaces can be modeled as diffuse and specular components that are functions of light direction, viewing direction and sometimes spatial location on the surface.
+Surface reflection models are described with a bidirectional reflectance distribution function, or BRDF. \cite{nicodemus1965dirreflectanceetc}
+
+A distribution model of the surface's global or local microgeometry specifies how much light reflects in different surfaces. \cite{nayar1991surface} % XXX 1991 or -89?
 Diffuse means a material that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more \emph{specular} surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
 Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in figure \ref{fig:lambertcosine}. \cite{lamberttodo}
 A Lambertian surface's BRDF is constant among the viewing direction.
@@ -422,28 +441,31 @@ Some more expensive models support ``X-sync'', where several shorter flash burst
 
 % data path intro
 
-The image information travels from the scene through the optics to the image sensor's surface, via an analog/digital converter, the camera's processor(s) and finally to a memory card or straight to a computer's storage via a wired or wireless connection.
+The image information travels from the subject through the optics to the image sensor's surface, via an analog/digital converter, the camera's processor(s) and finally to a memory card or straight to a computer's storage via a wired or wireless connection.
 Many parts in this equation contribute to the rate of which the images can be taken, usually measured in frames per second (FPS).
 
 % fps
 
 An average DSLR can achieve around five frames per second of full resolution footage, while more expensive models can reach over 10 FPS.
 A digital still camera can often record video too, at a lower resolution and a higher FPS.
-DSLR video modes achieve a higher frame rate, and they use the sensor's full size but skip some of its lines when recording video, getting the same field of view as still images but sometimes resulting in significant aliasing patterns. \cite{todo}
 
 % sample speed calculations
 
-For example, recent Canon DSLRs such as 650D and 700D feature an 18 megapixel CMOS sensor having a resolution of 5184 by 3456 pixels and a 14-bit analog/digital converter, resulting in approximately 31 megabytes of raw data.
-For a moderate 5 FPS, the sensor generates thus about 150 MB of data per second.
+For example, recent Canon consumer DSLRs such as 650D and 700D feature an 18 megapixel CMOS sensor having a resolution of 5184 by 3456 pixels and a 14-bit analog/digital converter, resulting in approximately 31 megabytes of raw data per frame.
+For a moderate 5 FPS, the sensor generates thus about 155 MB of data per second, as shown in equation \ref{equ:canonmbfps}.
+
+\begin{equation}
+	5\frac{1}{s} * 5128 * 3456 \text{px} * 14 \frac{\text{bit}}{\text{px}} \approx 1240 \frac{\text{Mbit}}{s} \approx 155 \frac{\text{MB}}{s}
+\end{equation}
 
 % files
 
-The files saved by these cameras are compressed in a proprietary lossless format and contain also metadata about certain camera settings.
+The raw files saved by DSLR cameras are compressed in a proprietary lossless format and contain also metadata about certain camera settings.
 Lossless compression maintains image quality and reduces file size depending on the complexity of the frame.
 Some manufacturers encode the brightness values through a lookup table, and it's common to use a compression scheme known from standard file compressions, or a specific lossless image compression.
 
-Video files are almost always saved as compressed, the H264 format being common for recent cameras.
-Common bitrate for a full-hd (1920 by 1080 pixels) 24 FPS video is about 5-6 MB/s.
+Video files are almost always saved in a lossy video format, the H.264 format being common for recent cameras.
+Common bitrate for a full-hd (1920 by 1080 pixels) 24 FPS video is about 5-6 MB/s maximum.
 
 % storage
 
@@ -455,7 +477,7 @@ The speed of USB 2.0 high-speed specification is 480 Mbit/s; bus protocol's over
 Computers typically have several USB hosts each capable to the maximum transfer rate.
 To speed up download from multiple devices, the devices should be connected evenly to all hosts to fully divide the workload.
 
-Machine vision cameras often use a higher speed connection, such as the newer USB 3.0, IEEE 1394 (FireWire), fast Ethernet or Camera Link to achieve realtime lossless transfer of high-resolution images.
+Machine vision cameras use a higher speed connection, such as the newer USB 3.0, IEEE 1394 (FireWire), gigabit Ethernet or Camera Link to achieve realtime lossless transfer of high-resolution images.
 For example, the 1 Gbit/s Ethernet connection can transfer a raw 12-bit full-hd stream at
 
 \[
@@ -463,7 +485,7 @@ For example, the 1 Gbit/s Ethernet connection can transfer a raw 12-bit full-hd 
 \]
 
 where Gbit is $1024^3$ bits.
-Manufacturers often use some kind of compression to achieve higher rates.
+Manufacturers can use some kind of compression to achieve higher rates.
 
 %http://majid.info/blog/is-the-nikon-d70-nef-raw-format-truly-lossless/
 
@@ -476,9 +498,9 @@ Video is ordered electronic pictures displayed one after another.
 
 %Hox ALL-I (intra) vs. IPB (intra-predict-bidirpredict)
 
-Humans perceive motion when a previously seen object is seen again in a nearby location or similar position.
+Humans perceive motion when a previously seen object is seen again in a nearby location.
 Current digital video technology encodes motion in a sequence of still images, usually displayed in constant rate.
-Three dimensional motion is usually no different: it is encoded as discrete poses in sequence.
+Three dimensional motion is generally no different: it is encoded as discrete poses in sequence.
 In order to do object capture in stereo, video material from two or more of cameras is used to initially capture a sequence of still photos.
 
 % }}}
@@ -492,11 +514,11 @@ Interlacing alternates between odd and even lines to increase update rate, and w
 Many CCD video cameras still produce interlaced stream.
 Video that contains full frames only is called progressive.
 
-In movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more information about the scene movement is encoded per frame than when grabbing infinitesimally short times.
+In movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more information about the scene movement is encoded per frame than when grabbing infinitesimally short times, at the expense of spatial resolution.
 A common shutter speed relates to frame rate such that a frame is exposed half the time between frames.
 \cite{wilson2004anton}
 For sharp images that are preferred in 3D reconstruction, motion blur should be avoided.
-Ideal shutter speed would be infinitesimally small, but practically the most short possible cannot be used becauses of the amount of light available.
+Ideal exposure time would be infinitesimally short, but practically the shortest possible cannot be used becauses of the amount of light available.
 
 Film cameras and some professional video cameras use a rotary disc shutter that has an opaque 180 degree sector.
 This is why having half the exposure time of frame rate is sometimes called ``180 degree shutter''.
@@ -507,7 +529,7 @@ Digital video analogously downloads data from the image sensor and clears it dur
 
 \subsubsection{Frame rate effects} % {{{
 
-For a constant speed scene, a higher FPS usually means better stopping of motion because of shorter shutter speed and less movement between frames.
+For a same subject, a higher FPS usually means better stopping of motion because of shorter shutter speed and less movement between frames.
 For optical flow computation, a long enough time should be passed for reliable motion vectors, though.
 
 Interlaced video was invented to increase the update speed of cathode ray tube (CRT) displays, reducing apparent flicker.
@@ -517,15 +539,15 @@ The pictures alternate between odd and even lines only, resulting in tearing art
 Some CCD sensors employ a technology that scans the image in interlaced frames.
 
 \simplegfx{h!}{0.9\textwidth}{interlace}
-{Interlaced rendering. From left to right: even lines only, odd lines only and full picture combined. Only 20 lines used.}
+{Interlaced scanning. From left to right: even lines only, odd lines only and full picture combined. Picture not in scale, only 20 lines used.}
 
 Consumer video cameras and video-capable pocket cameras and DSLRs typically offer several choices of frame rate. Traditionally, the movie industry has used 24 FPS; 25 (PAL) and 30 (NTSC) are common alternatives used in TV broadcast, some cameras being capable to twice the speed on a lower resolution.
 
-Actual FPS in camcorders is slowed down by a factor of 1.001 because of historical reasons relating to black and white / color TV backwards compabilities.
+Actual FPS in camcorders is slowed down by a factor of 1.001 because of historical reasons relating to black and white / color TV backwards compatibilities.
 30 and 24 FPS refer often actually to approximately 29.970 and 23.976 FPS, respectively.
 
 Externally triggered cameras can be configured to record at any arbitrary speed, as long as it's in the limits of the camera speed capabilities.
-Synchronized machine vision cameras do not record video on their own, but instead just listen to a synchronization signal and output frames on its rate.
+Synchronized machine vision cameras do not record video on their own, but instead just listen to a synchronization signal and output frames on its rate, that frame grabbers on a computer read and store.
 
 % }}}
 
@@ -557,13 +579,21 @@ Synchronized machine vision cameras do not record video on their own, but instea
 What happens when the shutter is closed cannot be recorded.
 The Nyquist-Shannon sampling theorem states that events higher than half the sampling rate cannot be distinguished from the signal.
 In reality, repetitive motions rarely happen in reconstruction videos, but the fact that information about the subject between frames is lost cannot be circumvented.
-Commonly, motion is simply interpolated between their positions in different frames.
+Normally, motion is simply interpolated between views in different frames or simply the last frame is used, if playback happens at a different rate from the recording.
 For a large displacement, this interpolation can be inaccurate enough to need manual fixing.
 
 Motion blur encodes more information about object travel but gets less precise by time.
 
 slowmovideo 
-\cite{slowmovideo}
+\cite{eugster2011slowmovideo}
+
+DSLR video modes use almost the sensor's full size but skip some of its lines when recording video, getting the same field of view as still images but sometimes resulting in significant aliasing patterns with certain subjects with high frequency information.
+Line skipping is depicted in figure \ref{fig:lineskipping}.
+The color filter array makes the problem even worse.
+
+\simplegfx{h!}{0.9\textwidth}{lineskipping}
+{Line skipping in a video camera. Left shows a part of the full sensor and its bayer pattern; on the right, only every third line is captured. (TODO: better pic)}
+
 
 % }}}
 
@@ -576,7 +606,7 @@ Cameras should be synchronized, i.e. locked to hold their shutters open at the s
 When cameras open their shutter in a different time, they effectively shoot a different scene (assuming moving subjects in the scene), breaking one of the most fundamental assumptions of stereo vision: that the images encode geometrically same objects.
 This can be compensated to some degree with optical flow if hard syncing is not possible. \cite{bradley2009synchronization}
 
-Synchronization issues can be divided in three major concepts, assuming N cameras each having its own video file: offset, drift and jitter.
+Synchronization issues can be divided in three major errors, assuming N cameras each having its own video file: offset, drift and jitter.
 Offset is the time difference relating start time of two streams.
 Drift is a property of one single camera that advertises to record at some speed and actually works at some other speed.
 Jitter is the random difference between frames for a same camera.
@@ -1450,7 +1480,7 @@ Error removal; strip outliers that do not have nearby pairs; small disconnected 
 
 Postprocessing: remodel the mesh (face), see what it would look like.
 Refine parameters to get a similar output as in the photos (normal map etc.), backproject.
-Use colors and highpass them; assume uniform lightning and locally uniform texture color (bradley).
+Use colors and highpass them; assume uniform lighting and locally uniform texture color (bradley).
 (Simply a rendering technique, that level of detail in 3D structure might not be needed).
 Still, structured light and/or shading assumptions [shape from single image cues/shading trucco+verri p.225] done too.
 
