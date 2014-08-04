@@ -14,15 +14,17 @@
 
 % small intro, what's scanning
 Computer vision is a mature field; the steps of acquiring three-dimensional structure of a real-life scene are well known, and there are several methods available.
+On the other hand, the increasing processing power enables the methods to evolve and move to even mobile devices.
 
-Multi-view stereo capture/scanning can be described as acquiring the geometry and color information of a subject from several images taken from different poses.
-A stereo scanning rig is a specially constructed machinery, consisting of two or more cameras, for quickly taking photos from different viewpoints for machine vision processing.
+Multi-view stereo capture/scanning can be described as acquiring the geometry and color information of a subject from several images taken from different views.
+A stereo scanning rig is a specially constructed machinery, consisting of two or more cameras and software, for quickly taking photos from different viewpoints for machine vision processing.
 
 The geometric structure of an object can be extracted from distinct features that can be detected with several cameras.
 
 The popularity of handheld computers - smartphones - equipped with relatively good quality cameras is currently an attractive target for 3d scanning software, while the actual reconstruction works in the cloud.
 Kinect, the active infrared-based scanner for the xbox console, has reached a phase where it can be considered ubiquitous in gaming.
-Current advances in camera technology and price make it possible for individual consumers to do pretty sophisticated reconstruction that has been possible only with a large budget of e.g. a movie studio.
+Movie and video game studios have used the technology already for years.
+%Current advances in camera technology and price make it possible for individual consumers to do pretty sophisticated reconstruction that has been possible only with a large budget of e.g. a movie studio.
 Even software that uses only a smart phone camera and runs on the same phone has been published.
 
 % static/dynamic definition, surface vs. motion capture, texture
@@ -35,7 +37,8 @@ Capturing also the moving texture (surface capture, as opposed to motion capture
 
 % applications
 
-(Other applications (uses). Movies. Remedy. Medical [essential physics of, bushberg]!). Landscape/architecture engineering. Crime scenes (police investigation). Topographic / terrain mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
+%(Other applications (uses). Movies. Remedy. Medical [essential physics of, bushberg]!).
+%Landscape/architecture engineering. Crime scenes (police investigation). Topographic / terrain mapping. Geology, archaeology. Object replication with 3d printing. Aerial photography (digital elevation models DEM)
 
 Large scale static 3D scanning and texturing of archeologic sceneries is done with combining laser scanning and photographs \cite{lerma2010terrestrial}.
 
@@ -47,8 +50,8 @@ Static applications are more developed; while dynamic scanning has lots of inter
 
 Three-dimensional motion capture means in general the way of recording a sequence of movements of a real-life target or scene.
 The technical details vary by what information is required and available.
-When time is considered as one additional dimension, sometimes 3D motion captured sequences are called 4D video.
-This reflects e.g. the names of some software packages \cite{something4dgoogleitup}
+%When time is considered as one additional dimension, sometimes 3D motion captured sequences are called 4D video.
+%This reflects e.g. the names of some software packages \cite{something4dgoogleitup}
 
 Facial surface motion capture (``mocap'') is currently a standard tool in the movie and video game entertainment industry among the more mature mocap for whole body movement to record performances for replaying them later.
 This capture records movements of a human body (or another object that is to be recorded) so that the movements can be replayed or analyzed. Traditional methods only model the joint angles and consider parts between them as rigid bodies, tracking tens of points in realtime. \cite{todo}
@@ -62,8 +65,8 @@ Advances in camera resolution make it possible to use only surface texture fiduc
 
 % starting our interests; humans in movies+games
 
-The Matrix \cite{wachowski99matrix}, a movie famous of its bullet-time scenes, used heavy optical flow processing to ``slow time down'';
-then, The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal} to capture the skin surface of a human head, in order to replicate the head in the form of computer models.
+%The Matrix \cite{wachowski99matrix}, a movie famous of its bullet-time scenes, used heavy optical flow processing to ``slow time down'';
+%then, The Matrix Reloaded \cite{wachowski03reloaded} used a technique called Universal Capture by Borshukov et al. \cite{borshukov05universal} to capture the skin surface of a human head, in order to replicate the head in the form of computer models.
 
 Recent movies and video games (such as \cite{rockstar2011noire}) have shown that by capturing real motion of facial expressions instead of simulating them produces impressive results.
 Literature on capture of human faces and skin surface motions is large. \cite{deng2007computer}
@@ -79,7 +82,7 @@ The reconstruction and rendering involves lots of filtering of the raw data and 
 
 % XXX less background, more contents and motivation
 
-Motivation: such uses, very popular, much algorithms, need own scanner wow.
+%Motivation: such uses, very popular, much algorithms, need own scanner wow.
 
 \subsection{Goal and scope of the thesis}
 
@@ -94,39 +97,42 @@ Feasible readily available programs for reconstructing 3D geometry and texture b
 
 Real-time processing is not considered important, as the data will be post-processed and observed manually for maximum quality and flexibility.
 
-or
-
-The intention of this work is both capturing the structure and texture of a target and tracking of the target's movement by time.
-The captured data should then be used to reconstruct the same target.
-A camera rig is constructed to record continuous video from several, carefully decided viewpoints.
-In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
-
-or
-
-The aim of this work is to evaluate both software and hardware aspects in three-dimensional markerless object reconstruction, and to develop such system, targeted to small sized objects.
-Both the geometric properties and color texture were considered.
-Questions on what such a system needs to be usable and what accuracy can be theoretically achieved given a specific hardware are addressed.
 Aim is in hardware robustness, ease of use and general extendability. While there are no detailed plans on further use of the machinery, it should support many kinds of studies in the future of its structure and without knowing all implementation issues in detail.
 
 A special case subject for scanning in this work is the human face: an interesting target because of its complex surface material and diverse ability to produce many different expressions.
-Many studies have recently focused on facial 3D reconstruction based on a set of high resolution photographs.
 
+Constructing a rig means studying the theoretical background for the reconstruction process in order to be familiar with the system needs, selecting hardware and setting it up, and writing software for using the selected cameras to automate the scanning process.
+A reconstruction rig consisting of digital cameras can be fixed in an indoor setup, or a more flexible setting that can be transported to a location where it is needed.
+The rig will be used for future research on image-based reconstruction algorithms.
+% or
+
+%The intention of this work is both capturing the structure and texture of a target and tracking of the target's movement by time.
+%The captured data should then be used to reconstruct the same target.
+%A camera rig is constructed to record continuous video from several, carefully decided viewpoints.
+%In addition to multiple cameras at different locations and poses, an uniform lightning is also required to minimize specular difficulties in the texture.
+
+or
+
+%The aim of this work is to evaluate both software and hardware aspects in three-dimensional markerless object reconstruction, and to develop such system, targeted to small sized objects.
+%Both the geometric properties and color texture were considered.
+%Questions on what such a system needs to be usable and what accuracy can be theoretically achieved given a specific hardware are addressed.
+%Aim is in hardware robustness, ease of use and general extendability. While there are no detailed plans on further use of the machinery, it should support many kinds of studies in the future of its structure and without knowing all implementation issues in detail.
+%
+%A special case subject for scanning in this work is the human face: an interesting target because of its complex surface material and diverse ability to produce many different expressions.
+%Many studies have recently focused on facial 3D reconstruction based on a set of high resolution photographs.
+%
 % }
 
 Basic techniques for taking also motion into account are presented, but the use of state-of-the-art algorithms is left for future implementations.
 
 % "a rig is built" or "a rig was built"?
-
-Constructing a rig means studying the theoretical background for the reconstruction process in order to be familiar with the system needs, selecting hardware and setting it up, and writing software for using the selected cameras to automate the scanning process.
-A reconstruction rig consisting of digital cameras can be fixed in an indoor setup, or a more flexible setting that can be transported to a location where it is needed.
-In this work, transportability and flexibility were considered important, and the final product was successful in that it can be packed and transported, set up, and used in a relatively simple manner.
-The rig will be used for future research on image-based reconstruction algorithms.
+%In this work, transportability and flexibility were considered important, and the final product was successful in that it can be packed and transported, set up, and used in a relatively simple manner.
 
 It is assumed that the reader is familiar with some basic concepts of light, such as wavelength and colors. Technical details of cameras and imaging are described and how images are represented digitally. % TODO expand...
 
 The thesis is organised as follows.
-Theoretical background on the elementary methods used in 3D reconstruction implementations are described in sections A-B, focusing on image acquisition, multi-view 3D reconstruction and 3D motion capture, respectively.
-In section C, the practical design and implementation of the aim of the thesis, the flexible 3D scanning rig, is presented.
-Section D focuses on using the rig for case experiments and testing it on some research questions.
-Feasibility of the rig, possible uses and future work are discussed in chapter E.
-Chapter F gives a conclusion on the work.
+Theoretical background on the elementary methods used in image acquisition and 3D reconstruction are described in sections 2-3.
+Section 4 introduces issues on dynamic subjects and motion capture.
+In section 5, the implementation of the rig is described.
+Sections 6 and 7 show test experiments on the rig and their results.
+Section 8 concludes the work.
