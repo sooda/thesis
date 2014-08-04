@@ -3,7 +3,11 @@
 
 % is X? test X. proof: X is ?.
 
-\subsection{Sample faces}
+\subsection{Synchronization}
+\subsubsection{Static}
+\subsubsection{Video}
+
+\subsection{Sample objects}
 
 \subsection{Hard cases}
 
@@ -11,24 +15,26 @@
 
 \subsection{Accuracy}
 
+\clearpage
+
 \section{Discussion}
 
-Perf of cloth animation capture
+%Perf of cloth animation capture
 
-other uses - street view, autom driving, geodetic systems
+%other uses - street view, autom driving, geodetic systems
 
-(corresponding problems in e.g. autonomous driving or harvester machines?)
+%(corresponding problems in e.g. autonomous driving or harvester machines?)
 
-(any point in outdoor methods?)
+%(any point in outdoor methods?)
 
 
-previous usage in:
-
-	rockstar games / la noire; camera pairs
-
-	polar express / sony imageworks
-
-	ea sports / faro
+%previous usage in:
+%
+%	rockstar games / la noire; camera pairs
+%
+%	polar express / sony imageworks
+%
+%	ea sports / faro
 
 
 
@@ -48,17 +54,21 @@ Uncanny valley: humans are really good at identifying faces and correct facial m
 
 \subsubsection{Simplifications/assumptions}
 
+Facial expression space, 2d tracking, feature keypoints
+
+Makeup
+
 Facial expression space. Some techiques \cite{faceshift,something} use pre-recorded facial expressions to identify the subject's pose.
 They suffer from not being able to accurately describe the temporal changes in finest details, but benefit from densely packed parameterization of facial expressions.
 A separate mesh is stored as a three-dimensional template for each expression (such as happy or angry) and each frame is encoded, as a linear combination of these individual expressions.
-Such feature vectors describe well each possible face, and importantly, they eliminate the need for encoding the movement of each vertex, which can be unnecessarily heavy to compute or store.
-The results from this method can easily be mapped to other models than the face of the subject, as it is independent on the actual facial geometry and only uses weights for pre-modeled faces, making it interesting in computer animation.
-
+%Such feature vectors describe well each possible face, and importantly, they eliminate the need for encoding the movement of each vertex, which can be unnecessarily heavy to compute or store.
+%The results from this method can easily be mapped to other models than the face of the subject, as it is independent on the actual facial geometry and only uses weights for pre-modeled faces, making it interesting in computer animation.
+%
 Compare to Facial Action Coding System (FACS) (Hjortsjö 1969), which parameterizes the face in a group of muscular actions. This is similar to grouping vertices in keyframe animation [?].
-
-Expression tracking / 2d capture
-
-Use colors and highpass them; assume uniform lighting and locally uniform texture color (bradley).
+%
+%Expression tracking / 2d capture
+%
+%Use colors and highpass them; assume uniform lighting and locally uniform texture color (bradley).
 
 \subsection{Future work}
 
@@ -76,6 +86,6 @@ visual hull
 
 masking
 
-Mesoscopic level shape reconstruction with texture level something (bradley)
+Mesoscopic level shape reconstruction with texture (bradley)
 
 match moving

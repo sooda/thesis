@@ -3,40 +3,40 @@
 
 \subsection{Functional specification} % {{{
 
-The implementation was specified to be easy to use, portable, flexible and available for both 3D and 4D cases, 4D being a nice-to-have feature.
-Portability and open design was also considered to be important.
+The implementation was specified to be easy to use, portable, flexible and available for both 3D and 4D cases.
+Portability and open design were also considered to be important.
 By documenting the selected hardware and its structure, and writing control code in a generic way, it is hoped that the design could be reimplemented and/or refined by others too.
 
-There is a wide variety of different consumer grade digital cameras.
-Some of the main differences are dicussed below.
+%There is a wide variety of different consumer grade digital cameras.
+%Some of the main differences are dicussed below.
 
 % }}}
 
-\subsubsection{Features} % {{{
-
-Some of the above stuff goes here
-
-% }}}
+%\subsubsection{Features} % {{{
+%Some of the above stuff goes here
+%% }}}
 
 \subsubsection{Practicalities} % {{{
 
 A general-purpose reconstruction rig has remarkably many practical matters to consider when comparing to the pure mathematical side.
 A mobile rig should be light enough to carry and set up, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration.
 Distance to the photographed target should not be too short in order to not annoy human targets, but a too large setup is difficult to build and needs lots of space.
-When capturing video, the frames should be synchronized among cameras as described in \ref{sec:somethingaboutvideosync}, which might not be possible with a reasonable budget.
+When capturing video, the frames should be synchronized among cameras as described in \ref{sec:video}, which might not be possible with a reasonable budget.
 
 % or \subsection{Data recording}
 
 - lens distortion?
+
 - rigid base, motion blur
+
 - baseline width, focus, depth, fstop etc
-- compression artifacts are nasty (edge detectors go wild etc.)
+%- compression artifacts are nasty (edge detectors go wild etc.)
 
 % }}}
 
 \subsection{Camera comparison} % {{{
 
-not considered: weatherproofing, lcd/viewfinder/user interface, mirror blackout, autofocus, etc
+(not considered: weatherproofing, lcd/viewfinder/user interface, mirror blackout, autofocus, etc))))
 
 The section \ref{sec:cameratypes} presents in more detail the properties necessary for reconstruction.
 
@@ -47,15 +47,15 @@ the manufacturers do not provide official specifications of the release connecto
 Zoom-only lenses and lack of raw processing, fast processors, manual modes etc.~leave cheaper compact cameras out of the comparison.
 More expensive models do have comparable features, but their prices rise into the same range as with DSLRs that are more understood.
 
-Canon DSLRs have been used previously on commercial setups [infiniterealities, ten24, capture lab likeness capture rig (ea sports/fifa example), remedy].
+Canon DSLRs have been used previously on commercial setups [infiniterealities, ten24, capture lab likeness capture rig (ea sports/fifa), remedy].
 Commercial video capture setups use specialized machine vision devices and partly custom software to export data into suitable format.
 
 Machine vision devices need several high performance computers for reliable multi-camera capture.
-Where each camera outputs approximately 1 Gbit/s of data, approximately one hard disk per camera is needed if the capture is long enough and does not fit in a computer's RAM, increasing the system cost and complexity.
+While each camera outputs approximately 1 Gbit/s of data, one hard disk per camera is needed if the capture is long enough and does not fit in a computer's RAM, increasing the system cost and complexity.
 Best mechanical hard disks have sequential write speed that just exceeds 1 Gbit/s;
 newer solid-state disks (SSD) generally are two to four times faster.
 
-For covering all the bandwidth, an expansion card would be needed per camera, count depending on the camera protocol. According to specifications, USB 3.0 has a maximum transmission rate of 5 Gbit/s, Camera Link supports 5.44 Gbit/s in base and full configuration, FireWire up to 3,2 Gbit/s and GigE only 1 Gbit/s.
+For covering all the bandwidth, expansion cards would be needed per camera, count depending on the camera protocol. According to specifications, USB 3.0 has a maximum transmission rate of 5 Gbit/s, Camera Link supports 5.44 Gbit/s in base and full configuration, FireWire up to 3,2 Gbit/s and GigE only 1 Gbit/s.
 Additionally, actual data transfer speeds are less than the theoretical max rate advertised because of protocol and operating system overhead.
 Most PC motherboards can accommodate only a few cards, requiring several PCs.
 
@@ -65,9 +65,9 @@ Most PC motherboards can accommodate only a few cards, requiring several PCs.
 \item Lens quality. High resolution is only useful if the lens is sharp enough to fully use the pixel count.
 \item Dynamic range, i.e. bit depth of the processing pipeline. JPEG pictures have only 8 bits per color channel, whereas DSLRs and industrial cameras use more, often 12 to 14 bits per pixel (in raw image, that contains the raw bayer pattern before interpolation)
 \item Continuous speed. Controlled by many factors, the rate at which full-size pictures can be taken; image processing speed and memory card write speed have most effect.
-\item Dust reduction. If enabled for some consumer cameras, it is implemented as high-frequency vibration of the sensor on camera bootup. Because it moves the sensor, it may affect calibration. (Not sure.)
+\item Dust reduction. If enabled for some consumer cameras, it is implemented as high-frequency vibration of the sensor on camera bootup. Because it moves the sensor, it may affect calibration.
 \item Optical stabilization works by moving a glass element inside the lens or the sensor itself, effectively moving the image on the sensor, having a bad effect on calibration.
-\item Video frame rate, resolution and compression. Cameras that support raw usually only use raw for still pictures and compress the video, as raw video is often unnecessary in the consumer market and uses lots of space. For image processing, each frame should be as little compressed as possible. Some DSLRs support ALL-I format, which contains only full keyframes (still compressed, but not predicted from other actual frames).
+\item Video frame rate, resolution and compression. Cameras that support raw usually only use raw for still pictures and compress the video, as raw video is often unnecessary in the consumer market and uses lots of space. For image processing, each frame should be as little compressed as possible. Some DSLRs support writing only full keyframes instead of predicted frames, resulting in higher quality and file size.
 \item Usb speed. Retrieving saved image or video data takes less time for faster interfaces.
 \item External flash. Practically all system cameras can be wired to an external flash lamp; only some compact cameras support this. Industrial cameras are externally triggered and require custom wiring.
 \item Shutter lag. Lag measured between ordering the camera to take the picture to the actual moment where exposure starts should be consistent, and preferably small.
@@ -95,8 +95,13 @@ Canon was chosen because of previously acquired knowledge of the manufacturer, p
 
 \subsubsection{Canon EOS 700D DSLR}
 
+\simplefig{h}{%
+\includegraphics[width=0.4\textwidth]{gfx/eos700d}
+}{fig:eos700d}
+{Canon EOS 700D placeholder pic}
+
 Canon EOS 700D body (or Rebel T5i in US), introduced in 2013, is among the newest of Canon's consumer range, with a price at about 600EUR.
-Key features important for reconstruction are shown in table \ref{tab:eos700dfeatures}.
+Key features shown in table \ref{tab:eos700dfeatures}.
 
 \begin{table}[h]
 	\centering
@@ -104,11 +109,12 @@ Key features important for reconstruction are shown in table \ref{tab:eos700dfea
 		Sensor type & CMOS\\
 		Sensor size & APS-C 22.3 x 14.9 mm\\
 		Pixel size & 4,3 x 4,3 $\text{\si\micro m}$\\
-		Image resolution & 5184 by 3456 pixels (17,9 million) \\
+		Image resolution & 5184 x 3456 pixels (17,9 million) \\
 		Processor & Canon Digital Imaging Core (DIGIC) 5\\
 		Bits per pixel & 14\\
-		Shooting speed & five frames per second\\
-		Video mode & 1080p in 30 FPS or 720p in 60 FPS
+		Shooting speed & 5 FPS\\
+		Video mode & 1080p in 30 FPS or 720p in 60 FPS\\
+		Write speed & 40 MB/s
 	\end{tabular}
 	\caption{Canon EOS 700D key features}
 	\label{tab:eos700dfeatures}
@@ -124,12 +130,12 @@ The sensor is labeled ``Hybrid CMOS'', a new Canon's technology that embeds phas
 
 The camera also features a tilting LCD screen that has provided to be useful when looking the camera from the front.
 
-Older models of the same product line can still be found in the market, such as 650D or 600D. 700D has a newr processor and thus faster processing speed, faster memory card controller and others. Resolution of the sensor has stayed same since 550D, introduced in 2010.
+Older models of the same product line can still be found in the market, such as 650D or 600D. 700D has a newer processor and thus faster processing speed, faster memory card controller and others. Resolution of the sensor has stayed same since 550D, introduced in 2010.
 At the same time also cheaper new models are available, such as 1200D. At a reduced price, less processing power is provided, resulting in slower operation but otherwise the cameras share mostly same features.
 
 An important consideration was the ability to use the third-party Magic Lantern firmware add-on;
 it was originally designed for improved user interfaces for video recording, but has been extended for other features too.
-Firstly, it provides experimental support for raw video recording and other hacks; additionally, being open source, it can be modified for any custom purposes, such as multi-camera synchronization aids.
+Firstly, it provides experimental support for raw video recording and other hacks; additionally, being open source, it can be modified for any custom purposes, such as multi-camera synchronization aids, if necessary.
 
 The camera uses SD cards for mass storage. A high-speed class 10 UHS-I card was selected; manufacturer claims 45 MB/s write speed.
 
@@ -138,7 +144,7 @@ Canon sells adapters that plug in the camera's battery holder, providing continu
 
 \subsubsection{Canon EF 50mm f/1.8 II}
 
-Canon's EF-mounting 50mm f/1.8 II lens (priced at about 110 EUR), shown in figure \ref{fig:canonef50mmlens} is commonly known for its excellent, sharp image quality at a low price.
+Canon's EF-mount 50mm f/1.8 II lens (priced at about 110 EUR), shown in figure \ref{fig:canonef50mmlens} is commonly known for its excellent, sharp image quality at a low price.
 The lens was introduced in 1990.
 Despite the poor plastic build quality, its glass is very good and it is well known as one of the best portrait lenses.
 The lens changes between autofocus and manual focus modes with a mechanical switch, and the focus ring in manual focus mode is loose enough that it might need to be locked with tape if left on for a long time shooting to hold its position for a calibrated setup.
@@ -147,7 +153,7 @@ The lens changes between autofocus and manual focus modes with a mechanical swit
 \includegraphics[width=0.4\textwidth]{gfx/canonef50mm-1}
 %\includegraphics[width=0.4\textwidth]{gfx/canonef50mm-2}
 }{fig:canonef50mmlens}
-{Canon EF 50mm f/1.8 II, a fixed focus lens chosen for the rig}
+{Canon EF 50mm f/1.8 II, a fixed focus lens chosen for the rig (TODO replace pic)}
 
 % }}}
 
@@ -158,17 +164,18 @@ The lens changes between autofocus and manual focus modes with a mechanical swit
 With flexibility and mobility as requirements, the system should be built of removable parts that need no modifications to the environment, such as screwing bolts to nearby walls.
 The separate parts should be small enough for transportation, but large enough for rigidity and build simplicity.
 
-Two major designs were considered: a frame consisting of industrial aluminium profile system, or individual tripod stands available in most photography stores meant for supporting lights.
+Two different major designs were considered: a frame consisting of industrial aluminium profile system, or individual tripod stands available in most photography stores meant for supporting lights.
 For connecting the cameras, a custom profile could make use of also custom built parts; also, photography stores sell screws and clamps meant for connecting cameras, lights and other hardware.
 
-Extruded aluminium profiles such as those by MiniTec, Item or Bosch Rexroth consist of square tube with a T-shaped slot running along each side, sometimes called T-slot systems.
-The profile systems are commonly used in assembly lines and other automation installations in factories, but also in smaller assemblies; mechanical details vary by manufacturer but most supply a large catalog of connection brackets, hinges, screws etc. that allow much flexibility in the frame design.
-A hobbyist-targeted manufacturer is OpenBuilds that targets open source projects, such as 3D printers and CNC routers.
+Extruded aluminium profiles such as those by MiniTec, Item or Bosch Rexroth consist of square tube with a T-shaped slot running along each side for screws, sometimes called T-slot systems.
+%The profile systems are commonly used in assembly lines and other automation installations in factories, but also in smaller assemblies
+Mechanical details vary by manufacturer but most supply a large catalog of connection brackets, hinges, screws etc. that allow much flexibility in the frame design.
+A hobbyist-purposed manufacturer is OpenBuilds that targets open source projects, such as 3D printers and CNC routers.
 The cost of such profile is around 10-20 EUR/m, with varying prices for connecting pieces; availability varies by supplier.
 
 Ready-made light or speaker stands come in a variety of sizes and share a common design with an extendable center rod and three legs.
 Typical light stands have an universal mount in one end of the rod for fastening a lamp.
-Speaker stands do not have a similar standard; in general, they are heavier and thicker to support a larger mass.
+Speaker stands do not have a similar standard; in general, they are also heavier and thicker to support a larger mass.
 Most photography studio stores offer a variety of light stands; some have a similar range of speaker stands.
 
 A custom aluminium profile system has its benefits in rigidity and positional flexibility, because it can be built in any shape.
@@ -182,12 +189,12 @@ Machine vision cameras do not generally use same tripod screws aimed for consume
 \subsubsection{Selected design}
 
 The selected method was to use ready-made, heavy duty lighting stands.
-Millenium LST-310 (sold by Thomann) is a sturdy three-legged lighting stand with a pole that can be zoomed several meters high.
+Millenium LST-310 (a brand by Thomann) is a sturdy three-legged lighting stand with a pole that can be zoomed several meters high.
 Additionally, it has a horizontal bar at the top that was removed as useless.
 The same tripod is used in other projects in the same lab and was found useful.
 The relatively heavy weight (10 kg) makes the support structures steady. % FIXME weight
 
-Four of these stands were bought, and testing was done with three, with three cameras in each.
+Four of these stands were bought, and testing was done mostly with three, with three cameras in each.
 
 For flexibility, each camera should be able to rotate in at least to horizontal or vertical pose, with arbitrary aiming position.
 For that, Manfrotto 494 ball heads were used, connected to the tripod rod with Manfrotto 035 Super Clamps. Figure \ref{fig:TODO}.
@@ -200,7 +207,7 @@ Wires and power adapters are fastened to the stand legs in long-term use to redu
 
 \subsection{Remote shutter synchronization} % {{{
 
-For a rig with dynamic subjects, the cameras have to be synchronized to record the same data, as described in \ref{sec:videosomething}.
+For a rig with non-static subjects, the cameras have to be synchronized to record the same data.
 Photo synchronization was done with a remote mechanism provided by the camera, by driving the remote control of all cameras simultaneously.
 In video recording mode, the same remote wire can be used with 3rd-party firmware to start recording.
 
@@ -210,11 +217,11 @@ In video recording mode, the same remote wire can be used with 3rd-party firmwar
 
 The selected Canon EOS 700D has an input port for focus and shutter release, in addition to the integrated shutter button.
 The camera uses a standard 2,5 mm sized stero jack for connecting external remote controllers.
-Wired and wireless electronic remotes are available in the market, but no standard devices for triggering several cameras are available. % seem to exist.
+Wired and wireless electronic remotes are available in the market, but no standard devices for triggering several cameras are well available. % seem to exist.
 Fortunately, the triggering method is widely researched among hobbyists; it is well enough documented in the internet.
 
 The remote release jack is a three-contact connector, where one pin serves as a common ground, and connecting another pin to the ground triggers the camera's focus button, and the third pin releases the shutter when connected to the ground.
-Luk from doc-diy.net \cite{docdiy} describes the camera's trigger circuit internals; the wires supply some current that flows back to the camera via the ground pin, which is why the cameras should be separated from each other electrically insteaad of connecting the similar remote wires of all cameras together.
+Luk from doc-diy.net \cite{docdiy} describes the camera's trigger circuit internals; the wires supply some current that flows back to the camera via the ground pin, which is why the cameras should be separated from each other electrically instead of connecting the similar remote wires of all cameras together.
 A commonly used method among the DIY community is to use opto-isolators to control each camera individually, isolated from the shared control circuit.
 
 An opto-isolator provides a galvanically separated switch that can be used to electrically ``connect'' the release wire to the camera's ground such that no electrical signal path is shared between the cameras.
@@ -222,7 +229,7 @@ The switch is commonly a phototransistor that is triggered externally by the lig
 Both the phototransistor and the LED are installed in a opaque plastic housing.
 As an example, the opto-isolator device used in this work is shown in figure \ref{fig:opto-isolator}.
 The particular device works in open collector setting, exposing an open collector pin and an emitter of the transistor.
-Another popular setting is powered device that outputs a voltage signal from a power supply.
+Another common setting is powered device that outputs a voltage signal from a power supply.
 
 % TODO: fig:opto-isolator in physical form and in a schematic diagram next to each other
 
@@ -262,7 +269,7 @@ All MCU-side code was developed using the Mbed libraries.
 The trigger was constructed for ten cameras, functionally transferring trigger pulses from a PC to all cameras synchronously through opto-isolators and 2,5 mm stereo cables connecting to the cameras.
 For each output, a Toshiba TLP621-2 dual opto-isolator was used, mainly because they were readily available in the lab.
 An output pin in the microcontroller drives an LED of the opto, connecting the corresponding transistor.
-Schematic of one camera is shown in figure \ref{fig:singleopto}.
+Schematic of one camera controller is shown in figure \ref{fig:singleopto}.
 Each LED is driven through a current-limiting resistor of 220 ohms, resulting in about 10 milliamps of LED current with the LED voltage drop of 1.15 V specified by Toshiba datasheet, matching the specified test condition.
 This results in tens of milliamps of maximum available collector current, which is orders of magnitude more than that of supplied by the camera. % TODO write this better
 The cameras have shown to consistently respond to this signal well.
@@ -273,7 +280,7 @@ Board layout is shown in figure \ref{fig:triggerboard} and the built case withou
 Full schematic for the whole circuit is available in the appendix. \ref{app:fullschematic}
 The circuit was drawn with the Cadsoft EAGLE pcb design software; complete schematic and layout files are available in \url { http://github.com/sooda/TODO-URL-HERE }.
 
-The circuit board was designed to fit in an enclosure that has inside dimensions of 5 by 3.9 inches.
+The circuit board was designed to fit in a recycled enclosure that has inside dimensions of 5 by 3.9 inches.
 The used housing has a removable lid, but any box with a height of 1.4 inches (35 mm) or more should fit.
 
 \simplegfx{h}{0.8\textwidth}{singleopto} % TODO: disconnect ground from the camera side
@@ -314,8 +321,8 @@ The programs are available in \url { http://github.com/sooda/TODO-URL-HERE } wit
 
 \subsection{Custom camera control software} % {{{
 
-Parallelized image acquisition from a large set of cameras has not yet established such a state that general purpose software would be easily available.
-Commercial solutions probably exist, but they are often strictly bound to a specific hardware, costly and inflexible.
+General parallelized image acquisition from a large set of cameras has not yet established such a state that general purpose software would be easily available.
+Commercial solutions probably exist, but they are often strictly bound to a specific hardware, expensive, and inflexible.
 
 Some custom techniques were used to preview images of all cameras simultaneously, configure the settings of each in parallel, and retrieve the captured images from them in order.
 
@@ -332,7 +339,7 @@ To support both vendors, one would have to write code for both APIs.
 In addition, development kits provided by the vendors may be more restrictive and may not be fully available.
 Canon provides a Digital Imaging Developer Programme that requires registration to be able to download the camera control library.
 
-Ggphoto2 implements the Picture Transfer Protocol (PTP) \cite{ptpTODO} for setting properties and transferring pictures.
+Gphoto2 implements the Picture Transfer Protocol (PTP) \cite{ptpTODO} for setting properties and transferring pictures.
 Details on list of configurable properties and sequences for capturing pictures and preview vary among manufacturers, and gphoto2 has most thorough support for Canon and Nikon cameras.
 
 A ``wrapper'' code was written in C++ for libgphoto2 to automate memory and resource management and to write the programs themselves in clean C++.
@@ -352,7 +359,7 @@ Because of the flexible nature of the rig purposes, a simple preview live feed i
 A preview matrix of all cameras makes it easy to identify the cameras and to point them to correct direction, and to verify that their settings are the same by judging from the image quality.
 The program is shown in figure \ref{fig:gphotogrid} and is found in the github repository under the name \emph{gphotogrid}.
 It is written in C++ and uses the wxWidgets GUI library.
-The gphoto library provides an interface for reading a camera preview frame at a good speed of several frames per second, speed depending on the number of cameras used in parallel because of USB bus limits.
+The gphoto library provides an interface for reading a camera preview frame at a rate of several frames per second, speed depending on the number of cameras used in parallel because of USB bus limits.
 A preview feed is connected to each camera to download the frames as fast as possible, and the user interface displays them as a grid, with configurable camera order.
 
 Remote control of all cameras is required to set all settings, such as shutter speed and focus distance, jointly from the same computer instead of clicking on each camera's buttons manually.
@@ -368,9 +375,9 @@ Other small command-line scripts were written using the gphoto2 command-line too
 \begin{itemize}
 \item config: reset common parameters to defaults for all cameras
 \item forallp: run gphoto with user supplied arguments for all cameras in parallel
-post-download-by-camid: download all previously shot files stored in the cameras to directories named by camera artist name
-readconfig: read and copy settings from one camera to all others currently connected
-release-uilock: unlock the physical user interface of connected cameras by fetching a listing the filesystem; a workaround for the Canon glitch described above
+\item post-download-by-camid: download all previously shot files stored in the cameras to directories named by camera artist name
+\item readconfig: read and copy settings from one camera to all others currently connected
+\item release-uilock: unlock the physical user interface of connected cameras by fetching a listing the filesystem; a workaround for the Canon glitch described above
 \end{itemize}
 
 
@@ -516,20 +523,20 @@ Basic uv mapping. Project texture to computed mesh. Somehow use colors and optic
 Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lighting and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed).
 
 facial expression space, faceshift, face muscles
-
-KINECT 2 HYBRID SHIT YEA
-
-eigenface / pca / AAM model (?)
-
-poisson surface vs ball pivoting
-
-visual convex hull, bbox for constraining
+%
+%KINECT 2 HYBRID SHIT YEA
+%
+%eigenface / pca / AAM model (?)
+%
+%poisson surface vs ball pivoting
+%
+%visual convex hull, bbox for constraining
 
 % }}}
 
 \subsection{Computer requirements} % {{{
 
-any pc will do, the bigger the better
+any pc with usb and linux/mac/?? will do, the bigger the better
 
 % }}}
 
