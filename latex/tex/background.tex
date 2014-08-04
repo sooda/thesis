@@ -501,20 +501,20 @@ Video is ordered electronic pictures displayed one after another.
 Humans perceive motion when a previously seen object is seen again in a nearby location.
 Current digital video technology encodes motion in a sequence of still images, usually displayed in constant rate.
 Three dimensional motion is generally no different: it is encoded as discrete poses in sequence.
-In order to do object capture in stereo, video material from two or more of cameras is used to initially capture a sequence of still photos.
+In order to do motion capture in stereo vision, video material from two or more of cameras is used to initially capture a sequence of still photos.
 
 % }}}
 
 \subsubsection{Sequence of frames} % {{{ or: video is frames
 
 When scanning a scene continuously, a camera grabs frames using the same principles as in photos, but does it in sequence, at a speed that is called frame rate.
-Each picture of a video stream is a frame.
+Each picture of a video stream is called a frame.
 In interlaced video, two frames make up a whole picture that covers all pixels.
-Interlacing alternates between odd and even lines to increase update rate, and was invented for CRT displays.
-Many CCD video cameras still produce interlaced stream.
+Interlacing alternates between odd and even lines to increase update rate, and was invented for cathode ray tube (CRT) displays.
+Many CCD video cameras still produce interlaced stream, because it is cheaper to manufacture.
 Video that contains full frames only is called progressive.
 
-In movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more information about the scene movement is encoded per frame than when grabbing infinitesimally short times, at the expense of spatial resolution.
+In movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more temporal information about the scene movement is encoded per frame than when exposing infinitesimally short frames, at the expense of spatial resolution.
 A common shutter speed relates to frame rate such that a frame is exposed half the time between frames.
 \cite{wilson2004anton}
 For sharp images that are preferred in 3D reconstruction, motion blur should be avoided.
@@ -592,7 +592,7 @@ Line skipping is depicted in figure \ref{fig:lineskipping}.
 The color filter array makes the problem even worse.
 
 \simplegfx{h!}{0.9\textwidth}{lineskipping}
-{Line skipping in a video camera. Left shows a part of the full sensor and its bayer pattern; on the right, only every third line is captured. (TODO: better pic)}
+{Line skipping in a video camera. Left shows a part of the full sensor and its bayer pattern; on the right, only every third line is captured. (TODO: draw a cleaner and not stolen pic)}
 
 
 % }}}
@@ -607,37 +607,53 @@ When cameras open their shutter in a different time, they effectively shoot a di
 This can be compensated to some degree with optical flow if hard syncing is not possible. \cite{bradley2009synchronization}
 
 Synchronization issues can be divided in three major errors, assuming N cameras each having its own video file: offset, drift and jitter.
-Offset is the time difference relating start time of two streams.
-Drift is a property of one single camera that advertises to record at some speed and actually works at some other speed.
-Jitter is the random difference between frames for a same camera.
-For an actual video camera, drift and jitter are negligible; offset originates from pressing record buttons at a different time.
+Offset is the time difference relating start time of two streams: for camera $A$ at each frame index $t_{Ai}$ for an increasing $i$, and camera $B$ at $t_{Bi}$, a constant $e$ is added, as in eq. \ref{eq:timeoffset}:
+
+\begin{equation} \label{eq:timeoffset}
+	t_{Bi} = t_{Ai} + e
+\end{equation}
+
+Drift is a property of one single camera that advertises to record at some speed and actually works at some other speed, similarly, shown in eq. \ref{eq:timedrift} for cameras $A$ and $B$, constant $e$:
+
+\begin{equation} \label{eq:timedrift}
+	t_{Bi} = t_{Ai} + e * i
+\end{equation}
+
+Jitter is the random difference between frames for a same camera, in equation \ref{eq:timejitter}, when $e$ changes:
+
+\begin{equation} \label{eq:timejitter}
+	t_{Bi} = t_{Ai} + e(i)
+\end{equation}
+
+For an actual video camera, drift and jitter are negligible; offset originates from pressing record buttons at a different time and from the camera's internal processing before the recording actually starts.
 If the cameras take pictures only when instructed, such as machine vision cameras, a clock generator becomes another source of jitter.
+Many consumer compact cameras support a preview feed for individual frames when connected to a computer; the feeds can be useful for previewing but jitter becomes too significant because cameras are not designed with this in mind.
 If the offset between two cameras is not an exact multiple of the frame speed, they effectively cannot have any frames that would display exactly the same scene.
 
 Frame accurate offset sync with clapperboards works by matching the clap sound to visual cues in the video.
 Cameras that record audio to the same video file do not need visual cues and can be synced together by matching the sound stream only.
 This is the method used in making movies when editing a final version with multiple cameras used.
-It still leaves a maximum of half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
+It still leaves at most half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
 
 Synchronizing all the cameras that shoot the same scene might be a big issue in practice, depending on the gear used.
-Professional grade cameras can be synced to a single clock generator, so that they all operate on the same frequency and phase.
+Professional grade cameras can be synced to a single clock generator, so that they all operate on the same frequency (i.e. no drift) and phase (i.e. no offset).
 The same method is used when shooting with machine vision cameras that have external trigger input.
-This still leaves a small phase difference caused by unequal transmission paths from the clock generator.
-Synchronizable camcorders are very expensive, and consumer-grade hardware usually lacks all possibilities to properly sync frequency or offset, not to mention frequency drift or frame jitter.
+This still leaves a small phase difference (offset) caused by unequal transmission paths from the clock generator.
+Synchronizable camcorders are very expensive, and consumer-grade hardware usually lacks all possibilities for proper sync.
 
 \begin{verbatim}
 Drift
 
 normal   |   |   |   |   |   |   |
 drifting |    |    |    |    |    |
-	 0t  1t  2t  3t  4t  5t  6t time -->
+         0t  1t  2t  3t  4t  5t  6t time -->
 
 
 Jitter
 
 normal   |   |   |   |   |   |   |
 jitterin |    |  |   | |      |    |
-	 0t  1t  2t  3t  4t  5t  6t time -->
+         0t  1t  2t  3t  4t  5t  6t time -->
 \end{verbatim}
 
 %Often used techniques are starting flash (does not need an audio track) [REF], clapperboard [REF], strobe sync'd to fps, genlock.
@@ -660,15 +676,16 @@ jitterin |    |  |   | |      |    |
 	% P, Z
 \end{tikzpicture}
 }{fig:syncproblems}
-{Video phase difference.
+{Video phase difference, i.e.~offset.
 Red rectangles illustrate exposure times of camera A, green rectangles the same for camera B.
 Frame period is t, and the cameras have a constant exposure time offset of an arbitrary e.}
 
 Faster frame rate encodes information more often, which is preferable as longer distances of pixels of same objects are more difficult to match when tracking objects; faster shutter speeds help to reduce motion blur.
 Fast shutter (i.e.~short exposure) obviously needs to be compensated by using more sensitive sensors or more light to get equivalently bright images.
+Short exposure becomes problematic if the light source is a flash instead of continuous, if camera offset can be more than the exposure; the flash might illuminate only some cameras while others expose when the flash is not lit.
 
 Video recording and motion tracking are best considered orthogonal issues; while a single static case can be scanned in three dimensions, so can be also each frame of a sequence, separately.
-While this sounds tempting, it might not be computationally feasible, though, because the reconstruction must be started all over again for each frame and the topology is uncorrelated between the frames.
+It might not be computationally feasible in all use cases, though, because the reconstruction must be started all over again for each frame and the topology is uncorrelated between the frames.
 % Assumptions that the scene is locally almost the same can help and speed up computations. [?]
 
 %Section \ref{sec:tracking} will 
@@ -684,7 +701,7 @@ Reconstruction from frames extracted from a compressed video can not be as good 
 Compression introduces loss of detail and artifacts typical to each algorithm, often visible as blocks or blurring.
 
 Some expensive cameras can record raw video, and others can be tricked to that.
-Canon DSLRs can be ``hacked'' to dump the raw stream to a memory card, but only some models support the faster CF cards that can keep up with the amount of data.
+Canon DSLRs can be ``hacked'' to dump the raw stream to a memory card, but only some models support the faster CF memory cards that can keep up with the amount of data.
 
 % }}}
 
@@ -695,33 +712,34 @@ Canon DSLRs can be ``hacked'' to dump the raw stream to a memory card, but only 
 This section lists the most common types of cameras available for the typical consumer and their properties that have most effect on reconstruction quality.
 Good properties are image quality, configurability, ease of use and low price.
 Technical qualities usually get better with price.
-For a multi-camera setup with a restricted budget, low price is one of the largest advantage.
-On the other hand, large amounts of manual work should be avoided if possible.
+For a multi-camera setup with a restricted budget, low price is one of the largest advantages.
+On the other hand, large amounts of manual work should be avoided if possible; cheaper devices are usually more clumsy to use.
 
 % comparison on some properties
 
 Consumer cameras have good availability, but they are targeted for artistic photographs instead of science.
 They are divided roughly in two categories: DSLRs and compact (pocket, or point-and-shoot) cameras.
-Machine vision hardware are more controllable and contain no unnecessary bulky parts, but are more expensive, difficult to acquire and need proprietary control tools.
+Industrial cameras for machine vision are more controllable and contain no unnecessary bulky parts, but are more expensive, difficult to acquire and need proprietary control tools.
 
-In general, good technical properties are deep depth of field for sharp images, lots of light, high pixel count, short distance to target.
+In general, good technical properties are deep depth of field, light sensitivity, high resolution, and short distance to the subject.
 Practical features also count, such as availability of external power supply instead of batteries.
 Some technical properties of cameras that affect quality the most are listed below.
 
 \begin{itemize}
 	\item Sensor size: For an equivalent resolution, smaller sensor leads to deeper depth of field. Larger sensor requires a closer target or longer focal length for filling the frame, which leads to shallow DOF.
-	\item Focal length: smaller focal length results to less distance needed between camera and the subject, leading to smaller rig.
+	\item Pixel size: larger pixels gather more light; they increase the sensor size, though.
+	\item Pixel count: resolution gives more texture accuracy.
+	\item Focal length: smaller focal length results to less distance needed between camera and the subject, leading to smaller rig footprint.
 	\item Aperture size: Smaller aperture leads to deeper depth of field, but requires longer exposure times for equivalent amount of light.
 	\item Fixed focal length lens (prime lens): less moving parts means better calibration.
-	\item Lens size: a bigger lens captures more light, resulting in shorter exposure times.
-	\item Pixel count: resolution gives more texture accuracy.
-	\item Pixel size: larger pixels gather more light.
+	\item Remote control: changing parameters such as exposure time for all cameras must be automatic.
 \end{itemize}
 
 All the properties should be looked as a whole; especially large pixel count does not necessarily imply better pictures if the optics is not good enough.
 
 Resolution, or pixel count, is declared in million pixels, or megapixels (Mpix).
 Resolution and image size are related via pixel size that declares the physical size of one photosite on the sensor.
+Pixel size is described as the length of one side, and the pixels are almost always square.
 Newest consumer DSLRs can have a resolution of up to 20 megapixels.
 
 %camera position disparity
@@ -733,69 +751,69 @@ Newest consumer DSLRs can have a resolution of up to 20 megapixels.
 Typical sensor sizes for different camera types are:
 
 \begin{itemize}
-	\item System cameras use ``full-frame'' (36x24 mm) or APS-C (1.5-1.6x crop of full frame, i.e.~about 22x15 mm), resolution usually over 15 Mpix
-	\item Compact cameras typically use a small sensor, approximately 1/2.3" (6.2x4.6 mm), resolution about 10 Mpix
-	\item Typical smartphones use sizes between 1/3"-1/4" (less than 4.8x3.6 mm), resolution typically between 3 to 8 Mpix
-	\item Sizes used by industrial machine vision cameras vary by application, typically in 5 to 10 mm range having resolutions from 0.5 to over 10 Mpix.
+	\item System cameras use ``full-frame'' (36x24 mm) or APS-C (1.5-1.6x crop of full frame, i.e.~about 22x15 mm), resolution usually over 15 Mpix with pixel size at about 5 micrometers
+	\item Compact cameras use a small sensor; sizes vary a lot but are approximately 1/2.3" (6.2x4.6 mm), resolution about 10 Mpix
+	\item Smartphones use sizes between 1/3"-1/4" (less than 4.8x3.6 mm), resolution between 3 to 8 Mpix
+	\item Sizes used by industrial machine vision cameras vary by application, in 5 to 10 mm range having resolutions from 0.5 to over 10 Mpix.
 \end{itemize}
 
 DSLRs usually benefit from bigger pixel size to get better light sensitivity, and the shallow DOF is commonly appreciated because of its artistic value.
 
-sensor vibration to remove dust -> sensor position not very fixed \cite{rieke2009}. % TODO MEASURE!
-no image stabilizer in sensor or lens \cite{photogrammetry.doc}
-ring flash bending the lens assembly if attached to it \cite{rieke2009}.
+%sensor vibration to remove dust -> sensor position not very fixed \cite{rieke2009}. % TODO MEASURE!
+%no image stabilizer in sensor or lens \cite{photogrammetry.doc}
+%ring flash bending the lens assembly if attached to it \cite{rieke2009}.
 
-% APS-C (26-ish mm dia), full frame (30 mm)
 % http://www.agisoft.ru/forum/index.php?topic=1411.60
 
 % lenses
 % MILC/CSC?
 System cameras (DSLRs, MILCs) have by definition interchangeable lenses, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed.
-Those accompany a zoom lens; zooms are more complex systems and therefore more expensive to reach a good image quality.
+Compacts accompany a zoom lens; zooms are more complex systems and therefore more expensive to reach a good image quality.
 Calibration is also a problem with moving elements that rarely align to precisely same setting.
-With a DSLR lens that has a moving mirror and shutter, the mechanical movement could move the zoom lens each time a little, changing the lens parameters.
+With a DSLR lens that has a moving mirror and shutter, the mechanical vibration could move the zoom lens each time a little, changing the lens parameters.
 
 System cameras have a large selection of fixed focal length (``prime'') lenses.
 The lack of zoom of a prime lens is acceptable in a lab environment, where the distance to the subject can be adjusted as necessary.
 
 Lens sharpness is defined via their performance to high contrast, measured with modulation transfer function (MTF).
-Perceptual pixel count relates to lens contrast; a high pixel count sensor for a poor quality lens is only useful for observing that the lens blurs sharp targets.
+Perceptual pixel count relates to lens contrast; a high pixel count sensor for a poor quality lens is only useful for observing the lens defects.
 
-Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality
+Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality.
 
 % shutters
 
 System cameras usually use a mechanical focal plane shutter, and SLRs have an additional mirror to direct the image to a viewfinder.
 The mirror moves away when exposing the image.
-Some compact cameras have a leaf shutter in the lens, but most use digital shutters, resulting in rolling shutter artifacts for moving subjects.
+Some compact cameras have a leaf shutter in the lens, but many use digital shutters, resulting in rolling shutter artifacts for moving subjects.
 
 % storage speed
-Storage size and speed and camera processing power in general follows camera price well.
+Storage size and speed and camera processing power in general follows camera price.
 High-quality capture of short motions is aided by continuous burst mode that can achieve anything between 2 and over 10 frames per second, depending on camera model and price.
 Professional-level DSLRs can handle over 10 continuous raw full frames per second, while entry-level DSLRs handle around five;
-compact cameras are generally a little slower.
+compact cameras are generally slower.
 Overall storage speed is determined by several factors.
-Immediate readout speed from the sensor is affected by sensor, A/D converters and processor speed.
+Immediate readout speed from the sensor is affected by sensor, A/D converter and processor speed.
 Writeout to the mass storage medium is done from the camera's RAM, which can usually hold several pictures.
 Top storage medium speed varies by price.
 Best CF cards (used only in professional DSLRs) can write at about 150 MB/s, while SD cards reach 90 MB/s, but camera bus drivers usually only achieve 20-40 MB/s. % TODO canon, magic lantern, uhs-i
 
-Reading the pictures to a computer can be done via USB or a memory card reader; the latter method is inconvenient as the card must be removed from the camera and placed to a reader manually, while a card reader usually is faster than a camera directly.
+Reading the pictures to a computer can be done via USB or a memory card reader; the latter method is inconvenient as the card must be removed from the camera and placed to a reader manually.
+A card reader is usually faster than a camera directly though.
 
-Machine vision hardware usually has temporary memory for only one frame that is read out immediately.
+Industrial cameras usually have temporary memory for only one frame that is read out immediately.
 For high speed video, this needs relatively large amounts of auxiliary hardware to save the raw frames, roughly a gigabit connection per camera, plus hard drives that can save the data fast enough.
 
 % software support
 Major consumer manufacturers provide software development kits (SDK) for controlling their cameras remotely at some degree, and industrial devices always have an accompanying SDK.
 
-Consumer SDKs by Canon, Nikon and Sony are relatively capable and can change any property of the camera that can be changed manually, e.g. aperture, shutter speed and ISO rating.
+Consumer SDKs by the largest manufacturers such as Canon, Nikon and Sony are relatively capable and can change any property of the camera that can be changed manually, e.g. aperture, shutter speed and ISO rating.
 They can also take pictures remotely and download them, and display a live view preview for some models.
 
 Gphoto2 is a free software alternative that aims to control camera's file system and properties, independently of camera maker and model.
 It has mature support for over a thousand cameras and camera-equipped mobile phones.
 It consists of two parts: a software library that can be embedded into other programs, and a command-line tool for using the library directly.
 
-For Canon, there is also a third-party open source firmware add-on that aims to enhance the user interface, and to hack additional experimental features such as RAW video recording.
+For Canon DSLRs, there is also a third-party open source firmware add-on that aims to enhance the user interface, and to hack additional experimental features such as RAW video recording.
 Another third-party add-on is the Canon Hacker's Development Kit (CHDK), a firmware for Canon's compact cameras.
 
 For machine vision cameras, manufacturers provide their own software packages, in addition to sometimes specifying that the camera complies to a standard.
@@ -803,15 +821,15 @@ The standards specify data formats, image streaming and control methods.
 Key standards for industrial cameras are:
 
 \begin{itemize}
-	\item Camera Link, partly proprietary (but significantly reverse-engineered) serial transfer protocol
-	\item GigE vision, standard interface for video data over gigabit Ethernet connection; licensed so that writing open source software based on the standard is not possible (not including reverse-engineered efforts)
-	\item IIDC/DCAM, Instrumentation \& Industrial Digital Camera or 1394-based Digital Camera Specification, data format standard used in IEEE 1394 (FireWire) cameras; open specification
+	\item Camera Link, partly proprietary (but significantly reverse-engineered) serial transfer protocol with special cable and connector types
+	\item GigE vision, standard interface for video data over gigabit Ethernet connection; licensed so that writing open source software based on the standard is not officially possible
+	\item IIDC/DCAM, Instrumentation \& Industrial Digital Camera or 1394-based Digital Camera Specification, data format standard used in IEEE 1394 (FireWire) cameras; an open specification
 	\item USB3 Vision, a standard for the USB 3 bus
 \end{itemize}
 
 A standard-compliant industrial camera enables to use readily available software, reducing the need for in-house software and protecting from vendor lock-in.
 Some of the largest manufacturers that offer standards-compliant cameras are Point Grey, Basler, Allied Vision, Imaging Source.
-Coriander \cite{} is a free user interface for controlling IIDC cameras.
+Coriander \cite{coriander} is a free user interface for controlling IIDC cameras.
 
 % triggering
 For a multi-camera setup, reliable remote trigger is important.
@@ -825,50 +843,19 @@ As a special case, CHDK supports a hacked remote release via USB port.
 Summarizing for the most popular camera types in the market:
 
 \begin{itemize}
-	\item System cameras with bigger sensors are good for artistic still photos, have excellent configurablility with lots of hardware available, and decent software support. Designed for single pictures, these often lack in video features.
-	\item Industrial machine vision cameras have small sensors, support interchangeable lenses and need a lot of additional hardware, and custom or expensive software to control
+	\item System cameras with bigger sensors are good for artistic still photos, have excellent configurability with lots of hardware available, and decent software support. Designed for single pictures, these often lack in video features.
+	\item Industrial machine vision cameras have both small and large sensors, support interchangeable lenses and need a lot of additional hardware, and custom or expensive software to control
 	\item Camcorders are only good for video recording, have properties for film editing but have poor resolution for still pictures. Electrical shutter, some interlaced. Deeper DOF. Only pro devices have external sync.
 	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Some do shoot RAW images. Most lack external AC supplies. Resolution is less than in system cameras, and high-resolution cameras perform worse in low light because of smaller pixel size.
 	\item Others (smartphones, webcams) have poorly documented features and bad lenses that are hidden by overly compressing jpeg images.
 \end{itemize}
 
-In addition to multiview stereo, there are cameras that can image depth directly.
+In addition to multiview stereo, there are cameras that can capture depth directly.
 Laser range finders are common in automation industry, and have great precision and high price.
-Active infrared cameras such as the Kinect (sensor manufactured by PrimeSense) project an infrared pattern of dots to the camera's view and estimate depth in coarse blobs, resulting in an easy-to-use depth camera with poor accuracy.
+Active infrared cameras such as the Kinect (sensor manufactured by PrimeSense) project an infrared pattern of dots to the camera's view and estimate depth in coarse blobs, resulting in an easy-to-use depth camera but poor accuracy.
+Light field cameras such as the newer Kinect 2 have a better spatial accuracy but not yet an established reliable software state.
 
 % }}} camera selection
-
-\subsection{Hardware} % {{{
-
-do i need this section? maybe partly to implementation discussion
-
-\subsubsection{Image storage}
-
-memory cards and all that (lots of this is discussed above, though)
-
-Integral memory cards / disks, offline usage
-
-memory cards cannot be swapped out because of simply too much manual work
-
-\subsubsection{Transport buses and cabling}
-
-USB2
-
-USB3
-
-Firewire
-
-GigE
-
-Camera Link
-
-libgphoto2; googl others for machine vision
-
-\subsubsection{(Mechanical something)}
-
-support structures out of bounds; just assume that the construction is rigid enough?
-
-% }}} hardware
 
 \clearpage
 \section{Static 3D reconstruction}
