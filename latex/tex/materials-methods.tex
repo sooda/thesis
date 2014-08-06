@@ -303,10 +303,11 @@ The code also monitors a single button that can be used to trigger all cameras s
 The used Mbed library does not actually turn all pins on at exactly the same time but in succession.
 This is not a problem because of the high clock speed of the processor; expected variance from each camera is supposed to be much longer than the time between the first and last pin state change. % TODO measure
 
-Control software for the host PC was implemented as small command-line Python scripts.
-The host controls the trigger's outputs individually, normally driving all the outputs simultaneously.
-Sequential or other forms of triggering are possible but not meaningful in normal use.
+Control software for the host PC was implemented as a small command-line Python script communicating to the virtual serial port of the Nucleo board.
+The host controls the trigger's outputs individually, normally driving all the outputs only.
+Sequential or other forms of triggering are possible, because the cameras are driven individually in hardware.
 For example, as each camera is able to record five full-resolution frames per second in burst, interleaving the nine cameras results in short 45 FPS full-resolution imagery.
+Also, when using the internal pop-up flashes in the cameras, they should be fired separately to circumvent lighting synchronization problems.
 
 The same MCU can be reprogrammed with another firmware at any time; it was used also for measuring shutter delay of one camera.
 An input pin of the MCU was connected to the hot shoe flash present in the camera body.
