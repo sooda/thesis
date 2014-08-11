@@ -1,0 +1,10 @@
+- no widget found exception?
+	- verify that the camera mode selection wheel is on manual, otherwise e.g.
+	  shutter speed cannot be changed
+- camera ui (buttons, remote shutter) stuck after changing things?
+	- run release-uilock.sh or replug usb or reboot cams
+- ui unlocked and still black screen?
+	- push info button twice to cycle it back to the normal mode
+- camera not saving pics on the memory card?
+	- the capture target was internal ram, set back to memory card
+	- gphoto2 --set-config capturetarget=1
