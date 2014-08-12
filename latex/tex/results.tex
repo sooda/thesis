@@ -3,13 +3,90 @@
 
 % is X? test X. proof: X is ?.
 
-\subsection{Synchronization}
-\subsubsection{Static}
-\subsubsection{Video}
+\subsection{Synchronization issues}
+
+Synchronizing the image sources temporally is important for reconstruction algorithms to work correctly.
+A synchronized system captures images from all cameras with a reasonably small time difference, so that subject movement does not introduce additional errors.
+
+\subsubsection{Still capture}
+
+Static subjects do not move or change shape.
+However, still imagery of e.g. a human head needs at least semi-accurate syncing, because standing still enough is not possible for longer periods (seconds).
+Even though the facial pose would not change, the wrong position of the head in a frame would introduce error.
+Similarly, capturing e.g. a still image of a moving cloth needs proper synchronization.
+
+For a completely static subject, the cameras can even be shot separately, each using its own integrated flash unit, to minimize shadows for each viewpoint.
+When the light direction is almost the same as the camera's view direction, no shadows are possible.
+
+Still capture using the wired remote trigger was analyzed with a moving object.
+%A spinning disk with a dial was captured and the images were compared.
+%Sample data is shown in figure \ref{fig:spindisk}
+
+\subsubsection{Video capture}
+
+The EOS 700D does not support an external sync signal for video recording, but relies on an internal clock to sync the frames within a single video file.
+It can be safely assumed that the clock speed has little variation, and thus, little drift and jitter.
+Recording offset remains an issue;
+processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a wireless remote control of the camera manufacturer would be used for starting several cameras at once, the offset is noticeable.
+
+A test was carried out to find variations in the recording offset.
+Three cameras were triggered with a Canon RC-6 wireless remote control.
+The remote sends a short infrared pulse to a sensor in the front of a camera when a key is pressed.
+The camera was set in video mode and it was configured to use a remote release.
+When all cameras were recording, a flash unit was aimed at the lenses and fired several times.
+
+A direct light pulse of a flash unit shows up as an over-exposed, completely white video frame, if the whole frame was exposing the image during the light pulse.
+Sometimes only part of the frame would be exposed to the flash light as a rolling shutter effect.
+Because the CMOS sensor is read and cleared line by line, the time of the flash can be deduced from the first bright line in the image.
+The rows are zeroed from light in succession in the same way as a mechanical focal plane shutter moves and exposed until read.
+Thus, the flash light's starting time in the video's internal clock is the frame's start time plus the duration that it takes for the rows before the overexposed one to show up:
+
+\begin{align} \label{timingcalib}
+t_l &= t_i + t_f \\
+&= i * F + f / R * F \\
+&= (i + f / r * c) * F
+\end{align}
+
+where $t_l$ is camera-relative time for the light, $t_i$ is the starting time for the frame where the light shows up, and $t_f$ is the time in the particular frame.
+The frame index $i$ marks the number of the frame in the video file, starts from 0, and there is $F$ = $1/\text{fps}$ time between the frames.
+$f$ is the first exposed row, $R = r * c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient $0.5$ found experimentally by matching with audio, presumably originating from internal processing in the camera between frames and the rows.
+The timings are illustrated in figure \ref{fig:flashtimeline} as a timeline with matching symbols.
+
+For well synchronized videos, the frames would be identical, and time difference calculated with eq. \ref{timingcalib} for each frame would be zero.
+A typical measurement result is shown in figure \ref{fig:flashtiming}.
+
+%\simplegfx{h}{0.6\textwidth}{flashtimeline}
+%{Illustrations on timing calibration using flashes.}
+
+\simplefig{h}{%
+\setlength\fboxsep{0pt}
+\setlength\fboxrule{1pt}
+\fbox{\includegraphics[width=0.3\textwidth]{gfx/flashtiming-a}}
+\fbox{\includegraphics[width=0.3\textwidth]{gfx/flashtiming-b}}
+\fbox{\includegraphics[width=0.3\textwidth]{gfx/flashtiming-c}}
+}{fig:flashtiming}
+{Video frames of three cameras with the same frame index with same flash light imaged.
+The flash start can be seen in the leftmost and middle frames.
+In the rightmost one, the flash has been fired before the frame exposure started;
+the frame before it is still without any overexposed light.
+It is impossible to deduce the exact time in this case.
+The time for the flash unit to reach maximum brightness is almost instant.
+}
+
+The method for measuring the synchronization error can be used to calibrate the differences, which aids in artificial sync with optical flow or other methods.
+A similar method using the recorded audio is perhaps more familiar, where a distinct sound in the audio tracks recorded by the cameras would be used for calibration.
+%The $t_l$ in equation \ref{eq:timingcalib}
+
+Another method for triggering multiple video recordings is to use a ML-based wired remote trigger by pressing the half-shutter, or focus button when a record key has been configured in ML.
+This method did not show any improvements in overcoming the offset.
 
 \subsection{Sample objects}
 
+The mask, human heads, legos, books
+
 \subsection{Hard cases}
+
+Low light? Little texture? Speculars? Hair?
 
 % test X. not feasible for X because Y.
 
