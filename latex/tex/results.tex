@@ -24,54 +24,74 @@ Still capture using the wired remote trigger was analyzed with a moving object.
 
 \subsubsection{Video capture}
 
+% intro
+
 The EOS 700D does not support an external sync signal for video recording, but relies on an internal clock to sync the frames within a single video file.
-It can be safely assumed that the clock speed has little variation, and thus, little drift and jitter.
+It can be safely assumed that the clock speed has little variation, and thus, little drift and jitter occur in the videos.
 Recording offset remains an issue;
-processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a wireless remote control of the camera manufacturer would be used for starting several cameras at once, the offset is noticeable.
+processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a wireless remote control of the camera manufacturer would be used for starting several cameras at once, the offset is very noticeable.
+
+% what was done
 
 A test was carried out to find variations in the recording offset.
 Three cameras were triggered with a Canon RC-6 wireless remote control.
 The remote sends a short infrared pulse to a sensor in the front of a camera when a key is pressed.
-The camera was set in video mode and it was configured to use a remote release.
-When all cameras were recording, a flash unit was aimed at the lenses and fired several times.
+The camera was set in video mode and it was configured to use the remote release.
+%The exposure time was set to minimum, 1/4000 s, to maximise the rolling shutter effect.
+%In this mode, the sensor rows are exposed one by one in succession.
+When all cameras were recording, a flash unit (Canon Speedlite 420EX) was aimed at the lenses and fired manually several times.
+
+% what happens
 
 A direct light pulse of a flash unit shows up as an over-exposed, completely white video frame, if the whole frame was exposing the image during the light pulse.
 Sometimes only part of the frame would be exposed to the flash light as a rolling shutter effect.
-Because the CMOS sensor is read and cleared line by line, the time of the flash can be deduced from the first bright line in the image.
+Because the CMOS sensor is cleared and read line by line, the time of the flash can be deduced from the first bright line in the image.
 The rows are zeroed from light in succession in the same way as a mechanical focal plane shutter moves and exposed until read.
 Thus, the flash light's starting time in the video's internal clock is the frame's start time plus the duration that it takes for the rows before the overexposed one to show up:
 
 \begin{align} \label{timingcalib}
-t_l &= t_i + t_f \\
-&= i * F + f / R * F \\
-&= (i + f / r * c) * F
+t_{Cl} &= t_{Ci} + t_{Cf} \\
+&= i_C * F + f_C / R * F \\
+&= (i_C + f_C / r * c) * F
 \end{align}
 
-where $t_l$ is camera-relative time for the light, $t_i$ is the starting time for the frame where the light shows up, and $t_f$ is the time in the particular frame.
+where $C$ is a camera identifier, $t_{Cl}$ is camera-relative time for the light pulse, $t_{Ci}$ is the starting time for the frame where the light shows up, and $t_{Cf}$ is the time inside the particular frame.
 The frame index $i$ marks the number of the frame in the video file, starts from 0, and there is $F$ = $1/\text{fps}$ time between the frames.
-$f$ is the first exposed row, $R = r * c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient $0.5$ found experimentally by matching with audio, presumably originating from internal processing in the camera between frames and the rows.
-The timings are illustrated in figure \ref{fig:flashtimeline} as a timeline with matching symbols.
+$f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the relation of exposure time and frame duration ($0.5$ in this case, referring to 180 degree shutter).
+Offset between two cameras $A$ and $B$ is then $t_{Al} - t_{Bl}$.
+The timings are depicted in figure \ref{fig:flashtimeline} as a timeline with matching symbols.
 
-For well synchronized videos, the frames would be identical, and time difference calculated with eq. \ref{timingcalib} for each frame would be zero.
+For perfectly synchronized videos, the frames would be identical, and time difference calculated with eq. \ref{timingcalib} for each frame would be zero as $i_C$ and $f_C$ would be constants for all $C$.
 A typical measurement result is shown in figure \ref{fig:flashtiming}.
+Audio recorded by the cameras' internal microphones at the same event is shown in figure \ref{fig:flashaudio}, and the order of flash pulses in the three frames can be verified from the order of the sound emitted by the flash.
 
-%\simplegfx{h}{0.6\textwidth}{flashtimeline}
-%{Illustrations on timing calibration using flashes.}
+\simplegfx{h}{1.0\textwidth}{flashtimeline}
+{Illustration on timing calibration of two cameras using a flash light.
+The darkened areas represent the exposure times and the red band represents the light pulse.
+In this example, $c = 0.5$.
+}
 
-\simplefig{h}{%
+\simplefig{p}{%
 \setlength\fboxsep{0pt}
 \setlength\fboxrule{1pt}
 \fbox{\includegraphics[width=0.3\textwidth]{flashtiming-a}}
 \fbox{\includegraphics[width=0.3\textwidth]{flashtiming-b}}
 \fbox{\includegraphics[width=0.3\textwidth]{flashtiming-c}}
 }{fig:flashtiming}
-{Video frames of three cameras with the same frame index with same flash light imaged.
-The flash start can be seen in the leftmost and middle frames.
-In the rightmost one, the flash has been fired before the frame exposure started;
+{Video frames of three cameras started with the same remote, with the same frame index.
+The time for the flash unit to reach maximum brightness is almost instant.
+The start of the light pulse can be seen in the leftmost and rightmost frames.
+In the middle one, the flash has been fired before the frame exposure started;
 the frame before it is still without any overexposed light.
 It is impossible to deduce the exact time in this case.
-The time for the flash unit to reach maximum brightness is almost instant.
 }
+
+\simplegfx{p}{0.8\textwidth}{flashaudio}
+{Trimmed audio recordings of the same moment as in figure \ref{fig:flashtiming}, extracted from the video files, in top-bottom order.
+First rows of the frames have been exposed at about $t = 0.03 \text{ s}$.
+The flash outputs a distinct ``pop'' sound.
+}
+
 
 The method for measuring the synchronization error can be used to calibrate the differences, which aids in artificial sync with optical flow or other methods.
 A similar method using the recorded audio is perhaps more familiar, where a distinct sound in the audio tracks recorded by the cameras would be used for calibration.
