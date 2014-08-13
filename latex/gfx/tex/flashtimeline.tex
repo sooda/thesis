@@ -1,0 +1,14 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[scale=1.5]
+	\def\blkw{4}
+	\def\blkh{1}
+	\draw (0,0) rectangle (\blkw,\blkh);
+	\draw [fill=gray] (0,0) rectangle (0.5\blkw,\blkh);
+	\node at (-0.3, -0.5) {1/1};
+	\node at (-0.3, -1.5) {1/2};
+	\node at (-0.3, -2.5) {1/4};
+\end{tikzpicture}
+\end{document}
+

@@ -1,10 +1,12 @@
 SRC := dippa.tex \
 	$(wildcard tex/*.tex) \
-	$(wildcard gfx/*.tex) \
-	gfx/raddist.pdf \
-	gfx/interlace.pdf \
-	gfx/focalplaneshutter.pdf \
-	gfx/img-get-process.pdf
+	gfx/tex/bayer.tex \
+	gfx/tex/lens.pdf \
+	gfx/tex/raddist.pdf \
+	gfx/tex/interlace.pdf \
+	gfx/tex/focalplaneshutter.pdf \
+	gfx/tex/flashtimeline.pdf \
+	gfx/dot/img-get-process.dot.pdf
 
 all: dippa.pdf
 	okular dippa.pdf
@@ -21,16 +23,10 @@ fullclean:
 
 .PHONY: all clean fullclean final
 
-gfx/raddist.pdf: gfx/raddist.tex
-	pdflatex -output-directory gfx gfx/raddist
+gfx/tex/%.pdf: gfx/tex/%.tex
+	pdflatex -output-directory gfx/tex/ $<
 
-gfx/interlace.pdf: gfx/interlace.tex
-	pdflatex -output-directory gfx $<
-
-gfx/focalplaneshutter.pdf: gfx/focalplaneshutter.tex
-	pdflatex -output-directory gfx $<
-
-gfx/img-get-process.pdf: gfx/img-get-process.dot
+gfx/dot/%.pdf: gfx/dot/%.dot
 	dot -Tpng $< > $@
 
 dippa.pdf: $(SRC)

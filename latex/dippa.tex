@@ -30,7 +30,7 @@ linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
 \SetWatermarkScale{3.33}
 %\SetWatermarkColor{gray!20}
 
-\input{gfx/bayer}
+\input{gfx/tex/bayer}
 % \simplefig{pos-specifier}{contents}{labelname}{caption}
 \newcommand{\simplefig}[4]{%
 	\begin{figure}[#1]\begin{center}
@@ -41,7 +41,7 @@ linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
 }
 % \simplegfx{pos-specifier}{width}{filename-and-labelname}{caption}
 \newcommand{\simplegfx}[4]{%
-	\simplefig{#1}{\includegraphics[width=#2]{gfx/#3}}{fig:#3}{#4}
+	\simplefig{#1}{\includegraphics[width=#2]{#3}}{fig:#3}{#4}
 }
 
 \setlength{\hoffset}{-1in}
@@ -54,6 +54,8 @@ linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
 \setlength{\headheight}{1em}
 \setlength{\topmargin}{25mm-\headheight-\headsep}
 \setlength{\textheight}{23cm}
+
+\graphicspath{ {gfx/tex/}{gfx/dot/}{gfx/bitmap/}{gfx/vector/} }
 
 \begin{document}
 

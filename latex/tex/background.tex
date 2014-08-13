@@ -137,8 +137,8 @@ Optical stabilization in a camera lens is implemented with a moving element in t
 %{Block diagram of Canon EF50mm f/1.8 II lens construction; insides of the lens shown from the side.}
 
 \simplefig{h}{%
-\includegraphics[width=0.4\textwidth]{gfx/canonef50mm-1}
-\includegraphics[width=0.4\textwidth]{gfx/canonef50mm-2}
+\includegraphics[width=0.4\textwidth]{canonef50mm-1}
+\includegraphics[width=0.4\textwidth]{canonef50mm-2}
 }{fig:canonef50mm}
 {A fixed focal length Canon EF 50mm f/1.8 II lens. Left: the lens. Right: block diagram of the lens construction, showing the six optical elements. Diagram by Canon Camera Museum.}
 
@@ -149,7 +149,7 @@ The following equation applies for a thin lens and image in focus, illustrated i
 	\frac{1}{a} + \frac{1}{b} = \frac{1}{f} \label{eq:focal}
 \end{equation}
 
-\simplefig{h!}{\input{gfx/lens.tex}}{fig:thinlens}
+\simplefig{h!}{\includegraphics{lens}}{fig:thinlens}
 { thin lens sample: a=6, b=3, f=2 }
 
 where f is the focal length of the lens, a is the distance between the lens and the imaged subject, and b is the distance between the lens and the camera's image sensor. Figure \ref{fig:thinlens} shows an example where the lens magnifies the subject at a factor of less than one, making it smaller on the camera film.
@@ -193,14 +193,14 @@ Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of fi
 %It should be noted that the nonlinear optical distortions are different from the inevitable perspective projection distortion that happens when projecting a 3D scene to a 2D plane, which is taken into account in the reconstruction.
 %Perspective distortion refers to the illusion that actual parallel lines would not be parallel in a projected image. \cite{SOMEONE}
 
-%\simplefig{h!}{\input{gfx/raddist.tex}}{fig:raddist}
+%\simplefig{h!}{\input{raddist.tex}}{fig:raddist}
 \simplegfx{h!}{0.6\textwidth}{raddist}
 {Barrel-type radial distortion: lines point from destination image pixels to locations to sample from in original image.
 The distortion is significantly larger near the borders.}
 
 \simplefig{h}{%
-\includegraphics[width=0.2\textwidth]{gfx/barrel-distortion}
-\includegraphics[width=0.2\textwidth]{gfx/pincushion-distortion}
+\includegraphics[width=0.2\textwidth]{barrel-distortion}
+\includegraphics[width=0.2\textwidth]{pincushion-distortion}
 }{fig:distortions}
 {Barrel (left) and pincushion distortions that would show up in an image of a grid of straight lines. For a lens with no distortion, the lines would not be curved.}
 
@@ -921,7 +921,7 @@ This part quickly reviews basic transforms whose results are needed in the later
 
 % FIXME especially this should be elsewhere
 \simplefig{h}{%
-\includegraphics[width=0.7\textwidth]{gfx/pinhole3d}
+\includegraphics[width=0.7\textwidth]{pinhole3d}
 }{fig:pinhole3d}
 {Pinhole camera geometry. Camera coordinate system origin at O, axis X3 points towards the optical axis, Y1 and Y2 point to image plane axes and R is the principal point, at the image center. The point P projects to Q, as well as everything else on the line joining them. The image plane is f units away from camera origin; f is called the focal length.}
 
