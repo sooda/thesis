@@ -333,21 +333,29 @@ Because of the rolling shutter effect of a CMOS sensor, it is better to do the r
 
 % mechanical stuff
 
-\simplegfx{h!}{0.5\textwidth}{focalplaneshutter}
+\simplegfx{h!}{0.8\textwidth}{focalplaneshutter}
 {Focal plane shutter has two moving curtains to cover the sensor, opening it momentarily so that each pixel receives light for the same amount of time.
-Top: initial position, sensor blocked.
-Middle: first curtain moved away, sensor exposed to light.
-Bottom: second curtain has moved to cover the sensor.
-The shutter resets by moving back to the position in the top.
-Modern curtains do not actually have whole planes but folding metal pieces to save space.}
+From left to right: initially, the sensor is blocked.
+Once the first curtain moves away, the sensor is exposed to light.
+Another shutter stops the light from entering again.
+The shutter resets by moving back to the position in the top (not shown).
+Modern curtains do not actually have whole planes but folding metal pieces to save space.
+}
+
+\simplegfx{h!}{0.8\textwidth}{focalplanerolling}{
+Rolling shutter effect in a focal plane shutter happens when the exposure time is really short.
+The shutters have to move at the same time, exposing only a part of the sensor at a time.
+Fast movement during the exposure leads to artifacts and a short flash light would illuminate only a part of the sensor.
+}
 
 
 A shutter is a mechanical device that blocks light to the sensor and can be moved quickly out of the way and back.
 There are several types of mechanical constructions for shutters, depending on the application.
 A focal plane shutter, used in most system cameras, is installed in front of the sensor.
 It consists of two curtains that move to the same direction; one moves out of the way of the sensor to let light pass to it, and another moves to cover it back again when the exposure time has elapsed.
-Figure \ref{fig:focalplaneshutter}.
+Figure \ref{fig:focalplaneshutter} illustrates a planar shutter (in reality, the curtains are black and not complete planes).
 A \emph{rolling shutter} effect is produced with very high shutter speeds, where the limit of curtain movement speed prohibits fully opened shutter and the closing curtain starts to move before the first has stopped, exposing only a narrow band of the sensor at a time.
+Fast shutter movement is depicted in figure \ref{fig:focalplanerolling}.
 
 A digital CMOS exposure and ``electrical shutter'' works like this too; the sensor is reset and read row by row sequentially; this produces a strong rolling shutter effect especially in short exposures and in video.
 

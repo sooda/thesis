@@ -3,11 +3,9 @@
 \begin{document}
 \begin{tikzpicture}
 
-\def\sceneAy{0}
-\def\sceneBy{4}
-\def\sceneBy{8}
-\def\sceneH{4}
-
+\def\sceneW{6cm}
+\def\sceneWW{4.5cm}
+\def\sceneSpace{1cm}
 \def\planeW{4}
 \def\planeH{3}
 \def\planeSep{-0.1}
@@ -20,26 +18,51 @@
 \def\clrback{black}
 
 \begin{scope}[ultra thick]
-		\draw [\clrsecond,dashed] (\planeW+\planeSep, 0) -- ++(0,\planeH);
-		\draw [\clrsecond,fill,fill opacity=0.3]        (\planeW+\planeSep,\planeH)
-		      -- ++(\planeW,0) -- ++(0,-\planeH) -- ++(-\planeW,0);
+		% top overlap
+		\draw [\clrsecond,dashed] (0,\planeH+\planeSep) -- ++(\planeW,0);
+		%  _
+		% | |
+		\draw [\clrsecond,fill,fill opacity=0.3] (0,\planeH+\planeSep)
+		      -- ++(0,\planeH) -- ++(\planeW,0) -- ++(0,-\planeH);
+		% sensor
 		\draw [\clrback,dashed] (\backX,\backY) rectangle ++(\backW, \backH);
+		% bottom on sensor
 		\draw [\clrfirst,fill=\clrfirst,fill opacity=0.3] (0,0) rectangle ++(\planeW,\planeH);
 
-	\begin{scope}[yshift=-{\sceneH}cm]
-		\draw [\clrfirst,fill,fill opacity=0.2] (-\planeW-\planeSep,0) rectangle ++(\planeW,\planeH);
+		% shutter move
+		\draw [->] (0.5*\planeW,0.5*\planeH) -- ++(0,-1.0*\planeH);
+		% scene move
+		\draw [->] (\sceneWW,0.5*\planeH) -- ++(\sceneSpace,0);
+
+	\begin{scope}[xshift = \sceneW]
+		% top still there
+		\draw [\clrsecond,fill,fill opacity=0.2] (0,\planeH+\planeSep) rectangle ++(\planeW, \planeH);
+		% shutter
 		\draw [\clrback,fill=gray] (\backX,\backY) rectangle ++(\backW, \backH);
-		\draw [\clrsecond,fill,fill opacity=0.2] (\planeW+\planeSep, 0) rectangle ++(\planeW, \planeH);
+		% bottom has moved
+		\draw [\clrfirst,fill,fill opacity=0.2] (0,-\planeH-\planeSep) rectangle ++(\planeW,\planeH);
+
+		% shutter move
+		\draw [->] (0.5*\planeW,1.5*\planeH) -- ++(0,-1.0*\planeH);
+		% scene move
+		\draw [->] (\sceneWW,0.5*\planeH) -- ++(\sceneSpace,0);
 	\end{scope}
 
-	\begin{scope}[yshift=-{2*\sceneH}cm]
+	\begin{scope}[xshift=2*\sceneW]
 		%\draw [\clrfirst] (-\planeW-\planeSep,0) rectangle ++(\planeW,\planeH);
-		\draw [\clrfirst,dashed] (-\planeSep, 0) -- ++(0,\planeH);
-		\draw [\clrfirst,fill,fill opacity=0.2]        (-\planeSep,\planeH)
-		      -- ++(-\planeW,0) -- ++(0,-\planeH) -- ++(\planeW,0);
+
+		% bottom is now under
+		% bottom overlap
+		\draw [\clrfirst,dashed] (0,-\planeSep) -- ++(\planeW,0);
+		% |_|
+		\draw [\clrfirst,fill,fill opacity=0.2] (0,-\planeSep)
+		      -- ++(0,-\planeH) -- ++(\planeW,0) -- ++(0,\planeH);
+		% sensor
 		\draw [\clrback,dashed] (\backX,\backY) rectangle ++(\backW, \backH);
+		% top on sensor
 		\draw [\clrsecond,fill,fill opacity=0.2] (0, 0) rectangle ++(\planeW, \planeH);
 	\end{scope}
+
 \end{scope}
 
 \end{tikzpicture}

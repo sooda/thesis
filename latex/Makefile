@@ -5,6 +5,7 @@ SRC := dippa.tex \
 	gfx/tex/raddist.pdf \
 	gfx/tex/interlace.pdf \
 	gfx/tex/focalplaneshutter.pdf \
+	gfx/tex/focalplanerolling.pdf \
 	gfx/tex/flashtimeline.pdf \
 	gfx/dot/img-get-process.dot.pdf
 
