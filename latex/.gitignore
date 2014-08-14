@@ -5,7 +5,4 @@ dippa.pdf
 dippa.toc
 dippa.bbl
 dippa.blg
-gfx/raddist.pdf
-gfx/interlace.pdf
-gfx/focalplaneshutter.pdf
-gfx/img-get-process.pdf
+gfx/tex/*.pdf
