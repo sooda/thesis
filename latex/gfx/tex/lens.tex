@@ -4,6 +4,11 @@
 
 \begin{tikzpicture}
 
+% http://tex.stackexchange.com/questions/14901/dimensioning-of-a-technical-drawing-in-tikz
+\tikzset{%
+    dimen/.style={<->,>=latex,thin,every rectangle node/.style={fill=white,midway,font=\sffamily}},
+}
+
 %\namedhorline{text}{textpos}{radius}
 \newcommand*{\namedhorline}[3]{%
 	%\draw [<-] ++ -- ++(\dx,\dy) -- ++(\dx,-\dy) -- ++(-\dx,-\dy) -- cycle
@@ -34,11 +39,11 @@
 
 % lens
 
-\draw (\lensx+\lensw/2,\lensy) arc [radius=\rad, start angle=0, end angle=\ang];
-\draw (\lensx+\lensw/2,\lensy) arc [radius=\rad, start angle=0, end angle=-\ang];
+\draw [thick] (\lensx+\lensw/2,\lensy) arc [radius=\rad, start angle=0, end angle=\ang];
+\draw [thick] (\lensx+\lensw/2,\lensy) arc [radius=\rad, start angle=0, end angle=-\ang];
 
-\draw (\lensx-\lensw/2,\lensy) arc [radius=\rad, start angle=180, end angle=180+\ang];
-\draw (\lensx-\lensw/2,\lensy) arc [radius=\rad, start angle=180, end angle=180-\ang];
+\draw [thick] (\lensx-\lensw/2,\lensy) arc [radius=\rad, start angle=180, end angle=180+\ang];
+\draw [thick] (\lensx-\lensw/2,\lensy) arc [radius=\rad, start angle=180, end angle=180-\ang];
 %\draw (\lensx-\lensw/2,\lensy) arc [radius=\rad, start angle=180-\ang, end angle=180+\ang];
 
 % object, image
@@ -52,15 +57,23 @@
 
 % labels
 
-\namedhorline{f}{-1,\flabely}{1}
-\namedhorline{f}{1,\flabely}{1}
+\draw (0, 0) -- ++(0, \alabely);
 
-\namedhorline{a}{-3,\alabely}{3}
+\draw (-2, 0) -- ++(0, \flabely) coordinate (Df);
+\draw (2, 0) -- ++(0, \flabely) coordinate (Dff);
+\draw [dimen] (Df) -- ++(\f, 0) node {$f$};
+\draw [dimen] (Dff) -- ++(-\f, 0) node {$f$};
+
+%\namedhorline{a}{-3,\alabely}{3}
+\draw (-\objx, \objh) -- (-\objx, \alabely) coordinate (Da);
+\draw [dimen] (Da) -- ++(\objx, 0) node {$a$};
 
 \node at (-\objx, -1) {subject};
-\node at (\imgx, 1) {image};
+\node at (\imgx, -1) {image};
 
-\namedhorline{b}{1.5,\alabely}{1.5}
+%\namedhorline{b}{1.5,\alabely}{1.5}
+\draw (\imgx, 0) -- ++(0, \alabely) coordinate (Db);
+\draw [dimen] (Db) -- ++(-\imgx, 0) node {$b$};
 
 \end{tikzpicture}
 
