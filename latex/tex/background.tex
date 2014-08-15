@@ -169,30 +169,35 @@ In artistic photos and e.g. portraits, it can be preferred to have a small subje
 In a reconstruction rig, exactly the opposite is preferred: everything should be in focus.
 This might need a really small aperture, and consequently really bright lights, to achieve in a reconstruction rig where the distance to the subject is relatively short.
 
-As the blur happens gradually, a \emph{circle of confusion} is often used as a definition of unsharp areas of images.
-A point outside the focal plane shows up on the image sensor as a circle (for circular apertures and lenses); when this circle is significantly larger than the pixel size on the sensor, the image is perceived as blurred at this point.
+As the blur happens gradually, a \emph{circle of confusion} (CoC) is often used as a definition of unsharp areas of images.
+A point outside the focal plane shows up on the image sensor as a circle (for circular apertures); when this circle is significantly larger than the pixel size on the sensor, the image is perceived as blurred at this point.
 
-Depth of field can be calculated from the difference between the shortest and farthest object distances that generates a circle of confusion, found geometrically.
-When $f$ is the focal length, $F$ the aperture f number, $s$ the distance to the subject, and $c$ the acceptable circle of confusion, the depth of field $D$ is given by (\cite{greenleaf1950photographic}):
+Depth of field can be calculated from the difference between the shortest and farthest object distances that generates a CoC, found geometrically.
+When $f$ is the focal length, $F$ the aperture f number, $s$ the distance to the subject, and $c$ the acceptable CoC, the depth of field $D$ is given by (\cite{greenleaf1950photographic}):
 
-\begin{equation}
+\begin{equation} \label{eq:dof}
 	D = \frac{2 s f^2 F c (s - f)} {f^4 - F^2 c^2 (s - f)^2}
 \end{equation}
 
 In figure \ref{fig:dofcoc}, $D$ equals to $Z' - Z$, the maximum and minimum acceptable distances near the subject.
 
-Size of the circle of confusion depends on the resolution power of the viewer; when a photograph is looked with the eye, the print size of the image determines the circle.
-A popular formula in photography determines the size as $c = d/1730$, computed via the diagonal $d$ of the image size.
+Size of the CoC depends on the resolution power of the viewer; when a photograph is looked with the eye, the print size of the image determines the circle.
+A standard-considered formula in photography determines the maximum acceptable CoC by dividing the image size by 1500.
+For the standard 35 mm film size with an image size of 36 x 24 mm (about 43 mm diagonal), the CoC becomes $c = 43 \text{mm} / 1500 \approx 0.03 \text{mm}$.
+For an APS-C sized sensor having 1.6 times smaller image size, CoC becomes $c = 43 \text{mm} / 1.6 / 1500 \approx 0.019 \approx{mm}$.
 In reality, an intuitive way to determine the disk size would be the size of a single pixel in a digital sensor;
 the disk should not span too many pixels, so that accurate detail would be resolvable from the digital image.
+
+For a normal 50 mm lens with the subject at a distance of 1 m, an aperture of f/11 and a circle of confusion of 0.019 mm, the formula \ref{eq:dof} gives $D \approx 16 \text{cm}$, having the subject approximately in the middle of the acceptable range.
 
 % CoC img http://www.cambridgeincolour.com/tutorials/depth-of-field.htm
 
 \simplegfx{h!}{\textwidth}{dofcoc}{
-	Exaggerated illustration of circle of confusion and depth of field, seen from the side (not drawn to scale).
+	Exaggerated illustration of circle of confusion and depth of field with a thin lens, seen from the side (not drawn to scale).
 	Sensor is at the green line, and the middle of the cross represents the lens.
+	Subjects at distance $s$ project perfectly at the sensor.
 	Distances between $Z$ and $Z'$ project to a circle smaller or equal to $c$.
-	It can be easily seen that at longer distances, the CoC becomes smaller.
+	It can be easily seen that for subjects at longer distances, the depth of field increases.
 }
 
 % diffraction
