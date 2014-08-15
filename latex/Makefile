@@ -8,6 +8,7 @@ SRC := dippa.tex \
 	gfx/tex/focalplanerolling.pdf \
 	gfx/tex/flashtimeline.pdf \
 	gfx/tex/lineskipping2.pdf \
+	gfx/tex/dofcoc.pdf \
 	gfx/dot/img-get-process.dot.pdf
 
 all: dippa.pdf

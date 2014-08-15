@@ -50,12 +50,12 @@ A cube projected on a plane is shown in figure \ref{fig:perspproj}.
 % Cartesian coordinates.
 
 Mathematically, a point in a three-dimensional world can be encoded in any coordinate system;
-when using a cartesian coordinate system, a point is described as a location relative to a selected origin reference, as a triplet of distances along three perpendicular X, Y and Z axes (figure \ref{fig:coordsys}).
+when using a standard cartesian coordinate system, a point is described as a location relative to a selected origin reference, as a triplet of distances along three perpendicular X, Y and Z axes. % (figure \ref{fig:coordsys}).
 In a traditional right-handed system, X increases right, Y upwards and Z towards the viewer.
 All coordinates throughout this work are expressed in a 3D cartesian system, unless noted otherwise.
 
-\simplegfx{h}{0.6\textwidth}{coordsys}
-{A 3D cartesian coordinate system. Origin at O, point location encoded in the triplet $(x,y,z)$ as individual lengths along the X, Y and Z axes, respectively.}
+%\simplegfx{h}{0.6\textwidth}{coordsys}
+%{A 3D cartesian coordinate system. Origin at O, point location encoded in the triplet $(x,y,z)$ as individual lengths along the X, Y and Z axes, respectively.}
 
 % Points, projection equation.
 
@@ -125,11 +125,12 @@ Imperfections in the lenses project points to positions that differ from those p
 Lens distortions deviate the rays, and no system is in perfect focus, so that one point spreads out as a circle.
 %In reconstructing, methods that estimate the points and minimize errors are used, as no model predicts the camera perfectly.
 
-Construction of optical systems is well studied. \cite{kingslake1989history}
-Actual camera ``lenses'' consist of not only a single glass element (optical lens) but many, especially in the case of zoom lenses whose focal length can be changed.
-As an example, a Canon lens diagram is shown in figure \ref{fig:canonef50mm}.
+Construction of optical systems is well studied. \cite{kingslake1989history,greenleaf1950photographic}
+Actual camera ``lenses'' consist of not only a single glass element (optical lens) but many, especially in the case of zoom lenses where the focal length can be changed.
+As an example, a fixed-focus Canon lens diagram is shown in figure \ref{fig:canonef50mm}.
 There are several lenses, some grouped together, all aligned so that their centers lie parallel to the optical axis.
-Optical stabilization in a camera lens is implemented with a moving element in the middle of the lens.
+Aperture stop is located in the middle (not shown in the figure).
+Optical stabilization in a camera lens is implemented with a moving element in the light path, usually near the middle of the lens.
 %In this work, the inner workings of these systems are ignored and equations assume a simple projective model, which is a safe assumption when the image is in focus.
 
 % http://www.canon.com/camera-museum/lens/ef/data/standard/ef_50_18ii.html?p=2
@@ -143,14 +144,15 @@ Optical stabilization in a camera lens is implemented with a moving element in t
 {A fixed focal length Canon EF 50mm f/1.8 II lens. Left: the lens. Right: block diagram of the lens construction, showing the six optical elements. Diagram by Canon Camera Museum.}
 
 
-The following equation applies for a thin lens and image in focus, illustrated in figure \ref{fig:thinlens}:
+The following equation applies for a thin lens and image in focus, as seen in figure \ref{fig:thinlens}:
 
 \begin{equation}
 	\frac{1}{a} + \frac{1}{b} = \frac{1}{f} \label{eq:focal}
 \end{equation}
 
-\simplefig{h!}{\includegraphics{lens}}{fig:thinlens}
-{ thin lens sample: a=6, b=3, f=2 }
+\simplefig{h!}{\includegraphics{lens}}{fig:thinlens}{
+	thin lens sample: $a=6$, $b=3$, $f=2$. Actual subjects would be usually much further away; image depicts a macro setup for clarity.
+}
 
 where f is the focal length of the lens, a is the distance between the lens and the imaged subject, and b is the distance between the lens and the camera's image sensor. Figure \ref{fig:thinlens} shows an example where the lens magnifies the subject at a factor of less than one, making it smaller on the camera film.
 % hox, optical axis
@@ -165,16 +167,40 @@ if it is not infinitesimally small, as in any practical case, there will be some
 This effect is called \emph{depth of field}.
 In artistic photos and e.g. portraits, it can be preferred to have a small subject in focus to separate it from the background by blurring the background.
 In a reconstruction rig, exactly the opposite is preferred: everything should be in focus.
+This might need a really small aperture, and consequently really bright lights, to achieve in a reconstruction rig where the distance to the subject is relatively short.
 
-As the blur happens gradually, a ``circle of confusion'' is often used as a definition of unsharp areas of images.
+As the blur happens gradually, a \emph{circle of confusion} is often used as a definition of unsharp areas of images.
 A point outside the focal plane shows up on the image sensor as a circle (for circular apertures and lenses); when this circle is significantly larger than the pixel size on the sensor, the image is perceived as blurred at this point.
+
+Depth of field can be calculated from the difference between the shortest and farthest object distances that generates a circle of confusion, found geometrically.
+When $f$ is the focal length, $F$ the aperture f number, $s$ the distance to the subject, and $c$ the acceptable circle of confusion, the depth of field $D$ is given by (\cite{greenleaf1950photographic}):
+
+\begin{equation}
+	D = \frac{2 s f^2 F c (s - f)} {f^4 - F^2 c^2 (s - f)^2}
+\end{equation}
+
+In figure \ref{fig:dofcoc}, $D$ equals to $Z' - Z$, the maximum and minimum acceptable distances near the subject.
+
+Size of the circle of confusion depends on the resolution power of the viewer; when a photograph is looked with the eye, the print size of the image determines the circle.
+A popular formula in photography determines the size as $c = d/1730$, computed via the diagonal $d$ of the image size.
+In reality, an intuitive way to determine the disk size would be the size of a single pixel in a digital sensor;
+the disk should not span too many pixels, so that accurate detail would be resolvable from the digital image.
 
 % CoC img http://www.cambridgeincolour.com/tutorials/depth-of-field.htm
 
+\simplegfx{h!}{\textwidth}{dofcoc}{
+	Exaggerated illustration of circle of confusion and depth of field, seen from the side (not drawn to scale).
+	Sensor is at the green line, and the middle of the cross represents the lens.
+	Distances between $Z$ and $Z'$ project to a circle smaller or equal to $c$.
+	It can be easily seen that at longer distances, the CoC becomes smaller.
+}
+
 % diffraction
 
-Diffraction is an effect that happens for small apertures.
+Diffraction is an effect that happens for small apertures; another reason why arbitrarily small aperture is unwanted.
 When light rays diverge on a small aperture, their different distances traveled make the waves interfere each other and produce a 2D diffraction pattern, called an airy disk.
+The disk blurs the image in a similar fashion as an object that is out of focus.
+Size of the airy disk is relative to the size of the aperture; it too should not be significantly larger than the sensor pixel size.
 
 % rayleigh limit?
 
