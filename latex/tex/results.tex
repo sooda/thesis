@@ -19,8 +19,37 @@ For a completely static subject, the cameras can even be shot separately, each u
 When the light direction is almost the same as the camera's view direction, no shadows are possible.
 
 Still capture using the wired remote trigger was analyzed with a moving object.
-%A spinning disk with a dial was captured and the images were compared.
-%Sample data is shown in figure \ref{fig:spindisk}
+A standard 120 mm PC fan was rotated in the view of all cameras, with markings drawn around the fan and in the moving blades with a bright-colored pen.
+The cameras were set to maximum aperture (f/1.8) and shortest possible shutter speed (1/4000 s) to minimize motion blur.
+The fan speed had to be reduced by using 4.5 volts instead of the nominal 12 volts, resulting in about TODO revolutions per second, or TODO m/s on the far end of the fan blades.
+
+Without any actual measurements done but only with careful manual observation, no significant sync mismatches were found by comparing the position of the rotating measurements in all nine different images.
+Two such images are depicted in figure \ref{fig:fansynctest}.
+
+\simplefig{h}{%
+%\setlength\fboxsep{0pt}
+%\setlength\fboxrule{1pt}
+%\fbox{\includegraphics[width=0.3\textwidth]{flashtiming-a}}
+\includegraphics[width=0.45\textwidth]{fan-a}
+\includegraphics[width=0.45\textwidth]{fan-b}
+}{fig:fansynctest}{
+	Frames from two cameras in a synchronization test with a PC fan. A marking on the end of a fan blade can be seen in the top.
+	The position of the marking does not differ distinctively in the pictures.
+}
+
+% TODO: testaa kans huomaako jos vaikka yksi ei oo synkassa
+% "hardly scientific" jonnekin väliin, hehheh?
+%Another test was done using a mobile phone microphone.
+%A DSLR makes a distinct clanking sound because of its mirror and mechanical shutter.
+%Two sound clips were recorded several times: the sound of all cameras triggering at the same time, and for comparison, the sound of a single camera only.
+%The waveforms were drawn on top of each other and inspected, and no distinct difference was found.
+%For comparison, also intentionally wrongly synchronized sequences were recorded.
+%
+%\simplegfx{p}{0.8\textwidth}{shutteraudio}{
+%	Trimmed audio recordings of all cameras shooting (top), and only a single camera (bottom).
+%	The waveforms cannot be clearly distinguished.
+%}
+
 
 \subsubsection{Video capture}
 
