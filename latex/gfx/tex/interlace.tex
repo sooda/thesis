@@ -5,31 +5,60 @@
 
 \def\wid{4.0}
 \def\hei{3.0}
-\def\spheresize{1.0}
+\def\objectsize{1.0}
 \def\clrback{gray}
-\def\clrsphere{green}
-\def\clrlines{black}
+\def\clrobject{green}
+\def\clrblank{black}
 \def\numlines{20}
 \def\lastline{19}
 
-\newcommand*{\scene}[1]{
-	\draw [\clrback,fill] (#1,0) rectangle (#1+\wid,\hei);
+\def\firstvisible{3}
+\def\lastvisible{15}
 
-	% circle confuses the image because of its seemingly higher-than-pixelrow resolution in curves :(
-	%\draw [\clrsphere,fill] (#1+\wid/2,\hei/2) circle [radius=\spheresize];
-	\draw [\clrsphere,fill] (#1+\wid/2-\spheresize,\hei/2-\spheresize) rectangle (#1+\wid/2+\spheresize,\hei/2+\spheresize);
-}
-
-\newcommand*{\scenefull}[2]{
-	\scene{#1}
-	\foreach \y in {#2,...,\lastline} { % ,...,\numlines} {
-		\draw [\clrlines,fill] (#1,\y*\hei/\numlines) rectangle (#1+\wid,{(\y+1)*\hei/\numlines});
+% \myboxes{middlex}{w}{firstindices}{color}
+\newcommand*{\myboxes}[4]{
+	\foreach \y in {#3}{
+		\draw [#4,fill] (#1-0.5*#2,\y*\hei/\numlines) rectangle ++(#2,\hei/\numlines);
 	}
 }
 
-\scenefull{0}{1,3}
-\scenefull{5}{0,2}
-\scene{10}
+	\myboxes{0}{\wid}{0,2,...,\lastline}{\clrback}
+	\myboxes{0}{\wid}{1,3,...,\lastline}{\clrblank}
+	\myboxes{0}{0.5*\wid}{2,4,...,\lastvisible}{\clrobject}
+
+	\draw [ultra thick] (2.5, \hei/2) ++ (0.2, 0) -- ++(-0.4, 0) ++ (0.2, 0.2) -- ++(0, -0.4);
+	% \node at (2.5, \hei/2) {\Huge +};
+
+	\myboxes{5}{\wid}{1,3,...,\lastline}{\clrback}
+	\myboxes{5}{\wid}{0,2,...,\lastline}{\clrblank}
+	\myboxes{5}{0.5*\wid}{3,5,...,\lastvisible}{\clrobject}
+
+	\draw [ultra thick] (7.5, \hei/2) ++(-0.2, 0.1) -- ++(0.4, 0) ++(0, -0.2) -- ++(-0.4, 0);
+	%\node at (7.5, \hei/2) {\Huge =};
+
+	\myboxes{10}{\wid}{0,1,...,\lastline}{\clrback}
+	\myboxes{10}{0.5*\wid}{3,4,...,\lastvisible}{\clrobject}
+
+\begin{scope}[yshift = -5cm]
+	\myboxes{0}{\wid}{0,2,...,\lastline}{\clrback}
+	\myboxes{0}{\wid}{1,3,...,\lastline}{\clrblank}
+	\myboxes{-0.5}{0.5*\wid}{2,4,...,\lastvisible}{\clrobject}
+
+	\draw [ultra thick] (2.5, \hei/2) ++ (0.2, 0) -- ++(-0.4, 0) ++ (0.2, 0.2) -- ++(0, -0.4);
+	%\node at (2.5, \hei/2) {\Huge +};
+
+	\myboxes{5}{\wid}{1,3,...,\lastline}{\clrback}
+	\myboxes{5}{\wid}{0,2,...,\lastline}{\clrblank}
+	\myboxes{5.5}{0.5*\wid}{3,5,...,\lastvisible}{\clrobject}
+
+	\draw [ultra thick] (7.5, \hei/2) ++(-0.2, 0.1) -- ++(0.4, 0) ++(0, -0.2) -- ++(-0.4, 0);
+	%\node at (7.5, \hei/2) {\Huge =};
+
+	\myboxes{10}{\wid}{0,1,...,\lastline}{\clrback}
+	\myboxes{9.5}{0.5*\wid}{2,4,...,\lastvisible}{\clrobject}
+	\myboxes{10.5}{0.5*\wid}{3,5,...,\lastvisible}{\clrobject}
+
+\end{scope}
 
 \end{tikzpicture}
 \end{document}
