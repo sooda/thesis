@@ -609,6 +609,15 @@ Actual FPS in camcorders is slowed down by a factor of 1.001 because of historic
 Externally triggered cameras can be configured to record at any arbitrary speed, as long as it's in the limits of the camera speed capabilities.
 Synchronized machine vision cameras do not record video on their own, but instead just listen to a synchronization signal and output frames on its rate, that frame grabbers on a computer read and store.
 
+DSLR video modes use almost the sensor's full size but skip some of its lines when recording video, getting the same field of view as still images but sometimes resulting in significant aliasing patterns with certain subjects with high frequency information.
+Line skipping is depicted in figure \ref{fig:lineskipping2}.
+The color filter array makes the problem even worse.
+
+\simplegfx{h!}{0.9\textwidth}{lineskipping2}{
+Line skipping in a video camera.
+Left shows a part of the full sensor and its bayer pattern; on the right, only every third line is captured.
+}
+
 % }}}
 
 \subsubsection{Frame rate vs. shutter speed} % {{{
@@ -636,8 +645,8 @@ Synchronized machine vision cameras do not record video on their own, but instea
 {Shutter speed compared to frame rate. For an always open shutter, the camera records everything. 1/2 is a ``normal'' rate, 1/4 resulting in slightly less motion blur.}
 
 What happens when the shutter is closed cannot be recorded.
-The Nyquist-Shannon sampling theorem states that events higher than half the sampling rate cannot be distinguished from the signal.
-In reality, repetitive motions rarely happen in reconstruction videos, but the fact that information about the subject between frames is lost cannot be circumvented.
+%The Nyquist-Shannon sampling theorem states that events higher than half the sampling rate cannot be distinguished from the signal.
+%In reality, repetitive motions rarely happen in reconstruction videos, but the fact that information about the subject between frames is lost cannot be circumvented.
 Normally, motion is simply interpolated between views in different frames or simply the last frame is used, if playback happens at a different rate from the recording.
 For a large displacement, this interpolation can be inaccurate enough to need manual fixing.
 
@@ -646,14 +655,16 @@ Motion blur encodes more information about object travel but gets less precise b
 slowmovideo 
 \cite{eugster2011slowmovideo}
 
-DSLR video modes use almost the sensor's full size but skip some of its lines when recording video, getting the same field of view as still images but sometimes resulting in significant aliasing patterns with certain subjects with high frequency information.
-Line skipping is depicted in figure \ref{fig:lineskipping2}.
-The color filter array makes the problem even worse.
+Faster frame rate encodes information more often, which is preferable as longer distances of pixels of same objects are more difficult to match when tracking objects; faster shutter speeds help to reduce motion blur.
+Fast shutter (i.e.~short exposure) needs to be compensated by using more sensitive sensors or more light to get equivalently bright images.
+Short exposure becomes problematic if the light source is a flash instead of continuous, if camera offset can be more than the exposure; the flash might illuminate only some cameras while others expose when the flash is not lit.
 
-\simplegfx{h!}{0.9\textwidth}{lineskipping2}{
-Line skipping in a video camera.
-Left shows a part of the full sensor and its bayer pattern; on the right, only every third line is captured.
-}
+% (FIXME wat?)
+Video recording and motion tracking are best considered orthogonal issues; while a single static case can be scanned in three dimensions, so can be also each frame of a sequence, separately.
+It might not be computationally feasible in all use cases, though, because the reconstruction must be started all over again for each frame and the topology is uncorrelated between the frames.
+% Assumptions that the scene is locally almost the same can help and speed up computations. [?]
+
+%Section \ref{sec:tracking} will 
 
 
 % }}}
@@ -663,21 +674,25 @@ Left shows a part of the full sensor and its bayer pattern; on the right, only e
 %Time offset / drift / jitter / lockstep
 
 Synchronized recording of multiple view video is more complicated than shooting still photos simultaneously.
-Cameras should be synchronized, i.e. locked to hold their shutters open at the same time during each frame.
-When cameras open their shutter in a different time, they effectively shoot a different scene (assuming moving subjects in the scene), breaking one of the most fundamental assumptions of stereo vision: that the images encode geometrically same objects.
+The cameras should be clocked together to hold their shutters open at the same time during each frame.
+When cameras open their shutter in a different time, they effectively shoot a different scene (assuming moving subjects in the scene), breaking the assumption of stereo vision that the images encode a static scene, i.e. geometrically same objects.
 This can be compensated to some degree with optical flow if hard syncing is not possible. \cite{bradley2009synchronization}
 
-Synchronization issues can be divided in three major errors, assuming N cameras each having its own video file: offset, drift and jitter.
-Offset is the time difference relating start time of two streams: for camera $A$ at each frame index $t_{Ai}$ for an increasing $i$, and camera $B$ at $t_{Bi}$, a constant $e$ is added, as in eq. \ref{eq:timeoffset}:
+Synchronization issues can be divided roughly in three sources of error, assuming N cameras each having its own video file with same frame rate: \emph{offset}, \emph{drift} and \emph{jitter}.
+With the same frame rate, the frames can be indexed with numbers starting from 0.
+Times when the frames taken relative to a global clock is noted as $t_{Ci}$, where $C$ is a camera identifier and $i$ is the increasing frame index.
+% TODO something on the errors modulo frame length
+
+\emph{Offset} is the time difference of two streams: for an ideal camera $A$ at each frame $t_{Ai}$ for $i$, and camera $B$ at $t_{Bi}$, a constant $e$ is added, as in eq. \ref{eq:timeoffset}:
 
 \begin{equation} \label{eq:timeoffset}
 	t_{Bi} = t_{Ai} + e
 \end{equation}
 
-Drift is a property of one single camera that advertises to record at some speed and actually works at some other speed, similarly, shown in eq. \ref{eq:timedrift} for cameras $A$ and $B$, constant $e$:
+Drift is a property of one a camera that advertises to record at some speed and actually works at some other speed, similarly, shown in eq. \ref{eq:timedrift} for cameras $A$ and $B$, constant $e$:
 
 \begin{equation} \label{eq:timedrift}
-	t_{Bi} = t_{Ai} + e * i
+	t_{Bi} = t_{Ai} + e i
 \end{equation}
 
 Jitter is the random difference between frames for a same camera, in equation \ref{eq:timejitter}, when $e$ changes:
@@ -691,65 +706,55 @@ If the cameras take pictures only when instructed, such as machine vision camera
 Many consumer compact cameras support a preview feed for individual frames when connected to a computer; the feeds can be useful for previewing but jitter becomes too significant because cameras are not designed with this in mind.
 If the offset between two cameras is not an exact multiple of the frame speed, they effectively cannot have any frames that would display exactly the same scene.
 
-Frame accurate offset sync with clapperboards works by matching the clap sound to visual cues in the video.
+Frame accurate offset sync with clapperboards works by matching the clap sound to visual cues in the video, a method well known in film production.
 Cameras that record audio to the same video file do not need visual cues and can be synced together by matching the sound stream only.
-This is the method used in making movies when editing a final version with multiple cameras used.
+%This is the method used in making movies when editing a final version with multiple cameras used.
 It still leaves at most half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
 
 Synchronizing all the cameras that shoot the same scene might be a big issue in practice, depending on the gear used.
-Professional grade cameras can be synced to a single clock generator, so that they all operate on the same frequency (i.e. no drift) and phase (i.e. no offset).
+Professional video cameras can be synced to a single clock generator, so that they all operate on the same frequency (i.e. no drift) and phase (i.e. no offset), called genlocking or generator locking.
 The same method is used when shooting with machine vision cameras that have external trigger input.
-This still leaves a small phase difference (offset) caused by unequal transmission paths from the clock generator.
+%This still leaves a small phase difference (offset) caused by unequal transmission paths from the clock generator.
 Synchronizable camcorders are very expensive, and consumer-grade hardware usually lacks all possibilities for proper sync.
 
-\begin{verbatim}
-Drift
-
-normal   |   |   |   |   |   |   |
-drifting |    |    |    |    |    |
-         0t  1t  2t  3t  4t  5t  6t time -->
-
-
-Jitter
-
-normal   |   |   |   |   |   |   |
-jitterin |    |  |   | |      |    |
-         0t  1t  2t  3t  4t  5t  6t time -->
-\end{verbatim}
+%\begin{verbatim}
+%Drift
+%
+%normal   |   |   |   |   |   |   |
+%drifting |    |    |    |    |    |
+%         0t  1t  2t  3t  4t  5t  6t time -->
+%
+%
+%Jitter
+%
+%normal   |   |   |   |   |   |   |
+%jitterin |    |  |   | |      |    |
+%         0t  1t  2t  3t  4t  5t  6t time -->
+%\end{verbatim}
 
 %Often used techniques are starting flash (does not need an audio track) [REF], clapperboard [REF], strobe sync'd to fps, genlock.
 
 \simplefig{h!}{
 \begin{tikzpicture}[scale=1.5]
-	\draw (0,0) rectangle (6,-1);
-	\draw (0,-1) rectangle (6,-2);
+	\draw (0,0) rectangle ++(6,-0.5);
+	\draw (0,-0.5) rectangle ++(6,-0.5);
 	\foreach \x in {0,...,5} {
-		\draw (\x*1, 0) -- (\x*1, -2.5);
-		\node at (\x*1, -2.6) {{\x}t};
+		\draw (\x*1, 0) -- (\x*1, -1.5);
+		\node at (\x*1, -1.6) {${\x}t$};
 
-		\draw [fill=red] (\x*1, 0) rectangle (\x*1+0.4, -1);
-		\draw [fill=green] (\x*1+0.3, -1) rectangle (\x*1+0.3+0.4, -2);
+		\draw [fill=red] (\x*1, 0) rectangle ++(0.4, -0.5);
+		\draw [fill=green] (\x*1+0.3, -0.5) rectangle ++(0.4, -0.5);
 	}
-	\draw (0.3, 0) -- (0.3, -2.5);
-	\node at (0.3, -2.6) {e};
-	\node at (-0.3, -0.5) {A};
-	\node at (-0.3, -1.5) {B};
+	\draw (0.3, 0) -- (0.3, -1.5);
+	\node at (0.3, -1.6) {$e$};
+	\node at (-0.3, -0.25) {$A$};
+	\node at (-0.3, -0.75) {$B$};
 	% P, Z
 \end{tikzpicture}
 }{fig:syncproblems}
 {Video phase difference, i.e.~offset.
-Red rectangles illustrate exposure times of camera A, green rectangles the same for camera B.
-Frame period is t, and the cameras have a constant exposure time offset of an arbitrary e.}
-
-Faster frame rate encodes information more often, which is preferable as longer distances of pixels of same objects are more difficult to match when tracking objects; faster shutter speeds help to reduce motion blur.
-Fast shutter (i.e.~short exposure) obviously needs to be compensated by using more sensitive sensors or more light to get equivalently bright images.
-Short exposure becomes problematic if the light source is a flash instead of continuous, if camera offset can be more than the exposure; the flash might illuminate only some cameras while others expose when the flash is not lit.
-
-Video recording and motion tracking are best considered orthogonal issues; while a single static case can be scanned in three dimensions, so can be also each frame of a sequence, separately.
-It might not be computationally feasible in all use cases, though, because the reconstruction must be started all over again for each frame and the topology is uncorrelated between the frames.
-% Assumptions that the scene is locally almost the same can help and speed up computations. [?]
-
-%Section \ref{sec:tracking} will 
+Red rectangles illustrate exposure times of camera $A$, green rectangles the same for camera $B$.
+Frame period is $t$, and the cameras have a constant exposure time offset of an arbitrary $e$.}
 
 % }}}
 
@@ -922,7 +927,7 @@ Light field cameras such as the newer Kinect 2 have a better spatial accuracy bu
 \section{Static 3D reconstruction}
 
 Multi-view stereo reconstruction is one way to recover the structure of a static three-dimensional subject.
-In the following, a normal multi-view setup with ordinary photo cameras is assumed;
+In the following, a normal multi-view setup with ordinary digital photo cameras is assumed;
 fundamentally different methods, such as laser rangers or light field imaging, are not considered.
 
 %some presented fundamental methods are applicable also for different 
@@ -963,8 +968,8 @@ fundamentally different methods, such as laser rangers or light field imaging, a
 
 %Homography definition (mapping of points and lines in $P^2$) / panorama homography
 
-The previous image acquisition section described how to record a view of a scene with a camera. From now on, the term camera refers to a particular camera configuration, which can be a single physical camera moved to different locations.
-No optical system is assumed; at this point, the camera is reduced to the pinhole model \ref{sec:pinhole}.
+The previous image acquisition section described how to record a view of a scene with a camera. From now on, the term camera refers to a particular camera configuration, which can even be a single physical camera moved to different locations.
+At this point, the camera is reduced to the pinhole model \ref{sec:pinhole}; distortions caused by the optical system are assumed to be corrected.
 
 % FIXME: describe more of these in pinhole and less here, just recap here what pinhole describes?
 % intrinsics into camera workings, join them here to extrinsics
@@ -973,7 +978,7 @@ No optical system is assumed; at this point, the camera is reduced to the pinhol
 The camera is a projective object located somewhere in the imaged scene.
 Its \textit{intrinsic parameters} model the properties of projection, but do not take into account the camera location in any global coordinate system.
 The \textit{extrinsic parameters} contain the camera location and rotation in another global coordinate system, often structured as a matrix.
-This is especially advantageous when there are more than one cameras and their coordinates must be related.
+%This is especially advantageous when there are more than one cameras and their coordinates must be related.
 \cite{hartley03multiview,heyden2005multiple}
 This part quickly reviews basic transforms whose results are needed in the later reconstruction steps.
 
