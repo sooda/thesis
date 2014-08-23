@@ -347,6 +347,8 @@ The programs are available in \url { http://github.com/sooda/TODO-URL-HERE } wit
 
 \subsection{Custom camera control software} % {{{
 
+% FIXME clumsy
+% esper design etc.
 General parallelized image acquisition from a large set of cameras has not yet established such a state that general purpose software would be easily available.
 Commercial solutions probably exist, but they are often strictly bound to a specific hardware, expensive, and inflexible.
 
@@ -448,6 +450,8 @@ Testing the parameters on a camera manually is more convenient in some cases.
 
 \subsubsection{Image acquisition} % {{{
 
+% offloading
+
 A command-line tool called \emph{paraphotos} for downloading the images in realtime in parallel from each camera was developed in C++ using the libgphoto2 library.
 The cameras send a notification when a new photo is taken with the shutter button or the remote release.
 When this new file is found, it is downloaded and named by a running index and camera name.
@@ -516,6 +520,8 @@ Cmpmvs is a multi-view reconstruction software for transforming a set of calibra
 
 Python Photogrammetry Toolbox is another pipeline combinator for full 3D reconstruction, popular in archaeological fields. It combines Bundler and PMVS and others. \cite{moulon2011python}
 
+SFM toolkit combines Bundler and CMVS/PMVS.
+
 VisualSFM is probably the most common tool in the open source community.
 It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, PBA for camera estimation, and PMVS/CMVS for dense matching.
 A common post step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
@@ -524,19 +530,36 @@ A common post step is to use Meshlab to filter outliers away from the data and t
 
 % }}}
 
-\subsubsection{Commercial programs} % {{{
+\subsubsection{Commercial solutions} % {{{
 
-There is a large selection of commercial solutions available. Some companies are devoted to building software on certain applications or constructing whole scanning rigs. Examples include:
+% breeze systens $129 per cam
+%smartshooter
+
+There is a large selection of commercial software available, often accompanied with a 3D scanner.
+Some companies offer completely specialized rigs, some sell a scanning device and a general-purpose software alongside it which can be used as standalone and some only sell software, leaving the hardware implementation to the user.
+Examples include:
+% FIXME emphasis on differences
+
 \begin{description}
-\item[Autodesk 123D Catch] is a free web-based application for automatic structureless reconstruction.
-\item[CaptiveMotion] provides a facial capture and retargeting system that can be used with full-body mocap.
-\item[MotionScan] is the technology behind the video game L.A. Noire. \cite{rockstar2011noire} It uses tens of cameras to recover detailed structure.
-\item[Faceshift] encodes a markerless face captuer in a feature space that describes virtual muscle and bone movements.
-\item[3DF Zephyr Pro] is another automatic photo reconstruction system.
-\item[Mova Contour Reality Capture] does high-performance surface capture with a large array of cameras.
-\item[Pendulum Studio] provides a capture system called Alter Ego that integrates with game engines.
-\item[Pix4dMapper] converts aerial images to geometric surface models.
-\item[Acute3d] is targeted for large-scale photogrammetry and cultural heritage digitization.
+	\item[Autodesk 123D Catch] is a free web-based application for automatic structureless reconstruction.
+	\item[Agisoft PhotoScan] has two editions, for 3D designers and professional geographic content manipulation; among the geographic features, it is very suitable for multi-view reconstruction in content generation, and has an active forum for its users.
+	\item[CaptiveMotion] provides a facial capture and retargeting system that can be used with full-body mocap.
+	\item[MotionScan] is the technology behind the video game L.A. Noire. \cite{rockstar2011noire} It uses tens of cameras to recover detailed structure.
+	\item[Faceshift] encodes a markerless face captuer in a feature space that describes virtual muscle and bone movements.
+	\item[3DF Zephyr Pro] is another automatic photo reconstruction system.
+	\item[Mova Contour Reality Capture] does high-performance surface capture with a large array of cameras.
+	\item[Pendulum Studio] provides a capture system called Alter Ego that integrates with game engines.
+	\item[Pix4dMapper] converts aerial images to geometric surface models.
+	\item[Acute3d] is targeted for large-scale photogrammetry and cultural heritage digitization.
+	\item [FARO] manufactures hardware and provides scanning software for 3D documentataion and surveying, and provides a free application for Kinect-based scanning
+	\item[Trimensional] is a 3D scanner for iPhone
+	\item[Fuel3D] is a complete handheld scanning system
+	\item[Dimensional Imaging ltd.] provides DI3D and DI4D systems for static and dynamic surface capture, respectively.
+	%\item[SynthEyes] 
+	\item[Pixel Farm] provides tools for CG integration and match moving.
+	\item[3D-equalizer] is a multi-platform 3D tracking solution for the visual effects industry
+	\item[Smart3DCapture] targets GIS and large-scale reconstruction.
+	\item{V-STARS] by Geodetic System has emphasis on 3D measurement and engineering.
 \end{description}
 
 % TODO vicon; bradley face capture explains some.
@@ -545,37 +568,13 @@ There is a large selection of commercial solutions available. Some companies are
 
 (TODO)
 
-- kinect
-- meshmixer
-- photofly
-- sfm toolkit
-- alvar/artoolkit
-- agisoft photoscan
-- voodoo camera tracker
-- faro
-- cyberware
-- geodetic.com
-- v-star
-- trimensional
-- pix4d
-- facade
-- canoma
-- fuel3d
-- ms skynet
-- dimensional imaging
-- bundler based on photosynth?
-- boujou matchmover
-- vookat
-- syntheye
-- pftrack
-- 3d-equaliser
-- photomodel3d
-- janimation head tech
-- neven vision
-- ppr (osm bundler)
-- smart3dcapture
-- KLT: http://www.inf.ethz.ch/personal/chzach/opensource.html
-- http://slowmovideo.granjow.net/
+%- voodoo camera tracker
+% cyberware no longer exists, was used in films in hollywood
+%- canoma no longer
+%- bundler based on photosynth?
+%- janimation head tech
+% - KLT: http://www.inf.ethz.ch/personal/chzach/opensource.html
+% http://slowmovideo.granjow.net/
 
 % }}}
 
