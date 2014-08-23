@@ -3,25 +3,25 @@
 
 \subsection{Functional specification} % {{{
 
-The implementation was specified to be easy to use, portable, flexible and available for both 3D and 4D cases.
-Portability and open design were also considered to be important.
-By documenting the selected hardware and its structure, and writing control code in a generic way, it is hoped that the design could be reimplemented and/or refined by others too.
+Constraints on the rig were specified in loose terms, leaving much work on the background study.
+Desirable properties of the system were given as:
+
+\begin{itemize}
+	\item Ease of use: the user should not need to know implementation details to acquire a 3D scan
+	\item Portability: the system should not rely on affixing fixtures on the walls or the ceiling, for example
+	\item Flexibility: for research purposes, many subjects should be possible to scan
+	\item 3D and 4D: both static surface reconstruction and variations in geometry over time should be possible to scan
+	\item Open design: by documenting the rig well and selecting readily available generic components, a similar system could be built if there was such a need, and the already built system could be extended
+\end{itemize}
 
 %There is a wide variety of different consumer grade digital cameras.
 %Some of the main differences are dicussed below.
 
-% }}}
-
-%\subsubsection{Features} % {{{
-%Some of the above stuff goes here
-%% }}}
-
-\subsubsection{Practicalities} % {{{
-
 A general-purpose reconstruction rig has remarkably many practical matters to consider when comparing to the pure mathematical side.
 A mobile rig should be light enough to carry and set up, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration.
-Distance to the photographed target should not be too short in order to not annoy human targets, but a too large setup is difficult to build and needs lots of space.
-When capturing video, the frames should be synchronized among cameras as described in \ref{sec:video}, which might not be possible with a reasonable budget.
+Distance to the photographed target should not be too short in order to not annoy human subjects, but a too large setup is difficult to build and needs lots of space.
+Flexibility for arbitrary subjects means, among other interests, that the rig should be adjustable enough by means of camera positions and viewing directions.
+When capturing video, the frames should be synchronized among cameras as described in \ref{sec:video}, which might not be perfectly possible with a reasonable budget.
 
 % or \subsection{Data recording}
 
@@ -36,7 +36,10 @@ When capturing video, the frames should be synchronized among cameras as describ
 
 \subsection{Camera comparison} % {{{
 
-(not considered: weatherproofing, lcd/viewfinder/user interface, mirror blackout, autofocus, etc))))
+Closeup subjects in the range of a metre or less introduce concerns in shallow depth of field, forcing the lens aperture small, and consequently, requiring bright lights or slow shutter speeds.
+More sensitive sensor would require less light, but depth of field decreases as the sensor size increases.
+
+As the capture environment will be a clean laboratory space and the cameras will mostly be controlled remotely, features usually important to photographers such as weatherproofing or user interface were not considered.
 
 The section \ref{sec:cameratypes} presents in more detail the properties necessary for reconstruction.
 
@@ -559,7 +562,7 @@ Examples include:
 	\item[Pixel Farm] provides tools for CG integration and match moving.
 	\item[3D-equalizer] is a multi-platform 3D tracking solution for the visual effects industry
 	\item[Smart3DCapture] targets GIS and large-scale reconstruction.
-	\item{V-STARS] by Geodetic System has emphasis on 3D measurement and engineering.
+	\item[V-STARS] by Geodetic System has emphasis on 3D measurement and engineering.
 \end{description}
 
 % TODO vicon; bradley face capture explains some.

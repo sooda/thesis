@@ -133,6 +133,56 @@ This method did not show any improvements in overcoming the offset.
 
 The mask, human heads, legos, books
 
+Some test subjects were scanned using the system with different light setups for analysis.
+Nine cameras were set up in a $3 x 3$ grid and two flash units were attached to two cameras, directed up and down to white styrofoam diffusers to soften the light.
+A human face contains enough distinct features for SfM to find the system structure, and several dense reconstruction methods were tested for generating dense point clouds and textured meshes.
+
+Agisoft Photoscan and Agisoft StereoScan are commercial programs for scanning subjects from several pictures and a pair of stereo pictures, respectively. \cite{agisoft}
+The programs are targeted for the end user and include tools for editing the resulting data, and need no external tools for outputting complete meshes.
+Photoscan includes a free demo version, which does not include mesh exports; a couple of screenshots were taken for illustration.
+
+Photoscan adds significant noise to skin surface.
+Fig. \ref{fig:sample-arto-meshlab} depicts the results in different forms.
+A typical face scan results in a very high-density point cloud of five million points, which the software reduces into a one million triangle mesh with textures.
+
+\simplefig{h}{%
+\includegraphics[width=0.3\textwidth]{arto-1}
+\includegraphics[width=0.3\textwidth]{arto-2}
+\includegraphics[width=0.3\textwidth]{arto-3}
+}{fig:sample-arto-photoscan}{
+	Three of the nine source pictures for a head scan
+}
+
+\simplefig{h}{%
+%\includegraphics[width=0.4\textwidth]{photoscan-arto-sparse}
+\includegraphics[width=0.4\textwidth]{photoscan-arto-dense}
+\includegraphics[width=0.4\textwidth]{photoscan-arto-textured}
+}{fig:sample-arto-photoscan}{
+	Arto in Photoscan
+}
+
+VisualSFM \cite{visualsfm} is a free SfM system combining the initial steps of structure reconstruction, and has integration for dense reconstruction using the PMVS \cite{pmvs} tool and others.
+Same datasets were tested as with Photoscan with similar results.
+VisualSFM's feature matching seems not as robust, sometimes resulting in separate models.
+PMVS \cite{pmvs} works by expanding patches in the reconstruction, resulting in a dense point cloud with oriented and colored points.
+For mesh generation, the result was imported into \cite{Meshlab}.
+The outlier points were cleaned up manually, and a mesh was fitted using the Poisson surface reconstruction plugin.
+Results of different steps of the pipeline can be seen in figure \ref{fig:sample-arto-meshlab}.
+
+%\simplefig{h}{%
+%%\includegraphics[width=0.4\textwidth]{meshlab}
+%\includegraphics[width=0.4\textwidth]{meshlab}
+%\includegraphics[width=0.4\textwidth]{meshlab}
+%}{fig:sample-arto}{
+%	Arto in Photoscan
+%}
+
+A structure of Lego blocks was scanned with poor results, as was expected; uniform-colored blocks with no texture and no geometry variations present a difficulty to point matching.
+
+%\simplegfx{h!}{\textwidth}{legoshit}{
+%	lego
+%}
+
 \subsection{Hard cases}
 
 Low light? Little texture? Speculars? Hair?
