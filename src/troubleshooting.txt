@@ -3,8 +3,12 @@
 	  shutter speed cannot be changed
 - camera ui (buttons, remote shutter) stuck after changing things?
 	- run release-uilock.sh or replug usb or reboot cams
+	- leave the focus button pressed when exiting paraphotos, then the cameras
+	  won't lock the ui when quitting
+- paraphotos not reacting to camera shutters?
+	- do not start paraphotos when the focus button is down
 - ui unlocked and still black screen?
 	- push info button twice to cycle it back to the normal mode
 - camera not saving pics on the memory card?
 	- the capture target was internal ram, set back to memory card
-	- gphoto2 --set-config capturetarget=1
+	- forallp.sh --set-config capturetarget=1
