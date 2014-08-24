@@ -144,6 +144,8 @@ Photoscan includes a free demo version, which does not include mesh exports; a c
 Photoscan adds significant noise to skin surface.
 Fig. \ref{fig:sample-arto-meshlab} depicts the results in different forms.
 A typical face scan results in a very high-density point cloud of five million points, which the software reduces into a one million triangle mesh with textures.
+Wrinkle detail tests can be seen in fig. \ref{fig:sample-arto-forehead}; a forehead has so much detail that even the point cloud maps to the wrinkle geometry.
+The pictured wrinkles are pretty large, though.
 
 \simplefig{h}{%
 \includegraphics[width=0.3\textwidth]{arto-1}
@@ -159,6 +161,16 @@ A typical face scan results in a very high-density point cloud of five million p
 \includegraphics[width=0.4\textwidth]{photoscan-arto-textured}
 }{fig:sample-arto-photoscan}{
 	Arto in Photoscan
+}
+
+\simplefig{h}{%
+\includegraphics[width=0.48\textwidth]{arto-forehead-dense}%
+\includegraphics[width=0.48\textwidth]{arto-forehead-solid}\\%
+\includegraphics[width=0.48\textwidth]{arto-forehead-wireframe}%
+\includegraphics[width=0.48\textwidth]{arto-forehead-tex}%
+}{fig:sample-arto-forehead}{
+	Forehead wrinkles in PhotoScan: dense point cloud, solid mesh, wireframe, and textured mesh.
+	The point cloud and wireframe pictures show the reconstructed detail level well.
 }
 
 VisualSFM \cite{visualsfm} is a free SfM system combining the initial steps of structure reconstruction, and has integration for dense reconstruction using the PMVS \cite{pmvs} tool and others.
