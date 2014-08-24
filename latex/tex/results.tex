@@ -8,6 +8,16 @@
 Synchronizing the image sources temporally is important for reconstruction algorithms to work correctly.
 A synchronized system captures images from all cameras with a reasonably small time difference, so that subject movement does not introduce additional errors.
 
+\subsubsection{Shutter delay} \label{sec:shutterdelaymeas}
+
+Shutter delay consistency among cameras and shots blah blah.
+
+An input pin of the MCU was connected to the hot shoe flash present in the camera body.
+Assuming a negligible delay between the flash trigger signal and the actual photo exposure, the time between shutter button and signal from the flash connector is the shutter delay.
+The camera was set up to all manual settings and manual focus.
+Measurements matched consistently the 75 millisecond delay found in various sources, repeated shots varying less than a millisecond.
+This suggests that even fast moving subjects can be captured properly.
+
 \subsubsection{Still capture}
 
 Static subjects do not move or change shape.
