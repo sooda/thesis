@@ -167,7 +167,7 @@ The pictured wrinkles are pretty large, though.
 
 \simplefig{h}{%
 %\includegraphics[width=0.4\textwidth]{photoscan-arto-sparse}
-\includegraphics[width=0.4\textwidth]{photoscan-arto-dense}
+\includegraphics[width=0.35\textwidth]{photoscan-arto-dense}
 \includegraphics[width=0.4\textwidth]{photoscan-arto-textured}
 }{fig:sample-arto-photoscan}{
 	Arto in Photoscan
@@ -177,11 +177,16 @@ The pictured wrinkles are pretty large, though.
 \includegraphics[width=0.48\textwidth]{arto-forehead-dense}%
 \includegraphics[width=0.48\textwidth]{arto-forehead-solid}\\%
 \includegraphics[width=0.48\textwidth]{arto-forehead-wireframe}%
-\includegraphics[width=0.48\textwidth]{arto-forehead-tex}%
+\includegraphics[width=0.48\textwidth]{arto-forehead-tex}\\%
 }{fig:sample-arto-forehead}{
 	Forehead wrinkles in PhotoScan: dense point cloud, solid mesh, wireframe, and textured mesh.
 	The point cloud and wireframe pictures show the reconstructed detail level well.
 }
+
+\simplegfx{h}{\textwidth}{arto-forehead-uvmap}{
+	UV map for the model in figure \ref{fig:sample-arto-forehead}. Note the wrinkle colors in the forehead patches.
+}
+
 
 VisualSFM \cite{visualsfm} is a free SfM system combining the initial steps of structure reconstruction, and has integration for dense reconstruction using the PMVS \cite{pmvs} tool and others.
 Same datasets were tested as with Photoscan with similar results.
