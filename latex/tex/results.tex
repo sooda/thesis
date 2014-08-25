@@ -68,12 +68,12 @@ Two such images are depicted in figure \ref{fig:fansynctest}.
 The EOS 700D does not support an external sync signal for video recording, but relies on an internal clock to sync the frames within a single video file.
 It can be safely assumed that the clock speed has little variation, and thus, little drift and jitter occur in the videos.
 Recording offset remains an issue;
-processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a wireless remote control of the camera manufacturer would be used for starting several cameras at once, the offset is very noticeable.
+processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a wireless remote control of the camera manufacturer would be used for starting several cameras at once, the offset was found to be sometimes almost as much as the duration of two frames.
 
 % what was done
 
-A test was carried out to find variations in the recording offset.
-Three cameras were triggered with a Canon RC-6 wireless remote control.
+Visual and auo based tests were carried out to find variations in the recording offset.
+Three cameras were triggered with several times a Canon RC-6 wireless remote control.
 The remote sends a short infrared pulse to a sensor in the front of a camera when a key is pressed.
 The camera was set in video mode and it was configured to use the remote release.
 %The exposure time was set to minimum, 1/4000 s, to maximise the rolling shutter effect.
@@ -88,11 +88,11 @@ Because the CMOS sensor is cleared and read line by line, the time of the flash 
 The rows are zeroed from light in succession in the same way as a mechanical focal plane shutter moves and exposed until read.
 Thus, the flash light's starting time in the video's internal clock is the frame's start time plus the duration that it takes for the rows before the overexposed one to show up:
 
-\begin{align} \label{timingcalib}
+\begin{align} \begin{split} \label{timingcalib}
 t_{Cl} &= t_{Ci} + t_{Cf} \\
 &= i_C * F + f_C / R * F \\
 &= (i_C + f_C / r * c) * F
-\end{align}
+\end{split} \end{align}
 
 where $C$ is a camera identifier, $t_{Cl}$ is camera-relative time for the light pulse, $t_{Ci}$ is the starting time for the frame where the light shows up, and $t_{Cf}$ is the time inside the particular frame.
 The frame index $i$ marks the number of the frame in the video file, starts from 0, and there is $F$ = $1/\text{fps}$ time between the frames.
@@ -101,8 +101,6 @@ Offset between two cameras $A$ and $B$ is then $t_{Al} - t_{Bl}$.
 The timings are depicted in figure \ref{fig:flashtimeline} as a timeline with matching symbols.
 
 For perfectly synchronized videos, the frames would be identical, and time difference calculated with eq. \ref{timingcalib} for each frame would be zero as $i_C$ and $f_C$ would be constants for all $C$.
-A typical measurement result is shown in figure \ref{fig:flashtiming}.
-Audio recorded by the cameras' internal microphones at the same event is shown in figure \ref{fig:flashaudio}, and the order of flash pulses in the three frames can be verified from the order of the sound emitted by the flash.
 
 \simplegfx{h}{1.0\textwidth}{flashtimeline}
 {Illustration on timing calibration of two cameras using a flash light.
@@ -132,36 +130,49 @@ The flash outputs a distinct ``pop'' sound.
 }
 
 
-The method for measuring the synchronization error can be used to calibrate the differences, which aids in artificial sync with optical flow or other methods.
-A similar method using the recorded audio is perhaps more familiar, where a distinct sound in the audio tracks recorded by the cameras would be used for calibration.
-%The $t_l$ in equation \ref{eq:timingcalib}
+The method for measuring the synchronization error can be used to calibrate the differences, which is useful in artificial sync with optical flow or other methods, where frame timing is used.
+A similar method using the recorded audio (as in fig. \ref{fig:flashaudio} is perhaps more familiar, where a distinct sound in the audio tracks recorded by the cameras would be used for calibration.
+For a few cameras, the audio tracks are simple to align manually in an audio editing software, or automatically with cross-correlation to find the time lag.
 
 Another method for triggering multiple video recordings is to use a ML-based wired remote trigger by pressing the half-shutter, or focus button when a record key has been configured in ML.
 This method did not show any improvements in overcoming the offset.
 
+A typical measurement result is shown in figure \ref{fig:flashtiming}.
+Audio recorded by the cameras' internal microphones at the same event is shown in figure \ref{fig:flashaudio}, and the order of flash pulses in the three frames can be verified from the order of the sound emitted by the flash.
+Both methods show that the middle camera has started recording first, and subsequent time lags compared to it are approximately 21 and 31 milliseconds.
+
 \subsection{Sample objects}
 
-The mask, human heads, legos, books
+%The mask, human heads, legos, books
 
 Some test subjects were scanned using the system with different light setups for analysis.
-Nine cameras were set up in a $3 x 3$ grid and two flash units were attached to two cameras, directed up and down to white styrofoam diffusers to soften the light.
-A human face contains enough distinct features for SfM to find the system structure, and several dense reconstruction methods were tested for generating dense point clouds and textured meshes.
+Nine cameras were set up in a 3 by 3 grid and two flash units were attached to two cameras, directed up and down to white styrofoam and fabric diffusers to soften the light.
+The Bundler SfM system recommends to take photos at least every $\alpha = 15$ degrees around a subject.
+With a distance $d$ of one metre from lens to the subject, this yields a baseline $b$ of approximately 26 cm by eq. \ref{eq:baselinedegrees}:
+
+\begin{align} \begin{split} \label{eq:baselinedegrees}
+	\sin \alpha/2 &= \frac{b/2}{d}\\
+	b &= 2 d \sin \alpha/2
+\end{split} \end{align}
+
+A human face contains enough distinct features for SfM to find the system structure, and methods for SfM, dense reconstruction and mesh texturing were tested.
 
 Agisoft Photoscan and Agisoft StereoScan are commercial programs for scanning subjects from several pictures and a pair of stereo pictures, respectively. \cite{agisoft}
 The programs are targeted for the end user and include tools for editing the resulting data, and need no external tools for outputting complete meshes.
 Photoscan includes a free demo version, which does not include mesh exports; a couple of screenshots were taken for illustration.
 
-Photoscan adds significant noise to skin surface.
-Fig. \ref{fig:sample-arto-meshlab} depicts the results in different forms.
+Reconstructions in Photoscan add significant noise to skin surface.
+Fig. \ref{fig:sample-arto-meshlab} depicts the results in different forms, with some of the source pictures shown in \ref{fig:sample-arto-photoscan-source}.
 A typical face scan results in a very high-density point cloud of five million points, which the software reduces into a one million triangle mesh with textures.
-Wrinkle detail tests can be seen in fig. \ref{fig:sample-arto-forehead}; a forehead has so much detail that even the point cloud maps to the wrinkle geometry.
-The pictured wrinkles are pretty large, though.
+Wrinkle detail tests can be seen in fig. \ref{fig:sample-arto-forehead}; a forehead has well detail so that the point cloud maps to the geometry well, resulting in also a wrinkled mesh.
+
+Photoscan was found to be relatively robust to baseline length, reconstructing the scene geometry well with a baseline almost twice as much as by the 15 degree rule suggested in Bundler.
 
 \simplefig{h}{%
 \includegraphics[width=0.3\textwidth]{arto-1}
 \includegraphics[width=0.3\textwidth]{arto-2}
 \includegraphics[width=0.3\textwidth]{arto-3}
-}{fig:sample-arto-photoscan}{
+}{fig:sample-arto-photoscan-source}{
 	Three of the nine source pictures for a head scan
 }
 
@@ -187,36 +198,38 @@ The pictured wrinkles are pretty large, though.
 	UV map for the model in figure \ref{fig:sample-arto-forehead}. Note the wrinkle colors in the forehead patches.
 }
 
-
-VisualSFM \cite{visualsfm} is a free SfM system combining the initial steps of structure reconstruction, and has integration for dense reconstruction using the PMVS \cite{pmvs} tool and others.
+VisualSFM \cite{visualsfm} was tested with dense reconstruction done by PMVS \cite{pmvs} and meshing in Meshlab \cite{meshlab}.
 Same datasets were tested as with Photoscan with similar results.
-VisualSFM's feature matching seems not as robust, sometimes resulting in separate models.
+VisualSFM's feature matching seems not as robust as with Photoscan, sometimes resulting in separate models because of a too long baseline and displaying very few feature matches between pictures.
+With a shorter baseline of approximately 30 cm, the SfM process was more successful.
+
 PMVS \cite{pmvs} works by expanding patches in the reconstruction, resulting in a dense point cloud with oriented and colored points.
 For mesh generation, the result was imported into \cite{Meshlab}.
-The outlier points were cleaned up manually, and a mesh was fitted using the Poisson surface reconstruction plugin.
+The numerous outlier points were cleaned up manually, and a mesh was fitted using the Poisson surface reconstruction plugin.
 Results of different steps of the pipeline can be seen in figure \ref{fig:sample-arto-meshlab}.
 
 %\simplefig{h}{%
 %%\includegraphics[width=0.4\textwidth]{meshlab}
 %\includegraphics[width=0.4\textwidth]{meshlab}
 %\includegraphics[width=0.4\textwidth]{meshlab}
-%}{fig:sample-arto}{
-%	Arto in Photoscan
+%}{fig:sample-arto-meshlab}{
+%	Arto in Meshlab
 %}
 
-A structure of Lego blocks was scanned with poor results, as was expected; uniform-colored blocks with no texture and no geometry variations present a difficulty to point matching.
+A simple structure of Lego blocks was scanned with poor results, as was expected; uniform-colored blocks with no texture and no geometry variations present a difficulty to point matching.
+The corners between blocks of different color are the only detailed candidates for features, and the low number is not enough.
 
 %\simplegfx{h!}{\textwidth}{legoshit}{
 %	lego
 %}
 
-\subsection{Hard cases}
-
-Low light? Little texture? Speculars? Hair?
-
-% test X. not feasible for X because Y.
-
-\subsection{Accuracy}
+%\subsection{Hard cases}
+%
+%Low light? Little texture? Speculars? Hair?
+%
+%% test X. not feasible for X because Y.
+%
+%\subsection{Accuracy}
 
 \clearpage
 
@@ -281,6 +294,11 @@ Constructing a 3D scanning rig was a large topic on its own.
 The field of 3D reconstruction needs content to evolve, even more so for content-specific improvements.
 The rig can be used for digitizing real-life objects and studying the process, helping to understand how different algorithms behave on different inputs.
 Also, identifying defects in current state-of-the-art is easier when high-resolution test data can be scanned for testing new hypotheses.
+
+The rig was found to be suitable for high-resolution capture of human faces, a target that is considered difficult because of the lack of well noticeable pattern.
+High resolution photographs recover detail that can be used for feature matching and successful reconstruction.
+By tweaking reconstruction parameters, applying soft makeup and using a more uniform lighting, the quality can be further improved;
+especially the surface color is challenging to recover uniformly because of specular highlights, even though the reconstruction succeeds.
 %Although readily available multi-view datasets could be used for performance evaluation, not many sets are publicly available.
 %the Stanford 3D Scanning Repository (models only)
 
