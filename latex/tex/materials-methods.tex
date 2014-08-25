@@ -564,21 +564,24 @@ PCL contains a set of algorithms for filtering, segmentation, registration, visu
 \subsubsection{Free programs} % {{{
 
 While libraries can be used to write new tools, many pieces of software are readily available that implement the algorithms presented and are distributed in source code form and/or readily usable binary executables.
+Some of the most known state-of-the-art implementations are listed below.
 
 Camera Calibration Toolbox for Matlab, also included in OpenCV as a C port, is a more or less standard tool to single-camera and stereo camera calibration.
 The toolbox computes undistortion maps and intrinsic and extrinsic parameters with checkerboard images using non-linear optimization and homographies. \cite{camcalmatlab}
 
-Bundler is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds. \cite{snavely2006photo}
+Bundler is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds, targeted for large-scale unordered photo collections. \cite{snavely2006photo}
 
-SiftGPU, a SIFT implementation for graphics processing units. \cite{changchang2007siftgpu} It is built on Sift++ \cite{vedaldi2011sift++}; both are based on difference of gaussians, a method for edge detection \cite{marr1980theory}
+SiftGPU is a fast SIFT implementation for graphics processing units (GPUs).
+\cite{changchang2007siftgpu} It is built on Sift++ \cite{vedaldi2011sift++}; both are based on difference of gaussians, a method for edge detection \cite{marr1980theory}
 
-Multicore (parallel) bundle adjustment: PBA computes the bundle step in a way that exploits the modern parallel nature of computer processors that have several computing cores. \cite{wu2011multicore}
+Multicore (parallel) bundle adjustment PBA is a fast bundle adjustment library built with the modern parallel nature of multi-processor computers in mind. \cite{wu2011multicore}
 
 Patch-based, clustering multi-view stereopsis (PMVS/CMVS) starts from a set of matching keypoints (features) and expands them to a dense patch set iteratively. \cite{furukawa2010accurate,furukawa2012patch}
 
-VisualSFM \cite{wu2013towards} is a common and free but closed-source integration tool simplifying the workflow using external programs.
+VisualSFM \cite{wu2013towards} is a common and free but closed-source integration tool that implements a structure from motion algorithm and simplifies the workflow of several external programs, finally visualizing the results.
+The needed external tools are feature matching, bundle adjustment and dense reconstruction.
 
-Meshlab \cite{meshlab} is a portable editor of point clouds and meshes.
+Meshlab \cite{meshlab} is a generic editor of point clouds and meshes.
 It can be used interactively and scripted to do the same steps automatically.
 In a reconstruction pipeline, it is one of the last processing steps, used for removing outliers or fitting a surface on a point cloud with the poisson surface reconstruction method, and finally projecting the textures to the generated mesh when given the camera parameters in relation to the point cloud pose.
 It can also perform registration between point clouds.
@@ -588,43 +591,42 @@ Screened poisson surface reconstruction, or PoissonRecon, is another stand-alone
 Cmpmvs is a multi-view reconstruction software for transforming a set of calibrated image data to a full textured mesh, used in a similar way as VisualSFM but using internally a different method based on graph cuts and weakly-supported surfaces.
 \cite{jancosek2011multi}
 
-Python Photogrammetry Toolbox is another pipeline combinator for full 3D reconstruction, popular in archaeological fields. It combines Bundler and PMVS and others. \cite{moulon2011python}
+Python Photogrammetry Toolbox is another pipeline combinator for full 3D reconstruction, popular in archaeological fields. It combines Bundler, PMVS, and others. \cite{moulon2011python}
 
-SFM toolkit combines Bundler and CMVS/PMVS.
+%SFM toolkit combines Bundler and CMVS/PMVS.
 
-VisualSFM is probably the most common tool in the open source community.
-It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, PBA for camera estimation, and PMVS/CMVS for dense matching.
-A common post step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
-
-%(VisualSFM screenshot here)
+VisualSFM is probably the most common tool in the open source and research community for practical use.
+It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, its own SfM for camera estimation, and PBA for bundle adjustment, and finally PMVS/CMVS for dense matching.
+A common final step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
+%PMVS is suggested by many others.
 
 % }}}
 
 \subsubsection{Commercial solutions} % {{{
 
-There is a large selection of commercial software available, often accompanied with a 3D scanner.
+There is a large selection of commercial software available, often accompanied with a 3D scanning device.
 Some companies offer completely specialized rigs, some sell a scanning device and a general-purpose software alongside it which can be used as standalone and some only sell software, leaving the hardware implementation to the user.
 Examples include:
 % FIXME emphasis on differences
 
 \begin{description}
-	\item[Autodesk 123D Catch] is a free web-based application for automatic structureless reconstruction.
+	\item[Autodesk 123D Catch] is a free and popular web-based application for automatic reconstruction; photos are uploaded to a cloud service, and a textured mesh is generated automatically.
 	\item[Agisoft PhotoScan] has two editions, for 3D designers and professional geographic content manipulation; among the geographic features, it is very suitable for multi-view reconstruction in content generation, and has an active forum for its users.
 	\item[CaptiveMotion] provides a facial capture and retargeting system that can be used with full-body mocap.
-	\item[MotionScan] is the technology behind the video game L.A. Noire. \cite{rockstar2011noire} It uses tens of cameras to recover detailed structure.
-	\item[Faceshift] encodes a markerless face captuer in a feature space that describes virtual muscle and bone movements.
-	\item[3DF Zephyr Pro] is another automatic photo reconstruction system.
-	\item[Mova Contour Reality Capture] does high-performance surface capture with a large array of cameras.
+	\item[MotionScan] is the technology behind e.g.\ he video game L.A.\ Noire. \cite{rockstar2011noire} It uses tens of cameras to recover detailed structure.
+	\item[Faceshift] encodes a markerless face capture in a feature space that describes virtual muscle and bone movements.
+	\item[3DF Zephyr Pro] is an automatic reconstruction software that takes photographs as input.
+	%\item[Mova Contour Reality Capture] does high-performance surface capture with a large array of cameras.
 	\item[Pendulum Studio] provides a capture system called Alter Ego that integrates with game engines.
 	\item[Pix4dMapper] converts aerial images to geometric surface models.
 	\item[Acute3d] is targeted for large-scale photogrammetry and cultural heritage digitization.
 	\item [FARO] manufactures hardware and provides scanning software for 3D documentataion and surveying, and provides a free application for Kinect-based scanning
-	\item[Trimensional] is a 3D scanner for iPhone
-	\item[Fuel3D] is a complete handheld scanning system
+	\item[Trimensional] is a 3D scanner for iPhone.
+	\item[Fuel3D] is a complete handheld scanning system.
 	\item[Dimensional Imaging ltd.] provides DI3D and DI4D systems for static and dynamic surface capture, respectively.
 	%\item[SynthEyes] 
 	\item[Pixel Farm] provides tools for CG integration and match moving.
-	\item[3D-equalizer] is a multi-platform 3D tracking solution for the visual effects industry
+	\item[3D-equalizer] is a multi-platform 3D tracking solution for the visual effects industry.
 	\item[Smart3DCapture] targets GIS and large-scale reconstruction.
 	\item[V-STARS] by Geodetic System has emphasis on 3D measurement and engineering.
 \end{description}
@@ -632,8 +634,6 @@ Examples include:
 % TODO vicon; bradley face capture explains some.
 
 %\subsubsection{Other}
-
-(TODO)
 
 %- voodoo camera tracker
 % cyberware no longer exists, was used in films in hollywood
@@ -645,30 +645,30 @@ Examples include:
 
 % }}}
 
-\subsection{Sample reconstruction pipeline} % {{{
-%\subsection{Full reconstruction} % {{
-
-Both shape and texture are considered in this work. Only diffuse color (albedo) is of interest; more complex material properties are assumed to be captured in other means and not spatially varying.
-
-Basic uv mapping. Project texture to computed mesh. Somehow use colors and optical flow everywhere...
-
-Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lighting and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed).
-
-facial expression space, faceshift, face muscles
+%\subsection{Sample reconstruction pipeline} % {{{
+%%\subsection{Full reconstruction} % {{
 %
-%KINECT 2 HYBRID SHIT YEA
+%Both shape and texture are considered in this work. Only diffuse color (albedo) is of interest; more complex material properties are assumed to be captured in other means and not spatially varying.
 %
-%eigenface / pca / AAM model (?)
+%Basic uv mapping. Project texture to computed mesh. Somehow use colors and optical flow everywhere...
 %
-%poisson surface vs ball pivoting
+%Postprocessing: remodel the mesh (face), see what it would look like. Refine parameters to get a similar output as in the photos (normal map etc.), backproject. Use colors and highpass them; assume uniform lighting and locally uniform texture color (bradley). (Simply a rendering technique, that level of detail in 3D structure might not be needed).
 %
-%visual convex hull, bbox for constraining
-
-% }}}
-
-\subsection{Computer requirements} % {{{
-
-any pc with usb and linux/mac/?? will do, the bigger the better
-
-% }}}
+%facial expression space, faceshift, face muscles
+%%
+%%KINECT 2 HYBRID SHIT YEA
+%%
+%%eigenface / pca / AAM model (?)
+%%
+%%poisson surface vs ball pivoting
+%%
+%%visual convex hull, bbox for constraining
+%
+%% }}}
+%
+%\subsection{Computer requirements} % {{{
+%
+%any pc with usb and linux/mac/?? will do, the bigger the better
+%
+%% }}}
 
