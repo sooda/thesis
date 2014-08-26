@@ -398,7 +398,7 @@ Some surfaces are more \emph{diffuse} than others.
 Surfaces can be modeled as diffuse and specular components that are functions of light direction, viewing direction and sometimes spatial location on the surface.
 Surface reflection models are described with a bidirectional reflectance distribution function, or BRDF. \cite{nicodemus1965dirreflectanceetc}
 
-A distribution model of the surface's global or local microgeometry specifies how much light reflects in different surfaces. \cite{nayar1991surface} % XXX 1991 or -89?
+A distribution model of the surface's global or local microgeometry specifies how much light reflects in different surfaces. \cite{nayar1991surface} % XXX 1991 or -89? TODO fig 22 from the paper
 Diffuse means a material that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more \emph{specular} surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
 Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in figure \ref{fig:lambertcosine}. \cite{lamberttodo}
 A Lambertian surface's BRDF is constant among the viewing direction.
@@ -1103,6 +1103,7 @@ These usually need several pictures taken with the same camera from different po
 
 The checkerboard calibration step is often programmed to measure optical distortion at the same time. \cite{opencv,camcalmatlab}
 
+A video-based calibration method has been proposed by Svoboda for self-calibration. The method uses a number of synchronized frames and a laser pointer in a dark calibration volume to find corresponding points. \cite{svoboda2005convenient}
 %TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
 
 %Single three-dimensional calibration object is also sufficient blbl
@@ -1487,7 +1488,11 @@ In practice, the search is done within a window that slides along the search axi
 
 \subsubsection{Multi-view stereo} % {{{
 % (or n-view?)
+% nelliportaali:pikahaku multiview stereo reconstruction
 
+graph cuts
+\cite{jancosek2011multi}
+\cite{chang2011gpu}
 (this section needs expansion and pictures)
 
 The case of more cameras than a single pair uses the same principles in epipolar geometry, extended in several ways.
@@ -1522,6 +1527,7 @@ Toldo et al. suggests to build a depth map individually per each view with appro
 
 \subsection{Structure from motion} % {{{
 
+
 The \emph{structure from motion} (\emph{SfM}) problem, also called structure and motion, uses the scene feature matches between different views to determine both the scene structure and the camera motion between the views.
 \cite{snavely2006photo,fitzgibbon1998automatic} 
 The camera does not have to physically move; the method is often used for a multi-camera reconstruction with a static rig.
@@ -1529,7 +1535,7 @@ Before SfM, the images should have been rectified and features matched; the algo
 While SfM retrieves the scene structure and camera parameters, a dense reconstruction usually follows it as only a fraction of the points in the images need to be considered.
 
 SfM begins with two reference views that are used to retrieve an initial reconstruction, and extends each new view into the set iteratively.
-Lastly, a \emph{bundle adjustment} method is used to globally optimize the scene parameters.
+Lastly, a \emph{bundle adjustment} method is used to globally optimize the scene parameters. \ref{triggs2000bundle}
 The relation between the views need not be previously calibrated; the process determines camera poses.
 In fact, many reconstruction applications use structure from motion as an initial step with bundle adjustment to determine calibration and proceeds to dense reconstruction.
 
@@ -1556,6 +1562,7 @@ In practice, this nonlinear optimization problem is approached in iterative mean
 
 According to \cite{wu2013towards}, bundle adjustment should be performed using a Levenberg-Marquardt or Preconditioned Conjugate Gradient method.
 
+Beardsley et al. use an iterative extended kalman filter \cite{beardsley1997sequential}
 % others?
 
 % }}}

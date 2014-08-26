@@ -553,8 +553,13 @@ in the video codec used, the frames can be \emph{I-frames} (intra-frames), with 
 
 \subsection{3D reconstruction software survey} % {{{
 
+% something on individual algorithms/tasks of the reconstruction pipeline; standalone pipelines; web services; sw/hw solutions
+
 When the imagery has been downloaded to a PC, the actual reconstruction can be started.
 There is a wide collection of libraries, open-source tools and commercial packages for both automatic reconstruction and generic mesh editing for post-processing the data.
+
+Many, if not all, programs assume that the Exif data embedded in the photograph files describes the used focal length and sensor dimensions.
+
  % }}}
 
 \subsubsection{Free libraries} % {{{
@@ -576,14 +581,18 @@ Some of the most known state-of-the-art implementations are listed below.
 Camera Calibration Toolbox for Matlab, also included in OpenCV as a C port, is a more or less standard tool to single-camera and stereo camera calibration.
 The toolbox computes undistortion maps and intrinsic and extrinsic parameters with checkerboard images using non-linear optimization and homographies. \cite{camcalmatlab}
 
-Bundler is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds, targeted for large-scale unordered photo collections. \cite{snavely2006photo}
+Bundler is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds, targeted for large-scale unordered photo collections, originally used for the Photo Tourism project. \cite{snavely2006photo}
 
-SiftGPU is a fast SIFT implementation for graphics processing units (GPUs).
-\cite{changchang2007siftgpu} It is built on Sift++ \cite{vedaldi2011sift++}; both are based on difference of gaussians, a method for edge detection \cite{marr1980theory}
+SiftGPU is a fast SIFT implementation for graphics processing units (GPUs) by Chenchang Wu. \cite{changchang2007siftgpu}
+It is built on Sift++ \cite{vedaldi2011sift++}; both are based on difference of gaussians, a method for edge detection. \cite{marr1980theory}
 
 Multicore (parallel) bundle adjustment PBA is a fast bundle adjustment library built with the modern parallel nature of multi-processor computers in mind. \cite{wu2011multicore}
 
-Patch-based, clustering multi-view stereopsis (PMVS/CMVS) starts from a set of matching keypoints (features) and expands them to a dense patch set iteratively. \cite{furukawa2010accurate,furukawa2012patch}
+Patch-based, multi-view stereopsis (PMVS) starts from a set of matching keypoints (features) and expands them to a dense patch set iteratively, resulting in oriented points.
+PMVS is usually combined with CMVS, a clustering tool that decomposes the input set to smaller clusters that are more convenient to process.
+Both are written by the same author, Yasutaka Furukawa. \cite{furukawa2010accurate,furukawa2012patch}
+% xxx viewpoint invariant patch, repetition analysis http://www.academia.edu/2021718/3D_Digitization_using_Structure_from_Motion
+% xxx2 graclus, wat pba
 
 VisualSFM \cite{wu2013towards} is a common and free but closed-source integration tool that implements a structure from motion algorithm and simplifies the workflow of several external programs, finally visualizing the results.
 The needed external tools are feature matching, bundle adjustment and dense reconstruction.
@@ -637,6 +646,8 @@ Examples include:
 	\item[Smart3DCapture] targets GIS and large-scale reconstruction.
 	\item[V-STARS] by Geodetic System has emphasis on 3D measurement and engineering.
 \end{description}
+
+% ms photosynth
 
 % TODO vicon; bradley face capture explains some.
 
