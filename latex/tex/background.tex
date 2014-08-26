@@ -123,6 +123,9 @@ When $f$ is the focal length, $F$ the aperture f number, $s$ the distance to the
 \end{equation}
 
 In figure \ref{fig:dofcoc}, $D$ equals to $Z' - Z$, the maximum and minimum acceptable distances near the subject.
+Depth of field is important to consider in near-field 3D scans, which practically means that a small aperture should be used.
+It is important to note that the subject should fill whole image frame to use the pixel density effectively.
+Increasing the distance to the subject would increase depth of field, but to enlarge the subject would need a longer lens, which decreases depth of field.
 
 Size of the CoC depends on the resolution power of the viewer; when a photograph is looked with the eye, the print size of the image determines the circle.
 A standard-considered formula in photography determines the maximum acceptable CoC by dividing the image size by 1500.
@@ -222,7 +225,7 @@ the sampling should then interpolate between neighboring pixels, instead of taki
 
 % }}} optics
 
-\subsubsection{Image sensors} % {{{
+\subsubsection{Image sensors} \label{sec:sensors} % {{{
 
 % intro: film vs sensor
 
@@ -867,7 +870,7 @@ Light field cameras such as the newer Kinect 2 have a better spatial accuracy bu
 % }}} camera selection
 
 \clearpage
-\section{Static 3D reconstruction}
+\section{Static 3D reconstruction} % {{{
 
 Multi-view stereo reconstruction is one way to recover the structure of a static three-dimensional subject.
 In the following, a normal multi-view setup with ordinary digital photo cameras is assumed;
@@ -889,6 +892,10 @@ fundamentally different methods, such as laser rangers or light field imaging, a
 %Pairs vs overlap? bradley: pairs
 
 % TODO: intro paragraph(s)
+% show all pipeline parts
+% cameras [pics] -> undistortion -> [undistorted pics] -> SfM -> [structure] -> dense -> [point cloud] -> meshing -> [mesh] -> texture projection -> [textured mesh]
+
+% }}}
 
 %\subsection{Imaging methods} % {{{
 
@@ -898,6 +905,10 @@ fundamentally different methods, such as laser rangers or light field imaging, a
 
 %- every Nth frame free of patterns for texture extraction (zhang snavely curless 2004)
 %- maybe not fast enough with common cameras
+
+% project noise for geometry if low-featured texture, grab texture/color separately with flashes
+
+% self occlusion and range images
 
 % }}} imaging methods
 
@@ -988,8 +999,13 @@ This part quickly reviews basic transforms whose results are needed in the later
 % FIXME especially this should be elsewhere
 \simplefig{h}{%
 \includegraphics[width=0.7\textwidth]{pinhole3d}
-}{fig:pinhole3d}
-{Pinhole camera geometry. Camera coordinate system origin at O, axis X3 points towards the optical axis, Y1 and Y2 point to image plane axes and R is the principal point, at the image center. The point P projects to Q, as well as everything else on the line joining them. The image plane is f units away from camera origin; f is called the focal length.}
+}{fig:pinhole3d}{
+	Pinhole camera geometry.
+	Camera coordinate system origin at O, axis X3 points towards the optical axis, Y1 and Y2 point to image plane axes and R is the principal point, at the image center.
+	The point P projects to Q, as well as everything else on the line joining them.
+	The image plane is f units away from camera origin; f is called the focal length.
+}
+% FIXME z left handed?
 
 In computer graphics and vision, points and directions are usually described in homogeneous coordinates.
 Translation, perspective projection, rotation, and other operations are conveniently described as matrix transformations by using an additional dimension for points: $(x, y, z, 1)$.
@@ -1484,6 +1500,7 @@ Other, also commonly used method is to arrange the cameras in pairs, reconstruct
 
 %It is also more computationally heavy, as more data must be processed; if no information about camera parameters is available, pairwise checks between the images may become expensive. \cite{wu2013towards}
 
+The dense reconstruction done in multi-view stereo is sometimes considered separately after the sparse SfM reconstruction that is used for obtaining camera poses.
 
 The cameras that are used in capturing a scene can be fixed or positioned arbitrarily; in fact, the structure from motion technique enables to use just one camera that is moved around.
 Accurate and fast reconstructions are still traditionally done with stereo camera pairs, though.
@@ -1498,6 +1515,9 @@ An incremental algorithm linear-time in number of the cameras has been suggested
 A specialized scanning rig in this work is not considered large-scale.
 Large-scale refers to hundreds or even thousands of images of a huge geometry, such as an outdoor building or terrain.
 A state-of-the-art patch-based reconstruction combined clustering to split large-scale datasets produces dense, oriented point sets \cite{furukawa2012patch,furukawa2010accurate}
+
+Toldo et al. suggests to build a depth map individually per each view with approximated normals, and to combine the points to a mesh with Poisson surface reconstruction. \cite{toldo2013accurate,toldo2013towards}
+
 % }}} multi-view stereo
 
 \subsection{Structure from motion} % {{{

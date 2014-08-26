@@ -17,6 +17,12 @@ Assuming a negligible delay between the flash trigger signal and the actual phot
 The camera was set up to all manual settings and manual focus.
 Measurements matched consistently the 75 millisecond delay found in various sources, repeated shots varying less than a millisecond.
 This suggests that even fast moving subjects can be captured properly.
+The used test program for the Nucleo board can be found in the github repository by the name \emph{measure.cpp}.
+
+A special flash synchronization method was considered using the hot shoe signals of all cameras.
+When the camera orders the flash to fire, its shutter is fully open.
+The same controller that drives the cameras would then monitor the hot shoe signals, and trigger the flashes when all the shutters have opened.
+The method was not deployed because the cameras are synced well enough; with a shutter speed of 1/20 s, no dark frames were encountered during testing.
 
 \subsubsection{Still capture}
 
@@ -136,6 +142,7 @@ For a few cameras, the audio tracks are simple to align manually in an audio edi
 
 Another method for triggering multiple video recordings is to use a ML-based wired remote trigger by pressing the half-shutter, or focus button when a record key has been configured in ML.
 This method did not show any improvements in overcoming the offset.
+% it may be even worse, as the additional code in ML induces more lag.
 
 A typical measurement result is shown in figure \ref{fig:flashtiming}.
 Audio recorded by the cameras' internal microphones at the same event is shown in figure \ref{fig:flashaudio}, and the order of flash pulses in the three frames can be verified from the order of the sound emitted by the flash.
@@ -147,6 +154,13 @@ Both methods show that the middle camera has started recording first, and subseq
 
 Some test subjects were scanned using the system with different light setups for analysis.
 Nine cameras were set up in a 3 by 3 grid and two flash units were attached to two cameras, directed up and down to white styrofoam and fabric diffusers to soften the light.
+Flash units were a Canon Speedlite 430EX and Yongnuo YN565EX II, set to normal front curtain sync.
+The top-facing Canon flash has only automatic mode, which was sufficient; the Yongnuo was set to full power, facing downwards to a piece of fabric.
+
+A black background matte was used to isolate unnecessary items in the background out;
+chroma-keying would be an effective way to isolate the subject, but a non-textured background has the same effect.
+The subject was surrounded by white styrofoam plates to even out the lighting.
+
 The Bundler SfM system recommends to take photos at least every $\alpha = 15$ degrees around a subject.
 With a distance $d$ of one metre from lens to the subject, this yields a baseline $b$ of approximately 26 cm by eq. \ref{eq:baselinedegrees}:
 
@@ -154,6 +168,26 @@ With a distance $d$ of one metre from lens to the subject, this yields a baselin
 	\sin \alpha/2 &= \frac{b/2}{d}\\
 	b &= 2 d \sin \alpha/2
 \end{split} \end{align}
+
+The key parameters used for photographing the samples are listed in table \ref{tab:sampleshotparams}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l l}
+		Camera baseline & 30 +/- 5 cm\\
+		F number & f/14\\
+		Shutter speed & 1/20\\
+		ISO sensitivity & 200\\
+		Subject distance & 90 +/- 10 cm
+		Lighting & Two flash heads bounced indirectly\\
+	\end{tabular}
+	\caption{
+		Key parameters in the sample photographs.
+		Baseline refers to distance to nearest camera, horizontally and vertically the same.
+	}
+	\label{tab:sampleshotparams}
+\end{table}
+
 
 A human face contains enough distinct features for SfM to find the system structure, and methods for SfM, dense reconstruction and mesh texturing were tested.
 
@@ -167,6 +201,7 @@ A typical face scan results in a very high-density point cloud of five million p
 Wrinkle detail tests can be seen in fig. \ref{fig:sample-arto-forehead}; a forehead has well detail so that the point cloud maps to the geometry well, resulting in also a wrinkled mesh.
 
 Photoscan was found to be relatively robust to baseline length, reconstructing the scene geometry well with a baseline almost twice as much as by the 15 degree rule suggested in Bundler.
+Because photoscan is targeted for artists, it is natural that it produces more production-quality meshes, doing more filtering in the way.
 
 \simplefig{h}{%
 \includegraphics[width=0.3\textwidth]{arto-1}
@@ -208,6 +243,10 @@ For mesh generation, the result was imported into \cite{Meshlab}.
 The numerous outlier points were cleaned up manually, and a mesh was fitted using the Poisson surface reconstruction plugin.
 Results of different steps of the pipeline can be seen in figure \ref{fig:sample-arto-meshlab}.
 
+PMVS divides the source images iteratively to smaller sets, and begins at a halved size by default with one fourth of the pixel count of the original.
+Using the original size was found to provide roughly twice the amount of points with four times longer processing time, but with no increased accuracy.
+The documentation of this parameter also suggests that a halved size is used, because a large part of colors are interpolated in the original image because of the color filter array in the image sensor (sec. \ref{sec:sensors}).
+
 %\simplefig{h}{%
 %%\includegraphics[width=0.4\textwidth]{meshlab}
 %\includegraphics[width=0.4\textwidth]{meshlab}
@@ -216,8 +255,10 @@ Results of different steps of the pipeline can be seen in figure \ref{fig:sample
 %	Arto in Meshlab
 %}
 
-A simple structure of Lego blocks was scanned with poor results, as was expected; uniform-colored blocks with no texture and no geometry variations present a difficulty to point matching.
-The corners between blocks of different color are the only detailed candidates for features, and the low number is not enough.
+%A simple structure of Lego blocks was scanned with poor results, as was expected; uniform-colored blocks with no texture and no geometry variations present a difficulty to point matching.
+%The corners between blocks of different color are the only detailed candidates for features, and the low number is not enough.
+% kyllähä se onnistu kun otti paremmat kuvat, heijastusväri vaan vähän häiritsee
+
 
 %\simplegfx{h!}{\textwidth}{legoshit}{
 %	lego
@@ -230,6 +271,25 @@ The corners between blocks of different color are the only detailed candidates f
 %% test X. not feasible for X because Y.
 %
 %\subsection{Accuracy}
+
+Video capture was experimented with three 800 W redhead halogen spot lights, with key parameters listed in table \ref{tab:samplevideoparams}.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l l}
+		Camera baseline & 30 +/- 5 cm\\
+		F number & f/14\\
+		Resolution & 1920 x 1080\\
+		FPS & 25\\
+		Shutter speed & 1/50\\
+		ISO sensitivity & 800\\
+		Subject distance & 90 +/- 10 cm
+		Lighting & total 2400 W halogen light\\
+	\end{tabular}
+	\caption{
+		Key parameters in the video recording test. % TODO: iso?
+	\label{tab:samplevideoparams}
+\end{table}
 
 \clearpage
 
@@ -287,6 +347,10 @@ Compare to Facial Action Coding System (FACS) (Hjortsjö 1969), which parameteri
 %Use colors and highpass them; assume uniform lighting and locally uniform texture color (bradley).
 
 \subsection{Future work}
+
+% TODO a restricted volume for the subject from the nature of the system, to filter outliers
+
+% large area lights will be installed
 
 %Although 
 

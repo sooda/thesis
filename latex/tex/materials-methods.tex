@@ -302,6 +302,9 @@ By connecting each camera to a separate opto-isolator and driving all of them fr
 To fully automate the system, the trigger device should be connected to the computer that downloads the photos from the cameras.
 Additionally, the cameras are enabled to shoot separately in addition to the synchronized simultaneous mode.
 
+An alternative method in synchronization could have been one third-party wireless remote trigger per camera;
+however, they are expensive (approximately 100 EUR per transceiver) and may be not as consistent as a wired solution.
+
 \subsubsection{Platform}
 
 In this work, a microcontroller prototyping platform called Nucleo-F401RE by STMicroelectronics was used.
@@ -324,6 +327,7 @@ When capturing moving targets, measuring this lag variation could be of interest
 
 The Nucleo-F401RE (figure \ref{fig:nucleo}) is a prototyping board designed around the STM32F401RET6 microcontroller IC.
 This MCU contains a relatively powerful 32-bit ARM core, space for 512 KB of program code, 96 KB of RAM, 51 general-purpose I/O pins available on the board, and other peripherals such as timers and analog/digital converters.
+A single-wire debugging (SWD) method is supported to debug the running software in real time.
 
 The trigger was constructed for ten cameras, functionally transferring trigger pulses from a PC to all cameras synchronously through opto-isolators and 2,5 mm stereo cables connecting to the cameras.
 For each output, a Toshiba TLP621-2 dual opto-isolator was used, mainly because they were readily available; any similar device would work.
@@ -458,7 +462,7 @@ The wrapper is written for exclusively libgphoto2 in mind, but as it actually hi
 \subsubsection{Previewing} % {{{
 
 \simplegfx{h}{1.0\textwidth}{gphotogrid}
-{A custom written program for displaying a preview feed of many cameras in a grid and configuring exposure time, aperture, and sensitivity. (TODO update later with the finished one)}
+{A custom written program for displaying a preview feed of many cameras in a grid and configuring exposure time, aperture, and ISO sensitivity. (TODO update later with the finished one)}
 
 %\simplegfx{h}{1.0\textwidth}{gphotogridtimeline}
 %{TODO}
@@ -485,6 +489,9 @@ The cameras are identified and ordered by a name written to the configuration se
 The artist name can be set either via USB or from the camera's physical user interface, and it is supposedly originally meant for writing the camera owner's name in the image file's metadata, along with copyright information.
 For the camera rig, a single letter was used for each camera, ordered from \emph{A} to \emph{I}.
 A separate configuration property stored in the camera itself is most robust; USB port name can be used as an alternative to identify the cameras, but the port name changes when the cameras are plugged in another way when rebuilding the rig or using another computer.
+
+The pop-up flashes should not be activated during use, because the camera was found to ignore the effects of aperture settings etc. when the flash is up.
+Additionally, remote control disables the camera user interface and taking pictures or changing settings is not possible while previewing.
 
 % }}}
 
@@ -596,7 +603,7 @@ Python Photogrammetry Toolbox is another pipeline combinator for full 3D reconst
 %SFM toolkit combines Bundler and CMVS/PMVS.
 
 VisualSFM is probably the most common tool in the open source and research community for practical use.
-It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, its own SfM for camera estimation, and PBA for bundle adjustment, and finally PMVS/CMVS for dense matching.
+It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, its own radual undistortion model and SfM for camera estimation, and PBA for bundle adjustment, and finally PMVS/CMVS for dense matching.
 A common final step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
 %PMVS is suggested by many others.
 
@@ -615,7 +622,7 @@ Examples include:
 	\item[CaptiveMotion] provides a facial capture and retargeting system that can be used with full-body mocap.
 	\item[MotionScan] is the technology behind e.g.\ he video game L.A.\ Noire. \cite{rockstar2011noire} It uses tens of cameras to recover detailed structure.
 	\item[Faceshift] encodes a markerless face capture in a feature space that describes virtual muscle and bone movements.
-	\item[3DF Zephyr Pro] is an automatic reconstruction software that takes photographs as input.
+	\item[3DF Zephyr Pro] is an automatic reconstruction software that takes photographs as input. A free SfM software, \textbf{3DF Samantha}, is provided too. The company (3DFlow \cite{3dflow}) is a spin-off of a university thesis project. \cite{toldo2013accurate,toldo2013towards}
 	%\item[Mova Contour Reality Capture] does high-performance surface capture with a large array of cameras.
 	\item[Pendulum Studio] provides a capture system called Alter Ego that integrates with game engines.
 	\item[Pix4dMapper] converts aerial images to geometric surface models.
