@@ -461,8 +461,13 @@ The raw files saved by DSLR cameras are compressed in a proprietary lossless for
 %Lossless compression maintains image quality and reduces file size depending on the complexity of the frame.
 %Some manufacturers encode the brightness values through a lookup table, and it's common to use a compression scheme known from standard file compressions, or a specific lossless image compression.
 
+Raw video consumes too much data to be feasible to use normally.
 Video files are almost always saved in a lossy video format, the H.264 format being common for modern cameras.
+Compression introduces loss of detail and artifacts typical to each algorithm, often visible as blocks or blurring.
 Common bitrate for a full-HD (1920 by 1080 pixels) 24 FPS video is about 5 MB/s.
+Reconstruction from frames extracted from a compressed video may not be as good as from separately saved stills.
+Some expensive cameras can record raw video, and others can be tricked to that.
+Canon DSLRs can be tricked to dump the raw stream to a memory card, but only some models support the faster CF memory cards that can keep up with the amount of data with useful resolution.
 
 % storage
 
@@ -571,8 +576,10 @@ The color filter array makes the problem even worse for small-detailed features 
 }
 
 A higher frame rate results in more accurate representation of motion as a whole, and a faster shutter speed helps to reduce motion blur in individual frames.
-Ideal exposure time would be infinitesimally short, but practically the shortest possible cannot be used becauses of the amount of light available.
+Ideal exposure time would be infinitesimally short; practically, the amount of available light restricts the time, even though a camera would be faster.
 Similarly, what happens when the shutter is closed is not recorded; ideal frame rate would be faster than any period of motion in the scene.
+For motion tracking based on frame differences, a long enough time should be passed for reliable motion direction, though.
+Normally, if playback happens at a different rate from the recording, motion is interpolated between different frames or the last appeared frame is used.
 
 In contrary, in motion picture industry, the shutter is kept open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye;
 even though the motion is blurred, more temporal information about the scene movement is encoded per frame than when exposing infinitesimally short frames, at the expense of spatial resolution.
@@ -580,18 +587,12 @@ A common shutter speed relates to frame rate such that a frame is exposed half o
 \cite{wilson2004anton}
 Good cameras allow to change the frame rate and shutter speed independently.
 
-%For a higher frame rate, also a faster shutter speed is typically required.
-
-Normally, if playback happens at a different rate from the recording, motion is interpolated between different frames or the last appeared frame is used.
-
-For motion computation based on frame differences, a long enough time should be passed for reliable motion direction, though.
-
-Fast shutter (i.e.~short exposure) needs to be compensated by using more sensitive sensors or brighter light sources to get equivalently bright images.
-
 Film cameras and some professional video cameras use a rotary disc shutter that has an opaque 180 degree sector.
-This is why the common practice of having half the exposure time of frame rate is sometimes called ``180 degree shutter''.
+Having half the exposure time of frame rate is sometimes called ``180 degree shutter''.
 While the light is blocked, film is mechanically advanced to the next frame.
 Digital video analogously downloads data from the image sensor and clears it during this time.
+
+For unsynchronized videos that shoot frames at different points in time, morphing techniques have been developed to analyze motion between frames and to interpolate intelligently.
 
 %Motion blur encodes more information about object travel but gets less precise by time.
 %slowmovideo \cite{eugster2011slowmovideo}
@@ -604,7 +605,7 @@ Digital video analogously downloads data from the image sensor and clears it dur
 
 Synchronized recording of multiple view video is more complicated than shooting still photos simultaneously.
 The cameras should be clocked together to hold their shutters open at the same time during each frame.
-When cameras open their shutter in a different time, they effectively shoot a different scene (assuming moving subjects in the scene), breaking the assumption of stereo vision that the images encode a static scene, i.e. geometrically same objects.
+An assumption of stereo vision is that the images encode a static scene, i.e. geometrically same objects, which would not hold otherwise.
 This can be compensated to some degree with optical flow if hard syncing is not possible. \cite{bradley2009synchronization}
 
 Synchronization issues can be divided roughly in three sources of error, assuming N cameras each having its own video file with same frame rate: \emph{offset}, \emph{drift} and \emph{jitter}.
@@ -612,38 +613,36 @@ With the same frame rate, the frames can be indexed with numbers starting from 0
 Times when the frames taken relative to a global clock is noted as $t_{Ci}$, where $C$ is a camera identifier and $i$ is the increasing frame index.
 % TODO something on the errors modulo frame length
 
-\emph{Offset} is the time difference of two streams: for an ideal camera $A$ at each frame $t_{Ai}$ for $i$, and camera $B$ at $t_{Bi}$, a constant $e$ is added, as in eq. \ref{eq:timeoffset}:
+\emph{Offset} is the time difference of two streams: for an ideal camera $A$ at each frame $t_{Ai}$ for $i$, and an offset camera $B$ at $t_{Bi}$, a constant error $e$ is added:
 
 \begin{equation} \label{eq:timeoffset}
 	t_{Bi} = t_{Ai} + e
 \end{equation}
 
-Drift is a property of one a camera that advertises to record at some speed and actually works at some other speed, similarly, shown in eq. \ref{eq:timedrift} for cameras $A$ and $B$, constant $e$:
+Drift is a property of one a camera that advertises to record at some speed and actually works at some other speed. Similarly, for cameras $A$ and $B$, constant $d$:
 
 \begin{equation} \label{eq:timedrift}
-	t_{Bi} = t_{Ai} + e i
+	t_{Bi} = t_{Ai} + d i
 \end{equation}
 
-Jitter is the random difference between frames for a same camera, in equation \ref{eq:timejitter}, when $e$ changes:
+Jitter is the random difference $j(i)$ between frames for a same camera:
 
 \begin{equation} \label{eq:timejitter}
-	t_{Bi} = t_{Ai} + e(i)
+	t_{Bi} = t_{Ai} + j(i)
 \end{equation}
 
-For an actual video camera, drift and jitter are negligible; offset originates from pressing record buttons at a different time and from the camera's internal processing before the recording actually starts.
-If the cameras take pictures only when instructed, such as machine vision cameras, a clock generator becomes another source of jitter.
-Many consumer compact cameras support a preview feed for individual frames when connected to a computer; the feeds can be useful for previewing but jitter becomes too significant because cameras are not designed with this in mind.
+For an actual video camera, drift and jitter are negligible; offset originates from starting the recording at a different time and from camera's internal processing before the recording actually starts.
+If the cameras take pictures only when instructed, such as machine vision cameras, a common clock generator becomes another source of errors.
+Many consumer cameras support a live preview feed when connected to a computer; the feeds can be useful for previewing but jitter becomes too significant because cameras are not designed with this in mind.
 If the offset between two cameras is not an exact multiple of the frame speed, they effectively cannot have any frames that would display exactly the same scene.
 
 Frame accurate offset sync with clapperboards works by matching the clap sound to visual cues in the video, a method well known in film production.
-Cameras that record audio to the same video file do not need visual cues and can be synced together by matching the sound stream only.
+Cameras that record audio to the same video file do not need visual cues and can be synced together by matching just the sound streams.
 %This is the method used in making movies when editing a final version with multiple cameras used.
-It still leaves at most half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
+Unsynchronized shooting still leaves at most half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
 
-Synchronizing all the cameras that shoot the same scene might be a big issue in practice, depending on the gear used.
-Professional video cameras can be synced to a single clock generator, so that they all operate on the same frequency (i.e. no drift) and phase (i.e. no offset), called genlocking or generator locking.
-The same method is used when shooting with machine vision cameras that have external trigger input.
-%This still leaves a small phase difference (offset) caused by unequal transmission paths from the clock generator.
+Professional video cameras can be synced to a single clock generator, so that they all operate on the same frequency (i.e. no drift) and phase (i.e. no offset), called \emph{genlocking} or \emph{generator locking}.
+Similar method is used when shooting with machine vision cameras that have external trigger input.
 Synchronizable camcorders are very expensive, and consumer-grade hardware usually lacks all possibilities for proper sync.
 
 %\begin{verbatim}
@@ -663,7 +662,7 @@ Synchronizable camcorders are very expensive, and consumer-grade hardware usuall
 
 %Often used techniques are starting flash (does not need an audio track) [REF], clapperboard [REF], strobe sync'd to fps, genlock.
 
-\simplefig{h!}{
+\simplefig{h}{
 \begin{tikzpicture}[scale=1.5]
 	\draw (0,0) rectangle ++(6,-0.5);
 	\draw (0,-0.5) rectangle ++(6,-0.5);
@@ -684,19 +683,6 @@ Synchronizable camcorders are very expensive, and consumer-grade hardware usuall
 {Video phase difference, i.e.~offset.
 Red rectangles illustrate exposure times of camera $A$, green rectangles the same for camera $B$.
 Frame period is $t$, and the cameras have a constant exposure time offset of an arbitrary $e$.}
-
-% }}}
-
-\subsubsection{Encoding quality} % {{{
-
-Raw video consumes too much data to be feasible to use normally.
-Thus, a range of compression algorithms have been invented, most of them lossy.
-Reconstruction from frames extracted from a compressed video can not be as good as from separately saved stills.
-
-Compression introduces loss of detail and artifacts typical to each algorithm, often visible as blocks or blurring.
-
-Some expensive cameras can record raw video, and others can be tricked to that.
-Canon DSLRs can be ``hacked'' to dump the raw stream to a memory card, but only some models support the faster CF memory cards that can keep up with the amount of data.
 
 % }}}
 
