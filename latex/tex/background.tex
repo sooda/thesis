@@ -301,13 +301,14 @@ A so-called raw image file can be saved with more expensive cameras contains the
 when a raw file is not used, the camera processes the image with device-specific correction filters and applies e.g.~white balance correction, and finally saves the image as a standard image file such as JPEG.
 Clock speed of the conversion circuits with the main processor speed ultimately determine the maximum burst imaging speed.
 For example, for the Canon flagship camera EOS-1D X, a continuous shooting speed of 14 frames per second is advertised.
-With its resolution of 5184 by 3456 pixels and 14-bit processing, the bit rate from the sensor is
+With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate for the bit rate from the sensor is
 
 \begin{equation} \label{eq:eos1dspeed}
 5184 \times 3456 \times 14 \times 14 \approx 3,5\text{ Gbit/s}
 \end{equation}
 
 by average, or 0,4 gigabytes per second, requiring also high speed from the processor and mass storage.
+In reality, a number of other complicated factors also have a small effect.
 
 % }}} image sensors
 
@@ -484,81 +485,65 @@ where Gbit is $1024^3$ bits.
 
 \subsection{Video} \label{sec:video} % {{{
 
-Video is ordered electronic pictures displayed one after another.
-
-
 %Hox ALL-I (intra) vs. IPB (intra-predict-bidirpredict)
 
+% intro, connection to reconstruction
+
+\emph{Video} is ordered electronic pictures displayed one after another.
 Humans perceive motion when a previously seen object is seen again in a nearby location.
-Current digital video technology encodes motion in a sequence of still images, usually displayed in constant rate.
+Current digital video technology encodes motion pictures as in films, in a sequence of still images, recorded and displayed at a constant rate.
 Three dimensional motion is generally no different: it is encoded as discrete poses in sequence.
 In order to do motion capture in stereo vision, video material from two or more of cameras is used to initially capture a sequence of still photos.
+
+To reconstruct the frames in 3D, each set of frames encoded by the cameras should be \emph{synchronized}, i.e.\ shot at the same time, because the reconstruction assumes a static subject.
 
 % }}}
 
 \subsubsection{Sequence of frames} % {{{ or: video is frames
 
-When scanning a scene continuously, a camera grabs frames using the same principles as in photos, but does it in sequence, at a speed that is called frame rate.
-Each picture of a video stream is called a frame.
-In interlaced video, two frames make up a whole picture that covers all pixels.
-Interlacing alternates between odd and even lines to increase update rate, and was invented for cathode ray tube (CRT) displays.
-Many CCD video cameras still produce interlaced stream, because it is cheaper to manufacture.
-Video that contains full frames only is called progressive.
+% how/when frames are captured
 
-In movies, the shutter is often open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye; even though the motion is blurred, more temporal information about the scene movement is encoded per frame than when exposing infinitesimally short frames, at the expense of spatial resolution.
-A common shutter speed relates to frame rate such that a frame is exposed half the time between frames.
-\cite{wilson2004anton}
-For sharp images that are preferred in 3D reconstruction, motion blur should be avoided.
-Ideal exposure time would be infinitesimally short, but practically the shortest possible cannot be used becauses of the amount of light available.
+When scanning a scene continuously, a camera shoots frames using the same principles as in photos, but does it in sequence, at a speed that is called \emph{frame rate}.
+For each frame, the shutter is open for a duration of \emph{exposure time} or interchangeably \emph{shutter speed}.
+In \emph{interlaced video}, two frames make up a whole picture that covers all pixels.
+Interlacing alternates between odd and even lines to increase update rate, and was invented for cathode ray tube displays to reduce apparent flicker.
+The alternation results in tearing artifacts when imaging horizontally moving subjects (shown in figure \ref{fig:interlace}).
+Many CCD video cameras still produce interlaced stream, because it is cheaper to manufacture due to fewer pixels.
+Video that contains full frames only is called \emph{progressive}.
 
-Film cameras and some professional video cameras use a rotary disc shutter that has an opaque 180 degree sector.
-This is why having half the exposure time of frame rate is sometimes called ``180 degree shutter''.
-While the light is blocked, film is mechanically advanced to the next frame.
-Digital video analogously downloads data from the image sensor and clears it during this time.
-
-% }}}
-
-\subsubsection{Frame rate effects} % {{{
-
-For a same subject, a higher FPS usually means better stopping of motion because of shorter shutter speed and less movement between frames.
-For optical flow computation, a long enough time should be passed for reliable motion vectors, though.
-
-Interlaced video was invented to increase the update speed of cathode ray tube (CRT) displays, reducing apparent flicker.
-Progressive video means a format where each picture is a full frame.
-Interlacing has twice as high update speed as progressive, because each picture encodes only half of the images.
-The pictures alternate between odd and even lines only, resulting in tearing artifacts when imaging moving subjects (shown in figure \ref{fig:interlacetearing})
-Some CCD sensors employ a technology that scans the image in interlaced frames.
-
-\simplegfx{h!}{0.9\textwidth}{interlace}{
-Interlaced scanning.
-From left to right: even lines only, odd lines only and full picture combined.
-Top: stationary square.
-Bottom: a moving square, showing tearing if the frames would be combined.
-Picture not in scale, only 20 lines used.
+\simplegfx{h!}{0.7\textwidth}{interlace}{
+	A cropped area of interlaced scanning.
+	From left to right: even lines only, odd lines only and full picture combined.
+	Top: stationary square.
+	Bottom: a moving square, showing tearing if the frames would be combined.
 }
 
-Consumer video cameras and video-capable pocket cameras and DSLRs typically offer several choices of frame rate. Traditionally, the movie industry has used 24 FPS; 25 (PAL) and 30 (NTSC) are common alternatives used in TV broadcast, some cameras being capable to twice the speed on a lower resolution.
+% on fps
 
-Actual FPS in camcorders is slowed down by a factor of 1.001 because of historical reasons relating to black and white / color TV backwards compatibilities.
-30 and 24 FPS refer often actually to approximately 29.970 and 23.976 FPS, respectively.
+Consumer video cameras, video-capable pocket cameras and DSLRs typically offer a few choices of frame rate. Traditionally, the movie industry has used 24 FPS; 25 and 30 are common alternatives used in TV broadcast, some cameras being capable to twice the speed at a lower resolution.
+Actual FPS is slowed down from the advertised by a factor of 1.001 because of historical reasons in monochrome and color TV backwards compatibilities.
+30 and 24 FPS refer to approximately 29.970 and 23.976 FPS, respectively.
 
-Externally triggered cameras can be configured to record at any arbitrary speed, as long as it's in the limits of the camera speed capabilities.
-Synchronized machine vision cameras do not record video on their own, but instead just listen to a synchronization signal and output frames on its rate, that frame grabbers on a computer read and store.
+Externally triggered cameras can be configured to record at any arbitrary rate and exposure, as long as it's in the limits of the camera speed capabilities.
+Synchronized machine vision cameras do not record video on their own, but instead just monitor to a synchronization signal and output frames on its rate, that frame grabbers on a computer read and store.
 
-DSLR video modes use almost the sensor's full size but skip some of its lines when recording video, getting the same field of view as still images but sometimes resulting in significant aliasing patterns with certain subjects with high frequency information.
+% dslr sucks
+
+DSLR video modes use almost the sensor's full size but skip some of its lines when recording video, resulting in the same field of view as still images but suffering from significant aliasing patterns with certain subjects with high frequency information.
+Additionally, pixels in the video frames do not represent physical pixels anymore, posing awkwardness in camera calibration.
 Line skipping is depicted in figure \ref{fig:lineskipping2}.
-The color filter array makes the problem even worse.
+The color filter array makes the problem even worse for small-detailed features of high color detail.
 
-\simplegfx{h!}{0.9\textwidth}{lineskipping2}{
-Line skipping in a video camera.
-Left shows a part of the full sensor and its bayer pattern; on the right, only every third line is captured.
+\simplegfx{h!}{0.5\textwidth}{lineskipping2}{
+	Line skipping in a DSLR camera in video mode.
+	Left shows a part of the full sensor and its bayer pattern; on the right, only every third line is captured.
 }
 
 % }}}
 
-\subsubsection{Frame rate vs. shutter speed} % {{{
+\subsubsection{Frame rate and shutter speed} % {{{
 
-\simplefig{h!}{
+\simplefig{h}{
 \begin{tikzpicture}[scale=1.5]
 	\def\nframes{5}
 	\draw (0,0) rectangle ++(6,-1.5);
@@ -577,31 +562,39 @@ Left shows a part of the full sensor and its bayer pattern; on the right, only e
 	\node at (-0.3, -0.75) {1/2};
 	\node at (-0.3, -1.25) {1/4};
 \end{tikzpicture}
-}{fig:shutterspeed}
-{Shutter speed compared to frame rate. For an always open shutter, the camera records everything. 1/2 is a ``normal'' rate, 1/4 resulting in slightly less motion blur.}
+}{fig:shutterspeed}{
+	Varying shutter speed compared to constant frame rate, FPS is $1 / t$.
+	Red rectangles illustrate exposure time, i.e.\ open shutter.
+	For an always open shutter, the camera records everything.
+	A ratio of 1/2 is a ``normal'' rate.
+	1/4 results in slightly less motion blur.
+}
 
-What happens when the shutter is closed cannot be recorded.
-%The Nyquist-Shannon sampling theorem states that events higher than half the sampling rate cannot be distinguished from the signal.
-%In reality, repetitive motions rarely happen in reconstruction videos, but the fact that information about the subject between frames is lost cannot be circumvented.
-Normally, motion is simply interpolated between views in different frames or simply the last frame is used, if playback happens at a different rate from the recording.
-For a large displacement, this interpolation can be inaccurate enough to need manual fixing.
+A higher frame rate results in more accurate representation of motion as a whole, and a faster shutter speed helps to reduce motion blur in individual frames.
+Ideal exposure time would be infinitesimally short, but practically the shortest possible cannot be used becauses of the amount of light available.
+Similarly, what happens when the shutter is closed is not recorded; ideal frame rate would be faster than any period of motion in the scene.
 
-Motion blur encodes more information about object travel but gets less precise by time.
+In contrary, in motion picture industry, the shutter is kept open deliberately so long that fast motion is blurred, because it is considered aesthetically pleasing to human eye;
+even though the motion is blurred, more temporal information about the scene movement is encoded per frame than when exposing infinitesimally short frames, at the expense of spatial resolution.
+A common shutter speed relates to frame rate such that a frame is exposed half of the time between frames.
+\cite{wilson2004anton}
+Good cameras allow to change the frame rate and shutter speed independently.
 
-slowmovideo 
-\cite{eugster2011slowmovideo}
+%For a higher frame rate, also a faster shutter speed is typically required.
 
-Faster frame rate encodes information more often, which is preferable as longer distances of pixels of same objects are more difficult to match when tracking objects; faster shutter speeds help to reduce motion blur.
-Fast shutter (i.e.~short exposure) needs to be compensated by using more sensitive sensors or more light to get equivalently bright images.
-Short exposure becomes problematic if the light source is a flash instead of continuous, if camera offset can be more than the exposure; the flash might illuminate only some cameras while others expose when the flash is not lit.
+Normally, if playback happens at a different rate from the recording, motion is interpolated between different frames or the last appeared frame is used.
 
-% (FIXME wat?)
-Video recording and motion tracking are best considered orthogonal issues; while a single static case can be scanned in three dimensions, so can be also each frame of a sequence, separately.
-It might not be computationally feasible in all use cases, though, because the reconstruction must be started all over again for each frame and the topology is uncorrelated between the frames.
-% Assumptions that the scene is locally almost the same can help and speed up computations. [?]
+For motion computation based on frame differences, a long enough time should be passed for reliable motion direction, though.
 
-%Section \ref{sec:tracking} will 
+Fast shutter (i.e.~short exposure) needs to be compensated by using more sensitive sensors or brighter light sources to get equivalently bright images.
 
+Film cameras and some professional video cameras use a rotary disc shutter that has an opaque 180 degree sector.
+This is why the common practice of having half the exposure time of frame rate is sometimes called ``180 degree shutter''.
+While the light is blocked, film is mechanically advanced to the next frame.
+Digital video analogously downloads data from the image sensor and clears it during this time.
+
+%Motion blur encodes more information about object travel but gets less precise by time.
+%slowmovideo \cite{eugster2011slowmovideo}
 
 % }}}
 
