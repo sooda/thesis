@@ -7,7 +7,9 @@
 % Aikaisempi tutkimus
 \section{Image acquisition}
 
-% TODO: image of a scene, a camera and a computer, all connected
+% TODO: image of a scene, a camera with optics and sensor, and a computer, all connected
+
+% tell also briefly what calibration is
 
 Digital stereo vision analyses digital images for depth cues.
 A digital photograph is variations in light intensity on an image sensor that have been digitized.
@@ -229,23 +231,22 @@ the sampling should then interpolate between neighboring pixels, instead of taki
 % intro: film vs sensor
 
 Historically, photographs were saved on a photosensitive film.
-With digital cameras, a rectangular electrical sensor replaces the film.
+With digital cameras, a rectangular electrical \emph{sensor} replaces the film.
 The sensor consists of a uniformly spaced grid of small pixel sensors built as an integrated circuit package.
-A pixel, or picture element, represents a single dot on a film; when combined, the dots form a larger picture.
+A \emph{pixel}, or picture element, represents a tiny dot on a film; when combined, the dots form a larger picture.
 
 % digital pics
 
-Digital pictures on a computer are commonly represented as rectangular arrays of numbers, or \emph{raster images}.
-Each number describes the intensity of a single dot on a specific location.
+Digital pictures on a computer are represented as rectangular arrays of numbers, or \emph{raster images}.
+Each number describes the intensity of a single pixel on a specific location.
 For a single intensity value per pixel, a grayscale picture would be obtained.
-
 Color pictures are described with more intensity channels than one, in e.g. RGB space, the way that most parts of a computer use for describing colors.
-A single RGB color encodes the values of red, green and blue separately.
+A single RGB color encodes the intensities of red, green and blue separately.
 
 % sensors
 
 The rectangular image sensor senses the amount of light hitting each pixel and encodes it to an electrical signal.
-The signal is digitized to a brightness value and the camera saves all the pixel values to a file in mass storage.
+The signal is digitized to a brightness value and the camera saves all the pixels to a file in mass storage.
 There are two major sensor types: CMOS (Complementary Metal-Oxide Semiconductor) and CCD (Charge-coupled Device).
 CMOS is the type used in most still cameras because of its lower price.
 
@@ -256,46 +257,57 @@ CCD has other issues, such as bleeding a strong light source to surrounding pixe
 % noise
 
 As all electronic circuits, also image sensors are subject to signal noise.
-Each pixel receives a more or less random level of signal that shows up as random additive brightness, noticed usually only in low light conditions as its power is much less than the actual brightness level of the light.
-Black areas suffer from noise more than bright areas.
-Noise increases also with sensor's signal gain, or ``exposure sensitivity'': also digital cameras use the ISO system designed for film speed.
-More sensitive sensor needs less light to produce a bright-looking image by amplifying the signals more before digitization.
+Each pixel receives an additional random signal level that shows up as additive brightness, noticed usually only in low light conditions or black areas.
+Noise increases with sensor's signal gain, or ``exposure sensitivity'' described using the ISO system (``film speed'').
+A more sensitive sensor needs less light for a bright-looking image, because the signal is amplified more before digitization.
 This amplification also amplifies the original signal noise, which is why the gain level should be kept as small as possible and the amount of light entering the sensor as large as possible.
-This means using bright lights in the imaged scene or a longer exposure time.
+This leads to using bright lights in the imaged scene or a longer exposure time.
 Longer exposure time influences more motion blur, though.
 
 % sensor movement
 
-Some cameras use image stabilisation by moving the sensor around, as opposed to moving the optical elements inside the lens.
-In any case, image stabilisation should be turned off for reconstruction because it affects the calibration: if any element in the image acquisition path moves, calibration parameters also change.
-
+Some cameras use image stabilization by moving the sensor, as opposed to moving the optical elements inside the lens.
+In any case, image stabilization should be turned off for reconstruction because it affects the calibration of image formation: if any element in the image acquisition path moves, calibration parameters also change.
 The sensor also moves when a camera uses a sensor cleaning mechanism with ultrasonic vibration motor on the sensor.
 
 % colors
 
 A single pixel sensor acquires all light hitting it, independent of the wavelength.
-Two different methods to retrieve the red, green and blue color bands for each pixel are common in color cameras.
-The most common method that most cameras use is to interleave red, green and blue in a single sensor by filtering the wavelength that can pass a pixel with a colored film over the sensor, with a special repeating pattern.
+Two principal methods to retrieve the red, green and blue color bands for each pixel are used in color cameras, one being cheaper and thus more common.
+The most common method is to interleave red, green and blue in a single sensor by filtering the wavelength that can enter a pixel with a colored film over the sensor, with a special repeating pattern called \emph{color filter array}.
 The missing values for other colors bands are interpolated from surrounding pixels.
 The most popular interleaving pattern is the Bayer filter, illustrated in figure \ref{fig:bayerpattern}.
-Other arrangements of red, green and blue are also common, and it is not mandatory to use these three colors; there exist filters for e.g. cyan, yellow and magenta too.
+Other arrangements of red, green and blue are also used, some incorporate other colors, such as cyan, yellow, green, and magenta.
 
-Another way is to retrieve the three channels with three different sensors, one for each wavelength band, and to guide the light to them with prisms and filters; this is obviously more expensive than a single sensor but results in a more accurate picture as there are all colors available for each pixels.
+Another way is to retrieve the three channels with three different sensors, one for each wavelength band, and to guide the light to them with prisms and filters; being more expensive than a single sensor, this method is used in some high-end cameras only.
 
-\simplefig{h}{\bayer{0.6}}{fig:bayerpattern}
-{A small subsection of the repeating Bayer pattern, not drawn fully for better visualization. Each square is a single pixel; the grey area represents the image sensor. The gap between pixels is nonzero.}
+\simplefig{h}{\bayer{0.6}}{fig:bayerpattern}{
+	A small partly drawn subset of the repeating Bayer pattern.
+	Each square is a single pixel; the grey area represents the image sensor.
+	The gap between pixels is nonzero.
+}
 
 % ???
 
 Physical pixels cover less than the full area of a sensor, as there are gaps between them;
-microlenses between the pixel sites direct the light hitting the gaps to the neighboring pixels.
+microlenses between the pixel sites direct the light hitting the gaps to the neighboring pixels, with varying color performance.
+Because of the discrete nature of the pixel array, some cameras employ an analog low-pass filter in front of the sensor to hide high-frequency information that would show up as aliasing.
 
 % support electronics
 
-Next to the pixel sensors and their amplifiers is digital logic for reading out the data and passing it through to an image processor.
+Near the pixel sensors and their amplifiers is digital logic for reading out the data and passing it through to an image processor.
 Quality of this support electronics affects some properties, most important of which are analog-digital converter noise and dynamic range, and speed that the image is read out from the sensor.
 A so-called raw image file can be saved with more expensive cameras contains the raw sensor data with very little processing done;
 when a raw file is not used, the camera processes the image with device-specific correction filters and applies e.g.~white balance correction, and finally saves the image as a standard image file such as JPEG.
+Clock speed of the conversion circuits with the main processor speed ultimately determine the maximum burst imaging speed.
+For example, for the Canon flagship camera EOS-1D X, a continuous shooting speed of 14 frames per second is advertised.
+With its resolution of 5184 by 3456 pixels and 14-bit processing, the bit rate from the sensor is
+
+\begin{equation} \label{eq:eos1dspeed}
+5184 \times 3456 \times 14 \times 14 \approx 3,5\text{ Gbit/s}
+\end{equation}
+
+by average, or 0,4 gigabytes per second, requiring also high speed from the processor and mass storage.
 
 % }}} image sensors
 
@@ -303,80 +315,73 @@ when a raw file is not used, the camera processes the image with device-specific
 
 % shutter, why needed
 
-An image sensor accumulates the received light and converts its intensity to electrical signals.
-A static scene is imaged so that the sensor is exposed to the light passing the optics for a short time, keeping the camera and subject steady.
-Electrical sensors can be ``cleared'' to black rather quickly (unlike an analog film that starts exposing immediately and the effect cannot be undone). Still, good quality cameras use mechanical shutters for photographs.
+A static scene is imaged by exposing the sensor to the light passing the optics for a short time, keeping the camera and subject steady.
+Electrical sensors can be cleared to black rather quickly.
+Still, good quality cameras use even faster mechanical shutters for photographs.
 Because of the rolling shutter effect of a CMOS sensor, it is better to do the reset and readout phases when the sensor is not exposed to light.
 
 % mechanical stuff
 
-\simplegfx{h!}{0.8\textwidth}{focalplaneshutter}
-{Focal plane shutter has two moving curtains to cover the sensor, opening it momentarily so that each pixel receives light for the same amount of time.
-From left to right: initially, the sensor is blocked.
-Once the first curtain moves away, the sensor is exposed to light.
-Another shutter stops the light from entering again.
-The shutter resets by moving back to the position in the top (not shown).
-Modern curtains do not actually have whole planes but folding metal pieces to save space.
+\simplegfx{h!}{0.8\textwidth}{focalplaneshutter}{
+	Focal plane shutter has two moving curtains to cover the sensor, opening it momentarily so that each pixel receives light for the same amount of time.
+	From left to right: initially, the sensor is blocked.
+	Once the first (red) curtain moves away, the sensor is exposed to light.
+	A second curtain (blue) stops the light from entering again.
+	The shutter resets by moving back to the position in the top (not shown).
+	Modern shutters actually have folding metal pieces to save space, but the effect is the same.
 }
 
 \simplegfx{h!}{0.8\textwidth}{focalplanerolling}{
-Rolling shutter effect in a focal plane shutter happens when the exposure time is really short.
-The shutters have to move at the same time, exposing only a part of the sensor at a time.
-Fast movement during the exposure leads to artifacts and a short flash light would illuminate only a part of the sensor.
+	Rolling shutter effect in a focal plane shutter happens when the exposure time is really short.
+	The shutters have to move at the same time, exposing only a part of the sensor at a time.
+	Fast movement during the exposure leads to artifacts and a short flash light would illuminate only a part of the sensor.
 }
 
 
-A shutter is a mechanical device that blocks light to the sensor and can be moved quickly out of the way and back.
+A \emph{shutter} is a mechanical device that blocks light to the sensor and can be moved quickly out of the way and back.
 There are several types of mechanical constructions for shutters, depending on the application.
-A focal plane shutter, used in most system cameras, is installed in front of the sensor.
+Some compact cameras have a small \emph{leaf shutter} in the lens center that can be moved fast.
+A \emph{focal plane shutter}, used in most system cameras, is installed in front of the sensor.
 It consists of two curtains that move to the same direction; one moves out of the way of the sensor to let light pass to it, and another moves to cover it back again when the exposure time has elapsed.
 Figure \ref{fig:focalplaneshutter} illustrates a planar shutter (in reality, the curtains are black and not complete planes).
 
 A \emph{rolling shutter} effect is produced with very high shutter speeds, where the limit of curtain movement speed prohibits fully opened shutter and the closing curtain starts to move before the first has stopped, exposing only a narrow band of the sensor at a time.
 Fast mechanical shutter movement is depicted in figure \ref{fig:focalplanerolling}.
-Also electronic shutters in CMOS sensors suffer from this effect, which is especially noticeable in videos when the camera or the subject is moving fast.
 
-Result of shooting a moving object with rolling shutter is depicted in figure \ref{rollingeffect}.
+%Result of shooting a moving object with rolling shutter is depicted in figure \ref{rollingeffect}.
 When an object is moving to the same direction as the narrow shutter slit, i.e. vertically, it appears smeared;
-when the movement is horizontal, different parts of it appear to bend diagonally.
+when the movement is horizontal, different parts of the object appear to bend.
 
-\simplegfx{h!}{0.8\textwidth}{rollingeffect}{
-	Rolling shutter imaging a spinning disk.
-	At each point in time, the slit captures only part of the subject.
-	When the object moves, the subject appears distorted.
-	Image by Wikipedia user Cmglee, licensed under CC BY-SA.
-}
+%\simplegfx{h!}{0.8\textwidth}{rollingeffect}{
+%	Rolling shutter imaging a spinning disk.
+%	At each point in time, the slit captures only part of the subject.
+%	When the object moves, the subject appears distorted.
+%	Image by Wikipedia user Cmglee, licensed under CC BY-SA.
+%}
 
-
-
-A digital CMOS exposure and ``electrical shutter'' works like this too; the sensor is reset and read row by row sequentially; this produces a strong rolling shutter effect especially in short exposures and in video.
+A digital CMOS exposure and ``electrical shutter'' works like this too; the sensor is reset and read row by row sequentially; this produces a strong rolling shutter effect especially in video cameras when the subject is moving fast relative to the camera.
 
 A CCD camera would not need a mechanical shutter, because the full image is read out at once.
 Most still cameras have also a movie mode that holds the mechanical shutter open all the time, using the electrical shutter.
 
-The mechanical shutter can last only a finite amount of actuations (50-200 thousand for a common system camera) as it wears out gradually.
-
-%varying ccd charge time, ???
-%
-
-% vs frame rate
+The mechanical shutter can last only a finite amount of actuations (50 000-200 000 for a common system camera) as it wears out gradually.
 
 % other
 
-When the camera or the imaged subject moves while exposing the picture, an object gets smeared along the movement on the image, an effect known as ``motion blur'': the image gets blurred where motion happens.
+When the camera or the imaged subject moves while exposing the full frame, an object gets smeared along the movement on the image, an effect known as ``motion blur'': the image gets blurred where motion happens.
 
-Video film cameras that capture each frame to a separate part of film used a spinning wheel with a window in it, called rotary disc shutter. \cite{wilson2004anton}
+Video film cameras that capture each frame to a separate part of film used a spinning wheel with a transparent window, called rotary disc shutter. \cite{wilson2004anton}
 This rotates at a precise speed synchronized to the frame rate, displaying a for a consistent duration for each frame.
-The size of the window constitutes to the amount of light and motion blur. Video is more discussed in the section \ref{sec:video}.
+The size of the window constitutes to the amount of light and motion blur.
+Video is more discussed in the section \ref{sec:video}.
 
 When taking a picture, the camera does not instantly start to expose the image.
 Each camera has a specific \emph{shutter lag} that is the time that elapses between when the shutter button is pressed and when the shutter moves out of the way.
 Some sources include in this term also the time for the camera to focus the lens and measure sensitivity settings which can be a significantly longer time.
 
 Shutter speed has small variations over time when the camera ages and some parts wear out.
-Some difference also exists among same camera model from factory variations.
-Even a single camera cannot be exactly consistent in e.g. unpredictable firmware causes if it has not been taken into account in the design.
-The variations among several cameras must be taken into account when using a flash unit instead of continuous light: the short duration of the bright flash of light should happen when all the cameras imaging the same scene have opened, but not yet closed, their shutters.
+Some difference also exists among same camera model from mechanical variations and software processing.
+When using a flash unit instead of continuous light, the short duration of the bright flash of light must happen when all the cameras have opened, but not yet closed, their shutters.
 
 %Shutter lag (auto exposure/focus even in manual mode maybe?)
 
@@ -384,48 +389,46 @@ The variations among several cameras must be taken into account when using a fla
 
 \subsubsection{Lighting} % {{{
 
-In addition to multiple cameras at different locations and poses to encode a subject's geometry, a uniform and soft lighting is also required to minimize bright reflection difficulties in the texture.
+In addition to multiple cameras at different locations and poses to encode a subject's geometry, a uniform and soft lighting is also required for consistent color reproduction and to minimize bright reflection difficulties in the texture.
 A large variety of different studio lights are available in the market for different lighting situations, emitting either continuous light or short bright flashes.
 
 % XXX pic of brightness constancy: same object from two views, patch windows
-Because most reconstruction methods fundamentally assume a relatively diffuse lighting, a property called \emph{brightness constancy} (i.e. the brightness and color of a surface looks the same from all viewing directions), they perform poorly when a light shines off a surface so that its specular highlight is at a different geometric location in different images.
+Because most reconstruction methods fundamentally assume a relatively diffuse lighting, a property called \emph{brightness constancy} (i.e.\ the brightness and color of a surface looks the same from all viewing directions), they perform poorly when a light shines off a surface so that its specular highlight is at a different geometric location in different images.
 
-\simplegfx{h!}{0.7\textwidth}{brdfdiagram}
-{BRDF of a surface is a function of surface normal $n$, light direction $\omega_i$ and viewing direction $\omega_o$.}
+%\simplegfx{h!}{0.7\textwidth}{brdfdiagram}
+%{BRDF of a surface is a function of surface normal $n$, light direction $\omega_i$ and viewing direction $\omega_o$.}
 
-Some surfaces are more \emph{diffuse} than others.
-Surfaces can be modeled as diffuse and specular components that are functions of light direction, viewing direction and sometimes spatial location on the surface.
+Surfaces can be modeled as \emph{diffuse} and \emph{specular} components that are functions of light direction, viewing direction and spatial location on the surface.
 Surface reflection models are described with a bidirectional reflectance distribution function, or BRDF. \cite{nicodemus1965dirreflectanceetc}
 
 A distribution model of the surface's global or local microgeometry specifies how much light reflects in different surfaces. \cite{nayar1991surface} % XXX 1991 or -89? TODO fig 22 from the paper
-Diffuse means a material that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more \emph{specular} surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
-Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in figure \ref{fig:lambertcosine}. \cite{lamberttodo}
-A Lambertian surface's BRDF is constant among the viewing direction.
-Specular highlight or specular reflections refer to a mirror reflection of the lamp on the imaged surface.
-Surfaces modeled in computer graphics are often relighted with functions of surface normal and light and view directions, given as unit vectors, as in figure \ref{fig:brdfdiagram}.
+Diffuse means a material that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more specular surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
+%Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in figure \ref{fig:lambertcosine}. \cite{lamberttodo}
+%A Lambertian surface's BRDF is constant among the viewing direction.
+\emph{Specular highlight} or \emph{specular reflections} refer to a mirror reflection of the lamp on the imaged surface.
+In figure \ref{fig:nayarbrdf}, different types of reflections seen by the camera are visualized as light intensities of different colors.
+Ideally, the camera would only record the diffuse reflection that represents the surface color;
+the specular components are unwanted artifacts.
+Polarized filters can be used in front of the lights and in the camera lenses to filter out most of the specular lighting.
+%Surfaces modeled in computer graphics are often relighted with functions of surface normal and light and view directions, given as unit vectors, as in figure \ref{fig:brdfdiagram}.
 
+%\begin{equation} \label{eq:lambertcosine}
+%	I_D = L \dot N I_L = |N| |L| \cos \alpha = \alpha
+%\end{equation}
 
-\begin{equation} \label{eq:lambertcosine}
-	I_D = L \dot N I_L = |N| |L| \cos \alpha = \alpha
-\end{equation}
+\simplegfx{h!}{0.7\textwidth}{nayarbrdf}{
+	Polar plots of three reflection components as functions of the viewing angle, as suggested in \cite{nayar1991surface}, showing the brightness seen from different angles from the surface normal.
+	In a reconstruction subject, the bright specular spike and lobe reflections should be minimized, and only the diffuse color is wanted.
+	Image by Nayar \cite{nayar1991surface}.
+}
 
-[Some specular lobe picture here and definitions of the rendering equation, probably.]
-
-Commonly used but vague terms such as ``soft'' and ``hard'' lighting refer to the size and power of light sources: bright spotlights are hard, and larger and relatively less bright lamps are soft.
+Commonly used terms such as ``soft'' and ``hard'' lighting refer to the size and power of light sources: bright spotlights are hard, and larger and relatively less bright lamps are soft.
 Softness can be added by increasing the light's area while holding its power constant, such as reflecting a light off a large surface or adding a white cloth between it and the imaged subject.
-Effects of a soft versus hard light are illustrated in figure \ref{fig:lighthardness}.
+%Effects of a soft versus hard light are illustrated in figure \ref{fig:lighthardness}.
 
-Powerful flash light sources use usually a gas-filled tube (Xenon) that is excited with high voltage to produce a short, bright burst of light.
-Flashes are good for portrait photographers because the subject sees the bright light only for a short moent; thus, the light does not annoy the subject.
-Short bursts of light are also good for stopping motion: motion blur happens when the camera sees movement over time, but it only sees the light that enters the scene and reflects to the lens.
-If light enters the scene only for a short while, no motion blur is possible.
-
-Consumer flashes output a short spike of light, with a duration of a few milliseconds.
-When attached to a flash, many DSLR cameras refuse to use a shorter exposure time than around 1/200 s.
-There is a limit on the movement speed of the shutter mechanics.
-A short exposure is taken so that the opening and closing curtains move at the same time, exposing only a short band of the sensor to light at a time.
-The flash does not usually last long enough for the whole sensor to expose, resulting in a partly bright and partly dark image.
-Some more expensive models support ``X-sync'', where several shorter flash bursts are fired in sequence, resulting in a longer overall light pulse.
+Powerful electronic flash units use usually a gas-filled tube that is excited with high voltage to produce a short, bright burst of light for some milliseconds.
+Flashes are good for portrait photographers because the subject sees the bright light only for a short moment; thus, the light does not annoy the subject.
+Short bursts of light in an otherwise dark environment are also good for stopping motion and synchronizing multiple cameras, as only a short time is effectively exposed to light.
 
 %dark contact lenses if available (remedy)
 
@@ -442,41 +445,30 @@ Some more expensive models support ``X-sync'', where several shorter flash burst
 % data path intro
 
 The image information travels from the subject through the optics to the image sensor's surface, via an analog/digital converter, the camera's processor(s) and finally to a memory card or straight to a computer's storage via a wired or wireless connection.
-Many parts in this equation contribute to the rate of which the images can be taken, usually measured in frames per second (FPS).
+Many parts in this path contribute to the rate of which the images can be taken, usually measured in frames per second (FPS).
 
 % fps
 
 An average DSLR can achieve around five frames per second of full resolution footage, while more expensive models can reach over 10 FPS.
 A digital still camera can often record video too, at a lower resolution and a higher FPS.
 
-% sample speed calculations
-
-For example, recent Canon consumer DSLRs such as 650D and 700D feature an 18 megapixel CMOS sensor having a resolution of 5184 by 3456 pixels and a 14-bit analog/digital converter, resulting in approximately 31 megabytes of raw data per frame.
-For a moderate 5 FPS, the sensor generates thus about 155 MB of data per second, as shown in equation \ref{equ:canonmbfps}.
-
-\begin{equation}
-	5\frac{1}{s} * 5128 * 3456 \text{px} * 14 \frac{\text{bit}}{\text{px}} \approx 1240 \frac{\text{Mbit}}{s} \approx 155 \frac{\text{MB}}{s}
-\end{equation}
+% XXX \ref{eq:eos1dspeed}
 
 % files
 
 The raw files saved by DSLR cameras are compressed in a proprietary lossless format and contain also metadata about certain camera settings.
-Lossless compression maintains image quality and reduces file size depending on the complexity of the frame.
-Some manufacturers encode the brightness values through a lookup table, and it's common to use a compression scheme known from standard file compressions, or a specific lossless image compression.
+%Lossless compression maintains image quality and reduces file size depending on the complexity of the frame.
+%Some manufacturers encode the brightness values through a lookup table, and it's common to use a compression scheme known from standard file compressions, or a specific lossless image compression.
 
-Video files are almost always saved in a lossy video format, the H.264 format being common for recent cameras.
-Common bitrate for a full-hd (1920 by 1080 pixels) 24 FPS video is about 5-6 MB/s maximum.
+Video files are almost always saved in a lossy video format, the H.264 format being common for modern cameras.
+Common bitrate for a full-HD (1920 by 1080 pixels) 24 FPS video is about 5 MB/s.
 
 % storage
 
-Files are commonly stored to an internal memory memory of the camera, to a removable memory card, or directly to a PC via a cable.
-Files not directly transferred to a PC can be moved later by removing the memory card, or via USB connection that most consumer cameras support.
-
-Memory cards used by consumer grade cameras (CF, SD) can support speeds up to 125 MB/s and capacities in tens of gigabytes.
+In consumer devices, files are stored to a removable memory card.
+Industial devices transfer the images directly to a PC via a wire.
+Memory cards used by consumer grade cameras (Compact Flash (CF), Secure Digital (SD)) can support speeds up to 125 MB/s and capacities in tens of gigabytes.
 The speed of USB 2.0 high-speed specification is 480 Mbit/s; bus protocol's overhead limits effective data throughput to around 80 \%.
-Computers typically have several USB hosts each capable to the maximum transfer rate.
-To speed up download from multiple devices, the devices should be connected evenly to all hosts to fully divide the workload.
-
 Machine vision cameras use a higher speed connection, such as the newer USB 3.0, IEEE 1394 (FireWire), gigabit Ethernet or Camera Link to achieve realtime lossless transfer of high-resolution images.
 For example, the 1 Gbit/s Ethernet connection can transfer a raw 12-bit full-hd stream at
 
@@ -485,7 +477,6 @@ For example, the 1 Gbit/s Ethernet connection can transfer a raw 12-bit full-hd 
 \end{equation}
 
 where Gbit is $1024^3$ bits.
-Manufacturers can use some kind of compression to achieve higher rates.
 
 %http://majid.info/blog/is-the-nikon-d70-nef-raw-format-truly-lossless/
 
