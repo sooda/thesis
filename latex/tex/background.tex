@@ -1496,12 +1496,10 @@ The selection can be taken based on e.g. the image with highest detail or best b
 \clearpage
 \section{Motion capture}
 
-(surface vs motion capture)
-
 \emph{Motion capture} (mocap, or mo-cap) is the practice of recording object movement over time.
-A recorded subject can be a human that has a skeletal model, possibly encoding also some skin movement.
+A recorded subject can be e.g.\ a human that has a skeletal model, possibly encoding also some skin movement.
 In computer animation, the movement data is encoded as positions of certain vertices at each recorded point in time, and often post-processed to be parameterized to e.g.\ joint angles.
-\emph{Surface capture} is a related term referring to a similar motion recording but happening on a stationary but deforming surface instead of a globally moving skeleton.
+\emph{Surface capture} is a related term referring to a similar motion recording but happening on a locally deforming surface instead of a globally moving skeleton.
 
 % It is possible to assume locally smooth movements in most areas; thus, a more intelligent approach should be used than simply reconstructing a new mesh for each frame and using registration to just align them.
 % By making certain assumptions on high-resolution texture, very detailed bump maps can be extracted, for example, by backprojecting the expected 3d mesh to textures and refining. [CITE]
@@ -1509,22 +1507,20 @@ In computer animation, the movement data is encoded as positions of certain vert
 
 \subsection{4D data capture} % {{{
 
-The reconstruction field uses the term 4D in the context of time-varying 3D data.
-
+The reconstruction field uses the term \emph{4D} in the context of time-varying 3D data.
 Analogous to the case of traditional 2D video consisting of separate discrete frames of pixels, a sequence of dynamic 3D data is, in a simple case, individual ``frames'' of point clouds.
 
-For a source data in the form of video files per camera, consisting of a sequence of synchronized pictures, each set of frames can be considered a static geometry to which the reconstruction would be done.
-A naive registration to e.g. previous or first frame is possible to average out the object movement if only its local surface movement is of interest.
-Still, reconstructing each frame set separately would not produce the same topology for the mesh, as each frame contains a different point cloud and is not connected to the previous reconstruction, unless some algorithm that takes this into account is used.
+For a source data in the form of video files per camera, consisting of a sequence of synchronized pictures, each set of frames can be considered a static geometry on which the reconstruction would be done.
+A naive alignment to e.g. previous or first frame is possible to average out the object movement if only its local surface movement is of interest.
+Still, reconstructing each frame group separately would not produce the same topology for the mesh, as each frame contains a different point cloud and is not connected to the previous reconstruction, unless some algorithm that takes this into account is used.
 
 One possible method to correct the lack of geometric structure is to fit each frame of the mesh to another pre-recorded or pre-modeled mesh. \cite{somewhere,remedysoftware?}
-This can be beneficial also because the raw reconstruction quality may be even too high for practical use.
-
-Later usage may need only the tracked positions of specific locations on the surface to deform a mesh with bone guides.
+%This can be beneficial also because the raw reconstruction quality may be even too high for practical use.
+%Later usage may need only the tracked positions of specific locations on the surface to deform a mesh with bone guides.
 
 % }}}
 
-\subsection{Tracking the geometry} % {{{
+\subsection{Geometry tracking} % {{{
 
 %Kalman
 
@@ -1533,95 +1529,70 @@ Later usage may need only the tracked positions of specific locations on the sur
 %perf of cloth anim capture
 
 The dynamic reconstruction requires tracking of individual points or objects in order to usefully handle the moved subject.
-Non-static human motion capture in video gaming or movies where post-processing time is available rely on manual work to perfect the quality.
-A realtime case would need to e.g.~automatically register each frame between the previous one to use the geometry's dynamic properties.
+Non-static human motion capture in video gaming or movies, where post-processing time is available, rely on manual work to perfect the quality.
+In realtime applications, the full frame is typically not reconstructed again, but only selected keypoints that are tracked in 2D are triangulated, and a previously scanned model is deformed based on them.
+%A realtime case would need to e.g.~automatically register each frame between the previous one to use the geometry's dynamic properties.
 
-The simplest tracking step is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need e.g. topological continuity in the time domain, but recomputes its work on each new point cloud.
+The simplest tracking method is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need e.g. topological continuity in the time domain, but recomputes its work on each new point cloud.
 
-Registration and tracking of point clouds or meshes is a large topic on its own; this section reviewes only some of the most common methods presented in the literature.
-Some work with the reconstructed 3D structure; others use the source images and do additional work.
+%Registration and tracking of point clouds or meshes is a large topic on its own; this section reviewes only some of the most common methods presented in the literature.
+%Some work with the reconstructed 3D structure; others use the source images and do additional work.
 
 In three dimensions, a template model is often scanned beforehand that is then morphed to match the target object to keep the topology (i.e.~vertex neighborhood connectivity) constant.
 This technique adapts to both static and rigid cases.
 \cite{bojsen2012tracking,li2009robust}
-
-Common method also for the entertainment industry is to use a pre-determined model of the scanned target or a completely separate character, and deform it on each frame based on the current state of the object, fitting the model's vertices to the scanned set.
-
-Facial animation does not necessarily even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
+Common method also for the entertainment industry is to use a completely separate character, and deform it on each frame based on the current state of the object, fitting the model's vertices to the scanned set.
+% siggraph14 doghead
 
 % }}} tracking
 
-\subsection{2D features / surface tracking} % {{{
+\subsection{2D surface tracking} % {{{
 
 %* SIFT/SURF/Harris feature tracking, reproject
 
 %* edgels (edge pixels)
 
 In two dimensions, the full reconstruction step can be skipped when using only features in image space, providing real-time performance. \cite{pilet2005real}
-When assuming that a precise object stays in the cameras, features can be detected and mapped to a point on the 3D surface, and tracked locally with no reprojection, while the tracked object is assumed to keep the same topology as a previously scanned model.
-
-Tracking is done by looking for the same feature as in a previous frame in the neighborhood where it was previously.
-State-of-the-art 2D tracking methods include Kanade-Lucas-Tomasi (KLT) \cite{KLT} and Tracking-Learning-Detection (TLD) \cite{TLD}, both based on optical flow.
-
-(FIXME: move optical flow talk here?)
-
-%Pore-level matching, good resolution needed
-%Many cameras, zoom in to just a part of the target
-
-Classic motion capture uses special reflective markers that are tracked in 2D.
-Markerless surface capture detects image features that are used as virtual markers, working in a similar way.
-Distinctive bright markers in infrared bone tracking cameras can be easily thresholded from the background and matched; matching textured objects is much more computationally intensive, as it usually involves heavy template matching.
+When assuming that a precise object stays in the imaged volume, features can be detected and mapped to a point on the 3D surface, and tracked locally with no full-image reconstruction, while the tracked object is assumed to keep the same topology as a previously scanned model.
 
 %http://en.wikipedia.org/wiki/Facial_motion_capture the polar express, beowulf
+%Facial animation does not necessarily even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
+
+Classic motion capture uses special reflective markers that are tracked in 2D with infrared cameras.
+Distinctive bright markers are easily thresholded from the background, tracked, and triangulated in real time.
+Markerless surface capture detects image features that are then used as virtual markers, working in a similar way.
+Matching textured objects is more computationally intensive, and needs high resolution cameras.
 
 Markerless capture is important in scanning facial movement, because time-varying texture is significant in highly dynamic and detailed deformations, such as wrinkles from different facial expressions.
 Practically, scanning a neutral and wrinkled static subject beforehand and morphing between their texture with movement data of only vertex movement is easier.
 
-% }}} 2d features
-
-\subsection{Registration} % {{{
-
-When a subject moves, the two consecutively generated meshes should be aligned together, using a process called \emph{registration}.
-Registration is also used for combining separate models generated from different viewpoints to one larger model.
-
-The basic idea in registration is to fit two surfaces or point clouds together so that the common points that they share are as close as possible to each other.
-The practical method of choice is iterative closest point fitting (ICP).
-ICP iteratively finds a rigid transformation that minimizes the distance between every point in one mesh and its closest match in the other.
-When tracking the motion/deformation of a surface, the point sets describe a different geometry and there will always be some error.
-When ICP is used locally, it can be applied to non-rigid cases too. \cite{brown2007global}
-
-Also e.g. ransac for removing noise.
-
- \cite{zhao2005alignment}
-
-% }}} registration
-
-\subsection{Optical flow} % {{{
-
-A popular method for tracking points in 2D is \emph{optical flow}.
-Given source and destination images, optical flow is the motion vector of each pixel in a source to reach destination.
+Tracking is done by looking for the same feature as in a previous frame in the neighborhood where it was previously.
+State-of-the-art 2D tracking methods include Kanade-Lucas-Tomasi (KLT) \cite{KLT}, Tracking-Learning-Detection (TLD) \cite{TLD}, and Consensus-based Matching and Tracking (CMT), all based on \emph{optical flow}.
+\cite{horn1981determining,gibson1950perception,beauchemin1995computation}
+Given source and destination images, optical flow is the apparent motion in the scene, given as a motion vector for each pixel.
 Estimating the flow is based on the brightness constancy constraint: the intensity (i.e.\ color) of the source and destination pixels is the same.
-
-%Long history; several mature commercial video editing products. The Matrix.
-
-Uses: Frame time offset compensation by interpolation (morphing), needs features, direction vector estimation
-
-Motion in an image shows as changes in pixel color; it can be perceived as similar pixels flowing to the direction of movement in a pattern.
-A motion vector can be calculated for each pixel, resulting in a vector field; following and interpolating the movement is another way to detect three-dimensional movement.
-\cite{gibson1950perception,horn1981determining,beauchemin1995computation}
+Optical flow is also used in morphing frames between frames in a video to virtually synchronize the cameras to a common clock. \cite{thatbradleyone}
+% The Matrix.
 
 By combining the movement tracking to a mesh whose dynamics are modeled physically, motion can be estimated from a single image.
 \cite{decarlo1996integration}
+% }}} 2d features
 
-% }}} optical flow
+\subsection{3D registration} % {{{
 
-\subsection{Playback interpolation / morphing} % {{{
+Aligning two meshes or point clouds together is called \emph{registration}.
+Registration finds a rigid transformation from one object to another.
+For a moving subject, the method can be used to find the object movement between the frames.
+Registration is also used for combining different parts of separate models generated from different viewpoints to one larger model.
 
-XXX this is probably not important enough to be a separate section; to be merged in the above?
+The basic idea in registration is to fit two surfaces or point clouds together so that the shapes that they present become as close as possible to each other.
+The practical method of choice is iterative closest point fitting (ICP).
+ICP iteratively finds a rigid transformation that minimizes the distance between every point in one mesh and its closest match in the other.
+When tracking the deformation of a surface, the point sets describe a different geometry and there will always be some error.
+When ICP is used locally, it can be applied to non-rigid cases too. \cite{brown2007global}
 
-The record rate might not be exactly the same as the playback rate; when the movement is displayed on a screen, the positions of the tracked parts of object are interpolated between recorded keypoints.
-The same stuff in 2D is called morphing: pixel movement is tracked instead of simply blending each pixel between two time points.
+%Also e.g. ransac for removing noise. \cite{zhao2005alignment}
 
-Linear, cubic etc. interpolation.
+% kalman?
 
-% }}}
+% }}} registration
