@@ -1,0 +1,58 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\begin{document}
+\begin{tikzpicture}[scale=0.3]
+
+	\tikzset{%
+		dimen/.style={<->,>=latex,thin,every rectangle node/.style={fill=white,midway,font=\sffamily}},
+	}
+
+	\draw[fill] (0, 20) circle [radius=0.3];
+	\node at (0, 21) {$X$};
+
+
+	% origins, T
+	% TODO: circles, node ends not exactly at those points
+	\draw [dimen] (-9.5,0) -- (9.5, 0) node {$T$};
+	\draw [dimen] (0, 0.5) -- (0, 19.5) node {$Z$};
+	\draw[fill] (-10, 0) circle [radius=0.3];
+	\draw[fill] ( 10, 0) circle [radius=0.3];
+	\node at (-10, -1) {$C_l$};
+	\node at (10, -1) {$C_r$};
+
+	% headings
+	\draw [->] (-10, 0) -- (-10, 10);
+	\draw [->] (10, 0) -- (10, 10);
+
+	% image planes, at y=4
+	\draw[thick] (-13, 4) -- (-7, 4);
+	\draw[thick] (13, 4) -- (7, 4);
+
+	\draw [dimen] (-6, 0.0) -- (-6, 4.0) node {$f$};
+
+
+	% intersection points at principals and xs
+	\draw[fill] (-10, 4) circle [radius=0.3];
+	\draw[fill] (10, 4) circle [radius=0.3];
+
+	\node at (-10.5, 3) {$c_l$};
+	\node at (10.5, 3) {$c_r$};
+
+	\node at (-9, 5) {$x_l$};
+	\node at (9, 5) {$x_r$};
+
+
+	% C-to-P
+	\draw (-10, 0) -- (0, 20);
+	\draw (10, 0) -- (0, 20);
+
+
+	% p
+	\draw[fill] (8, 4) circle [radius=0.3];
+	\node at (8, 3) {$p_r$};
+	\draw[fill] (-8, 4) circle [radius=0.3];
+	\node at (-8, 3) {$p_l$};
+
+
+\end{tikzpicture}
+\end{document}

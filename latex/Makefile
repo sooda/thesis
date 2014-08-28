@@ -9,6 +9,8 @@ SRC := dippa.tex \
 	gfx/tex/flashtimeline.pdf \
 	gfx/tex/lineskipping2.pdf \
 	gfx/tex/dofcoc.pdf \
+	gfx/tex/simplestereo.pdf \
+	gfx/tex/epigeom.pdf \
 	gfx/dot/img-get-process.dot.pdf
 
 all: dippa.pdf
