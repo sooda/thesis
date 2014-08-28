@@ -32,14 +32,14 @@ Cameras must be chosen from a large selection of pocket cameras, system cameras,
 
 % }}}
 
-\subsection{Camera comparison} % {{{
+\subsection{Camera comparison} \label{sec:cameracomparison} % {{{
 
 Closeup subjects in the range of a metre or less introduce concerns in shallow depth of field, forcing the lens aperture small, and consequently, requiring bright lights or slow shutter speeds.
 More sensitive sensor would require less light, but depth of field decreases as the sensor size increases.
 
 As the capture environment will be a clean laboratory space and the cameras will mostly be controlled remotely, features usually important to photographers such as weatherproofing or user interface were not considered.
 
-The section \ref{sec:cameratypes} presents in more detail the properties necessary for reconstruction.
+%The section \ref{sec:cameratypes} presents in more detail the properties necessary for reconstruction.
 
 Reliability on configurability and controllability was considered important.
 Cheaper cameras fit more into a budget, offering more numerous content, but they might not be properly controllable.
@@ -80,8 +80,8 @@ In detail, the camera properties that should be considered include:
 
 \begin{itemize}
 \item CMOS/CCD sensor. CMOS suffers from rolling shutter in video mode, while CCD is more expensive and rare.
-\item Resolution and sensor size. Higher resolution covers more detail, until airy disk size is reached. Larger sensor is more sensitive to light and therefore results in lower noise.
-\item Lens quality. High resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general.
+\item Resolution and sensor size. Higher resolution covers more detail, until airy disk size is reached. Larger sensor has larger pixels, and is thus more sensitive to light and results in lower noise. On the other hand, at an equivalent subject distance, a deeper DOF is achieved with a smaller sensor.
+\item Lens quality. High resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general. Fixed focal length lenses have less moving parts and hold their calibration better.
 \item Dynamic range, i.e. bit depth of the processing pipeline. JPEG pictures have only 8 bits per color channel, whereas DSLRs and industrial cameras use more, often 12 to 14 bits per pixel (in raw format, that contains the color filter array effects before interpolation)
 \item Continuous shooting rate. Controlled by many factors, the speed at which full-size pictures can be taken; on consumer cameras, image processing speed and memory card write speed have most effect, and on industrial cameras, the bus speed typically limits the rate.
 \item Dust reduction. If enabled for some consumer cameras, it is implemented as high-frequency vibration of the sensor on camera bootup. Because it moves the sensor, affects calibration.
@@ -93,10 +93,16 @@ In detail, the camera properties that should be considered include:
 \item Weight and size. A smaller and lighter camera requires less bulky support structures.
 \item Price. With a fixed budget, cheaper cameras can cover a larger area of the subject at a time because more cameras fit in the budget.
 \item Availability. For an easily replicable system, it should be simple to purchase the hardware.
-\item Configurability. Clearly, aperture, shutter speed and others should be manually controllable and repeatable without automatic features.
+\item Configurability. Aperture, shutter speed and others should be manually controllable remotely, and repeatable without automatic features.
 \item Low noise. Sensor noise shows immediately in the image quality, complicating correspondence and others.
 \item Remote trigger. Practically all DSLRs have wired or wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol in the data bus. Some protocols may have global commands to send throughout a group of cameras. (FireWire?) Otherwise, software trigger suffers from sporadic jitter from operating system and protocol non-determinism.
 \end{itemize}
+
+In general, good technical properties are deep depth of field, light sensitivity, high resolution, and short distance to the subject.
+Practical features also count, such as availability of external power supply instead of batteries.
+
+All the properties should be looked as a whole; especially large pixel count does not necessarily imply better pictures if the optics is not good enough.
+
 
 Prices for compact cameras that have the required features go up to the same price range as DSLRs or even higher, i.e. 500 EUR and up.
 
