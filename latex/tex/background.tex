@@ -705,15 +705,18 @@ They are divided roughly in two categories: \emph{compact (pocket, or point-and-
 The presence of a mirror divides system cameras in two: \emph{digital single-lens reflex cameras (DSLR)} and \emph{mirrorless interchangeable-lens cameras (MILC)}.
 A MILC lacks a separate viewfinder and the reflex mirror, resulting in smaller size.
 System cameras typically support an interchangeable lens and a number of auxiliary hardware, such as electronic flash units, remote shutter releases and power adapters to replace batteries.
-\emph{Industrial cameras} for \emph{machine vision}, targeted for engineering, are more controllable and contain no unnecessary bulky parts, but are more expensive, difficult to acquire and may need proprietary control tools.
-In industrial cameras, the different parts of the system are typically defined more accurately in terms of e.g.\ sensor size, pixel size, sensor noise, processing speed and communication protocol.
+
+\emph{Industrial cameras} for \emph{machine vision}, targeted for engineering applications, are more controllable and contain no unnecessary bulky parts, but are more expensive and may need proprietary control tools.
+Their product cycle is typically longer and thus more reliable than in consumer electronics.
+In industrial cameras, the different parts of the system are typically defined more accurately in terms of e.g.\ lens quality, sensor and pixel size, sensor noise, processing speed and communication protocol.
+
 \emph{Camcorders}, video cameras with recording capabilities, also vary from consumer to professional grade devices.
 Camcorders are not considered in this work because of their lower resolution relative to still cameras.
 
 % some properties
 
-Resolution, or pixel count, is declared in million pixels, or megapixels (Mpix).
-Resolution and image size are related via pixel size that declares the physical size of one photosite on the sensor.
+Camera resolution, is declared in million pixels, or megapixels (Mpix).
+Resolution and image size are related via pixel size that is the physical size of one photosite on the sensor.
 Pixel size is described as the length of one side, and the pixels are typically square.
 Newest consumer DSLRs can have a resolution of up to 20 megapixels.
 
@@ -735,8 +738,11 @@ Typical sensor sizes for different camera types are as follows:
 % http://www.agisoft.ru/forum/index.php?topic=1411.60
 
 % lenses, shutters
-System cameras have by definition interchangeable lenses, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed.
-Compacts accompany a zoom lens; zooms are more complex systems and therefore more expensive to reach a good image quality.
+
+To benefit from the sensor resolution, the lens should have an equivalent or better \emph{resolving power}, provided as a chart of \emph{modulation transfer function} (MTF).
+A lens attenuates the frequencies of the optical patterns, such that at some point, tight line pairs are not resolved from each other.
+Machine vision cameras and system cameras have by interchangeable lenses with often well specified MTFs, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed and has less defined MTF.
+Compacts also accompany a zoom lens; zooms are more complex systems and therefore more expensive to reach a good image quality.
 Calibration is also a problem with moving zoom elements that may not align to precisely same setting.
 System cameras have a large selection of fixed focal length (``prime'') lenses.
 The lack of zoom of a prime lens is preferable in a controlled environment, where the distance to the subject can be adjusted as necessary.
@@ -749,37 +755,37 @@ Some compact cameras have a lightweight leaf shutter in the lens, and many use d
 %Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality.
 
 % storage
+
 Storage size and speed and camera processing power in general follows camera price.
 High-quality capture of short motions is aided by continuous burst mode that can achieve anything between 2 and over 10 frames per second, depending on camera model.
 Professional-level DSLRs can handle over 10 continuous raw full frames per second, while entry-level DSLRs handle around five;
 compact cameras are generally slower.
+Machine vision cameras with resolutions comparable to DSLRs also exist, but at a significantly higher price.
 Overall storage speed is determined by several factors between the sensor, the camera's processor and mass storage.
-Best Compact Flash (CF) cards, used in professional DSLRs, can write at approximately 150 MB/s, while cheaper Secure Digital (SD) cards reach 90 MB/s, but camera bus drivers usually only achieve 20-40 MB/s. % TODO canon, magic lantern, uhs-i
-
 Reading the pictures to a computer can be done via USB or a memory card reader; the latter method is inconvenient as the card must be removed from the camera and placed to a reader manually.
-
-Industrial cameras typically have temporary memory for only one frame that is read out immediately.
+Industrial cameras typically have temporary memory for only one frame that is read out immediately via a bus.
 For video recording, this needs relatively large amounts of auxiliary hardware to save the raw frame feed.
 
 % software support
-Major consumer manufacturers provide a software development kit (SDK) for controlling their cameras remotely at some degree.
+Major consumer manufacturers provide a software development kit (SDK) for controlling their cameras remotely at some degree, and some support a common standard for file access.
 For machine vision cameras, manufacturers provide their own software packages, in addition to sometimes specifying that the camera complies to a standard.
 The standards specify data formats, image streaming and control methods.
 Key standards for industrial cameras are:
 
 \begin{itemize}
 	\item Camera Link, partly proprietary (but significantly reverse-engineered) serial transfer protocol with special cable and connector types
-	\item GigE vision, standard interface for video data over gigabit Ethernet connection; licensed so that writing open source software based on the standard is not officially possible
+	\item GigE vision, standard interface for video data over gigabit Ethernet connection; licensed so that writing open source software directly based on the standard is not officially possible
 	\item IIDC/DCAM, Instrumentation \& Industrial Digital Camera or 1394-based Digital Camera Specification, data format standard used in IEEE 1394 (FireWire) cameras; an open specification
 	\item USB3 Vision, a standard for the USB 3 bus
 \end{itemize}
 
-For a multi-camera setup, much additional hardware for recording the frames is needed.
-For example, according to eq. \ref{eq:gigabit-transfer}, one network interface per each camera would be needed for a decent video rate.
-
 A standard-compliant industrial camera enables to use readily available software, reducing the need for in-house software and protecting from vendor lock-in.
 Some of the largest manufacturers that offer standards-compliant cameras are Point Grey, Basler, Allied Vision, and Imaging Source.
 %Coriander \cite{coriander} is a free user interface for controlling IIDC cameras.
+
+Machine vision cameras require additional hardware for recording the frames, which becomes costly with many cameras.
+For example, according to eq. \ref{eq:gigabit-transfer}, one network interface per each camera would be needed for a decent video rate.
+Additionally, hard disks for data storage are needed.
 
 % triggering
 For a multi-camera setup, reliable remote trigger is important.
@@ -792,15 +798,15 @@ Others have limited offer, mainly supporting infrared remote if anything.
 Summarizing for the most popular camera types in the market:
 
 \begin{itemize}
-	\item System cameras with bigger sensors have good light sensitivity, excellent configurability with auxiliary hardware available, such as remote shutter releases, and decent software support. Designed for single pictures, these often lack in video features.
-	\item Industrial machine vision cameras have both small and large sensors, support interchangeable lenses and need significant amount of additional hardware, and custom or expensive software to control.
+	\item System cameras with bigger sensors have good light sensitivity, excellent configurability with auxiliary hardware available, such as remote shutter releases, and decent software support.
+	\item Industrial machine vision cameras have both small and large sensors, support interchangeable lenses and need significant amount of additional hardware, and custom or expensive software to control. Video synchronization is usually not an issue.
 	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Raw images and external utilities are usually lacking. Resolution is less than in system cameras, and high-resolution cameras perform worse in low light because of smaller pixel size.
 	\item Others (smartphone cameras, webcams) have poorly documented features, bad optics and are not configurable properly in general.
 \end{itemize}
 
 In addition to multiview stereo, there are cameras that can capture depth directly.
 Laser range finders are common in automation industry, and have great precision and high price.
-Active infrared cameras such as the Kinect (sensor manufactured by PrimeSense) project an infrared pattern of dots to the camera's view and estimate depth in coarse blobs, resulting in an easy-to-use depth camera but poor accuracy.
+Active infrared cameras such as the well-known Kinect (sensor manufactured by PrimeSense) project an infrared pattern of dots to the camera's view and estimate depth in coarse blobs, resulting in an easy-to-use depth camera but poor accuracy.
 Light field cameras such as the newer Kinect 2 have a better spatial accuracy but not yet an established reliable software state.
 
 % }}} camera selection
