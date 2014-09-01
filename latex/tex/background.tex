@@ -11,18 +11,24 @@
 
 % tell also briefly what calibration is
 
-Digital stereo vision analyses digital images for depth cues.
-A digital photograph is variations in light intensity on an image sensor that have been digitized.
-In front of a sensor is a lens system that projects an image to the sensor.
+%Digital stereo vision analyses digital images for depth cues.
+%A digital photograph is variations in light intensity on an image sensor that have been digitized.
+%In front of a sensor is a lens system that projects an image to the sensor.
 
-This section describes the background theory for basic image acquisition steps and main concerns that affect reconstruction quality.
+Stereo vision works by analyzing images for depth cues.
+It is important that the images are sharp and noise-free.
+This section describes the background theory for basic image acquisition steps in a camera and main concerns that affect reconstruction quality.
 Reconstruction accuracy depends on not only measureable parameters of a stereo imaging rig, such as camera positioning accuracy, but also on e.g. lens imperfections, camera focus, camera sensor noise, image compression and algorithmic accuracy. \cite{hollsten2013imagequality,kyto2011method,rieke2009evaluation}.
 
 \subsection{Imaging} \label{sec:imaging} % {{{
 
-From the perspective of this thesis, images are taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane, and finally to a discrete grid of numerical values that describe light intensities.
-Reconstruction algorithms assume a pinhole camera model, and the images must be captured such that the model is accurate.
-Lens systems are configured such that the subject is in focus, and optical distortions are corrected.
+From the perspective of this thesis, images are taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane.
+A digital camera has the same optical working principles as an analog film camera;
+the main differences are in image storage as a discrete array of pixels, as opposed to a photosensitive film.
+%digital images are only described as a discrete grid of numerical values that describe light intensities, whereas analog film .
+Reconstruction algorithms assume a \emph{pinhole camera} model on the camera optics, and the images must be captured such that the model is accurate.
+However, as is described in this chapter, cameras in reality seldom match the simplified model thoroughly, and care must be taken when configuring the cameras and post-processing the images later.
+%Lens systems are configured such that the subject is in focus, and optical distortions are corrected.
 
 % }}} imaging
 
@@ -38,15 +44,20 @@ Lens systems are configured such that the subject is in focus, and optical disto
 	Image seen through the small hole is formed to the plane on the back of the box, rotated upside down, as rays of light travel from the subject through the hole.
 }
 
-A physical camera is in its simplest form modeled as a \emph{pinhole camera}; an ideal device that projects an image on its film through an infinitesimal aperture, rotated 180 degrees around the \emph{optical axis}, i.e.\ the line that runs through the pinhole and is perpendicular to the image plane.
-Illustration is given in image \ref{fig:pinhole-camera}; for example, light rays from the top right of the subject travel through the pinhole to the bottom left on the film.
+A physical camera is in its simplest form modeled as a \emph{pinhole camera}; an ideal device that \emph{projects} an image on its film through an infinitesimal aperture, rotated 180 degrees around the \emph{optical axis}, i.e.\ the line that runs through the pinhole and is perpendicular to the image plane.
+Illustration of the process is given in Figure \ref{fig:pinhole-camera}; for example, light rays from the top right of the subject travel through the pinhole to the bottom left on the film.
 The term \emph{projection} means the representation of three-dimensional objects on a flat surface, seen from a single point such as the human eye.
-A cube projected on a plane is shown in figure \ref{fig:perspproj}.
+The \emph{perspective projection} effect makes objects further away from the observer look smaller in the projected image.
+A cube projected on a plane is shown in Figure \ref{fig:perspproj}.
+
+In the scope of this thesis, the only actual camera type considered is one with a \emph{rectilinear lens}; that is, an optic system that preserves straight lines, as a perspective projection does in a pinhole camera.
+More exotic lenses that have a completely different projection are not considered, such as ``fisheye'' lenses, although their projections can be corrected in software.
 
 \simplegfx{h}{0.5\textwidth}{perspproj}{
-	Perspective projection: a cube seen from origin O projected on a plane; point P projects to p.
+	Perspective projection: a cube seen from a camera at origin O.
+	For example, the 3D point $P$ projects on to $p$ on the green plane.
 	In a camera, the rays of light travel through a common point to the film that is behind the origin; a virtual projection film between the origin and the object is often used for simplicity.
-	Parallel lines connect in vanishing points, two drawn in the left and right.
+	Parallel lines in 3D connect in \emph{vanishing points}, two drawn in the left and right.
 }
 
 % http://en.wikipedia.org/wiki/Perspective_projection rays of light etc.
@@ -54,7 +65,8 @@ A cube projected on a plane is shown in figure \ref{fig:perspproj}.
 % Cartesian coordinates.
 
 Mathematically, a point in a three-dimensional world can be encoded in any coordinate system;
-in this work, a standard 3D cartesian coordinate system is used, where, a point is described as a location relative to a selected origin reference, as a triplet of distances along three perpendicular X, Y and Z axes. % (figure \ref{fig:coordsys}).
+in this work, a standard 3D cartesian coordinate system is used.
+In cartesian coordinates, a point is described as a location relative to a selected origin reference, as a triplet of distances along three perpendicular X, Y and Z axes. % (Figure \ref{fig:coordsys}).
 In a traditional right-handed system, X increases right, Y upwards and Z towards the viewer.
 
 %\simplegfx{h}{0.6\textwidth}{coordsys}
@@ -68,21 +80,20 @@ In a traditional right-handed system, X increases right, Y upwards and Z towards
 
 %Practical algorithms take lens imperfections into account (e.g. \cite{opencv}).
 
-In practice, no actual camera works ideally; a pinhole-resembling camera could be built with a tiny hole, but it would have poor light gathering power and low resolution limited by diffraction effects. \cite{todo}
-In practice, lens distortions deviate the rays nonlinearly, and no system is in perfect focus, so that one point spreads out as a circle.
+In practice, no actual camera works ideally; a pinhole-resembling camera with a tiny hole could be built, but it would have poor light gathering power and low resolution limited by diffraction effects. \cite{todo}
+Light sensitivity is increased by using a larger hole, and the light rays are directed using carefully manufactured lens systems.
+Refraction properties of light rays and manufacturing defects introduce additional distortions that must be taken into account.
+%In practice, lens distortions deviate the rays nonlinearly, and no system is in perfect focus, so that one point spreads out as a circle.
 
 Construction of optical systems is well studied. \cite{kingslake1989history,greenleaf1950photographic}
-Actual camera ``lenses'' (objectives) consist of not only a single glass element (optical lens) but many, especially in the case of zoom lenses where the focal length can be changed.
-As an example, a mechanically simple fixed-focus Canon lens diagram is shown in figure \ref{fig:canonef50mm}.
-There are several lenses, aligned so that their centers lie parallel to the optical axis.
-Some lenses implement optical stabilization as a moving element in the light path.
-%In this work, the inner workings of these systems are ignored and equations assume a simple projective model, which is a safe assumption when the image is in focus.
+Actual camera ``lenses'' (\emph{camera objectives}) consist of not only a single glass element (optical lens) but many, especially in the case of zoom lenses.
+%where the focal length can be changed.
+As an example, a mechanically simple fixed focal length Canon lens diagram is shown in Figure \ref{fig:canonef50mm}.
+There are several lenses, aligned so that their centers lie on the the optical axis parallel to it.
+Most objectives can be reduced to a \emph{thin lens} model (depicted in Figure \ref{fig:thinlens}), an ideal optical model of a single infinitesimally thin glass element.
+% XXX Some lenses implement optical stabilization as a moving element in the light path.
 
-% http://www.canon.com/camera-museum/lens/ef/data/standard/ef_50_18ii.html?p=2
-%\simplegfx{h!}{0.6\textwidth}{canonef50mm}
-%{Block diagram of Canon EF50mm f/1.8 II lens construction; insides of the lens shown from the side.}
-
-\simplefig{b}{%
+\simplefig{t}{%
 \includegraphics[width=0.4\textwidth]{canonef50mm-1}
 \includegraphics[width=0.4\textwidth]{canonef50mm-2}
 }{fig:canonef50mm}{
@@ -93,96 +104,137 @@ Some lenses implement optical stabilization as a moving element in the light pat
 }
 
 
-The following relation applies for a thin lens or a system simplified as one, and an image in focus, as seen in figure \ref{fig:thinlens}:
-
-\begin{equation}
-	\frac{1}{a} + \frac{1}{b} = \frac{1}{f} \label{eq:focal}
-\end{equation}
-
-\simplefig{h!}{\includegraphics{lens}}{fig:thinlens}{
-	thin lens sample: $a=6$, $b=3$, $f=2$. Actual subjects would be usually much further away; image depicts a macro setup for clarity.
+\simplefig{t}{\includegraphics{lens}}{fig:thinlens}{
+	thin lens sample: $a=6$, $b=3$, $f=2$.
+	Actual subjects would be usually much further away; image depicts a macro setup for clarity.
+	A subject at a distance $a$ is \emph{focused} on a film at a distance $b$ on the other side.
 }
 
-where $f$ is the focal length of the lens, $a$ is the distance between the lens and the imaged subject, and $b$ is the distance between the lens and the camera's image sensor. Figure \ref{fig:thinlens} shows an example where the lens magnifies the subject at a factor of less than one, making it smaller on the camera film.
-% hox, optical axis
-% TODO: fig:focal
+\paragraph{Focusing}
+A subject is said to be \emph{in focus} when the light rays originating from it converge at the same point on the camera's film.
+When the camera objective is adjusted for the object to be in focus, its parameters are changed slightly and a different thin lens is formed.
+\emph{Focal length} is a fundamental property of a lens and determines its amount of magnification.
+Illustrated in Figure \ref{fig:thinlens}, the thin lens model and its focal length $f$ encode a relation between an object at a distance $a$ and its \emph{focused} image at a distance $b$ on the other side, as shown in Equation \ref{eq:thinlens}.
+A camera system typically has a \emph{magnification} of much less than one; i.e.\ the image on its film is rendered smaller than the imaged subject, as $a >> b$.
+%For a lens focused at \emph{infinity} ($a = \inf$), $b$ becomes equal to $f$ and a pinhole model becomes accurate.
+For objects at distances approaching infinity ($a = \inf$), $b$ becomes equal to $f$, and the thin lens resembles a pinhole with film distance $f$. \cite{szeliski10vision}
+
+\begin{equation} \label{eq:thinlens}
+	\frac{1}{a} + \frac{1}{b} = \frac{1}{f}
+\end{equation}
+
+
+% http://www.canon.com/camera-museum/lens/ef/data/standard/ef_50_18ii.html?p=2
 
 %The focal length has a direct influence to field of view, as given in figure TODO. Longer focal length (long-focus lens, often referred to as telephoto lens) results to a more zoomed in picture, as opposed to a wide-angle lens. 
 
 % Aperture.
 
-\emph{Aperture} refers to the minimum size of the hole where light effectively goes through; the hole itself is called \emph{aperture stop} and is located in the middle of the objective.
-if it is not infinitesimally small, as in any practical case, there will be some area of the scene that is imaged as sharp and others in front and behind of this area will be blurred.
-This effect is called \emph{depth of field (DOF)}.
-In artistic photos, it can be preferred to have a small subject in focus to separate it from the background by blurring the background.
-In 3D reconstruction, exactly the opposite is preferred: everything should be in focus.
-%This might require a really small aperture, and consequently really bright lights, in a reconstruction rig where the distance to the subject is relatively short.
+\paragraph{Aperture}
+The size of the hole where light effectively goes through is called \emph{aperture}; the hole itself is called \emph{aperture stop} and it is located inside the the objective in between its lenses.
+The diameter of a thin lens corresponds to the aperture diameter and to the stop's \emph{entrance pupil}, the aperture stop seen from the front of the objective.
+As in any practical case, it is not infinitesimally small, and there will be some area of the scene that is imaged as sharp and others in front and behind of this area will be blurred.
+This effect is called \emph{depth of field (DOF)} and is illustrated in figure \ref{fig:irldof}.
+In artistic photos, a \emph{shallow} depth of field can be preferred; having the subject in focus separating separate it from the background by blurring the background.
+In 3D reconstruction, exactly the opposite is preferred: everything should be sharp, in deep focus.
+The aperture size is presented as relative to the focal length and is commonly called the \emph{F number} \cite{szeliski10vision}, specified via the aperture diameter $d$:
 
-As the blur happens gradually, a \emph{circle of confusion} (CoC) is often used as a definition of unsharp areas of images.
-A point outside the focal plane shows up on the image sensor as a circle (for circular apertures); when this circle is significantly larger than the pixel size on the sensor, the point is perceived as blurred.
+\begin{equation} \label{eq:fnumber}
+	N = \frac{f}{d}
+\end{equation}
+
+\simplefig{b}{%
+\includegraphics[width=0.45\textwidth]{irldofdeep}
+\includegraphics[width=0.45\textwidth]{irldofshallow}
+}{fig:irldof}{
+	Deep and shallow depth of field in close-up photography using a 50 mm lens.
+	Left: F/16 aperture, 15 second exposure, showing only slight blur in the nearest keys.
+	Right: F/1.8, 0.2 s exposure, with only a small sharp area.
+	The image blurs and the distinctively brighter lit markings on the keys show as increasingly larger bright spots as the circle of confusion increases.
+}
+
+
+Doubling the area of the aperture equals to an increase of the diameter $d$ by $\sqrt 2 \approx 1.4$.
+The aperture size is typically denoted as $f/\#$, where $\#$ is replaced by the number, such as $f/1$ or $f/1.4$.
+This makes the amount of light reaching the film universal among all focal lengths.
+Full multiples of $\sqrt 2$ are called \emph{stops}.
+\cite{szeliski10vision}
+
+\paragraph{Circle of confusion}
+As the blur happens gradually, the ``level of sharpness'' at each point is often defined via a \emph{circle of confusion} (CoC).
+The distance from the lens along the optical axis where perfect focus is attained is called the \emph{focal plane}.
+Every point nearer or further away shows up on the film as a circle (for circular apertures); when this circle is significantly larger than the resolving power of the observer, the image of this point is perceived as blurred.
 
 Depth of field is defined as difference between the shortest and farthest object distances that still generate an acceptable CoC, found geometrically.
-When $f$ is the focal length, $F$ the aperture f number, $s$ the distance to the subject, and $c$ the maximum acceptable CoC, the depth of field $D$ is given by (\cite{greenleaf1950photographic}):
+When $f$ is the focal length, $N$ the aperture f number, $s$ the distance to the subject, and $c$ the maximum acceptable CoC, the depth of field $D$ is given by (from \cite{greenleaf1950photographic}):
 
 \begin{equation} \label{eq:dof}
-	D = \frac{2 s f^2 F c (s - f)} {f^4 - F^2 c^2 (s - f)^2}
+	D = \frac{2 s f^2 N c (s - f)} {f^4 - N^2 c^2 (s - f)^2}
 \end{equation}
 
 \simplegfx{h}{\textwidth}{dofcoc}{
 	Exaggerated illustration of depth of field and circle of confusion with a thin lens, seen from the side (not drawn to scale).
-	Sensor is at the green line, and the middle of the cross represents the lens.
-	Subjects at distance $s$ project perfectly at the sensor.
+	Subjects at distance $s$ project perfectly at the film.
 	Distances between $Z$ and $Z'$ project to a circle smaller or equal to $c$.
 	It can be easily seen that for subjects at longer distances, the depth of field increases.
 }
 
 
-In figure \ref{fig:dofcoc}, $Z' - Z = D$, the maximum and minimum acceptable distances near the subject.
-Sufficient depth of field is important to consider in near-field 3D scans with small subjects, which translates to a small aperture, and consequently, really bright lights.
+In Figure \ref{fig:dofcoc}, $Z'$ and $Z$ are the maximum and minimum acceptable distances near the subject, and $Z' - Z = D$.
+Sufficient depth of field is important to consider in near-field 3D scans, which translates to a small aperture, and consequently, really bright lights.
 The subject should fill whole image frame to use the pixel density effectively.
 Increasing the distance to the subject would increase depth of field, but enlarging the subject in the frame again would need a longer lens, which decreases depth of field.
 
-Size of the CoC depends on the resolution power of the viewer; when a photograph is looked with the eye, the print size of the image determines the circle.
-A standard-considered formula in photography determines the maximum acceptable CoC by dividing the image size by 1500, originating from human eye and looking distance.
-For the standard ``full-frame'' 35 mm film size with an image size of 36 x 24 mm (about 43 mm diagonal), the CoC becomes $c = 43 \text{mm} / 1500 \approx 0.03 \text{mm}$.
-In reality, an intuitive way to determine the disk size is the size of a single pixel in a digital sensor;
+Acceptable size of the CoC depends on the resolving power of the viewer; when a photograph is looked with the eye, the print size of the image determines the circle.
+A standard-considered formula in photography determines the maximum acceptable CoC by dividing the image size by 1500, originating from human eye and viewing distance.
+For the standard ``full-frame'' 35 mm film size with an image size of 36 x 24 mm (approx.\ 43 mm diagonal), the CoC becomes $c = 43 \text{ mm} / 1500 \approx 0.03 \text{ mm}$.
+In reality, an intuitive way to determine the disk size is the size of a single pixel in a digital sensor replacing the film;
 the disk should not span too many pixels, so that accurate detail would be resolvable from the digital image.
-
 For a normal 50 mm lens with the subject at a distance of 1 m, an aperture of f/11 and a circle of confusion of 0.03 mm, the formula \ref{eq:dof} gives $D \approx 25 \text{cm}$. % , having the subject approximately in the middle of the acceptable range.
 
 % diffraction
 
-\emph{Diffraction} is an effect that happens for too \emph{small} apertures.
-When light rays diverge on a small aperture, their different distances traveled make the waves interfere each other and produce a two-dimensional diffraction pattern, called an \emph{airy disk}.
+\paragraph{Diffraction}
+The required amount of light is not the only factor that limits the minimum aperture size.
+\emph{Diffraction} is an effect that blurs the image with too \emph{small} apertures.
+When light rays diverge on a small aperture, their different distances traveled make the waves interfere each other and produce a two-dimensional diffraction pattern, called an \emph{airy disk}, named by  George Biddell Airy.
 The disk blurs the image in a similar fashion as an object that is out of focus.
-Size of the airy disk is relative to the size of the aperture.
+Size of the airy disk is relative to the size of the aperture and the light wavelength.
 Thus, the aperture size must be set to a balance between the unwanted effects of DOF and diffraction.
-% d/2 = 1.22 lambda N http://en.wikipedia.org/wiki/Diffraction-limited_system
+The disk size can be approximated by
+
+\begin{equation} \label{eq:airydisk}
+	x = 1.22 \frac{\lambda f}{d} = 1.22 \lambda N
+\end{equation}
+
+
+which, for red light in the visible spectrum having a wavelength $\lambda$ of 700 nanometers, with an aperture of f/11, results in $\approx$ 0.01 mm (compare to above CoC of 0.03 mm).
+\cite{greenleaf1950photographic}
 
 % rayleigh limit?
 
-All practical optical systems introduce some non-linear \emph{radial} and \emph{tangential distortion} (depicted in fig. \ref{fig:distortions}) that affect the accuracy of the ideal pinhole model.
-Common distortions are the purely radial so-called \emph{barrel} and \emph{pincushion} distortions, where the lens magnification is a nonlinear function of image ray distance from the center of the lens. \cite{brown1966decentering}
-Other extreme distortions, such as the ``fisheye'' distortion present in extremely short focal length lenses, is usually not considered.
-Most reconstruction software assume either undistorted images or use a simple distortion model, and give poor results with exotic lenses.
+% XXX TODO linear projection: straight lines in the world map to straight lines in the image (p. 58)
 
+\paragraph{Geometric distortion}
+While most rectilinear lenses are close to a perspective projection, practical optical systems introduce some non-linear \emph{radial} and \emph{tangential distortion} that affect the accuracy of the ideal pinhole model.
+Common distortions are the purely radial so-called \emph{barrel} and \emph{pincushion} distortions, where the lens magnification is a nonlinear function of image ray distance from the center of the lens, caused by the shape of the lenses. \cite{brown1966decentering}
 In addition to radial, tangential distortion is less significant, and it is often ignored.
 Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not being parallel to the image plane. \cite{kingslake1989history}
 
-Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
+%Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
 
 \simplefig{h}{%
 \includegraphics[width=0.2\textwidth]{barrel-distortion}
 \includegraphics[width=0.2\textwidth]{pincushion-distortion}
 }{fig:distortions}{
 	Barrel (left) and pincushion distortions that would show up in an image of a grid of straight lines.
-	For a lens with no distortion, the lines would not be curved.
+	For a lens with no distortion, the lines would not be curved but in a perfect grid.
 }
 
-Distortion should be corrected in software, as the following stereo algorithms assume that the images are free of nonlinear errors, i.e. straight lines in the world should remain straight in 2D images after the projective transformation.
+Geometric distortion must be corrected in software, because stereo vision algorithms assume that the images are free of nonlinear errors, i.e. straight lines in the world should remain straight in 2D images after the projective transformation.
 %In particular, image rectification (discussed later in \ref{sec:rectification} won't work if this straightness does not remain; the assumption that similar features should be found on horizontal lines wouldn't hold on distorted images. \cite{hartley03multiview} 
 
-The radial correction proposed first by Brown \cite{brown1966decentering} and used by e.g. the OpenCV library \cite{opencv} to create a new image of the original pixel values at new positions is
+The radial error model and correction proposed first by Brown \cite{brown1966decentering} and used by e.g. the OpenCV library \cite{opencv} is % to create a new image of the original pixel values at new positions is
 
 \begin{align} \label{equ:radialdist} \begin{split}
 	x_{corr} &= x(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)\\
@@ -191,23 +243,23 @@ The radial correction proposed first by Brown \cite{brown1966decentering} and us
 
 % (XXX some software does this in a different way (inverse of this, maybe?)
 
-Trucco and Verri \cite{trucco1998introductory} use only the two first coefficients.
-For tangential distortion, the correction has the following form:
+Trucco and Verri \cite{trucco1998introductory} use only the two first coefficients, and some use only the first $k_1$; for lenses with low distortion, this is often enough.
+For tangential distortion, the corresponding correction has the following form:
 
 \begin{align} \label{equ:tangdist} \begin{split}
 x_{corr} &= x + (2 p_1 x y + p_2 (r^2 + 2 x^2))\\
 y_{corr} &= y + (2 p_2 x y + p_1 (r^2 + 2 y^2))
 \end{split} \end{align}
 
-In eq. \ref{equ:radialdist} and \ref{equ:tangdist}, $x$ and $y$ are the original coordinates in the distorted image, $x_{corr}$ and $y_{corr}$ are the corrected ones, $k_1$, $k_2$, $k_3$, $p_1$ and $p_2$ are coefficients specific to the distortion, and $r$ equals to the distance to image center where the optical axis hits, located at $(x_c,~y_c)$:
+In eq. \ref{equ:radialdist} and \ref{equ:tangdist}, $x$ and $y$ are the original coordinates in the distorted image, $x_{corr}$ and $y_{corr}$ are the corrected ones, $k_1$, $k_2$, $k_3$, $p_1$ and $p_2$ are coefficients specific to the distortion, and $r$ equals to the distance to image center where the optical axis lies, located at $(x_c,~y_c)$:
 
 \begin{equation}
 r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
 \end{equation}
 
 
-The image size is often normalized such that the coordinates $x$ and $y$ range from $-1$ to $1$, making the distortion parameters universal for all image resolutions.
-A barrel distortion with parameters $k_a = 0.04$ and $k_b = 0.02$ is shown in fig. \ref{raddist}.
+The image size is normalized such that the coordinates $x$ and $y$ range from $-1$ to $1$, making the distortion parameters universal for all image resolutions.
+The effects of different parameters are depicted in Figure \ref{fig:raddist}.
 % TODO: only first and also ka and kb for comparison
 
 \simplegfx{h}{\textwidth}{raddist}{
@@ -216,8 +268,8 @@ A barrel distortion with parameters $k_a = 0.04$ and $k_b = 0.02$ is shown in fi
 	Left: $k_a = 0.16$, middle: $k_b = 0.08$, right: $k_a = -0.04, k_b = -0.04$.
 }
 
-Because digital images consist of a discrete pixel array, the pixel coordinates given by the undistortion do not necessarily lie on exact pixel positions;
-the sampling should then interpolate between neighboring pixels, instead of taking the nearest color.
+% XXX HOXHOX THIS SOMEWHERE TODO BEGINNING
+Because digital images consist of a discrete pixel array, the pixel coordinates given by the undistortion do not necessarily lie on exact pixel positions; the sampling should then interpolate between neighboring pixels, instead of taking the nearest color. \cite{wolberg1990digital}
 
 %Perspective distortion something something viewer location.
 %Normal TV is usually watched at the distance of twice the screen diagonal.
@@ -278,7 +330,7 @@ A single pixel sensor acquires all light hitting it, independent of the waveleng
 Two principal methods to retrieve the red, green and blue color bands for each pixel are used in color cameras, one being cheaper and thus more common.
 The most common method is to interleave red, green and blue in a single sensor by filtering the wavelength that can enter a pixel with a colored film over the sensor, with a special repeating pattern called \emph{color filter array}.
 The missing values for other colors bands are interpolated from surrounding pixels.
-The most popular interleaving pattern is the Bayer filter, illustrated in figure \ref{fig:bayerpattern}.
+The most popular interleaving pattern is the Bayer filter, illustrated in Figure \ref{fig:bayerpattern}.
 Other arrangements of red, green and blue are also used, some incorporate other colors, such as cyan, yellow, green, and magenta.
 
 Another way is to retrieve the three channels with three different sensors, one for each wavelength band, and to guide the light to them with prisms and filters; being more expensive than a single sensor, this method is used in some high-end cameras only.
@@ -349,13 +401,13 @@ It consists of two curtains that move to the same direction; one moves out of th
 Figure \ref{fig:focalplaneshutter} illustrates a planar shutter (in reality, the curtains are black and not complete planes).
 
 A \emph{rolling shutter} effect is produced with very high shutter speeds, where the limit of curtain movement speed prohibits fully opened shutter and the closing curtain starts to move before the first has stopped, exposing only a narrow band of the sensor at a time.
-Fast mechanical shutter movement is depicted in figure \ref{fig:focalplanerolling}.
+Fast mechanical shutter movement is depicted in Figure \ref{fig:focalplanerolling}.
 
-%Result of shooting a moving object with rolling shutter is depicted in figure \ref{rollingeffect}.
+%Result of shooting a moving object with rolling shutter is depicted in figure \ref{fig:rollingeffect}.
 When an object is moving to the same direction as the narrow shutter slit, i.e. vertically, it appears smeared;
 when the movement is horizontal, different parts of the object appear to bend.
 
-%\simplegfx{h!}{0.8\textwidth}{rollingeffect}{
+%\simplegfx{h!}{0.8\textwidth}{fig:rollingeffect}{
 %	Rolling shutter imaging a spinning disk.
 %	At each point in time, the slit captures only part of the subject.
 %	When the object moves, the subject appears distorted.
@@ -406,14 +458,14 @@ Surface reflection models are described with a bidirectional reflectance distrib
 
 A distribution model of the surface's global or local microgeometry specifies how much light reflects in different surfaces. \cite{nayar1991surface} % XXX 1991 or -89? TODO fig 22 from the paper
 Diffuse means a material that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more specular surfaces are composed of a different microstructure that reflects light in a more mirror-like way and the surface brightness depends on where it is looked from.
-%Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in figure \ref{fig:lambertcosine}. \cite{lamberttodo}
+%Diffuse surfaces are called matte or Lambertian; they follow Lambert's cosine law (equation \ref{eq:lambertcosine} often used in computer graphics), a lighting model, shown in Figure \ref{fig:lambertcosine}. \cite{lamberttodo}
 %A Lambertian surface's BRDF is constant among the viewing direction.
 \emph{Specular highlight} or \emph{specular reflections} refer to a mirror reflection of the lamp on the imaged surface.
-In figure \ref{fig:nayarbrdf}, different types of reflections seen by the camera are visualized as light intensities of different colors.
+In Figure \ref{fig:nayarbrdf}, different types of reflections seen by the camera are visualized as light intensities of different colors.
 Ideally, the camera would only record the diffuse reflection that represents the surface color;
 the specular components are unwanted artifacts.
 Polarized filters can be used in front of the lights and in the camera lenses to filter out most of the specular lighting.
-%Surfaces modeled in computer graphics are often relighted with functions of surface normal and light and view directions, given as unit vectors, as in figure \ref{fig:brdfdiagram}.
+%Surfaces modeled in computer graphics are often relighted with functions of surface normal and light and view directions, given as unit vectors, as in Figure \ref{fig:brdfdiagram}.
 
 %\begin{equation} \label{eq:lambertcosine}
 %	I_D = L \dot N I_L = |N| |L| \cos \alpha = \alpha
@@ -427,7 +479,7 @@ Polarized filters can be used in front of the lights and in the camera lenses to
 
 Commonly used terms such as ``soft'' and ``hard'' lighting refer to the size and power of light sources: bright spotlights are hard, and larger and relatively less bright lamps are soft.
 Softness can be added by increasing the light's area while holding its power constant, such as reflecting a light off a large surface or adding a white cloth between it and the imaged subject.
-%Effects of a soft versus hard light are illustrated in figure \ref{fig:lighthardness}.
+%Effects of a soft versus hard light are illustrated in Figure \ref{fig:lighthardness}.
 
 Powerful electronic flash units use usually a gas-filled tube that is excited with high voltage to produce a short, bright burst of light for some milliseconds.
 Flashes are good for portrait photographers because the subject sees the bright light only for a short moment; thus, the light does not annoy the subject.
@@ -514,7 +566,7 @@ When scanning a scene continuously, a camera shoots frames using the same princi
 For each frame, the shutter is open for a duration of \emph{exposure time} or interchangeably \emph{shutter speed}.
 In \emph{interlaced video}, two frames make up a whole picture that covers all pixels.
 Interlacing alternates between odd and even lines to increase update rate, and was invented for cathode ray tube displays to reduce apparent flicker.
-The alternation results in tearing artifacts when imaging horizontally moving subjects (shown in figure \ref{fig:interlace}).
+The alternation results in tearing artifacts when imaging horizontally moving subjects (shown in Figure \ref{fig:interlace}).
 Many CCD video cameras still produce interlaced stream, because it is cheaper to manufacture due to fewer pixels.
 Video that contains full frames only is called \emph{progressive}.
 
@@ -538,7 +590,7 @@ Synchronized machine vision cameras do not record video on their own, but instea
 
 DSLR video modes use almost the sensor's full size but skip some of its lines when recording video, resulting in the same field of view as still images but suffering from significant aliasing patterns with certain subjects with high frequency information.
 Additionally, pixels in the video frames do not represent physical pixels anymore, posing awkwardness in camera calibration.
-Line skipping is depicted in figure \ref{fig:lineskipping2}.
+Line skipping is depicted in Figure \ref{fig:lineskipping2}.
 The color filter array makes the problem even worse for small-detailed features of high color detail.
 
 \simplegfx{h!}{0.5\textwidth}{lineskipping2}{
@@ -641,7 +693,7 @@ If the offset between two cameras is not an exact multiple of the frame speed, t
 Frame accurate offset sync with clapperboards works by matching the clap sound to visual cues in the video, a method well known in film production.
 Cameras that record audio to the same video file do not need visual cues and can be synced together by matching just the sound streams.
 %This is the method used in making movies when editing a final version with multiple cameras used.
-Unsynchronized shooting still leaves at most half a frame lag between the camera sequences; this is illustrated in figure \ref{fig:syncproblems}.
+Unsynchronized shooting still leaves at most half a frame lag between the camera sequences; this is illustrated in Figure \ref{fig:syncproblems}.
 
 Professional video cameras can be synced to a single clock generator, so that they all operate on the same frequency (i.e. no drift) and phase (i.e. no offset), called \emph{genlocking} or \emph{generator locking}.
 Similar method is used when shooting with machine vision cameras that have external trigger input.
@@ -822,7 +874,7 @@ fundamentally different methods, such as laser rangers or light field imaging, a
 
 A complete reconstruction pipeline consists of many parts of hardware and software.
 The hardware parts were given in section \ref{sec:image-acquisition}.
-This section concentrates on the software part, which is illustrated in figure \ref{fig:reconst-pipeline}.
+This section concentrates on the software part, which is illustrated in Figure \ref{fig:reconst-pipeline}.
 Images taken with digital cameras are scanned for distinct features and matched, optical distortions are corrected, individual camera parameters are computed, whole scene calibration is found, a dense reconstruction of subject geometry is reconstructed, a surface is fitted on the dense point set, and color textures are backprojected on the surface.
 
 %[1] Shape and motion from image streams under orthography: A factorization approach
@@ -884,7 +936,7 @@ x \\ y
 \end{pmatrix}
 \end{equation}
 
-The result can be derived from similar triangles with a common vertex at the aperture; figure \ref{fig:pinhole3d}.
+The result can be derived from similar triangles with a common vertex at the aperture; Figure \ref{fig:pinhole3d}.
 
 Sometimes the sign is inverted, which results in a plane on the other side of the origin where the actual point lies, where the image is not rotated; this can be more convenient to analyse.
 Physically, the projected point in a camera is behind the aperture, on the sensor.
@@ -949,7 +1001,7 @@ The transformation chain is encoded as follows in eq. \ref{eq:projxform}, given 
 $x$ is a 2d pixel in a discrete image, $X_s$ exists on the sensor.
 $R$, $T$ encode the camera rotation and translation (extrinsics);
 $M_p$ projects the world coordinates to the camera sensor - still in world coordinates, and finally the affine $M_i$ transforms the points from the sensor to pixel coordinates on the digital discretized image.
-The transformation pipeline is depicted in figure \ref{fig:projxformworld}.
+The transformation pipeline is depicted in Figure \ref{fig:projxformworld}.
 
 \simplegfx{p}{1.0\textwidth}{projxformworld}{
 	Transformations in a projection matrix pipeline.
@@ -1077,10 +1129,10 @@ In the following section, this search problem in finding corresponding pixels, m
 }
 % this figure would need to be bigger and have also the back side planes (sensors) as opposed to the (normalized?) image planes (at f=1?)
 
-%Next, the setup of binocular stereo vision is described. Common stereo vision rigs use the simplest possible case: two identical cameras with a fixed distance, both oriented to the same direction, parallel to the line connecting them, as in figure \ref{fig:simplestereo}.
+%Next, the setup of binocular stereo vision is described. Common stereo vision rigs use the simplest possible case: two identical cameras with a fixed distance, both oriented to the same direction, parallel to the line connecting them, as in Figure \ref{fig:simplestereo}.
 
-%Assuming known calibration with identical cameras (same focal length and sensor) in a setup described above, visualized in figure \ref{fig:simplestereo}, points can be triangulated as follows:
-Assuming a planar setup with identical cameras (same focal length and sensor) facing in the same direction as visualized in figure \ref{fig:simplestereo}, points can be triangulated as follows:
+%Assuming known calibration with identical cameras (same focal length and sensor) in a setup described above, visualized in Figure \ref{fig:simplestereo}, points can be triangulated as follows:
+Assuming a planar setup with identical cameras (same focal length and sensor) facing in the same direction as visualized in Figure \ref{fig:simplestereo}, points can be triangulated as follows:
 
 From similar triangles with a common vertex at $X$, we get (note that $x_r < 0$ as it's to the left, towards to the negative axis, from the corresponding plane's origin):
 
@@ -1120,7 +1172,7 @@ In stereo vision, the same scene of interest is seen by two or more cameras at t
 The cameras are rarely aligned perfectly as in the disparity setup described above, however.
 \emph{Epipolar geometry} encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with similar triangulation.
 
-As seen in fig. \ref{fig:epigeom}, a point seen by camera $C_l$ at 3D point A could be anywhere on the line between $C_l$'s origin and A, because a certain line passing through the principal point always projects to a point.
+As seen in Figure \ref{fig:epigeom}, a point seen by camera $C_l$ at 3D point A could be anywhere on the line between $C_l$'s origin and A, because a certain line passing through the principal point always projects to a point.
 This line is seen as a single point $A_l$.
 From another viewpoint in camera $C_r$, this line equals to some line on the right image plane.
 The matching point must be on that line.
@@ -1130,7 +1182,7 @@ For example, the line from $C_l$ to $A$ projects to the line from $e_r$ and $A_r
 
 % FIXME:
 \emph{Essential matrix} encodes how the camera poses differ, to match one image's point in another.
-When $A_l$, $A_r$ encode the points in figure \ref{fig:epigeom} by the corresponding camera coordinates, and the baseline difference is a vector from $C_l$ to $C_r$, it holds that $(A_l-C_l) \cdot (C_r - C_l) \times (A_r-C_r) = 0$, as all the vectors are coplanar; the cross product yields a normal to the plane, which is perpendicular to all the vectors, thus the dot product equals 0.
+When $A_l$, $A_r$ encode the points in Figure \ref{fig:epigeom} by the corresponding camera coordinates, and the baseline difference is a vector from $C_l$ to $C_r$, it holds that $(A_l-C_l) \cdot (C_r - C_l) \times (A_r-C_r) = 0$, as all the vectors are coplanar; the cross product yields a normal to the plane, which is perpendicular to all the vectors, thus the dot product equals 0.
 \cite{hartley03multiview}
 Essential matrix $E$ is a matrix form of this relation; it includes the relative rotation and translation of the two cameras:
 
@@ -1218,7 +1270,7 @@ The fundamental matrix relates directly the pixels and epipolar lines, and as su
 
 %Now, given its position in the image plane of camera $C_l$ and the fundamental matrix $F$, finding the corresponding point in camera $C_r$'s image plane is seen as solving eq. \ref{eq:fundamental} for $a_r$.
 
-The essential and fundamental matrices can be seen as a more general configuration of the triangulation in fig. \ref{fig:simplestereo} and eq. \ref{eq:triangulation}.
+The essential and fundamental matrices can be seen as a more general configuration of the triangulation in Figure \ref{fig:simplestereo} and eq. \ref{eq:triangulation}.
 Once the points are found by solving \ref{eq:fundamental}, the depth can be obtained.
 
 % cite longuet-higgins 1981, the books too
@@ -1274,7 +1326,7 @@ Further, closeby points are only looked in a small window around the previous, n
 By virtually aligning the cameras such that their images are coplanar, the search only has to be performed on a line that is parallel to the line connecting the camera centers.
 Rectification can be done in multiple ways.
 Planer rectification projects the images on a common plane and rotates them such that corresponding lines are axis-aligned (horizontal or vertical) in both images. \cite{hartley03multiview}
-In figure \ref{fig:rectif}, two cameras are situated at arbitrary positions, looking at different directions, and their view images are projected on a common plane, where they show up as trapezoids.
+In Figure \ref{fig:rectif}, two cameras are situated at arbitrary positions, looking at different directions, and their view images are projected on a common plane, where they show up as trapezoids.
 In practice, a new image can be created that contains the old trapezoidal image, or the search can be performed in the original image in the direction of the epipolar line.
 
 \simplegfx{h}{0.6\textwidth}{rectif}{
@@ -1282,12 +1334,14 @@ In practice, a new image can be created that contains the old trapezoidal image,
 }
 
 
-%Rectified images are twisted so that todo todo, see figure \ref{fig:rectification} compare to epipolar geometry image, epipolar lines become parallel in the rectified images
+%Rectified images are twisted so that todo todo, see Figure \ref{fig:rectification} compare to epipolar geometry image, epipolar lines become parallel in the rectified images
 % LOL TODO guido gerig image rectification (stereo) slides
 
 % }}} correspondence and rectification
 
 \subsubsection{Multi-view stereo} % {{{
+
+% zhang snavely curless 2004 real time dense 3d face capture spacetime stereo
 
 (highly incomplete section)
 
@@ -1337,7 +1391,7 @@ Before SfM, the images should have been rectified and features matched; the algo
 While SfM retrieves the scene structure and camera parameters, a dense reconstruction usually follows it as only a fraction of the points in the images need to be considered.
 
 SfM begins with two reference views that are used to retrieve an initial reconstruction, and extends each new view into the set iteratively.
-Lastly, a \emph{bundle adjustment} method is used to globally optimize the scene parameters. \ref{triggs2000bundle}
+Lastly, a \emph{bundle adjustment} method is used to globally optimize the scene parameters. \cite{triggs2000bundle}
 The relation between the views need not be previously calibrated; the process determines camera poses.
 In fact, many reconstruction applications use structure from motion as an initial step to determine calibration and proceed then to dense reconstruction.
 
@@ -1377,7 +1431,7 @@ Furthermore, if the scene structure is known beforehand (e.g.\ as a calibration 
 Ground truth data can also be obtained with a real 3D scanner, such as a laser ranging device. % david
 
 %Noise in subpixel-accurate match detection and (TODO survey errors, that one .doc) affects each reconstructed depth.
-In addition, uncertainty in depth depends more heavily on the pixel errors (i.e.\ disparity) if the baseline is short, depicted in figure \ref{fig:disparityerror}. % TODO image, recent in the paper notebook
+In addition, uncertainty in depth depends more heavily on the pixel errors (i.e.\ disparity) if the baseline is short, depicted in Figure \ref{fig:disparityerror}. % TODO image, recent in the paper notebook
 
 Bundle adjustment optimizes uncertainty in camera poses and projection matrices together.
 
