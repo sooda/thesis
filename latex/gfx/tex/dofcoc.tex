@@ -22,7 +22,7 @@
 
 % http://tex.stackexchange.com/questions/14901/dimensioning-of-a-technical-drawing-in-tikz
 \tikzset{%
-    dimen/.style={<->,>=latex,thin,every rectangle node/.style={fill=white,midway,font=\sffamily}},
+	dimen/.style={<->,>=latex,thin,every rectangle node/.style={fill=white,midway,font=\sffamily}},
 }
 
 
@@ -42,9 +42,19 @@
 \def\flabely{2}
 \def\alabely{3}
 
-% background and lens
+% background optical axis and lens
 \draw [thin] (\Ox-1, 0) -- (\Ipx+1, 0);
 \draw [thin] (0,-\hei) -- (0, \hei);
+
+% labels for them
+% this style would start the line in the center of the text :(
+%\draw [-latex] (\Ox, \hei) node {optical axis} to [bend right=15] (0.5*\Ox, 0);
+%\draw [-latex] (0.5*\Ox, \hei) node {lens} to [bend right=15] (0, 0.5*\hei);
+\node (A) at (\Ox, \hei) {optical axis};
+\draw [-latex] (A) edge [bend left] (0.5*\Ox, 0);
+
+\node (A) at (0.5*\Ox,\hei) {lens};
+\draw [-latex] (A) edge [bend left] (0, 0.5*\hei);
 
 % diamonds
 \draw [dashed,dash pattern=on 2pt off 2pt on 1pt off 2pt,red] (\Opx, 0) -- (0, \hei) -- (\Ipx, 0) -- (0, -\hei) -- cycle;
@@ -55,10 +65,14 @@
 
 \draw (\Ox, 0) -- (0, \hei) -- (\Ix, 0) -- (0, -\hei) -- cycle;
 
+% sensor
 \draw [thick, green] (\Ix, -\sensor) -- (\Ix, \sensor);
 \draw (\Ix, \coc) -- ++(2, 0) coordinate (S1b);
 \draw (\Ix, -\coc) -- ++(2, 0) coordinate (S2b);
 \draw [dimen] (S1b) -- (S2b) node {$c$};
+% its label
+\node (A) at (\Ix,-\hei-0.7) {film};
+\draw [-latex] (A) edge [bend left] (\Ix, -\sensor);
 
 % distance arrows
 \draw (\Opx, 0) -- ++(0, -\hei-0.1) coordinate (D);
