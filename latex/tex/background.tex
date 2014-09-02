@@ -797,6 +797,7 @@ More in-depth survey on properties important in reconstruction are given in sect
 %
 % camera types introduced
 
+\paragraph{Camera category overview}
 \emph{Consumer cameras} have good availability, but they are targeted for artistic photographs and basic users.
 They are divided roughly in two categories: \emph{compact (pocket, or point-and-shoot) cameras} and \emph{system cameras}.
 The presence of a mirror divides system cameras in two: \emph{digital single-lens reflex cameras (DSLR)} and \emph{mirrorless interchangeable-lens cameras (MILC)}.
@@ -808,23 +809,27 @@ Their product cycle is typically longer and thus more reliable than in consumer 
 In industrial cameras, the different parts of the system are typically defined more accurately in terms of e.g.\ lens quality, sensor and pixel size, sensor noise, processing speed and communication protocol.
 
 \emph{Camcorders}, video cameras with recording capabilities, also vary from consumer to professional grade devices.
-Camcorders are not considered in this work because of their lower resolution relative to still cameras.
+Camcorders are not quite considered in this work because of their lower resolution relative to still cameras.
+Many still cameras support acceptable video recording.
 
 % some properties
 
-Camera resolution, is declared in million pixels, or megapixels (Mpix).
+\paragraph{Resolution}
+Camera resolution is declared in million pixels, or megapixels (Mpix).
 Resolution and image size are related via pixel size that is the physical size of one photosite on the sensor.
-Pixel size is described as the length of one side, and the pixels are typically square.
+Pixel size is described as the physical length of one side ofa a photosite, and the pixels are typically square.
 Newest consumer DSLRs can have a resolution of up to 20 megapixels.
 
 % sensors
 
-Typical sensor sizes for different camera types are as follows:
+\paragraph{Sensor size}
+The physical size of the image sensor varies a lot, and determines resolution, pixel size and light sensitivity.
+Typical sensor sizes for different camera categories are as follows:
 
 \begin{itemize}
 	\item System cameras use a ``full-frame'' (36x24 mm) or APS-C (1.5-1.6x crop of full frame, i.e.~about 22x15 mm), resolution usually over 15 Mpix with pixel size at about 5 micrometres
-	\item Compact cameras use a small sensor; sizes vary but are typically 1/2.3" (6.2x4.6 mm), resolution about 10 Mpix
-	\item Smartphones use sizes between 1/3"-1/4" (less than 4.8x3.6 mm), resolution between 3 to 8 Mpix
+	\item Compact cameras use a small sensor; sizes vary but are approximately 1/2.3" (6.2 x 4.6 mm), resolution about 10 Mpix
+	\item Smartphones use sizes between 1/3"-1/4" (less than 4.8 x 3.6 mm), resolution between 3 to 8 Mpix
 	\item Sizes used by industrial machine vision cameras vary by application, in 5 to 10 mm range having resolutions from 0.5 to over 10 Mpix.
 \end{itemize}
 
@@ -836,37 +841,40 @@ Typical sensor sizes for different camera types are as follows:
 
 % lenses, shutters
 
-To benefit from the sensor resolution, the lens should have an equivalent or better \emph{resolving power} (i.e.\ \emph{contrast}), provided as a chart of \emph{modulation transfer function} (MTF).
-A lens attenuates the frequencies of the optical patterns, such that at some point, tight line pairs are not resolved from each other.
-Machine vision cameras and system cameras have by interchangeable lenses with often well specified MTFs, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed and has less defined MTF.
-Compacts also accompany a zoom lens; zooms are more complex systems and therefore more expensive to reach a good image quality.
+\paragraph{Lens quality}
+To benefit from the sensor resolution, the camera objective should have an equivalent or better \emph{resolving power} (i.e.\ \emph{contrast}), provided as a chart of \emph{modulation transfer function} (MTF) which is a function of frequency, or number of black-and-white \emph{line pairs} per millimetre.
+A lens attenuates the frequencies of the optical patterns, such that at some point, dense line pairs are not resolved from each other but show up as gray.
+Machine vision cameras and system cameras use interchangeable lenses with often well specified MTFs provided by the manufacturer, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed and has poorer MTF that usually is not measured.
+Compacts also accompany a \emph{zoom lens}; zooms are more complex systems and therefore more expensive to reach a good image quality.
 Calibration is also a problem with moving zoom elements that may not align to precisely same setting.
-System cameras have a large selection of fixed focal length (``prime'') lenses.
-The lack of zoom of a prime lens is preferable in a controlled environment, where the distance to the subject can be adjusted as necessary.
+Interchangeable lenses have a large selection of fixed focal length (``prime'') lenses with less moving parts and typically better optical quality.
+The lack of zoom of a prime lens is acceptable in a controlled environment, where the distance to the subject can be adjusted as necessary.
 With DSLRs that have a moving mirror and a shutter, the mechanical vibration could move the zoom lens each time a little, changing the focal length.
-Some compact cameras have a lightweight leaf shutter in the lens, and many use digital shutters.
-
-%Lens sharpness is defined via their performance to high contrast, measured with modulation transfer function (MTF).
-%Perceptual pixel count relates to lens contrast; a high pixel count sensor for a poor quality lens is only useful for observing the lens defects.
-
+%Some compact cameras have a lightweight leaf shutter in the lens, and many use digital shutters.
 %Rieke-Zapp et al \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality.
 
 % storage
 
+\paragraph{Data storage}
 Storage size and speed and camera processing power in general follows camera price.
-High-quality capture of short motions is aided by continuous burst mode that can achieve anything between 2 and over 10 frames per second, depending on camera model.
+High-quality motion capture of short performances is aided by continuous burst mode that can achieve anything between 2 and over 10 frames per second, depending on camera model.
 Professional-level DSLRs can handle over 10 continuous raw full frames per second, while entry-level DSLRs handle around five;
 compact cameras are generally slower.
 Machine vision cameras with resolutions comparable to DSLRs also exist, but at a significantly higher price.
 Overall storage speed is determined by several factors between the sensor, the camera's processor and mass storage.
-Reading the pictures to a computer can be done via USB or a memory card reader; the latter method is inconvenient as the card must be removed from the camera and placed to a reader manually.
+Reading the pictures to a computer can be done via USB bus or a memory card reader; the latter method is not practical, since the card must be removed from each camera and placed to a reader manually.
 Industrial cameras typically have temporary memory for only one frame that is read out immediately via a bus.
 For video recording, this needs relatively large amounts of auxiliary hardware to save the raw frame feed.
+For example, according to eq. \ref{eq:gigabit-transfer}, one network interface per each camera would be needed for a decent video rate.
+Additionally, hard disks for data storage are needed.
 
 % software support
+
+\paragraph{Software support}
+For a number of cameras requiring identical parameters and control, setting the parameters and downloading pictures manually is not acceptable.
 Major consumer manufacturers provide a software development kit (SDK) for controlling their cameras remotely at some degree, and some support a common standard for file access.
 For machine vision cameras, manufacturers provide their own software packages, in addition to sometimes specifying that the camera complies to a standard.
-The standards specify data formats, image streaming and control methods.
+The standards specify data formats and buses, image streaming, and control methods.
 Key standards for industrial cameras are:
 
 \begin{itemize}
@@ -880,11 +888,8 @@ A standard-compliant industrial camera enables to use readily available software
 Some of the largest manufacturers that offer standards-compliant cameras are Point Grey, Basler, Allied Vision, and Imaging Source.
 %Coriander \cite{coriander} is a free user interface for controlling IIDC cameras.
 
-Machine vision cameras require additional hardware for recording the frames, which becomes costly with many cameras.
-For example, according to eq. \ref{eq:gigabit-transfer}, one network interface per each camera would be needed for a decent video rate.
-Additionally, hard disks for data storage are needed.
-
 % triggering
+\paragraph{Remote trigger}
 For a multi-camera setup, reliable remote trigger is important.
 It must be possible to signal the shutter release remotely for still pictures and video recording.
 Industrial cameras are designed to be remotely controllable, and system cameras have input sockets for remote trigger buttons.
@@ -892,17 +897,19 @@ Others have limited offer, mainly supporting infrared remote if anything.
 
 % camera comparison
 
-Summarizing for the most popular camera types in the market:
+\paragraph{Conclusion}
+Summarizing for the general feasibility of the most popular camera types in the market:
 
 \begin{itemize}
 	\item System cameras with bigger sensors have good light sensitivity, excellent configurability with auxiliary hardware available, such as remote shutter releases, and decent software support.
-	\item Industrial machine vision cameras have both small and large sensors, support interchangeable lenses and need significant amount of additional hardware, and custom or expensive software to control. Video synchronization is usually not an issue.
+	\item Industrial machine vision cameras have both small and large sensors, support interchangeable lenses and need significant amount of additional hardware, and custom or expensive software to control. Video synchronization is usually not an issue, and parameter control has more freedom at the expense of more work.
 	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Raw images and external utilities are usually lacking. Resolution is less than in system cameras, and high-resolution cameras perform worse in low light because of smaller pixel size.
 	\item Others (smartphone cameras, webcams) have poorly documented features, bad optics and are not configurable properly in general.
 \end{itemize}
 
-In addition to multiview stereo, there are cameras that can capture depth directly.
-Laser range finders are common in automation industry, and have great precision and high price.
+\paragraph{Other types}
+In addition to multiview stereo, there exist cameras that can capture depth directly.
+Laser range finders are common in automation industry and precision engineering, and have great precision and high price.
 Active infrared cameras such as the well-known Kinect (sensor manufactured by PrimeSense) project an infrared pattern of dots to the camera's view and estimate depth in coarse blobs, resulting in an easy-to-use depth camera but poor accuracy.
 Light field cameras such as the newer Kinect 2 have a better spatial accuracy but not yet an established reliable software state.
 
