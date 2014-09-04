@@ -456,7 +456,8 @@ A high bit depth also presents larger \emph{dynamic range}, i.e.\ the difference
 
 % ???
 
-\paragraph{???}
+{ \color{gray}
+\paragraph{random stuff to be moved}
 Some cameras use image stabilization by moving the sensor, as opposed to moving the optical elements inside the lens.
 In any case, image stabilization should be turned off for reconstruction because it affects the calibration of image formation: if any element in the image acquisition path moves, calibration parameters also change.
 The sensor also moves when a camera uses a sensor cleaning mechanism with ultrasonic vibration motor on the sensor.
@@ -482,6 +483,7 @@ With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate fo
 by average, or 0,4 gigabytes per second, requiring also high speed from the processor and mass storage.
 In reality, a number of other complicated factors also have a small effect.
 
+}
 % }}} image sensors
 
 
@@ -918,15 +920,22 @@ Light field cameras such as the newer Kinect 2 have a better spatial accuracy bu
 \clearpage
 \section{Static 3D reconstruction} \label{sec:static3d} % {{{
 
-Multi-view stereo reconstruction is one way to recover the structure of a static three-dimensional subject.
-In the following, a multi-view setup with ordinary digital photo cameras is assumed;
+Multi-view stereo reconstruction is one way to recover the structure of a static three-dimensional scene.
+In this thesis, a multi-view setup with ordinary digital photo cameras is assumed;
 fundamentally different methods, such as laser rangers or light field imaging, are not considered.
 
 A complete reconstruction pipeline consists of many parts of hardware and software.
 The hardware parts were given in section \ref{sec:image-acquisition}.
-This section concentrates on the software part, which is illustrated in Figure \ref{fig:reconst-pipeline}.
+This section concentrates on the software pipeline, which is illustrated in Figure \ref{fig:reconstpipeline}.
 Images taken with digital cameras are scanned for distinct features and matched, optical distortions are corrected, individual camera parameters are computed, whole scene calibration is found, a dense reconstruction of subject geometry is reconstructed, a surface is fitted on the dense point set, and color textures are backprojected on the surface.
 
+Mathematical background on the subject is so broad that this section can be considered to describe the main ideas in a nutshell.
+For detailed descriptions and analysis on the mathematical background, refer to e.g.\ \cite{hartley03multiview,heyden2005multiple,szeliski10vision}.
+
+\simplegfx{b}{0.7\textwidth}{reconstpipeline}{
+	Typical steps in a full reconstruction pipeline.
+	FIXME: draft image
+}
 %[1] Shape and motion from image streams under orthography: A factorization approach
 
 % kruppa eqs
@@ -951,7 +960,7 @@ Images taken with digital cameras are scanned for distinct features and matched,
 % intro, now using pinhole
 
 The previous image acquisition section described how to record a view of a scene with a camera.
-From now on in this thesis, the term camera refers to a particular \emph{configuration} for the camera, or \emph{view}, which can even be a single physical camera moved to different locations.
+From now on in this thesis, the camera term refers to a particular \emph{configuration} for the camera, or \emph{view}, which can even be a single physical camera moved to different locations.
 The camera is reduced to the pinhole model; distortions caused by the optical system are assumed to be corrected.
 
 % what is a camera now, parameters
@@ -960,7 +969,7 @@ The camera is a projective object located somewhere in the imaged scene.
 Its \emph{intrinsic parameters} model the properties of projection, but do not take into account the camera location in any global coordinate system.
 The \emph{extrinsic parameters} contain the camera location and rotation in another global coordinate system, often structured as a matrix.
 \cite{hartley03multiview,heyden2005multiple}
-This part reviews basic transforms whose results are needed in the later reconstruction steps.
+This section reviews basic transforms whose results are needed in the later reconstruction steps.
 
 % FIXME especially this should be elsewhere
 \simplefig{h}{%
@@ -973,8 +982,10 @@ This part reviews basic transforms whose results are needed in the later reconst
 }
 % FIXME z left handed?
 
+\paragraph{Projection}
 Light rays travel through the pinhole camera's aperture to the image plane that is $f$ units behind the aperture, while the camera origin is set to the aperture.
-The pinhole model (or, perspective projection) states that the world point $(x, y, z)$ is projected to the 2D image plane at $(u, v)$:
+This configuration is depicted in Figure \ref{fig:pinhole3d}.
+The pinhole model (or, \emph{perspective projection}) states that the world point $(x, y, z)$ is projected via direct light rays to the 2D image plane at $(u, v)$:
 
 \begin{equation}
 \begin{pmatrix}
@@ -986,10 +997,9 @@ x \\ y
 \end{pmatrix}
 \end{equation}
 
-The result can be derived from similar triangles with a common vertex at the aperture; Figure \ref{fig:pinhole3d}.
-
-Sometimes the sign is inverted, which results in a plane on the other side of the origin where the actual point lies, where the image is not rotated; this can be more convenient to analyse.
-Physically, the projected point in a camera is behind the aperture, on the sensor.
+The result can be derived from similar triangles with a common vertex at the aperture; in Figure \ref{fig:pinhole3d}, $Q = (u, v)$ and $P = (x, y, z)$.
+Sometimes the sign is inverted, which results in a plane on the other side of the origin where the actual point lies, where the image is not rotated; this can be more convenient to analyse, since the coordinate axes do not flip.
+Physically, the projected point in a camera is behind the aperture, on the film or sensor.
 \cite{hartley03multiview}
 
 %Setting the camera to origin, the mapping is given with a camera matrix as
@@ -1017,12 +1027,13 @@ Physically, the projected point in a camera is behind the aperture, on the senso
 %\end{pmatrix}
 %\end{equation}
 
-The camera position and rotation in a global coordinate frame are encoded in a matrix transformation, so that the point $(x,y,z)$ in global coordinate frame is first transformed from a global coordinates to a camera-centered frame.
+%The camera position and rotation in a global coordinate frame are encoded in a matrix transformation, so that the point $(x,y,z)$ in global coordinate frame is first transformed from a global coordinates to a camera-centered frame.
 % Matrices, homogeneous coordinates.
 
 % projective element, "~" up to scale equality definition
 
-In computer graphics and vision, points and directions are usually described in \emph{homogeneous coordinates}.
+\paragraph{Homogeneous coordinates}
+In computer graphics and vision, points are usually described in \emph{homogeneous coordinates}.
 Homogeneous coordinates add an extra dimension to the interpretation of coordinates, and each point becomes a line that crosses the origin in a dimension one higher than the original.
 In addition, several vector operations become more convenient to manipulate; for example, 3D translation is embedded in 4D matrices with homogeneous coordinates. \cite{hartley03multiview,heyden2005multiple}
 %Translation, perspective projection, rotation, and other operations are conveniently described as matrix transformations by using an additional dimension for points: $(x, y, z, 1)$.
@@ -1031,14 +1042,13 @@ The space is scale-invariant; all points $(xw, yw, zw, w)$ map to the same 3D po
 
 %Homography definition (mapping of points and lines in $P^2$)
 
+\paragraph{Camera parameters}
 The imaging process essentially captures a projection to a flat two-dimensional plane of the camera's view.
 When comparing points between different cameras that view the same scene, the cameras' relative positions and rotations must be known.
 One of the cameras is often conveniently chosen as the origin of a global coordinate frame, so that its extrinsic parameters become unity transforms (programming libraries may assume this, see e.g. \cite{opencv}).
 Each three-dimensional point in the world is transformed to the small sensor inside the camera, which is then digitized to a discrete two-dimensional grid of pixels, with different coordinate units.
 
-%Figure \ref{fig:TODO} illustrates this transformation chain, which is encoded as the following equations, given a homogeneous point (4-dimensional vector) $X$ representing a 3D location described in physical (e.g. metric) coordinates:
-
-The transformation chain is encoded as follows in eq. \ref{eq:projxform}, given a homogeneous point (4-dimensional vector) $X$ representing a 3D location described in physical (e.g. metric) coordinates:
+The transformation chain is encoded as follows in eq. \ref{eq:projxform}, given a homogeneous point (4-dimensional vector) $X$ representing a 3D location described in physical (\emph{metric}) coordinates:
 
 \begin{align} \label{eq:projxform} \begin{split}
 	x
@@ -1091,7 +1101,7 @@ The internal parameters, intrinsics, encode how the image is formed on the senso
 \end{equation}
 
 For simplicity, it is often denoted $\alpha_x = m_x f$, $\alpha_y = m_y f$.
-$R = (u_0, v_0)$ is the image center (or principal point).
+$R = (u_0, v_0)$ is the image center (principal point).
 The parameters can also be presented separately without the matrix notation.
 For square pixels, $m_x = m_y$, and for a non-skewed (rectangular) sensor, $\gamma = 0$, which is often the case. \cite{hartley03multiview,szeliski10vision,heyden2005multiple}
 
@@ -1101,7 +1111,7 @@ For square pixels, $m_x = m_y$, and for a non-skewed (rectangular) sensor, $\gam
 
 \subsection{Camera calibration} % {{{
 
-\emph{Calibrating} a camera means \emph{measuring} its intrinsics and extrinsics in order to map its data to a known coordinate frame.
+\emph{Calibrating} a camera means \emph{measuring} its intrinsic and extrinsic parameters in order to map its data to a known coordinate frame.
 Reconstruction algorithms relate points between images to recover depth; the relations are specified via camera parameters.
 Calibration is not necessarily a manual step before scanning;
 self-calibration and structure from motion techniques can recover camera calibration from a static scene automatically. \cite{pollefeys1999hand,hartley03multiview}
@@ -1111,18 +1121,18 @@ the intrinsics can then be calibrated beforehand only once.
 For a camera rig that does not change, whole intrinsic and extrinsic calibration can be retrieved beforehand and applied on further scanned datasets for direct reconstruction.
 
 Manual calibration is done with a known pattern, such as a planar checkerboard pattern \cite{chuang2002performance,zhang2000flexible} or manually selected point pairs.
+By knowing the geometry of the calibration object, and the matching structure in the projected images, the projective transformation performed by the camera is obtained.
 A known pattern is fast to detect and results in correct physical units when the physical pattern size is given.
 The checkerboard calibration step is often programmed to measure optical distortion at the same time. \cite{opencv,camcalmatlab}
-
 A single image of a three-dimensional calibration object is also sufficient for single-camera calibration. \cite{jokukirjoist}
 
-One way for calculating the calibration is direct linear transform (DLT):
-the whole matrix $P$ is solved from $x_i = PX_i$ by constructing a system of equations from the projections of some known points $i$, and minimizing an error metric, as the case is usually overconditioned. \cite{hartley03multiview}
+One way for calculating the calibration is \emph{direct linear transform (DLT)}:
+the whole matrix $P$ is solved from $x_i = PX_i$ by constructing a system of equations from the projections of some known points $i$, and minimizing an error metric, as the case is practically overconditioned. \cite{hartley03multiview}
 
 A video-based method has been proposed by Svoboda for self-calibration.
 The method uses a number of synchronized frames and a laser pointer in a dark calibration volume to find corresponding points, not requiring any precise objects. \cite{svoboda2005convenient}
 
-Structure from motion recovers full calibration for a larger amount of cameras with given matching point pairs, with no special requirements on the subject.
+\emph{Structure from motion} recovers full calibration for a larger amount of cameras with given matching point pairs, with no special requirements on the subject.
 It can be used to calibrate an arbitrarily large unknown set of cameras automatically.
 It is described further in section \ref{sec:sfm}.
 
@@ -1136,23 +1146,14 @@ It is described further in section \ref{sec:sfm}.
 %cv::stereocalibrate, cv::calibratecamera
 %TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
 
-% }}} camera calibration
-
-\subsection{Preprocessing/normalization} % {{{
-
-(to be moved)
-
-%The scale of values in the equations above affects the precision [hartley, in defense of .., h,ziss]. 
-The scale of values affects the numeric precision \cite{hartley1997defense,hartley03multiview}.
+The scale of values affects the calibration accuracy \cite{hartley1997defense,hartley03multiview}.
 A similarity transform is used to modify the values to a more consistent range.
-Centroid is moved to image center, and the coordinate axes are scaled.
+Coordinate system centroid is moved to image center, and the coordinate axes are scaled such that the average point distance from the origin becomes 1.
+The 3D points are scaled accordingly, which is only ideal if the calibration object has an uniform geometry. \cite{hartley03multiview}
+%Histogram and brightness equalization is done if image brightnesses vary for more effective point matching.
+%A well controlled stereo rig does not need color correction if the lighting is even enough.
 
-%Translate centroid to the origin, scale so that average becomes sqrt 2.
-
-Histogram and brightness equalization is done if image brightnesses vary for more effective point matching.
-A well controlled stereo rig does not need color correction if the lighting is even enough.
-
-% }}}
+% }}} camera calibration
 
 \subsection{Calibrated stereo vision} % {{{
 
@@ -1160,7 +1161,7 @@ Given two or more views of a same scene, depth for a point can be extracted by c
 Whole-picture depth extraction results in a depth map imaged from a single view, giving a depth value for each pixel in a picture, resulting in a set of three-dimensional points seen by that view.
 The resulting stereo vision consists of many steps.
 In order to compare the point positions in two images, given a point in one image, its matching pair must be found on the other.
-In the following section, this search problem in finding corresponding pixels, mapping them so that they can be compared, and the comparison that results a depth value are formalized.
+In the following section, this search problem in finding corresponding pixels, mapping them so that they can be compared, and the comparison that results a depth value is formalized.
 
 % }}}
 
@@ -1172,7 +1173,7 @@ In the following section, this search problem in finding corresponding pixels, m
 \includegraphics{simplestereo}
 }{fig:simplestereo}{
 	A very simple stereo setup, pictured from above.
-	The image planes (thick lines) are actually imaginary, as a real film in a camera would exist behind the principal point and project the image as rotated around principal axis, as described earlier in \ref{sec:imaging}.
+	The image planes (thick lines) are imaginary, as a real film in a camera would exist behind the camera origin and project the image as rotated around principal axis, as described earlier in \ref{sec:imaging}.
 	The coordinates are given in units of the world coordinate system, common with the camera origins.
 	The symbols $C$ are the camera origins ($T$ units between each other); $c$ the principal points; $x$ the image plane coordinates of $p$ w.r.t.~the principal points; and $f$ is the focal length.
 	The unknown is $Z$, i.e.\ depth of point $X$.
@@ -1182,13 +1183,11 @@ In the following section, this search problem in finding corresponding pixels, m
 %Next, the setup of binocular stereo vision is described. Common stereo vision rigs use the simplest possible case: two identical cameras with a fixed distance, both oriented to the same direction, parallel to the line connecting them, as in Figure \ref{fig:simplestereo}.
 
 %Assuming known calibration with identical cameras (same focal length and sensor) in a setup described above, visualized in Figure \ref{fig:simplestereo}, points can be triangulated as follows:
-Assuming a planar setup with identical cameras (same focal length and sensor) facing in the same direction as visualized in Figure \ref{fig:simplestereo}, points can be triangulated as follows:
-
-From similar triangles with a common vertex at $X$, we get (note that $x_r < 0$ as it's to the left, towards to the negative axis, from the corresponding plane's origin):
+Assuming a planar setup with identical cameras (same focal length and sensor) facing in the same direction as visualized in Figure \ref{fig:simplestereo}, points can be triangulated as follows.
+From similar triangles with a common vertex at $X$, the depth $Z$ is obtained: (note that $x_r < 0$ as it's to the left, towards to the negative axis, from the corresponding plane's origin)
 
 \begin{align} \label{eq:triangulation} \begin{split}
-	\frac{Z}{T} &= \frac{Z-f}{T - x_l + x_r} \\
-	&= \frac{Z-f}{T - d}\\
+	\frac{Z}{T} &= \frac{Z-f}{T - x_l + x_r} = \frac{Z-f}{T - d}\\
 	ZT - Zd &= ZT - fT\\
 	Z &= \frac{fT}{d}
 \end{split} \end{align}
@@ -1299,9 +1298,7 @@ Given pixel coordinates $a_l$ and $a_r$ that match the points $A_l$ and $A_r$ as
 %\]
 
 The fundamental matrix relates directly the pixels and epipolar lines, and as such it is useful in image processing where the images are described as pixels in a raster image rather than physical coordinates.
-
 %Le image above and lecture11.pdf. O->p dot (O->O' cross O'->p') = 0
-
 %Cross product expressed in a skew-symmetric matrix form is
 %\begin{equation}
 %\vec a \times \vec b =
@@ -1319,7 +1316,6 @@ The fundamental matrix relates directly the pixels and epipolar lines, and as su
 %Epipole can be interpreted as the location of another camera as seen by other camera, as seen in the picture.
 
 %Now, given its position in the image plane of camera $C_l$ and the fundamental matrix $F$, finding the corresponding point in camera $C_r$'s image plane is seen as solving eq. \ref{eq:fundamental} for $a_r$.
-
 The essential and fundamental matrices can be seen as a more general configuration of the triangulation in Figure \ref{fig:simplestereo} and eq. \ref{eq:triangulation}.
 Once the points are found by solving \ref{eq:fundamental}, the depth can be obtained.
 
@@ -1331,25 +1327,30 @@ Once the points are found by solving \ref{eq:fundamental}, the depth can be obta
 
 %salient geometric features for matching
 
-Previously, basics for reconstructing a three-dimensional location for a point pair were introduced, assuming known positions for the same point in different images.
+Previously, fundamentals for reconstructing a three-dimensional location for a point pair were introduced, assuming known positions for the same point in different images.
 To reconstruct a whole scene from a full image, all pairwise points must be \emph{matched}, i.e.\ found that what pixel in one view represents the same object as one in other view.
 
 Matching is often also called \emph{correspondence} searching:
 Given a pixel in one image, what is the corresponding pixel in another image taken from the same scene?
 Pixels correspond to each other if they represent the same physical point.
 Matching pixels for the previously introduced methods are found in the image space by comparing the color neighborhood.
-
 % FIXME: pairwise feature matching vs. windowed matching
 % TODO some sift descriptor theory, angle histogram stuff
-
 To describe the pixel's visual characteristics, its surrounding environment is encoded as a \emph{feature}, an easily recognizable property vector, \emph{feature descriptor} or \emph{feature vector}.
 %When discussing about features, not every pixel's neighbourhoods are used; \emph{good} features are those that have strongly distinguishable properties, such as edges and corners.
 
-Edges or corners are essentially high-frequency information in the image that can be interpreted as a 2D discrete function; thus, they can be detected by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found. \cite{marr1980theory}
+\paragraph{Features}
+Edges or corners are the typical features that are detected automatically at specific steps of reconstruction.
+They are essentially high-frequency information in the image that can then be interpreted as a 2D discrete function; thus, features can be detected by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found. \cite{marr1980theory}
 Many feature detector algorithms are based on edge detection. % CITE
 
-Scale-invariant feature transform (SIFT) \cite{lowe1999object} is a well-known algorithm for local feature detection. A fast GPU implementation is also available \cite{changchang2007siftgpu}.  Invariance to scaling and rotation makes SIFT useful in describing features that can be matched between unaligned images. Other similar commonly used means are Speeded Up Robust Features (SURF) \cite{bay2006surf}, Harris corner detector \cite{harris1988combined}, and difference-of-gaussian-based (DoG) methods \cite{dog}.
+\emph{Scale-invariant feature transform (SIFT)} \cite{lowe1999object} is a well-known algorithm for local feature detection.
+A fast GPU implementation is also available \cite{changchang2007siftgpu}.
+After detecting good keypoints with corner detection, SIFT encodes the local pixel neighborhood as a spatial histogram of gradients in the 2D image domain.
+Invariance to scaling and rotation makes SIFT useful in describing features that can be matched between unaligned images.
+Other similar commonly used means are \emph{Speeded Up Robust Features (SURF)} \cite{bay2006surf}, \emph{Harris corner detector} \cite{harris1988combined}, and \emph{difference-of-gaussian-based (DoG)} methods \cite{dog}.
 
+\paragraph{Search}
 Searching for well distinguished features in an image is called \emph{sparse} search.
 A sparse set of feature matches is good for reconstructing initial calibration, as all the feature vectors can be matched together relatively quickly.
 For finding a complete depth map of the whole image, a slower \emph{dense} search is performed, using the obtained calibration.
@@ -1378,9 +1379,11 @@ Rectification can be done in multiple ways.
 Planer rectification projects the images on a common plane and rotates them such that corresponding lines are axis-aligned (horizontal or vertical) in both images. \cite{hartley03multiview}
 In Figure \ref{fig:rectif}, two cameras are situated at arbitrary positions, looking at different directions, and their view images are projected on a common plane, where they show up as trapezoids.
 In practice, a new image can be created that contains the old trapezoidal image, or the search can be performed in the original image in the direction of the epipolar line.
+Other more complex methods, e.g.\ polar rectification, can handle more general camera configurations.
 
 \simplegfx{h}{0.6\textwidth}{rectif}{
 	In planar image rectification, two images are twisted so that the epipolar lines (drawn in red) become parallel.
+	FIXME: draft image.
 }
 
 
@@ -1437,13 +1440,12 @@ Toldo et al. suggests to build a depth map individually per each view with appro
 The \emph{structure from motion (SfM)} problem, also called structure and motion, uses the scene feature matches between different views to determine both the scene structure and the camera motion between the views.
 \cite{snavely2006photo,fitzgibbon1998automatic} 
 The camera does not have to physically move; the method can be used for multi-camera reconstruction with a static rig.
-Before SfM, the images should have been rectified and features matched; the algorithm works on point locations instead of input images.
+Before SfM, the images must be rectified and features matched; the algorithm works on point locations instead of input images.
 While SfM retrieves the scene structure and camera parameters, a dense reconstruction usually follows it as only a fraction of the points in the images need to be considered.
 
 SfM begins with two reference views that are used to retrieve an initial reconstruction, and extends each new view into the set iteratively.
 Lastly, a \emph{bundle adjustment} method is used to globally optimize the scene parameters. \cite{triggs2000bundle}
-The relation between the views need not be previously calibrated; the process determines camera poses.
-In fact, many reconstruction applications use structure from motion as an initial step to determine calibration and proceed then to dense reconstruction.
+Many reconstruction programs use structure from motion as an initial step to determine calibration and proceed then to dense reconstruction.
 
 The initial stage builds a reference frame and structure for the selected features (points) in two cameras.
 % pollefeys tutorial builds the frame using the epipolar geometry, determined as previously in section \ref{sec:epipolar}.
@@ -1454,7 +1456,7 @@ After a coordinate frame is built as a basis using two views, the next camera vi
 Scene features can be matched between only last few views if the camera motion is known to be continuous;
 the matches can also be done between all possible image pairs, which is feasible if there is lots of overlap.
 
-As a last step, bundle adjustment globally optimizes the bundles of light rays from the scene to all cameras.
+As a last step, bundle adjustment globally optimizes the \emph{bundles of light rays} from the scene to all cameras.
 Several algorithms and implementations are available, while the basic idea and the underlying problem is the same:
 a cost function is used to optimize jointly all camera parameter estimates such that the reprojection errors are minimized through all views.
 Pollefeys \cite{tutorial} gives the following formula to minimize:
@@ -1465,10 +1467,8 @@ Pollefeys \cite{tutorial} gives the following formula to minimize:
 
 when the goal is to find the projection matrices $P_k$ and the 3D points $X_i$ for all views $k$ and points $i$, where $D(a,b)$ is the Euclidean distance and $x_i$ the known, fixed matching 2D image feature positions for each unknown 3D point $X_i$.
 In practice, this nonlinear optimization problem is approached in iterative means.
-
 According to \cite{wu2013towards}, bundle adjustment should be performed using a Levenberg-Marquardt or Preconditioned Conjugate Gradient method.
-
-Beardsley et al. use an iterative extended kalman filter \cite{beardsley1997sequential}
+%Beardsley et al. use an iterative extended kalman filter \cite{beardsley1997sequential}
 % XXX others?
 
 % }}}
@@ -1481,12 +1481,19 @@ Furthermore, if the scene structure is known beforehand (e.g.\ as a calibration 
 Ground truth data can also be obtained with a real 3D scanner, such as a laser ranging device. % david
 
 %Noise in subpixel-accurate match detection and (TODO survey errors, that one .doc) affects each reconstructed depth.
-In addition, uncertainty in depth depends more heavily on the pixel errors (i.e.\ disparity) if the baseline is short, depicted in Figure \ref{fig:disparityerror}. % TODO image, recent in the paper notebook
+In addition, uncertainty in depth depends more heavily on the pixel errors (i.e.\ disparity) if the baseline is short, as depicted in Figure \ref{fig:baselineerr}. % TODO image, recent in the paper notebook
+The common area seen by two cameras stretches in depth as the cameras come closer, but the disparity reduces by equation \ref{eq:triangulation}, making the point matching in turn more dependent on the image resolution.
+
+\simplegfx{h}{\textwidth}{baselineerr}{
+	Exaggerated illustration of the effect of baseline difference $||A-B||$ on the depth error $Z_2 - Z_1$, with a small (left) and large (right) baseline.
+	Point $P$ is seen by the two cameras $A$ and $B$.
+	Points $P_l$ and $P_r$ depict the left and right possible points on the raster image, i.e.\ the possible range for the pixel.
+}
 
 Bundle adjustment optimizes uncertainty in camera poses and projection matrices together.
 
 When sparse feature matches are searched for matching picture points in different views, a number of features are first generated for each picture, and the matches are tested against picture pairs.
-False positive matches should be filtered out; common way to handle feature errors is Random Sample Consensus (RANSAC).
+False positive matches should be filtered out; common way to handle feature outliers is Random Sample Consensus (RANSAC).
 Random subsets of the sample space is iterated, and samples that do not fit well to a model that is constructed for a smaller set are ignored.
 The iteration that matches most samples is selected. \cite{hartley03multiview}
 
@@ -1504,7 +1511,7 @@ Units originating from reconstruction of raster images can be simply scaled to m
 \subsection{Surface fitting} % {{{
 
 A multi-view reconstruction results in a set of three-dimensional points, with no \emph{connectivity information}, i.e.\ interpretation of \emph{surfaces}.
-In reality, all the pixels are projections of nearby surfaces, and a more natural and standard representation can be obtained by fitting a surface on the points.
+In reality, all the pixels are projections of nearby surfaces, and a more natural and standard representation is obtained by fitting a surface on the points.
 Surfaces in computer graphics are described as collections of small patches with a polygon outline, often just triangles.
 When rendering the points on a computer screen, pixels between them are interpolated to contain all color information available in the source photographs.
 
@@ -1517,13 +1524,13 @@ When rendering the points on a computer screen, pixels between them are interpol
 \includegraphics[width=0.6\textwidth]{bunnyear}
 }{fig:stanfordbunny}{
 	Stanford Bunny, a standard 3D test model by The Stanford 3D Scanning Repository, Stanford Computer Graphics Laboratory, scanned with a laser ranger.
-	On the left: the whole model, shaded with a simple Phong model.
+	On the left: the whole model, shaded with a simple Phong lighting model.
 	On the right: a closeup of the left ear, showing the borders of the faces as black lines connecting the vertices.
 }
 
 % http://en.wikipedia.org/wiki/File:Mesh_overview.svg
 
-(Should some of the main terms be defined in the beginning of the whole thesis? Probably...)
+(Should some of the main terms be defined in the beginning of the whole main section or the whole thesis? Probably...)
 
 A \emph{(polygon) mesh}, a data structure often used to describe 3D models, consists generally of \emph{vertices} connected by \emph{edges}, forming \emph{faces} of objects.
 The meshes often consist of triangles, which is the simplest possible polygon.
@@ -1647,7 +1654,7 @@ However, the simplest tracking method is to leave tracking out completely: depen
 
 In three dimensions, a template model is often scanned beforehand that is then morphed to match the target object to keep the topology (i.e.~vertex neighborhood connectivity) constant.
 This technique adapts well to non-rigid deforming subjects. \cite{bojsen2012tracking,li2009robust}
-Common method also for the entertainment industry is \emph{animation retargeting}: using a completely separate character, and deforming it on each frame based on the current state of the scanned object, fitting the model's vertices to the scanned set.
+Common application also for the entertainment industry is \emph{animation retargeting}: using a completely separate character, and deforming it on each frame based on the current state of the scanned object, fitting the model's vertices to the scanned set.
 % siggraph14 doghead
 
 % }}} geometry tracking

@@ -11,6 +11,7 @@ SRC := dippa.tex \
 	gfx/tex/dofcoc.pdf \
 	gfx/tex/simplestereo.pdf \
 	gfx/tex/epigeom.pdf \
+	gfx/tex/baselineerr.pdf \
 	gfx/dot/img-get-process.dot.pdf
 
 all: dippa.pdf
