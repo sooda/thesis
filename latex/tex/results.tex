@@ -130,7 +130,7 @@ It is impossible to deduce the exact time in this case.
 }
 
 \simplegfx{p}{0.8\textwidth}{flashaudio}
-{Trimmed audio recordings of the same moment as in figure \ref{fig:flashtiming}, extracted from the video files, in top-bottom order.
+{Trimmed audio recordings near the same moment as in figure \ref{fig:flashtiming}, extracted from the video files, in top-bottom order.
 First rows of the frames have been exposed at about $t = 0.03 \text{ s}$.
 The flash outputs a distinct ``pop'' sound.
 }
@@ -162,6 +162,7 @@ chroma-keying would be an effective way to isolate the subject, but a non-textur
 The subject was surrounded by white styrofoam plates to even out the lighting.
 
 The Bundler SfM system recommends to take photos at least every $\alpha = 15$ degrees around a subject.
+% visualsize photomodel3d recommends 12 degrees http://www.visualsize.com/FAQ/3Dmodel.php
 With a distance $d$ of one metre from lens to the subject, this yields a baseline $b$ of approximately 26 cm by eq. \ref{eq:baselinedegrees}:
 
 \begin{align} \begin{split} \label{eq:baselinedegrees}
@@ -242,7 +243,7 @@ VisualSFM's feature matching seems not as robust as with Photoscan, sometimes re
 With a shorter baseline of approximately 30 cm, the SfM process was more successful.
 
 PMVS \cite{pmvs} works by expanding patches in the reconstruction, resulting in a dense point cloud with oriented and colored points.
-For mesh generation, the result was imported into \cite{Meshlab}.
+For mesh generation, the result was imported into Meshlab \cite{meshlab}.
 The numerous outlier points were cleaned up manually, and a mesh was fitted using the Poisson surface reconstruction plugin.
 Results of different steps of the pipeline can be seen in figure \ref{fig:sample-arto-meshlab}.
 

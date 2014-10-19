@@ -2,6 +2,12 @@
 % vai: multi-view stereo rig implementation
 \section{3D scanning rig implementation} \label{sec:implementation}
 
+Now that the background has been introduced, the practical part of this thesis follows.
+Specifications for a 3D scanning rig are given, and different off-the-shelf cameras types are compared more in depth.
+Proper cameras for the task are then selected and described, with the decisions on mechanical construction.
+Control software for the rig is developed, and a survey is given on the readily available offering of reconstruction software.
+Tests of the built system are given in the next section (\ref{sec:experiments}).
+
 \subsection{Functional specification} % {{{
 
 Constraints on the rig were specified in loose terms, leaving much work on the background study.
@@ -9,21 +15,21 @@ Desirable properties of the system were given as:
 
 \begin{itemize}
 	\item Ease of use: the user should not need to know implementation details to acquire a 3D scan
-	\item Portability: the system should not rely on affixing fixtures on the walls or the ceiling, for example
 	\item Flexibility: for research purposes, many subjects should be possible to scan
 	\item 3D and 4D: both static surface reconstruction and variations in geometry over time should be possible to scan
 	\item Open design: by documenting the rig well and selecting readily available generic components, a similar system could be built if there was such a need, and the already built system could be extended
+	\item Mobility: the system should not rely on affixing fixtures on the walls or the ceiling, for example
 \end{itemize}
 
 %There is a wide variety of different consumer grade digital cameras.
 %Some of the main differences are dicussed below.
 
-A general-purpose reconstruction rig has many practical matters to consider when comparing to the pure mathematical side.
-A mobile rig should be light enough to carry and set up, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration.
-Distance to the photographed target should not be too short in order to not annoy human subjects, but a too large setup is difficult to build and needs lots of space.
+A general-purpose reconstruction rig has many practical matters to consider, and many decisions can be judged by the understanding based on the pure mathematical side.
 Flexibility for arbitrary subjects means, among other interests, that the rig should be adjustable enough by means of camera positions and viewing directions.
+Distance to the photographed target should not be too short in order to not annoy human subjects, but a too large setup may be difficult to build and needs a lot of space on the floor.
 When capturing video, the frames should be synchronized among cameras as described in \ref{sec:video}, which might not be perfectly possible with a reasonable budget.
-Cameras must be chosen from a large selection of pocket cameras, system cameras, and industrial machine vision systems.
+A mobile rig should be light enough to carry, set up, and reconfigure for new subjects, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration.
+Cameras are chosen from a large selection of pocket cameras, system cameras, and industrial machine vision systems.
 
 %- lens distortion?
 %- rigid base, motion blur
@@ -34,33 +40,35 @@ Cameras must be chosen from a large selection of pocket cameras, system cameras,
 
 \subsection{Camera comparison} \label{sec:cameracomparison} % {{{
 
-Closeup subjects in the range of a metre or less introduce concerns in shallow depth of field, forcing the lens aperture small, and consequently, requiring bright lights or slow shutter speeds.
+The section \ref{sec:cameratypes} presented in general the typical properties of different camera categories.
+In this section, the focus is more on the feasibility of the properties on reconstruction, and on selecting a collection of feasible cameras fitting a reasonable budget.
+
+\paragraph{General concerns}
+Small subjects in the range of a metre or less introduce concerns in shallow depth of field, forcing the lens aperture small, and consequently, requiring bright lights or slow shutter speeds.
 More sensitive sensor would require less light, but depth of field decreases as the sensor size increases.
-
-As the capture environment will be a clean laboratory space and the cameras will mostly be controlled remotely, features usually important to photographers such as weatherproofing or user interface were not considered.
-
-%The section \ref{sec:cameratypes} presents in more detail the properties necessary for reconstruction.
-
+As the capture environment will be a clean indoor space and the cameras will mostly be controlled remotely, features usually important to photographers such as weatherproofing or user interface were not considered.
 Reliability on configurability and controllability was considered important.
 Cheaper cameras fit more into a budget, offering more numerous content, but they might not be properly controllable.
-External shutter release mechanisms have been researched more on DSLRs;
+External shutter release mechanisms have been researched more on DSLRs than compacts, and most compacts do not have one;
 the manufacturers do not provide official specifications of the release connector pinouts, but they have been reverse-engineered for many models by individual tinkerers.
-
+Machine vision (MV) cameras, in contrast, support only external shutters.
 Zoom-only lenses, lack of raw processing, remote configuration and manual modes, and slower processing speed leave cheaper compact cameras out of the comparison practically altogether.
 More expensive models do have comparable features, but their prices rise into the same range as with DSLRs that are more understood.
 
-Canon DSLRs have been used previously on commercial setups [infiniterealities, ten24, capture lab likeness capture rig (ea sports/fifa), remedy].
-Commercial video capture setups may use specialized machine vision devices and partly custom software to export data into suitable format.
+\paragraph{Previous work}
+Canon DSLRs have been used previously on commercial static capture setups [infiniterealities, ten24, capture lab likeness capture (ea sports/fifa), remedy].
+Commercial video capture setups may use specialized machine vision devices and hardware-accompanying or customized software for image capture and reconstruction.
 
+\paragraph{Machine vision requirements}
 Machine vision devices need several high performance computers for reliable multi-camera capture because of the lack of local storage.
 While each camera outputs easily 1 Gbit/s of data or more (eq. \ref{eq:gigabit-transfer}, one hard disk per camera is needed if the capture is long enough and does not fit in a computer's RAM, increasing the system cost and complexity.
+For a small number of cameras, existing buses on a PC might be enough, but a larger number requires even more bandwidth.
 Best mechanical hard disks currently have sequential write speed that just exceeds 1 Gbit/s;
 newer solid-state disks (SSD) generally are two to four times faster.
 For covering all the bandwidth, expansion cards would be needed per camera, count depending on the camera protocol.
 Most PC motherboards can accommodate only a few cards, requiring several PCs.
 Transfer speeds given by specifications and theoretical maximum frame rates for 12-bit raw full-HD frames are listed in table \ref{tab:busspeeds}; achievable rates would be less depending on bus overhead.
-
-Best Compact Flash (CF) cards, used in professional DSLRs, can write at approximately 150 MB/s, while cheaper Secure Digital (SD) cards reach 90 MB/s, but camera bus drivers usually only achieve 20-40 MB/s. % TODO canon, magic lantern, uhs-i
+In contrast, best Compact Flash (CF) cards, used in professional DSLRs, can write at approximately 150 MB/s, while cheaper Secure Digital (SD) cards reach 90 MB/s, but camera bus drivers usually only achieve 20-40 MB/s. % TODO canon, magic lantern, uhs-i
 
 \begin{table}[h]
 	\centering
@@ -78,38 +86,59 @@ Best Compact Flash (CF) cards, used in professional DSLRs, can write at approxim
 	\label{tab:busspeeds}
 \end{table}
 
-In detail, the camera properties that should be considered include:
-
-\begin{itemize}
-\item CMOS/CCD sensor. CMOS suffers from rolling shutter in video mode, while CCD is more expensive and rare.
-\item Resolution and sensor size. Higher resolution covers more detail, until airy disk size is reached. Larger sensor has larger pixels, and is thus more sensitive to light and results in lower noise. On the other hand, at an equivalent subject distance, a deeper DOF is achieved with a smaller sensor.
-\item Lens quality. High resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general. Fixed focal length lenses have less moving parts and hold their calibration better.
-\item Dynamic range, i.e. bit depth of the processing pipeline. JPEG pictures have only 8 bits per color channel, whereas DSLRs and industrial cameras use more, often 12 to 14 bits per pixel (in raw format, that contains the color filter array effects before interpolation)
-\item Continuous shooting rate. Controlled by many factors, the speed at which full-size pictures can be taken; on consumer cameras, image processing speed and memory card write speed have most effect, and on industrial cameras, the bus speed typically limits the rate.
-\item Dust reduction. If enabled for some consumer cameras, it is implemented as high-frequency vibration of the sensor on camera bootup. Because it moves the sensor, affects calibration.
-\item Optical stabilization works by moving a glass element inside the lens or the sensor itself, effectively moving the image on the sensor, having an effect on calibration.
-\item Video frame rate, resolution, and compression. Cameras that support raw format usually only use raw for still pictures and compress the video, as raw video is unnecessary in the consumer market and uses lots of space. For image processing, each frame should be as little compressed as possible. Some DSLRs support writing only full keyframes instead of predicted frames, resulting in higher quality and file size.
-\item For consumer cameras, USB read speed supported by the camera. Retrieving saved image or video data takes less time for faster interfaces.
-\item External flashes. Practically all system cameras can be wired to an external flash unit; only some compact cameras support this. Industrial cameras are externally triggered and require custom wiring from the signal source.
-\item Shutter lag. Lag measured between ordering the camera to take the picture to the actual moment where exposure starts should be consistent, and preferably small.
-\item Weight and size. A smaller and lighter camera requires less bulky support structures.
-\item Price. With a fixed budget, cheaper cameras can cover a larger area of the subject at a time because more cameras fit in the budget.
-\item Availability. For an easily replicable system, it should be simple to purchase the hardware.
-\item Configurability. Aperture, shutter speed and others should be manually controllable remotely, and repeatable without automatic features.
-\item Low noise. Sensor noise shows immediately in the image quality, complicating correspondence and others.
-\item Remote trigger. Practically all DSLRs have wired or wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol in the data bus. Some protocols may have global commands to send throughout a group of cameras. (FireWire?) Otherwise, software trigger suffers from sporadic jitter from operating system and protocol non-determinism.
-\end{itemize}
-
 In general, good technical properties are deep depth of field, light sensitivity, high resolution, and short distance to the subject.
 Practical features also count, such as availability of external power supply instead of batteries.
 
 All the properties should be looked as a whole; especially large pixel count does not necessarily imply better pictures if the optics is not good enough.
 
 
+
+\paragraph{Preferred properties}
+A camera is required to have several mandatory properties, and the system as a whole must be taken as a global optimization problem, since some properties conflict each other.
+In detail, the technical camera properties that should be considered include:
+
+\begin{itemize}
+	\item CMOS/CCD sensor. CMOS suffers from rolling shutter in video mode, while CCD is more expensive and rare in larger formats.
+
+	\item Resolution and sensor size. Higher resolution covers more detail, until the optical limits of the system are reached. A larger sensor has larger pixels, and is thus more sensitive to light and results in lower noise and lower required exposure time. On the other hand, at an equivalent subject distance, a deeper DOF is achieved with a smaller sensor.
+
+	\item Low noise. Sensor noise shows immediately in the image quality, complicating correspondence and others.
+
+	\item Dynamic range, i.e. bit depth of the processing pipeline. Whereas JPEG pictures have only 8 bits per color channel, DSLRs and industrial cameras use more, often 12 or 14 bits per pixel in raw format, that contains the color filter array effects before interpolation.
+
+	\item Lens quality. High resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general. Fixed focal length lenses have less moving parts and hold their calibration better.
+
+	\item Dust reduction, if enabled for some consumer cameras, is typically implemented as high-frequency vibration of the sensor on camera startup. Moving the sensor might result in small calibration problems.
+
+	\item Optical stabilization works by moving a glass element inside the lens or the sensor itself, effectively moving the image on the sensor, having also an effect on calibration.
+
+	\item Shutter lag. Lag measured between ordering the camera to take the picture to the actual moment where exposure starts should be consistent, and preferably small.
+
+	\item Continuous shooting rate, or the speed at which full-size pictures can be taken. Controlled by many factors, on consumer cameras, image processing speed and memory card write speed have most effect, and on MV cameras, the bus speed typically limits the rate and sensor speed is selected based on it.
+
+	\item Video frame rate, resolution, and compression. Cameras that support a raw format only use raw for still pictures and compress the video, as raw video is unnecessary in the consumer market and uses lots of space. For image processing, each frame should be as little compressed as possible. Some DSLRs support writing only full keyframes instead of predicted frames, resulting in higher quality and file size.
+
+	\item Configurability. Aperture, shutter speed and others should be manually controllable remotely, and repeatable without automatic features.
+
+	\item Remote trigger. Practically all DSLRs have wired or wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol in the data bus. Some protocols may have global commands to send throughout a group of cameras. (FireWire?) Otherwise, software trigger suffers from sporadic jitter from operating system and protocol non-determinism.
+
+	\item For consumer cameras, USB read speed supported by the camera. Retrieving saved image or video data takes less time for faster interfaces.
+
+	\item External flashes. Practically all system cameras can be wired to an external flash unit; only some compact cameras support this. Industrial cameras are always externally triggered, some supporting a separate independent signal and some via the transfer bus.
+
+	\item External power supply. Not needing to charge batteries adds value to the ease of use.
+
+	\item Weight and size. A smaller and lighter camera requires less bulky support structures.
+
+	\item Price. With a fixed budget, cheaper cameras can cover a larger area of the subject at a time because more cameras fit in the budget.
+
+	\item Availability. For an easily replicable system, it should be simple to purchase the hardware.
+\end{itemize}
+
 Prices for compact cameras that have the required features go up to the same price range as DSLRs or even higher, i.e. 500 EUR and up.
 
-Having a much smaller production rate than larger manufacturers that target consumers (such as Canon or Nikon), industrial cameras have a broad price range from a few hundred euros to thousands, well correlated with pixel count and frame rate.
-Lens prices for industrial C-mounts are moderate, at around 200-300 EUR.
+Having a much smaller production rate than larger manufacturers that target consumers (such as Canon, Nikon, Pentax or Sony), MV cameras have a broad price range from a few hundred euros to thousands, well correlated with pixel count and frame rate.
+Lens prices for the C-mount optics used by MV are moderate, at around 200-300 EUR.
 
 % }}}
 
@@ -119,11 +148,10 @@ A number of compacts, system cameras, and machine vision cameras were reviewed.
 In this section, the selected key parts are described in detail.
 Precise information on all hardware used can be found in appendix \ref{app:hardwareused}.
 
-A DSLR is a good choice for still photos because of moderate price compared to image quality, and availability of usable software.
+A DSLR is a good choice for still photos because of moderate price compared to image quality, and availability of usable software and best range of accessories.
 Video recording is notably worse than with machine vision that can produce higher resolution, raw data, and synchronized output;
-because of a price difference of an order of magnitude, it was decided to leave high-performance video tracking as a minor feature.
-
-Canon was chosen among others because of previously acquired knowledge of the manufacturer, previously proven work using the same maker [infiniterealities, ten24, capture lab likeness capture rig (ea sports/fifa example), remedy] and firmware customizability \cite{magiclantern}. % this also above in practicalities
+because of a price difference of an order of magnitude for cameras having a comparable resolution, it was decided to leave high-performance video tracking as a minor feature.
+Canon was chosen among others because of firmware customizability \cite{magiclantern} and previously acquired knowledge of the manufacturer, previously proven work using the same maker [infiniterealities, ten24, capture lab likeness capture rig (ea sports/fifa example), remedy].
 
 \subsubsection{Canon EOS 700D DSLR}
 
@@ -132,9 +160,10 @@ Canon was chosen among others because of previously acquired knowledge of the ma
 }{fig:eos700d}
 {Canon EOS 700D placeholder pic}
 
-Canon EOS 700D body (or Rebel T5i in US), introduced in 2013, is among the newest of Canon's consumer range, with a price at about 600EUR.
-Key features are shown in table \ref{tab:eos700dfeatures}.
-A front view with a Canon 18-55 mm kit lens fitted is shown in figure \ref{fig:eos700d}.
+Canon EOS 700D body, also known as the Rebel T5i, introduced in 2013, is among the newest of Canon's consumer range, with a price at about 600 EUR.
+Key features are shown in Table \ref{tab:eos700dfeatures}.
+A front view with a Canon 18-55 mm kit lens fitted is shown in Figure \ref{fig:eos700d}.
+It was decided to build the rig around nine of them.
 
 \begin{table}[h]
 	\centering
@@ -142,11 +171,11 @@ A front view with a Canon 18-55 mm kit lens fitted is shown in figure \ref{fig:e
 		Sensor type & CMOS\\
 		Sensor size & APS-C 22.3 x 14.9 mm\\
 		Pixel size & 4,3 x 4,3 $\text{\si\micro m}$\\
-		CoC span at 0.019 mm & 4.4 pixels\\
+		%CoC span at 0.019 mm & 4.4 pixels\\ % (FIXME move to lens)
 		Image resolution & 5184 x 3456 pixels (17,9 million) \\
 		Processor & Canon Digital Imaging Core (DIGIC) 5\\
 		Bits per pixel & 14\\
-		Shooting speed & 5 FPS\\
+		Continuous shooting speed & 5 FPS\\
 		Video mode & 1080p in 30 FPS or 720p in 60 FPS\\
 		Write speed & $\approx$ 40 MB/s
 	\end{tabular}
@@ -154,47 +183,51 @@ A front view with a Canon 18-55 mm kit lens fitted is shown in figure \ref{fig:e
 	\label{tab:eos700dfeatures}
 \end{table}
 
+\paragraph{Properties}
 Large pixel count combined to a good lens captures high-resolution detail.
-The sensor's pixel size is not unnecessarily small but not as large as in full frame cameras.
-Dynamic range with 14 bits per pixel is relatively large; most reconstruction programs use 8-bit images, though.
-The 5 FPS continuous speed for full-size images can be used for testing high resolution motion, but the video abilities should be reasonable too.
-Raw video recording is also possible with modified camera firmware, with reduced resolution limited by memory speed.
-
+The sensor's pixel size is not unnecessarily small but not as large as in full frame DSLR cameras.
+%Dynamic range with 14 bits per pixel is relatively large; most reconstruction programs use 8-bit images, though.
+% raw images useful for manual image enhancement
+The 5 FPS continuous speed for full-size images can be used for testing high resolution motion, but the video abilities are also reasonable.
+The quality can be tweaked with firmware modifications and raw video recording is also possible, at reduced resolution limited by storage speed. \cite{magiclantern}
 The sensor is labeled ``Hybrid CMOS'', a new Canon's technology that embeds phase-detection autofocus pixels in the sensor for fast continuous autofocusing in video mode.
 A number of pixels is missing color sparsely around the middle of the sensor and are interpolated; they only introduce artifacts in raw video.
 
-The camera also features a tilting LCD screen that has provided to be useful when looking the camera from the front.
-
-Older models of the same product line can still be found in the market, such as 650D or 600D.
+%Older models of the same product line can still be found in the market, such as 650D or 600D.
 %700D has a newer processor and thus faster processing speed, faster memory card controller and others.
-Resolution of the sensor has stayed same since 550D, introduced in 2010.
-At the same time also cheaper new models are available, such as 1200D.
-At a reduced price, less processing power is provided, resulting in slower operation but otherwise the cameras share mostly same features.
-The more expensive professional cameras vary mostly by processing speed.
+Resolution of the sensor has stayed same since the EOS 550D, introduced in 2010.
+At the same time, also cheaper new models are available, such as the EOS 1200D; at a reduced price, less processing power is provided, resulting in slower operation but otherwise the cameras share mostly same features.
+The more expensive professional cameras vary mostly by processing speed and build quality.
 
+\paragraph{Storage}
 The camera uses Secure Digital (SD) memory cards for mass storage, supporting the UHS-I standard (Ultra High Speed).
-Maximum write speed has been found experimentally to be approximately 40 MB/s.
+Maximum write speed has been found experimentally to be approximately 40 MB/s \cite{magiclanternforum}.
 A class 10 UHS-I memory card was selected; manufacturer claims 45 MB/s write speed.
 
+\paragraph{Conveniences}
+The camera also features a tilting LCD screen that has provided to be useful when looking the camera from the front.
 Additionally, AC power adapters were chosen to operate the cameras without the need for charging batteries.
 Canon sells adapters that plug in the camera's battery holder, providing continuous power at the expense of an additional cable per camera.
 
+% flashguns
+
 \subsubsection{Canon EF 50mm f/1.8 II}
 
-Canon's EF-mount 50mm f/1.8 II lens (priced at about 110 EUR), shown in figure \ref{fig:canonef50mmlens} is well known for its excellent image quality at a low price.
+Canon's EF-mount 50mm f/1.8 II lens (priced at about 110 EUR), shown in Figure \ref{fig:canonef50mmlens} is well known for its excellent image quality at a low price, quality comparable to ten times more expensive professional lenses.
 The lens was introduced in 1990.
-The 50 mm focal length provides good shooting distance for proposed subjects and is nearly distortion free.
+The 50 mm focal length with the crop factor of 1.6 of the camera body provides good shooting distance.
+Like most lenses at this focal length, the lens is nearly distortion free.
 Despite the poor plastic build quality, its glass is very good and it is well known as one of the best portrait lenses.
 The lens changes between autofocus and manual focus modes with a mechanical switch, and the focus ring in manual focus mode is loose enough that it might need to be locked with tape if left on for a long time shooting to hold its position for a calibrated setup.
 
-At a distance of one metre $d = 1 m$, the sensor size of $s_x$ x $s_y$ = 22.3 x 14.9 mm and $f = 50$ mm focal length, the area that fits in the frame is
+At a distance of one metre $d = 1 m$, the sensor size of $s_x \times s_y$ = $22.3 \times 14.9$ mm and $f = 50$ mm focal length, the area that fits in the frame is
 
 \begin{align} \label{equ:areasize} \begin{split}
-	a_x &= s_x * \frac{d}{f} = 22.3 \text{mm} * \frac{1 \text{m}}{50 \text{mm}} = 446 \text{mm}\\
-	a_y &= s_y * \frac{d}{f} = 14.9 \text{mm} * \frac{1 \text{m}}{50 \text{mm}} = 298 \text{mm}
+	a_x &= s_x \times \frac{d}{f} = 22.3 \text{mm} \times \frac{1 \text{m}}{50 \text{mm}} = 446 \text{mm}\\
+	a_y &= s_y \times \frac{d}{f} = 14.9 \text{mm} \times \frac{1 \text{m}}{50 \text{mm}} = 298 \text{mm}
 \end{split} \end{align}
 
-which can be seen from similar triangles.
+which is seen from similar triangles.
 From eq. \ref{eq:dof}, the depth of field at this setting is about 16 cm for a f-number of f/11, or 20 cm for f/14, at circle of confusion of 0.019 mm, a reasonable depth for the given area size.
 
 \simplefig{h}{%
@@ -207,16 +240,17 @@ From eq. \ref{eq:dof}, the depth of field at this setting is about 16 cm for a f
 
 An important consideration was the ability to use the third-party Magic Lantern (ML) firmware add-on;
 it was originally developed for tools and improved user interfaces for video recording, but has been extended for numerous other features too.
+It was installed on each camera in the rig.
 Firstly, it provides experimental support for raw video recording, easier remote triggering for video, and other hacks;
 additionally, being open source, it can be modified for any custom purposes, such as multi-camera synchronization aids, if necessary.
-It is a separate program that runs alongside the original firmware, using the same operating system and configuration menus.
-A screenshot of a menu grid is shown in figure \ref{fig:ml-menu}.
+It is a separate program that runs in the camera alongside the original firmware, using the same operating system and configuration menus.
+A screenshot of a menu grid displaying some of the additional functions is shown in Figure \ref{fig:ml-menu}.
 
 ML is installed on a memory card, and it does not make permanent changes to the camera's original firmware.
 Still, being third-party software based on reverse-engineering efforts, there is a small risk of unexpected instability.
 ML has an active user forum, a wiki, and an automatic build system for nightly testing builds.
-No stable release is offered for 700D yet, but the unofficial testing version has been long in use.
-As an open source project, developed in a distributed fashion, it suffers from inconsistent documentation and is occasionally best examined by reading source code.
+No stable release is offered for EOS 700D yet, but the unofficial testing version has been long in use.
+As an open source project developed in a distributed fashion, it suffers from inconsistent documentation and is occasionally best examined by reading source code.
 
 \simplegfx{h}{0.6\textwidth}{ml-menu}{
 	Magic Lantern grid menu in movie mode.
@@ -226,7 +260,11 @@ As an open source project, developed in a distributed fashion, it suffers from i
 
 \subsection{Hardware construction} % {{{
 
-\subsubsection{Mechanical choices}
+The cameras need additional support structures for mounting.
+A trivial solution would be a tripod for each camera, which would not allow stacking the cameras vertically, though.
+Two main methods were considered; they are described below.
+
+\subsubsection{Mechanical options}
 
 With flexibility and mobility as requirements, the system should be built of removable parts that need no modifications to the environment, such as screwing bolts to nearby walls.
 The separate parts should be small enough for transportation, but large enough for rigidity and build simplicity.
@@ -268,9 +306,13 @@ For flexibility, each camera should be able to rotate in at least to horizontal 
 For that, Manfrotto 494 ball heads were used, connected to the tripod rod with Manfrotto 035 Super Clamps.
 Figure \ref{fig:TODO} shows a complete connection from a stand pole to a camera.
 
-The total structure of all nine cameras divided in three supports (figure \ref{fig:TODO}) takes up relatively little space, and is flexible enough to set up around any human-size subject or smaller.
+The total structure of all nine cameras divided in three supports (Figure \ref{fig:totalsetup}) takes up relatively little space, and is flexible enough to set up around any human-size subject or smaller.
 
 Wires and power adapters are fastened to the stand legs in long-term use to reduce wires running on the floor.
+
+\simplegfx{h!}{0.8\textwidth}{totalsetup}{
+	Complete setup with cameras and spot lights for video recording.
+}
 
 % }}}
 
@@ -296,7 +338,7 @@ A commonly used method among the DIY community is to use opto-isolators to contr
 An opto-isolator provides a galvanically separated switch that can be used to electrically ``connect'' the release wire to the camera's ground such that no electrical signal path is shared between the cameras.
 The switch is a phototransistor that is triggered externally by the light transmitted from a LED.
 Both the phototransistor and the LED are installed in a opaque plastic housing.
-As an example, the opto-isolator device used in this work is shown in figure \ref{fig:singleopto} next to the circuit it was used with.
+As an example, the opto-isolator device used in this work is shown in Figure \ref{fig:singleopto} next to the circuit it was used with.
 The particular device works in open collector setting, exposing the open collector pin and the emitter pin of the transistor.
 Another common setting is a powered device that outputs a voltage signal from a power supply.
 
@@ -333,21 +375,21 @@ When capturing moving targets, measuring this lag variation could be of interest
 \simplegfx{h}{0.6\textwidth}{nucleo}
 {STM32 Nucleo-F401RE microcontroller development board.}
 
-The Nucleo-F401RE (figure \ref{fig:nucleo}) is a prototyping board designed around the STM32F401RET6 microcontroller IC.
+The Nucleo-F401RE (Figure \ref{fig:nucleo}) is a prototyping board designed around the STM32F401RET6 microcontroller IC.
 This MCU contains a relatively powerful 32-bit ARM core, space for 512 KB of program code, 96 KB of RAM, 51 general-purpose I/O pins available on the board, and other peripherals such as timers and analog/digital converters.
 A single-wire debugging (SWD) method is supported to debug the running software in real time.
 
 The trigger was constructed for ten cameras, functionally transferring trigger pulses from a PC to all cameras synchronously through opto-isolators and 2,5 mm stereo cables connecting to the cameras.
 For each output, a Toshiba TLP621-2 dual opto-isolator was used, mainly because they were readily available; any similar device would work.
 An output pin in the microcontroller drives an LED of the isolator, making the corresponding transistor conductive.
-Schematic of one camera controller is shown in figure \ref{fig:singleopto}.
+Schematic of one camera controller is shown in Figure \ref{fig:singleopto}.
 Each LED is driven through a current-limiting resistor of 220 ohms, resulting in about 10 milliamps of LED current with the LED voltage drop of 1.15 V specified by Toshiba datasheet, matching the specified test condition.
 This results in tens of milliamps of maximum available collector current, which is orders of magnitude more than that of supplied by the camera. % TODO write this better
 The cameras have shown to consistently respond to this signal well.
 
-The circuit was initially constructed on a solderless protoboard, ``breadboard'', shown in figure \ref{fig:camsremote-proto}.
+The circuit was initially constructed on a solderless protoboard, ``breadboard'', shown in Figure \ref{fig:camsremote-proto}.
 After proving that the circuit worked, a proper circuit board was built and installed in an extruded metal enclosure.
-Board layout is shown in figure \ref{fig:triggerboard} and the built case without final lid in figure \ref{fig:camsremote}.
+Board layout is shown in Figure \ref{fig:triggerboard} and the built case without final lid in Figure \ref{fig:camsremote}.
 Full schematic for the whole circuit is available in the appendix \ref{app:fullschematic}.
 The circuit was drawn with the Cadsoft EAGLE, a pcb design software; complete schematic and layout files are available in \url { http://github.com/sooda/TODO-URL-HERE }.
 
@@ -394,12 +436,12 @@ The reset button resets the whole microcontroller, restarting the program with n
 		Set focus pin state & Fxxxxxxxxxx\\
 		Set shutter pin state & Sxxxxxxxxxx\\
 		Reset all to unpressed & R\\
-		Example: press focus on first and third & F101\\
+		Example: push down focus on first and third & F101\\
 	\end{tabular}
 	\caption{
 		Remote trigger protocol; the letter x signifies a single bit (digit 0 or 1) and can be omitted from the start, in which case it is assumed 0.
 		Note that the messages set the whole button state instead of sending ``keypresses'';
-		to emulate a full keypress, the state must be set to 1 followed by a 0.
+		to emulate a full keypress, the state must be set first to 1, followed by a set to 0 or a reset.
 		Each command must be finished with a space or newline character.
 	}
 	\label{tab:triggerprotocol}
@@ -477,7 +519,7 @@ The wrapper is written for exclusively libgphoto2 in mind, but as it actually hi
 
 Although each camera can be positioned by individually looking through the viewfinders, a simple preview live feed is almost mandatory to properly set up a new configuration to see the big picture.
 A preview matrix of all cameras makes it easy to identify the cameras and to see if they all have been pointed to correct directions, and to verify that their settings are the same by judging from the image quality.
-The program is shown in figure \ref{fig:gphotogrid} and is found in the github repository under the name \emph{gphotogrid}.
+The program is shown in Figure \ref{fig:gphotogrid} and is found in the github repository under the name \emph{gphotogrid}.
 It is written in C++ and uses the libgphoto2 wrapper for camera control and the wxWidgets GUI library for the user interface.
 
 Libgphoto2 provides an interface for reading a camera preview frame at a rate of several frames per second, speed depending on the number of cameras used in parallel because of USB bus limits and CPU processing power as the images are resized to the screen.
@@ -539,7 +581,7 @@ A command-line tool called \emph{paraphotos} for downloading the images in realt
 The cameras send a notification when a new photo is taken with the shutter button or the remote release.
 When this new file is found, it is downloaded and named by a running index and camera name.
 The user is notified when all cameras have finished for a single shoot; also, when the program is requested to quit, it first waits until the last pending download is finished.
-Each download task runs in a separate thread of execution to overcome the synchronous nature of libgphoto2, as well as the notifying task; figure \ref{fig:img-get-process} shows simplified code control flow.
+Each download task runs in a separate thread of execution to overcome the synchronous nature of libgphoto2, as well as the notifying task; Figure \ref{fig:img-get-process} shows simplified code control flow.
 
 \simplegfx{h}{0.8\textwidth}{img-get-process}
 {FIXME: this is ugly. Simplified flow graph of the paraphotos program control flow.}
