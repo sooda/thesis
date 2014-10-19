@@ -1,0 +1,116 @@
+= Intro
+* (canon eos pic or something)
+* Interest in realistic content in computer graphics
+* Computer graphics synthesizes images from geometric data
+* Computer vision analyzes geometry from images
+* This work: Scanning real life objects using several digital cameras at once
+
+= Contents
+* (Roughly as in the thesis, add TOC here)
+
+= Motivation
+* (ira pic)
+* The processing power of GPUs big and increases
+* Able to process massive level of detail
+* Creating content manually tedious, difficult to get right
+* => Scan the geometry and color using digital cameras
+
+(some below OR condense all to a single slide: principles, reality)
+
+= Pinhole camera
+* Some imaging background first
+* (modified wikipedia pic)
+* Projects a 3D scene perfectly on a film
+
+= Actual camera
+* (simplified dslr box?)
+* Lens systems, geometric distortion, color distortion, depth of field, image resolution, frame rate, image quality, ...
+
+= Imaging
+* (or box here? or sth larger? or combine the previous slide here?)
+* light travels from subject to sensor, to digital file
+* Assumed uniform lighting, still non-shiny subject
+* Video = consecutive image frames
+
+= Video
+* (ruler pic?)
+* Moving subject?
+* Non-flickering lighting
+* Motion blur
+* Rolling shutter
+* Synchronization
+
+= 2D to 3D
+* Camera projection, calibration
+* Reconstruct 3D geometry <=> apply projection in inverse
+* Determine scene from multiple viewpoints
+
+= Principle: depth from disparity
+* (both theory pics? depth and epipolargeom)
+* Simple triangulation, in principle
+* Two views, two image positions => 3D position with depth
+* In practice, many more sophisticated dense algos
+* Complete pipeline needs to consider everything
+
+= Reconstruction system
+* (pic: MV cam, DSLR, pocket cam)
+* Using the background theory, construct a reconstruction rig
+* Requirements to be flexible and general purpose, easy to use
+* Human head as a special interest
+* Heavy study on available hardware and software solutions
+
+= Rig implementation
+* (photo of cams from the front)
+* nine Canon EOS DSLR cameras with 50 mm lenses
+* remote trigger tool
+* auxiliary HW, support SW
+* Not restricted to any specific reconstruction SW
+
+= Remote trigger tool
+* (photo of the box open)
+* Simultaneous or arbitrary focus and shutter release
+* Custom built on a microcontroller using wired remote connectors
+* Commercial tools mostly wireless and expensive
+
+= Software
+* Just camera controls, based on *gphoto2*
+* Generic open source library for cameras
+* Preview tool, image download, camera configuration, remote shutter
+* 3D reconstruction development out of scope
+
+= Previewer
+* (pic)
+* A great aid in aiming the rig as a whole
+* Individual orientations with the viewfinders though
+
+= Control
+* Camera exposes parameters via USB
+* Shutter speed, aperture, ...
+* Mostly implemented in gphoto2 CLI
+* Image download as soon as captured
+* USB connection to remote trigger box
+
+= Experiments
+* Synch tests
+* Sample scans
+* Several reconstruction programs tested
+
+= Source data
+
+= Output geometry
+
+= Hand
+
+= Legos
+
+= Issues
+* Video synchronization
+* Light requirements
+* Post processing
+* Camera quirks
+
+= Conclusion
+* Background survey, built reconstruction rig
+* easy to get sub-millimeter-scale content
+* Future work: actually use it
+* Data needs post-processing
