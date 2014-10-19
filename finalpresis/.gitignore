@@ -1,0 +1,9 @@
+presis.aux
+tex/*.aux
+presis.log
+presis.out
+presis.toc
+presis.bbl
+presis.blg
+presis.nav
+presis.snm

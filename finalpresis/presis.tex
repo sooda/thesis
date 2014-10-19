@@ -1,0 +1,283 @@
+\documentclass[first=purple,second=dgreen,logo=blueexc]{aaltoslides}
+
+\usepackage[latin9]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsfonts,amssymb,amsbsy,amsmath}
+\usepackage{tikz}
+\usepackage{url}
+\usepackage{lastpage}
+\usepackage{subfig}
+
+\title{Multi-view stereo reconstruction for computer graphics content capture}
+
+\author{Konsta Hölttä}
+\institute{Master's thesis presentation\\
+konsta.holtta@aalto.fi}
+
+\aaltofootertext{MVS content capture}{Nov 7, 2014}{\arabic{page}/\pageref{LastPage}\ }
+
+\date{Nov 7, 2014} % \today}
+
+\newcommand{\kuva}[2]{\begin{figure}[h]
+		\includegraphics[width=#1\textwidth]{gfx/#2}
+\end{figure}}
+
+\newcommand{\simplefig}[4]{%
+	\begin{figure}[#1]\begin{center}
+		#2
+		%\caption{#4}
+		%\label{#3}
+	\end{center}\end{figure}
+}
+% \simplegfx{pos-specifier}{width}{filename-and-labelname}{caption}
+\newcommand{\simplegfx}[4]{%
+	\simplefig{#1}{\includegraphics[width=#2]{gfx/#3}}{fig:#3}{#4}
+}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\aaltotitleframe
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Multi-view stereo reconstruction for computer graphics content capture}
+	%\kuva{0.5}{}
+	(super general pipeline pic here maybe)
+	\begin{itemize}
+		\item Interest in realistic content in computer graphics
+		\item Computer graphics synthesizes images from geometric data
+		\item Computer vision analyzes geometry from images
+		\item This work: Scanning real life objects using several digital cameras at once
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Contents}
+	\begin{itemize}
+		\item Intro, motivation
+		\item Imaging fundamentals
+		\item 3D reconstruction
+		\item Scanning rig implementation
+		\item Results
+		\item Conclusion
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Motivation}
+	\kuva{0.8}{ira-eyes}
+	{ \centering { \footnotesize Digital Ira, rendered} \par }
+	\begin{itemize}
+		\item The processing power of GPUs big and increases
+		\item Able to process massive level of detail
+		\item Creating content manually tedious, difficult to get right
+		\item Digital cameras are really good today
+		\item $\Rightarrow$ Scan the geometry and color using digital cameras
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Imaging}
+	(img: big camera system)%\kuva{0.6}{pinhole-camera}
+	\begin{itemize}
+		\item Complete imaging pipeline is complex
+		\item Light travels from subject to sensor, to digital file
+		\item Assumed uniform lighting, still non-shiny subject
+		\item Video = consecutive image frames
+		\item Lens systems, geometric distortion, color distortion, depth of field, image resolution, frame rate, motion blur, compression quality, ...
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Simplified methods}
+	(img: le wikpediakuva)%\kuva{0.6}{pinhole-camera}
+	\begin{itemize}
+		\item Linear camera model, simple optical distortion models, orthogonal problems as separate steps
+		\item corner detection, point matching, triangulation blbl tää menee jo liian pitkälle
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Video}
+	(ruler pic?)
+	\begin{itemize}
+		\item Moving subject
+		\item Non-flickering lighting
+		\item Motion blur
+		\item Rolling shutter
+		\item Synchronization
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{2D to 3D}
+	\begin{itemize}
+		\item Camera projection, calibration
+		\item Reconstruct 3D geometry <=> apply projection in inverse
+		\item Determine scene from multiple viewpoints
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Principle: depth from disparity}
+	\begin{itemize}
+		\item (both theory pics? depth and epipolargeom)
+		\item Simple triangulation, in principle
+		\item Two views, two image positions => 3D position with depth
+		\item In practice, many more sophisticated dense algos
+		\item Complete pipeline needs to consider everything
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Reconstruction system}
+	\begin{itemize}
+		\item (pic: MV cam, DSLR, pocket cam)
+		\item Using the background theory, construct a reconstruction rig
+		\item Requirements to be flexible and general purpose, easy to use
+		\item Human head as a special interest
+		\item Heavy study on available hardware and software solutions
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Rig implementation}
+	\begin{itemize}
+		\item (photo of cams from the front)
+		\item nine Canon EOS DSLR cameras with 50 mm lenses
+		\item remote trigger tool
+		\item auxiliary HW, support SW
+		\item Not restricted to any specific reconstruction SW
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Remote trigger tool}
+	\begin{itemize}
+		\item (photo of the box open)
+		\item Simultaneous or arbitrary focus and shutter release
+		\item Custom built on a microcontroller using wired remote connectors
+		\item Commercial tools mostly wireless and expensive
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Software}
+	\begin{itemize}
+		\item Few options available
+		\item Just camera controls, based on \emph{gphoto2}
+		\item Generic open source library for cameras
+		\item Preview tool, image download, camera configuration, remote shutter
+		\item 3D reconstruction development out of scope
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Previewer}
+	(pic)
+	\begin{itemize}
+		\item (pic)
+		\item A great aid in aiming the rig as a whole
+		\item Individual orientations with the viewfinders though
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Control}
+	(cli pic?)
+	\begin{itemize}
+		\item Camera exposes parameters via USB
+		\item Shutter speed, aperture, ...
+		\item Mostly implemented in gphoto2 CLI
+		\item Image download as soon as captured
+		\item USB connection to remote trigger box
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Experiments}
+	(some pics here)
+	\begin{itemize}
+		\item Synch tests
+		\item Sample scans
+		\item Several reconstruction programs tested
+		\item Numerous libraries and commercial tools reviewed
+		% list some of the tools?
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Source data}
+	\begin{itemize}
+		\item x
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Output geometry}
+	\begin{itemize}
+		\item x
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Hand}
+	\begin{itemize}
+		\item x
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Legos}
+	\begin{itemize}
+		\item x
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Issues}
+	\begin{itemize}
+		\item Video synchronization
+		\item Light requirements
+		\item Post processing
+		\item Camera quirks
+	\end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}{Conclusion}
+	\begin{itemize}
+		\item Background and feasibility study, built reconstruction rig
+		\item easy to get sub-millimeter-scale content
+		\item Future work: actually use it
+		\item Data needs post-processing
+	\end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
