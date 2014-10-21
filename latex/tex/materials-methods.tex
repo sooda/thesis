@@ -156,9 +156,9 @@ Canon was chosen among others because of firmware customizability \cite{magiclan
 \subsubsection{Canon EOS 700D DSLR}
 
 \simplefig{h}{%
-\includegraphics[width=0.4\textwidth]{eos700d}
+\includegraphics[width=0.8\textwidth]{eos700d}
 }{fig:eos700d}
-{Canon EOS 700D placeholder pic}
+{Canon EOS 700D DSLR camera body}
 
 Canon EOS 700D body, also known as the Rebel T5i, introduced in 2013, is among the newest of Canon's consumer range, with a price at about 600 EUR.
 Key features are shown in Table \ref{tab:eos700dfeatures}.
@@ -231,10 +231,10 @@ which is seen from similar triangles.
 From eq. \ref{eq:dof}, the depth of field at this setting is about 16 cm for a f-number of f/11, or 20 cm for f/14, at circle of confusion of 0.019 mm, a reasonable depth for the given area size.
 
 \simplefig{h}{%
-\includegraphics[width=0.4\textwidth]{canonef50mm-1}
+\includegraphics[width=0.8\textwidth]{canon50mmlens}
 %\includegraphics[width=0.4\textwidth]{canonef50mm-2}
 }{fig:canonef50mmlens}
-{Canon EF 50mm f/1.8 II, a fixed focus lens chosen for the rig (TODO replace pic)}
+{Canon EF 50mm f/1.8 II, a fixed focus lens}
 
 \subsubsection{Magic Lantern}
 
@@ -304,15 +304,45 @@ Four of these stands were bought, which should allow a moderate coverage around 
 
 For flexibility, each camera should be able to rotate in at least to horizontal or vertical pose, with arbitrary aiming position.
 For that, Manfrotto 494 ball heads were used, connected to the tripod rod with Manfrotto 035 Super Clamps.
-Figure \ref{fig:TODO} shows a complete connection from a stand pole to a camera.
+Figure \ref{fig:camconnection} shows a complete connection from a stand pole to a camera.
 
 The total structure of all nine cameras divided in three supports (Figure \ref{fig:totalsetup}) takes up relatively little space, and is flexible enough to set up around any human-size subject or smaller.
 
 Wires and power adapters are fastened to the stand legs in long-term use to reduce wires running on the floor.
 
+\simplefig{h}{%
+\includegraphics[width=0.45\textwidth]{connparts}
+\includegraphics[width=0.45\textwidth]{camconn}
+}{fig:camconnection}{
+	Left: the Super Clamp, ball head, and a camera separately.
+	Right: one camera connected to a pole and its wires.
+}
+
 \simplegfx{h!}{0.8\textwidth}{totalsetup}{
 	Complete setup with cameras and spot lights for video recording.
 }
+
+\subsubsection{Lighting}
+
+An even lighting is necessary to capture the subject properly, as described in section \ref{sec:bg-lighting}.
+Unwanted lighting artifacts include harsh shadows and sharp reflections.
+Most shadows do harm to the scanned colors, since the subject is to be relighted in a digital environment where shadows are calculated artificially by reducing brightness in less illuminated pixels.
+Sharp reflections make reconstruction harder, since the position of the reflection depends on the viewing direction, making the appearance of the surface different in different views.
+
+In still photographs, flash units bounced from white objects are a practical way to achieve a good lighting.
+Typical flash units are either bounced away from bright, reflecting umbrellas sold for this particular purpose, or shot through a large and transparent cloth.
+For video recording, either a continuous light source or a high-frequency stroboscope synchronized to the video frame rate would be needed.
+Since the selected cameras do not support frame synchronization, a continuous light is necessary.
+
+In the scope of this work, no lights were purchased, as readily available flash units and spot lights could be used temporarily to evaluate the amount of light needed.
+Two standard flash guns attached to the cameras were used for still photograph samples, and three studio spot lights were tested for video recording.
+One flash gun was bounced off a board of expanded polystyrene set above the subject, seen in Figure \ref{fig:totalsetup}, and another was bounced off a piece of white cloth under the subject, shown in Figure \ref{fig:flashbounce}.
+Details on the lights are given in section \ref{sec:experiments}.
+
+\simplegfx{h!}{0.8\textwidth}{flashbounce}{
+	Flash gun bounced from a white cloth is used to evenly illuminate the bottom side of the subject.
+}
+
 
 % }}}
 
@@ -411,8 +441,10 @@ The used housing has a removable lid, but any box with a height of 1.4 inches (3
 \simplegfx{p}{0.8\textwidth}{camsremote-proto}
 {Remote trigger tool prototype on a solderless breadboard.}
 
-\simplegfx{p}{0.8\textwidth}{camsremote}
-{Remote trigger tool in a case, with lid removed. TODO better pic.}
+\simplegfx{p}{0.8\textwidth}{camsremote}{
+	Remote trigger tool in a case, with lid removed.
+	The left side includes buttons, indicator lights and a USB connector; the camera connectors are on the opposite side.
+}
 
 \subsubsection{Code}
 

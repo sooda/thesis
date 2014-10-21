@@ -160,6 +160,7 @@ The top-facing Canon flash has only automatic mode, which was sufficient; the Yo
 A black background matte was used to isolate unnecessary items in the background out;
 chroma-keying would be an effective way to isolate the subject, but a non-textured background has the same effect.
 The subject was surrounded by white styrofoam plates to even out the lighting.
+The general setup is shown in Figure \ref{fig:totalsetuptwo}, and closer depiction of the poses of the cameras is shown in Figure \ref{fig:setupcams}.
 
 The Bundler SfM system recommends to take photos at least every $\alpha = 15$ degrees around a subject.
 % visualsize photomodel3d recommends 12 degrees http://www.visualsize.com/FAQ/3Dmodel.php
@@ -188,6 +189,16 @@ The key parameters used for photographing the samples are listed in table \ref{t
 	}
 	\label{tab:sampleshotparams}
 \end{table}
+
+\simplefig{h}{%
+\includegraphics[width=\textwidth]{totalsetup}
+}{fig:totalsetuptwo}{
+	Complete setup with cameras and spot lights for video recording.
+}
+
+\simplegfx{h!}{0.8\textwidth}{setupcams}{
+	Poses of the cameras from the subject's viewpoint.
+}
 
 
 A human face contains enough distinct features for SfM to find the system structure, and methods for SfM, dense reconstruction and mesh texturing were tested.
@@ -299,6 +310,8 @@ Video capture was experimented with three 800 W redhead halogen spot lights, wit
 \clearpage
 
 \section{Discussion} \label{sec:discussion}
+
+(FIXME rename section to Results and add Discussion as a subsection?)
 
 %Perf of cloth animation capture
 
