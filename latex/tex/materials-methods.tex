@@ -665,29 +665,38 @@ Raw recording is also supported, but with the limited memory card speed, only a 
 
 When the imagery has been downloaded to a PC, the actual reconstruction can be started.
 There is a wide collection of libraries, open-source tools and commercial packages for both automatic reconstruction and generic mesh editing for post-processing the data.
+Some of them are presented in this section.
+In the scope of this work, new reconstruction algorithms or implementations are not implemented;
+thus, it is important to test the rig with readily available implementations.
 
 Many, if not all, programs assume that the Exif data embedded in the photograph files describes the used focal length and sensor dimensions.
+Canon EOS 700D stores this information properly in the files.
 
  % }}}
 
 \subsubsection{Free libraries} % {{{
 
-There exist several generic computer vision and geometry processing libraries, most common of them being probably OpenCV \cite{opencv}, Point Cloud Library (PCL) \cite{pcl} and Computational Geometry Algorithms Library (CGAL) \cite{cgal}. These are written in the C and C++ languages and they have bindings to several scripting languages too.
+There exist several generic computer vision and geometry and image processing libraries, most common of them being probably OpenCV \cite{opencv}, Point Cloud Library (PCL) \cite{pcl} and Computational Geometry Algorithms Library (CGAL) \cite{cgal}.
+These are written in the C and C++ languages and they have bindings to several scripting languages too.
+For future work using the rig, these libraries present a well known basis for developing own tools.
 
-OpenCV contains a large set of tools for 2D image processing and extends also to camera calibration and 3D reprojection.
+OpenCV contains a large set of utilities for 2D image processing and extends also to camera calibration and 3D reprojection.
 It is probably the most commonly known and most used computer vision algorithm package.
 
-PCL contains a set of algorithms for filtering, segmentation, registration, visualization, and more for working on data sets that consist of points that may share attributes such as colors and normals. CGAL's scope is in the same field, concentrating on a little more advanced topics.
+PCL contains a set of algorithms for filtering, segmentation, registration, visualization, and more for working on data sets that consist of points that may share attributes such as colors and normals.
+PCL is popular in robotics involving three-dimensional computer vision; its algorithms apply well to point cloud data obtained easily using a LIDAR or similar range imaging device.
+
+CGAL provides access to more general and mathematically more geometric data structures and algorithms extending in combinatorics, convex hulls, polygons, arrangements, mesh processing, triangulations, voronoi diagrams, visualization and more, with a more mathematically rigorous approach.
 
 % }}}
 
 \subsubsection{Free programs} % {{{
 
-While libraries can be used to write new tools, many pieces of software are readily available that implement the algorithms presented and are distributed in source code form and/or readily usable binary executables.
+While libraries can be used to write new tools, many pieces of software are readily available that implement 3D reconstruction based on methods presented in Section \ref{static3d}, and are distributed in source code form and/or readily usable binary executables.
 Some of the most known state-of-the-art implementations are listed below.
 
-Camera Calibration Toolbox for Matlab, also included in OpenCV as a C port, is a more or less standard tool to single-camera and stereo camera calibration.
-The toolbox computes undistortion maps and intrinsic and extrinsic parameters with checkerboard images using non-linear optimization and homographies. \cite{camcalmatlab}
+Camera Calibration Toolbox for Matlab, also included built-in in OpenCV, is a more or less standard tool to single-camera and stereo camera calibration.
+The toolbox computes undistortion maps and intrinsic and extrinsic parameters with checkerboard images using non-linear optimization and planar homographies. \cite{camcalmatlab}
 
 Bundler is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds, targeted for large-scale unordered photo collections, originally used for the Photo Tourism project. \cite{snavely2006photo}
 
@@ -696,16 +705,19 @@ It is built on Sift++ \cite{vedaldi2011sift++}; both are based on difference of 
 
 Multicore (parallel) bundle adjustment PBA is a fast bundle adjustment library built with the modern parallel nature of multi-processor computers in mind. \cite{wu2011multicore}
 
-Patch-based, multi-view stereopsis (PMVS) starts from a set of matching keypoints (features) and expands them to a dense patch set iteratively, resulting in oriented points.
-PMVS is usually combined with CMVS, a clustering tool that decomposes the input set to smaller clusters that are more convenient to process.
-Both are written by the same author, Yasutaka Furukawa. \cite{furukawa2010accurate,furukawa2012patch}
+Patch-based, multi-view stereopsis (PMVS) starts from a set of matching keypoints (features) and a pre-acquired camera calibration, and expands the keypoints to a dense patch set iteratively, resulting in a high number of oriented points.
+PMVS is usually combined with CMVS, a clustering tool that decomposes the input set to smaller clusters that are more convenient to process, when the amount of different views is large. \cite{furukawa2010accurate,furukawa2012patch}
 % xxx viewpoint invariant patch, repetition analysis http://www.academia.edu/2021718/3D_Digitization_using_Structure_from_Motion
 % xxx2 graclus, wat pba
 
-VisualSFM \cite{wu2013towards} is a common and free but closed-source integration tool that implements a structure from motion algorithm and simplifies the workflow of several external programs, finally visualizing the results.
+VisualSFM \cite{wu2013towards} is a common and free but closed-source full-scale pipeline that implements a structure from motion algorithm and simplifies the workflow of several external programs, finally visualizing the results.
 The needed external tools are feature matching, bundle adjustment and dense reconstruction.
+VisualSFM is probably the most common tool in the open source and research community for practical use.
+It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, its own radial undistortion model and SfM for camera estimation, PBA for bundle adjustment, and finally PMVS/CMVS for dense matching.
+A common final step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
+%PMVS is suggested by many others.
 
-Meshlab \cite{meshlab} is a generic editor of point clouds and meshes.
+Meshlab \cite{meshlab} is a generic interactive editor of point clouds and meshes, implementing many scientific papers.
 It can be used interactively and scripted to do the same steps automatically.
 In a reconstruction pipeline, it is one of the last processing steps, used for removing outliers or fitting a surface on a point cloud with the poisson surface reconstruction method, and finally projecting the textures to the generated mesh when given the camera parameters in relation to the point cloud pose.
 It can also perform registration between point clouds.
@@ -715,46 +727,39 @@ Screened poisson surface reconstruction, or PoissonRecon, is another stand-alone
 Cmpmvs is a multi-view reconstruction software for transforming a set of calibrated image data to a full textured mesh, used in a similar way as VisualSFM but using internally a different method based on graph cuts and weakly-supported surfaces.
 \cite{jancosek2011multi}
 
-Python Photogrammetry Toolbox is another pipeline combinator for full 3D reconstruction, popular in archaeological fields. It combines Bundler, PMVS, and others. \cite{moulon2011python}
+Python Photogrammetry Toolbox, popular in archaeological fields, combines Bundler and PMVS/CMVS for a full-scale pipeline. \cite{moulon2011python}
 
 %SFM toolkit combines Bundler and CMVS/PMVS.
-
-VisualSFM is probably the most common tool in the open source and research community for practical use.
-It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, its own radual undistortion model and SfM for camera estimation, and PBA for bundle adjustment, and finally PMVS/CMVS for dense matching.
-A common final step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
-%PMVS is suggested by many others.
 
 % }}}
 
 \subsubsection{Commercial solutions} % {{{
 
-There is a large selection of commercial software available, often accompanied with a 3D scanning device.
+There is a large selection of commercial software available, often accompanied with a 3D scanning device or a complete service.
 Some companies offer completely specialized rigs, some sell a scanning device and a general-purpose software alongside it which can be used as standalone and some only sell software, leaving the hardware implementation to the user.
-Examples include:
+
 % FIXME emphasis on differences
 
 \begin{description}
-	\item[Autodesk 123D Catch] is a free and popular web-based application for automatic reconstruction; photos are uploaded to a cloud service, and a textured mesh is generated automatically.
-	\item[Agisoft PhotoScan] has two editions, for 3D designers and professional geographic content manipulation; among the geographic features, it is very suitable for multi-view reconstruction in content generation, and has an active forum for its users.
-	\item[CaptiveMotion] provides a facial capture and retargeting system that can be used with full-body mocap.
-	\item[MotionScan] is the technology behind e.g.\ he video game L.A.\ Noire. \cite{rockstar2011noire} It uses tens of cameras to recover detailed structure.
-	\item[Faceshift] encodes a markerless face capture in a feature space that describes virtual muscle and bone movements.
-	\item[3DF Zephyr Pro] is an automatic reconstruction software that takes photographs as input. A free SfM software, \textbf{3DF Samantha}, is provided too. The company (3DFlow \cite{3dflow}) is a spin-off of a university thesis project. \cite{toldo2013accurate,toldo2013towards}
+	\item[Autodesk 123D Catch] is a free and popular web-based application for automatic reconstruction; photos are uploaded to a cloud service, and a textured mesh is generated automatically. \cite{autodesk123dcatch}
+	\item[Agisoft PhotoScan] has two editions, for 3D designers and professional geographic content manipulation; among the geographic features, it is very suitable for multi-view reconstruction in content generation, and has an active forum for its users. \cite{photoscan} Photoscan is used by \cite{ir-ltd}.
+	%\item[CaptiveMotion] provides a facial capture and retargeting system that can be used with full-body mocap.
+	\item[MotionScan] is the technology behind e.g.\ the video game L.A.\ Noire \cite{rockstar2011noire}, developed by CaptiveMotion. It uses tens of cameras to recover detailed structure and is targeted for video game content generation.
+	\item[Faceshift] provides a realtime markerless face capture in a feature space that describes virtual muscle and bone movements, using a single camera and pre-trained poses. \cite{faceshift}
+	\item[3DF Zephyr Pro] is an automatic reconstruction software that takes photographs as input. A free SfM software, \textbf{3DF Samantha}, is provided too. \cite{3dfzephyr}; The company (3DFlow \cite{3dflow}) is a spin-off of a university thesis project. \cite{toldo2013accurate,toldo2013towards}
 	%\item[Mova Contour Reality Capture] does high-performance surface capture with a large array of cameras.
-	\item[Pendulum Studio] provides a capture system called Alter Ego that integrates with game engines.
-	\item[Pix4dMapper] converts aerial images to geometric surface models.
-	\item[Acute3d] is targeted for large-scale photogrammetry and cultural heritage digitization.
-	\item [FARO] manufactures hardware and provides scanning software for 3D documentataion and surveying, and provides a free application for Kinect-based scanning
-	\item[Trimensional] is a 3D scanner for iPhone.
-	\item[Fuel3D] is a complete handheld scanning system.
-	\item[Dimensional Imaging ltd.] provides DI3D and DI4D systems for static and dynamic surface capture, respectively.
+	\item[Pendulum Studios] provides a capture system called Alter Ego that integrates with game engines. \cite{alterego}
+	\item[Pix4dMapper] converts aerial images to geometric surface models. \cite{pix4d}
+	\item[Acute3D] Smart3DCapture is targeted for large-scale photogrammetry and cultural heritage digitization. \cite{acute3d}
+	\item [FARO] manufactures hardware and provides scanning software for 3D documentation and surveying, and provides a free application for Kinect-based scanning. \cite{faro}
+	%\item[Trimensional] is a 3D scanner for iPhone.
+	%\item[Fuel3D] is a complete low-cost handheld scanning system.
+	\item[Dimensional Imaging ltd.] provides DI3D and DI4D systems and software for static and dynamic surface capture, respectively. \cite{di4d}
 	%\item[SynthEyes] 
-	\item[Pixel Farm] provides tools for CG integration and match moving.
-	\item[3D-equalizer] is a multi-platform 3D tracking solution for the visual effects industry.
-	\item[Smart3DCapture] targets GIS and large-scale reconstruction.
-	\item[V-STARS] by Geodetic System has emphasis on 3D measurement and engineering.
+	\item[Pixel Farm] provides tools for reconstruction, CG integration and match moving. \cite{pixelfarm}
+	\item[3D-equalizer] is a multi-platform 3D tracking solution for the visual effects industry. \cite{3dequalizer}
+	%\item[V-STARS] by Geodetic System has emphasis on 3D measurement and engineering.
 \end{description}
-
 % ms photosynth
 
 % TODO vicon; bradley face capture explains some.
