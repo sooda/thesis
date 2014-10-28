@@ -10,8 +10,8 @@ BOOST_LDFLAGS := # -lboost_filesystem -lboost_system
 
 GPHOTO2_LDFLAGS := -lgphoto2 -lgphoto2_port
 
-CXXFLAGS := -g -std=c++11 -Wall -Wextra $(WX_CFLAGS) $(CV_CFLAGS)
-LDFLAGS := -std=c++11 $(WX_LDFLAGS) $(CV_LDFLAGS) $(BOOST_LDFLAGS) $(GPHOTO2_LDFLAGS)
+CXXFLAGS := -O2 -g -std=c++11 -Wall -Wextra $(WX_CFLAGS) $(CV_CFLAGS)
+LDFLAGS := -O2 -std=c++11 $(WX_LDFLAGS) $(CV_LDFLAGS) $(BOOST_LDFLAGS) $(GPHOTO2_LDFLAGS)
 
 DEPSFLAGS := -MMD -MP
 
