@@ -113,7 +113,7 @@ private:
 
 	// gphoto2 isn't thread safe; e.g. config while preview crashes
 	mutable std::mutex mutex;
-	// get_config can go initially wrong when gphoto2 is loading libs
+	// config() could go initially wrong when gphoto2 is loading libs
 	static std::mutex configmutex;
 };
 
@@ -147,7 +147,7 @@ public:
 	};
 
 	// Widgets can only be moved, and constructed by other Widgets or camera's
-	// get_config()
+	// config()
 	Widget(Widget&& other);
 	~Widget();
 	Widget(const Widget&) = delete;
