@@ -562,11 +562,18 @@ The wrapper is written exclusively with libgphoto2 in mind, but as it actually h
 
 \subsubsection{Previewing} % {{{
 
-\simplegfx{h}{1.0\textwidth}{gphotogrid}
-{A custom written program for displaying a preview feed of many cameras in a grid and configuring exposure time, aperture, and ISO sensitivity. (TODO update later with the finished one)}
+\simplegfx{h}{1.0\textwidth}{gphotogrid}{
+	A custom program, \emph{gphotogrid}, was written for displaying a preview feed of many cameras in a grid and configuring exposure time, aperture, and ISO sensitivity jointly for all cameras.
+	New settings are easy to add if needed.
+}
 
-%\simplegfx{h}{1.0\textwidth}{gphotogridtimeline}
-%{TODO}
+\simplefig{h}{%
+\includegraphics[width=\textwidth]{timeline-nosync}
+\includegraphics[width=\textwidth]{timeline-sync}
+}{fig:grid-timelines}{
+	Timelines displaying the points in time (x axis, in seconds) when frames have been captured from different cameras (y axis, by camera number).
+	The upper image shows all cameras running freely, and in the lower image, no new frame is captured from any camera until all have finished the current capture.
+}
 
 Although each camera can be positioned by individually looking through the viewfinders, a simple preview live feed is almost mandatory to properly set up a new configuration to see the big picture.
 A preview matrix of all cameras makes it easy to identify the cameras and to see if they all have been pointed to correct directions, and to verify that their settings are the same by judging from the image quality.
@@ -575,15 +582,17 @@ It is written in C++ and uses the libgphoto2 wrapper for camera control and the 
 The purpose is to view the picture frame of each camera in realtime and change the most important camera parameters concurrently.
 
 \paragraph{Preview stream}
-Libgphoto2 provides an interface for reading a camera preview frame at a rate of several frames per second, speed depending on the number of cameras used in parallel because of USB bus limits and CPU processing power as the images are resized to the screen.
+Libgphoto2 provides an interface for reading a camera preview frame at a rate of several frames per second, speed depending on USB hardware performance, the number of cameras used in parallel because of USB bus limits, and CPU processing power as the images are resized to the screen.
 A preview feed is connected to each camera to download the frames as fast as possible, and the user interface displays them as a grid, with configurable camera order.
 Because libgphoto2 does not offer asynchronous image or configuration transfers, a new thread of execution is set up for each camera, and the preview pictures are transferred to the main screen via concurrency-safe queues in the application itself.
 
+% FIXME this to experiments?
 \paragraph{Timeline}
-A timeline widget was also developed to investigate the points in time when the preview frames have been grabbed, in the hope of synchronization.
+A timeline widget was also developed to investigate the points in time when the preview frames have been grabbed, aiming to study synchronization accuracy using this preview method.
 Observing the times was found to be of no use, because the pipeline from camera to application seems to be so complex that the preview frame rate is completely sporadic, with no ability to control the frame order or timing.
-The application includes a checkbox for ``synchronizing'' the preview grabber threads so that no camera starts to read a new preview before all have read the last frame; this seems to have no noticeable effect.
-The timeline is depicted in fig. \ref{fig:gphotogridtimeline} (TODO).
+The application includes a checkbox for ``synchronizing'' the preview grabber threads so that no camera starts to read a new preview before all have read the last frame.
+This synchronization attempt did not have any positive effect; in contrast, restricting each camera this way made the performance much worse, as can be seen in Figure \ref{fig:grid-timelines}.
+In the figure, a vertical bar is drawn for each frame captured, with a small circle on the line of each corresponding camera number.
 
 \paragraph{Identification}
 The cameras are identified and ordered by a name written to the configuration set under a property called \emph{artist}, found at least in Canon DSLRs.
