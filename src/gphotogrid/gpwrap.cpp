@@ -207,6 +207,19 @@ Widget Camera::config() {
 	return Widget(w, *this);
 }
 
+const Widget Camera::config() const {
+	std::lock_guard<std::mutex> cg(configmutex);
+	std::lock_guard<std::mutex> g(mutex);
+
+	CameraWidget *w;
+	int ret;
+	if ((ret = gp_camera_get_config(camera, &w, ctx->context)) < GP_OK)
+		throw Exception("gp_camera_get_config", ret);
+
+	// FIXME: dirty cast, make const Widget do magic
+	return Widget(w, const_cast<gp::Camera&>(*this));
+}
+
 void Camera::set_config(CameraWidget* rootwindow) {
 	std::lock_guard<std::mutex> g(mutex);
 
@@ -309,7 +322,7 @@ Widget::Widget(CameraWidget* widget, Camera& camera) :
 	// don't gp_camera_ref, assume that it exists because we hold gp::Camera
 }
 
-Widget::Widget(CameraWidget* widget, Widget& parent) :
+Widget::Widget(CameraWidget* widget, const Widget& parent) :
 	widget(widget), root(parent.root ? parent.root : parent.widget), camera(parent.camera) {
 	// need a ref to be alive if the root gp::Widget dies
 	gp_widget_ref(root);
@@ -334,10 +347,22 @@ Widget::~Widget() {
 }
 
 Widget Widget::operator[](const std::string& name_or_label) {
-	return (*this)[name_or_label.c_str()];
+	return Widget(get_gp_child(name_or_label.c_str()), *this);
+}
+
+const Widget Widget::operator[](const std::string& name_or_label) const {
+	return Widget(get_gp_child(name_or_label.c_str()), *this);
 }
 
 Widget Widget::operator[](const char* name_or_label) {
+	return Widget(get_gp_child(name_or_label), *this);
+}
+
+const Widget Widget::operator[](const char* name_or_label) const {
+	return Widget(get_gp_child(name_or_label), *this);
+}
+
+CameraWidget* Widget::get_gp_child(const char *name_or_label) const {
 	CameraWidget* child;
 	int ret = gp_widget_get_child_by_name(widget, name_or_label, &child);
 
@@ -347,10 +372,10 @@ Widget Widget::operator[](const char* name_or_label) {
 	if (ret < GP_OK)
 		throw std::out_of_range("no widget found");
 	
-	return Widget(child, *this);
+	return child;
 }
 
-Widget::WidgetType Widget::type() {
+Widget::WidgetType Widget::type() const {
 	CameraWidgetType type;
 	gp_widget_get_type(widget, &type);
 	switch (type) {
@@ -378,7 +403,7 @@ void Widget::set_changed() {
 // WIDGET DATA TRAITS
 // ==================
 
-std::string Widget::Traits<std::string>::read(Widget& widget) {
+std::string Widget::Traits<std::string>::read(const Widget& widget) {
 	const char *val;
 	gp_widget_get_value(widget.widget, &val);
 	return val;
@@ -388,7 +413,7 @@ void Widget::Traits<std::string>::write(Widget& widget, const std::string& value
 	gp_widget_set_value(widget.widget, value.c_str());
 }
 
-bool Widget::Traits<bool>::read(Widget& widget) {
+bool Widget::Traits<bool>::read(const Widget& widget) {
 	int val;
 	gp_widget_get_value(widget.widget, &val);
 	return static_cast<bool>(val);

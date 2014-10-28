@@ -84,6 +84,7 @@ public:
 	Camera& operator=(Camera&&);
 
 	Widget config();
+	const Widget config() const;
 
 	// First preview might timeout e.g. with a DSLR that takes a long time to
 	// flip the mirror up. At least some cameras don't need to be in an
@@ -111,7 +112,7 @@ private:
 	Context* ctx; // pointer and not a ref because move assignment
 
 	// gphoto2 isn't thread safe; e.g. config while preview crashes
-	std::mutex mutex;
+	mutable std::mutex mutex;
 	// get_config can go initially wrong when gphoto2 is loading libs
 	static std::mutex configmutex;
 };
@@ -159,14 +160,16 @@ public:
 	// get a child widget; recursive (by libgphoto); look first by name, then
 	// by label. throw out_of_range if not found
 	Widget operator[](const std::string& name_or_label);
+	const Widget operator[](const std::string& name_or_label) const;
 	Widget operator[](const char* name_or_label);
-	WidgetType type();
+	const Widget operator[](const char* name_or_label) const;
+	WidgetType type() const;
 
 	// tools for get()
 	template <class V>
 	struct Traits {
 		static const WidgetType type;
-		static V read(Widget& w);
+		static V read(const Widget& w);
 		static void write(Widget& w, const V& value);
 	};
 
@@ -177,7 +180,7 @@ public:
 	// you should only get something whose type you are sure of (by common name
 	// for the widget, or by checking its type() explicitly)
 	template <class V>
-	V get() {
+	V get() const {
 		if (type() != Traits<V>::type)
 			throw std::invalid_argument("widget type mismatch");
 		return Traits<V>::read(*this);
@@ -200,7 +203,10 @@ private:
 	// root widget construction
 	Widget(_CameraWidget* widget, Camera& cam);
 	// children
-	Widget(_CameraWidget* widget, Widget& parent);
+	Widget(_CameraWidget* widget, const Widget& parent);
+
+	// just copypasta reduction in cfg getters
+	_CameraWidget* get_gp_child(const char *name_or_label) const;
 
 	_CameraWidget* widget;
 	_CameraWidget* root;
@@ -212,13 +218,13 @@ private:
 template <>
 struct Widget::Traits<std::string> {
 	static const WidgetType type = WIDGET_TEXT;
-	static std::string read(Widget& w);
+	static std::string read(const Widget& w);
 	static void write(Widget& w, const std::string& value);
 };
 template <>
 struct Widget::Traits<bool> {
 	static const WidgetType type = WIDGET_TOGGLE;
-	static bool read(Widget& w);
+	static bool read(const Widget& w);
 	static void write(Widget& w, bool value);
 };
 

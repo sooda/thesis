@@ -31,7 +31,7 @@ private:
 template <class Value>
 struct RadioTraits {
 	static const Widget::WidgetType type = Widget::WIDGET_RADIO;
-	static Value read(Widget& w) {
+	static Value read(const Widget& w) {
 		return Widget::Traits<RadioWidget>::read(w);
 	}
 	static void write(Widget& w, const Value& value) {

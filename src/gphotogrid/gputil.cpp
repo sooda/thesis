@@ -31,7 +31,7 @@ int RadioWidget::size() const {
 }
 
 template <>
-RadioWidget Widget::Traits<RadioWidget>::read(Widget& widget) {
+RadioWidget Widget::Traits<RadioWidget>::read(const Widget& widget) {
 	// gp hands out a shallow copy
 	const char* value;
 	gp_widget_get_value(widget.widget, &value);

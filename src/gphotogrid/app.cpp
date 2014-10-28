@@ -27,7 +27,7 @@ void App::sortCams() {
 		return std::find(v.begin(), v.end(), x) - v.begin();
 	};
 	std::sort(cams.begin(), cams.end(),
-		[&](gp::Camera& a, gp::Camera& b) {
+		[&](const gp::Camera& a, const gp::Camera& b) {
 			return nth(order, a.config()["artist"].get<std::string>())
 				< nth(order, b.config()["artist"].get<std::string>());
 		}
