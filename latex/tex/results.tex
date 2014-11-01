@@ -1,5 +1,5 @@
 % Tulokset / results
-\section{Experiments} \label{sec:experiments}
+\section{Experiments and results} \label{sec:experiments}
 
 % is X? test X. proof: X is ?.
 
@@ -8,15 +8,16 @@
 Synchronizing the image sources temporally is important for reconstruction algorithms to work correctly.
 A synchronized system captures images from all cameras with a reasonably small time difference, so that subject movement does not introduce additional errors.
 
-\subsubsection{Shutter delay} \label{sec:shutterdelaymeas}
+\subsubsection{Shutter delay and sync} \label{sec:shutterdelaymeas}
 
-Shutter delay consistency among cameras and shots blah blah.
+\emph{Shutter delay} consistency among cameras describes how well the cameras respond to the shutter release signals, and consequently, what exposure times can be used and how fast moving subjects would work.
+A repeated test was conducted using the microcontroller board to accurately measure the shutter delay and its variations on several cameras.
 
-An input pin of the MCU was connected to the hot shoe flash present in the camera body.
-Assuming a negligible delay between the flash trigger signal and the actual photo exposure, the time between shutter button and signal from the flash connector is the shutter delay.
-The camera was set up to all manual settings and manual focus.
-Measurements matched consistently the 75 millisecond delay found in various sources, repeated shots varying less than a millisecond.
-This suggests that even fast moving subjects can be captured properly.
+An input pin of the Nucleo-F401RE MCU was connected to the hot shoe flash present in the camera body.
+Assuming a negligible delay between the flash trigger signal and the actual photo exposure, the time between shutter signal and signal from the flash connector is the shutter delay.
+The camera was set up to all manual settings and manual focus, and the focus signal was given before each measurement.
+Measurements matched consistently a 75 millisecond delay, repeated shots varying less than a millisecond.
+This excellent repeatability suggests that even fast moving subjects can be captured properly.
 The used test program for the Nucleo board can be found in the github repository by the name \emph{measure.cpp}.
 
 A special flash synchronization method was considered using the hot shoe signals of all cameras.
@@ -24,7 +25,7 @@ When the camera orders the flash to fire, its shutter is fully open.
 The same controller that drives the cameras would then monitor the hot shoe signals, and trigger the flashes when all the shutters have opened.
 The method was not deployed because the cameras are synced well enough; with a shutter speed of 1/20 s, no dark frames were encountered during testing.
 
-\subsubsection{Still capture}
+\subsubsection{Still capture sync using a moving object}
 
 Static subjects do not move or change shape.
 However, still imagery of e.g. a human head needs at least semi-accurate syncing, because standing still enough is not possible for longer periods (seconds).
@@ -40,7 +41,7 @@ The cameras were set to maximum aperture (f/1.8) and shortest possible shutter s
 The fan speed had to be reduced by using 4.5 volts instead of the nominal 12 volts, resulting in about TODO revolutions per second, or TODO m/s on the far end of the fan blades.
 
 Without any actual measurements done but only with careful manual observation, no significant sync mismatches were found by comparing the position of the rotating measurements in all nine different images.
-Two such images are depicted in figure \ref{fig:fansynctest}.
+Two such images are depicted in Figure \ref{fig:fansynctest}.
 
 \simplefig{h}{%
 %\setlength\fboxsep{0pt}
@@ -71,20 +72,20 @@ Two such images are depicted in figure \ref{fig:fansynctest}.
 
 % intro
 
-The EOS 700D does not support an external sync signal for video recording, but relies on an internal clock to sync the frames within a single video file.
-It can be safely assumed that the clock speed has little variation, and thus, little drift and jitter occur in the videos.
+The EOS 700D does not support an external clock signal for timing the frames in video recording, but relies on an internal clock to sync the frames within a single video file.
+It can be safely assumed that the clock speed has little variation, and thus, little drift or jitter occur in the videos.
 Recording offset remains an issue;
-processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a wireless remote control of the camera manufacturer would be used for starting several cameras at once, the offset was found to be sometimes almost as much as the duration of two frames.
+processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a Canon wireless remote control would be used for starting several cameras at once, the offset was found to be sometimes almost as much as the duration of two frames.
 
 % what was done
 
-Visual and auo based tests were carried out to find variations in the recording offset.
-Three cameras were triggered with several times a Canon RC-6 wireless remote control.
-The remote sends a short infrared pulse to a sensor in the front of a camera when a key is pressed.
+Visual and audio-based tests were carried out to find variations in the recording offset.
+Three cameras were triggered several times with a Canon RC-6 wireless remote control.
+The remote sends a short infrared pulse to a sensor in the front of the camera when a key is pressed.
 The camera was set in video mode and it was configured to use the remote release.
 %The exposure time was set to minimum, 1/4000 s, to maximise the rolling shutter effect.
 %In this mode, the sensor rows are exposed one by one in succession.
-When all cameras were recording, a flash unit (Canon Speedlite 420EX) was aimed at the lenses and fired manually several times.
+When all cameras had started recording, a flash unit (Canon Speedlite 420EX) was aimed at the lenses and fired manually several times.
 
 % what happens
 
@@ -94,7 +95,7 @@ Because the CMOS sensor is cleared and read line by line, the time of the flash 
 The rows are zeroed from light in succession in the same way as a mechanical focal plane shutter moves and exposed until read.
 Thus, the flash light's starting time in the video's internal clock is the frame's start time plus the duration that it takes for the rows before the overexposed one to show up:
 
-\begin{align} \begin{split} \label{timingcalib}
+\begin{align} \begin{split} \label{eq:timingcalib}
 t_{Cl} &= t_{Ci} + t_{Cf} \\
 &= i_C * F + f_C / R * F \\
 &= (i_C + f_C / r * c) * F
@@ -102,9 +103,9 @@ t_{Cl} &= t_{Ci} + t_{Cf} \\
 
 where $C$ is a camera identifier, $t_{Cl}$ is camera-relative time for the light pulse, $t_{Ci}$ is the starting time for the frame where the light shows up, and $t_{Cf}$ is the time inside the particular frame.
 The frame index $i$ marks the number of the frame in the video file, starts from 0, and there is $F$ = $1/\text{fps}$ time between the frames.
-$f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the relation of exposure time and frame duration ($0.5$ in this case, referring to 180 degree shutter).
+$f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the relation of exposure time and frame duration ($0.5$ in this case, referring to 180 degree shutter configured in the camera).
 Offset between two cameras $A$ and $B$ is then $t_{Al} - t_{Bl}$.
-The timings are depicted in figure \ref{fig:flashtimeline} as a timeline with matching symbols.
+The timings are depicted in Figure \ref{fig:flashtimeline} as a timeline with matching symbols.
 
 For perfectly synchronized videos, the frames would be identical, and time difference calculated with eq. \ref{eq:timingcalib} for each frame would be zero as $i_C$ and $f_C$ would be constants for all $C$.
 
@@ -120,58 +121,64 @@ In this example, $c = 0.5$.
 \fbox{\includegraphics[width=0.3\textwidth]{flashtiming-a}}
 \fbox{\includegraphics[width=0.3\textwidth]{flashtiming-b}}
 \fbox{\includegraphics[width=0.3\textwidth]{flashtiming-c}}
-}{fig:flashtiming}
-{Video frames of three cameras started with the same remote, with the same frame index.
-The time for the flash unit to reach maximum brightness is almost instant.
-The start of the light pulse can be seen in the leftmost and rightmost frames.
-In the middle one, the flash has been fired before the frame exposure started;
-the frame before it is still without any overexposed light.
-It is impossible to deduce the exact time in this case.
+}{fig:flashtiming}{
+	Video frames of three cameras started with the same remote, with the same frame index.
+	The time for the flash unit to reach maximum brightness is almost instant.
+	The start of the light pulse can be seen in the two last frames.
+	In the first one, the flash has been fired before the frame exposure started, and the frame shows the flash shutting down;
+	the frame before it is black without any overexposed light.
+	It is impossible to deduce the exact time in this case.
 }
 
-\simplegfx{p}{0.8\textwidth}{flashaudio}
-{Trimmed audio recordings near the same moment as in figure \ref{fig:flashtiming}, extracted from the video files, in top-bottom order.
-First rows of the frames have been exposed at about $t = 0.03 \text{ s}$.
-The flash outputs a distinct ``pop'' sound.
+\simplegfx{p}{0.8\textwidth}{flashaudio}{
+	Trimmed audio recordings near the same moment as in Figure \ref{fig:flashtiming}, extracted from the video files, in top-bottom order.
+	First rows of the frames have been exposed at approx. $t = 0.03 \text{ s}$.
+	The flash outputs a distinct ``pop'' sound, comparable to the start of the bright part in Figure \ref{fig:flashtiming}.
 }
 
 
 The method for measuring the synchronization error can be used to calibrate the differences, which is useful in artificial sync with optical flow or other methods, where frame timing is used.
-A similar method using the recorded audio (as in fig. \ref{fig:flashaudio} is perhaps more familiar, where a distinct sound in the audio tracks recorded by the cameras would be used for calibration.
+A similar method using the recorded audio (as in Figure \ref{fig:flashaudio}) is more used in video photography \cite{pluraleyes,premierepromerge}, where a similarity in the sound of the audio tracks recorded by the different cameras would be used for shifting the videos so that their clocks is in sync.
 For a few cameras, the audio tracks are simple to align manually in an audio editing software, or automatically with cross-correlation to find the time lag.
 
-Another method for triggering multiple video recordings is to use a ML-based wired remote trigger by pressing the half-shutter, or focus button when a record key has been configured in ML.
+Another method for triggering multiple video recordings is to use a Magic Lantern based wired remote trigger by pressing the half-shutter, or focus button when a record key has been configured in ML to start recording.
 This method did not show any improvements in overcoming the offset.
 % it may be even worse, as the additional code in ML induces more lag.
 
-A typical measurement result is shown in figure \ref{fig:flashtiming}.
-Audio recorded by the cameras' internal microphones at the same event is shown in figure \ref{fig:flashaudio}, and the order of flash pulses in the three frames can be verified from the order of the sound emitted by the flash.
-Both methods show that the middle camera has started recording first, and subsequent time lags compared to it are approximately 21 and 31 milliseconds.
+A typical measurement result is shown in Figure \ref{fig:flashtiming}.
+Audio recorded by the cameras' internal microphones at the same event is shown in Figure \ref{fig:flashaudio}, and the order of flash pulses in the three frames can be verified from the order of the sound emitted by the flash.
+Both methods show that the leftmost shown camera has started recording first, and subsequent time lags compared to it are approximately 21 and 31 milliseconds.
 
-\subsection{Sample objects}
+\subsection{Sample subjects}
 
 %The mask, human heads, legos, books
 
-Some test subjects were scanned using the system with different light setups for analysis.
-Nine cameras were set up in a 3 by 3 grid and two flash units were attached to two cameras, directed up and down to white styrofoam and fabric diffusers to soften the light.
-Flash units were a Canon Speedlite 430EX and Yongnuo YN565EX II, set to normal front curtain sync.
-The top-facing Canon flash has only automatic mode, which was sufficient; the Yongnuo was set to full power, facing downwards to a piece of fabric.
+Test subjects were scanned using the system for validation and analysis.
+Different datasets were used on two popular reconstruction software pipelines.
+Proposals for a typical scanning setup and quality of instant results are shown in this section.
 
-A black background matte was used to isolate unnecessary items in the background out;
-chroma-keying would be an effective way to isolate the subject, but a non-textured background has the same effect.
-The subject was surrounded by white styrofoam plates to even out the lighting.
+\subsubsection{Photography setup}
+
+The nine cameras were set up in a dark hall as a $3 \times 3$ grid and two flash units were attached to two cameras, directed up and down to white styrofoam and fabric diffusers to soften the light.
+The flash units were a Canon Speedlite 430EX and a Yongnuo YN565EX II, set to normal front curtain sync.
+The top-facing Canon flash has only automatic mode, which was sufficient; the Yongnuo was set to manual full power, facing downwards to a piece of fabric.
+
+A black background matte was used to isolate out unnecessary items in the background;
+the textureless out-of-focus fabric has no particular features that would be detected, and its color is not particularly important, although chroma-keying with a green cloth is commonly used to isolate the subject already in the source images.
+%The subject was surrounded by white styrofoam plates to even out the lighting.
 The general setup is shown in Figure \ref{fig:totalsetuptwo}, and closer depiction of the poses of the cameras is shown in Figure \ref{fig:setupcams}.
 
 The Bundler SfM system recommends to take photos at least every $\alpha = 15$ degrees around a subject.
 % visualsize photomodel3d recommends 12 degrees http://www.visualsize.com/FAQ/3Dmodel.php
-With a distance $d$ of one metre from lens to the subject, this yields a baseline $b$ of approximately 26 cm by eq. \ref{eq:baselinedegrees}:
+With a distance $d$ of one metre from lens to the subject, this yields a baseline $b$ of approximately 26 cm by Equation \ref{eq:baselinedegrees}:
 
 \begin{align} \begin{split} \label{eq:baselinedegrees}
 	\sin \alpha/2 &= \frac{b/2}{d}\\
 	b &= 2 d \sin \alpha/2
 \end{split} \end{align}
 
-The key parameters used for photographing the samples are listed in table \ref{tab:sampleshotparams}.
+The key camera parameters used for photographing the samples are listed in table \ref{tab:sampleshotparams}.
+In a dark environment with flash lights, the shutter speed is not particularly important for a static subject; the short flash pulse dominates all light in the scene.
 
 \begin{table}[h]
 	\centering
@@ -185,82 +192,190 @@ The key parameters used for photographing the samples are listed in table \ref{t
 	\end{tabular}
 	\caption{
 		Key parameters in the sample photographs.
-		Baseline refers to distance to nearest camera, horizontally and vertically the same.
+		Baseline refers to distance to nearest camera, horizontally and vertically.
 	}
 	\label{tab:sampleshotparams}
 \end{table}
 
-\simplefig{h}{%
+\simplefig{p}{%
 \includegraphics[width=\textwidth]{totalsetup}
 }{fig:totalsetuptwo}{
-	Complete setup with cameras and spot lights for video recording.
+	Complete setup with cameras mounted on the stands, surrounded by 800 watt spot lights (red) for video recording tests.
 }
 
-\simplegfx{h!}{0.8\textwidth}{setupcams}{
+\simplegfx{p}{0.8\textwidth}{setupcams}{
 	Poses of the cameras from the subject's viewpoint.
 }
 
+\paragraph{Reconstruction software}
+Agisoft Photoscan is a popular commercial program for scanning subjects from several pictures for generation of 3D models and measuring spatial data.
+Agisoft advertises Photoscan ``to be used in GIS applications, cultural heritage documentation, and visual effects production as well as for indirect measurements of objects of various scales''. \cite{photoscan}
+%The programs are targeted for the end user and include tools for editing the resulting data, and need no external tools for outputting complete meshes.
+A free demo version was used, which does not include exporting the generated meshes; screenshots were taken in the user interface for illustration of results.
 
-A human face contains enough distinct features for SfM to find the system structure, and methods for SfM, dense reconstruction and mesh texturing were tested.
+VisualSFM \cite{visualsfm} was tested with dense reconstruction done by PMVS \cite{pmvs} and final cleanup and meshing in Meshlab \cite{meshlab}.
+Same datasets were tested as with Photoscan with similar results.
+VisualSFM's feature matching seems not as robust as with Photoscan, sometimes resulting in separate models because of a too long baseline and displaying very few feature matches between pictures.
+The VisualSFM manual suggests to decrease the camera baseline in this case or to take more pictures.
+With a shorter baseline of approximately 30 cm, the SfM process was more successful.
 
-In the following, results from different programs are presented.
-No installation instructions are provided; refer to the presented programs for installing them locally.
+PMVS \cite{pmvs} works by expanding a set of initially found patches iteratively in the reconstruction, resulting in a dense point cloud with oriented and colored points.
+For mesh generation, the result was imported into Meshlab \cite{meshlab}.
+The numerous outlier points were cleaned up manually, and a mesh was fitted using the Poisson surface reconstruction plugin.
+Results of different steps of the pipeline can be seen in Figure \ref{fig:sample-arto-meshlab}.
 
-Agisoft Photoscan and Agisoft StereoScan are commercial programs for scanning subjects from several pictures and a pair of stereo pictures, respectively. \cite{agisoft}
-The programs are targeted for the end user and include tools for editing the resulting data, and need no external tools for outputting complete meshes.
-Photoscan includes a free demo version, which does not include mesh exports; a couple of screenshots were taken for illustration.
+PMVS divides the source images iteratively to smaller sets, and begins at a halved size by default with one fourth of the pixel count of the original.
+Using the original size was found to provide roughly twice the amount of points with four times longer processing time, but with no increased accuracy.
+The documentation of this parameter also suggests that a halved size is used, because a large part of colors are interpolated in the original image because of the color filter array in the image sensor (sec. \ref{sec:sensors}).
 
-Reconstructions in Photoscan add significant noise to skin surface.
-Fig. \ref{fig:sample-arto-meshlab} depicts the results in different forms, with some of the source pictures shown in \ref{fig:sample-arto-photoscan-source}.
-A typical face scan results in a very high-density point cloud of five million points, which the software reduces into a one million triangle mesh with textures.
-Wrinkle detail tests can be seen in fig. \ref{fig:sample-arto-forehead}; a forehead has well detail so that the point cloud maps to the geometry well, resulting in also a wrinkled mesh.
+No installation instructions are provided in this work; refer to the presented programs for installing them locally.
+The photographs were captured using the developed software presented in the previous section \ref{sec:implementation}.
 
-Photoscan was found to be relatively robust to baseline length, reconstructing the scene geometry well with a baseline almost twice as much as by the 15 degree rule suggested in Bundler.
-Because photoscan is targeted for artists, it is natural that it produces more production-quality meshes, doing more filtering in the way.
+\subsubsection{Static subjects}
+
+With the 18 million pixel count of the cameras, a human face can be scanned with pore-level detail, and no markers are necessary.
+Markerless capture has been suggested to be important for human subjects, as both the geometry and the texture can be scanned simultaneously, and variations of the texture over time are also seen when capturing video. \cite{bradley?}
+
+\paragraph{Photoscan}
+Using the source data shown partly in \ref{fig:sample-arto-photoscan-source}, a point cloud and a textured mesh was generated in Photoscan, using a quality setting of ``High''.
+The workflow in Photoscan is similar to that of VisualSFM and other tools based on separate programs:
+initially, the scene structure is computed, resulting in a sparse point set of the subject and camera parameters.
+A dense point set computation is followed, and finally a textured triangle mesh is computed based on the dense points and source images.
+Figure \ref{fig:sample-arto-photoscan} depicts the results from dense point cloud and the textured mesh based on the point cloud.
+A typical face scan results in a high-density point cloud of five million points, which the software reduces into a one million triangle mesh with textures.
+The meshing process was found to consume temporarily a maximum of 5 GB of RAM.
+Wrinkle detail tests can be seen in Figure \ref{fig:sample-arto-forehead}; a forehead has well detail so that the point cloud maps to the geometry well, resulting in also a wrinkled mesh.
+The tested reconstructions in Photoscan have significant noise all surfaces for unknown reasons.
+
+Photoscan was found to be relatively robust to baseline length, reconstructing the scene geometry well with a baseline almost twice as much as the 15 degree rule suggested in Bundler with no apparent increase in accuracy when the baseline is halved.
+
+The resulting point set is dense enough to include medium wrinkles in the reconstructed mesh geometry, but with a well noticeable level of noise, larger than the smallest pore-level details seen in the photographs.
+As seen in Figure \ref{fig:sample-arto-forehead}, the triangle mesh is more detailed than what would typically be used by an end-user; the small skin wrinkles that show as color variations would be rendered as variation in the texture color.
+
+Texture 
+
+%Because photoscan is targeted for artists, it is natural that it produces more production-quality meshes, doing more filtering in the way.
 
 \simplefig{h}{%
 \includegraphics[width=0.3\textwidth]{arto-1}
 \includegraphics[width=0.3\textwidth]{arto-2}
 \includegraphics[width=0.3\textwidth]{arto-3}
 }{fig:sample-arto-photoscan-source}{
-	Three of the nine source pictures for a head scan
+	Three of the nine source pictures for a typical scan;
+	for a more optimized scan, the subject should be closer to the rig to use the full frame.
+	Note the shadows under the jaw, the nose, and near the eyes; only the top flash was used for this dataset for demonstration.
 }
 
 \simplefig{h}{%
-%\includegraphics[width=0.4\textwidth]{photoscan-arto-sparse}
-\includegraphics[width=0.35\textwidth]{photoscan-arto-dense}
-\includegraphics[width=0.4\textwidth]{photoscan-arto-textured}
+\includegraphics[width=0.5\textwidth]{photoscan-arto-dense}%
+\includegraphics[width=0.5\textwidth]{photoscan-arto-textured}
 }{fig:sample-arto-photoscan}{
-	Arto in Photoscan
+	A dense point set (left) and a textured mesh in Photoscan, matching the pictures in Figure \ref{fig:sample-arto-photoscan-source}.
+	The underlying triangle mesh contains as much noise as the point set, which is hidden by the noiseless texture.
 }
 
 \simplefig{h}{%
-\includegraphics[width=0.48\textwidth]{arto-forehead-dense}%
-\includegraphics[width=0.48\textwidth]{arto-forehead-solid}\\%
-\includegraphics[width=0.48\textwidth]{arto-forehead-wireframe}%
-\includegraphics[width=0.48\textwidth]{arto-forehead-tex}\\%
+\includegraphics[width=0.5\textwidth]{arto-forehead-dense}%
+\includegraphics[width=0.5\textwidth]{arto-forehead-solid}\\%
+\includegraphics[width=0.5\textwidth]{arto-forehead-wireframe}%
+\includegraphics[width=0.5\textwidth]{arto-forehead-tex}\\%
 }{fig:sample-arto-forehead}{
 	Forehead wrinkles in PhotoScan: dense point cloud, solid mesh, wireframe, and textured mesh.
 	The point cloud and wireframe pictures show the reconstructed detail level well.
+	The darkened color in the wrinkles is directly encoded in the color texture.
+}
+\simplefig{h}{%
+\includegraphics[width=0.45\textwidth]{artoglassuvgeneric}%
+\includegraphics[width=0.45\textwidth]{artoglassuvspherical}
+}{fig:sample-arto-photoscan-source}{
+	Photoscan can employ a ``generic'' texture mapping mode with no distortion in the pictures, and a ``spherical'' mode where the subject is assumed to be a sphere and the texture is made continuous but the original photos are warped.
 }
 
-\simplegfx{h}{\textwidth}{arto-forehead-uvmap}{
-	UV map for the model in figure \ref{fig:sample-arto-forehead}. Note the wrinkle colors in the forehead patches.
+\simplefig{h}{%
+\includegraphics[width=0.38\textwidth]{arto-dense-close-solid}
+\includegraphics[width=0.38\textwidth]{arto-dense-close-tex}\\
+\includegraphics[width=0.38\textwidth]{horseclose-solid}
+\includegraphics[width=0.38\textwidth]{horseclose-tex}
+}{fig:soodaheadclosecompare}{
+	Surface smoothness comparison.
+	Top: Photoscan.
+	Bottom: Meshlab.
 }
 
-VisualSFM \cite{visualsfm} was tested with dense reconstruction done by PMVS \cite{pmvs} and meshing in Meshlab \cite{meshlab}.
-Same datasets were tested as with Photoscan with similar results.
-VisualSFM's feature matching seems not as robust as with Photoscan, sometimes resulting in separate models because of a too long baseline and displaying very few feature matches between pictures.
-With a shorter baseline of approximately 30 cm, the SfM process was more successful.
+Figure \ref{fig:soodaheadclosecompare} shows a cropped region of one of the source photographs in the \emph{head} dataset.
+Note that the skin pores and wrinkles are visually well noticeable in the photograph, but the triangular model is missing smallest of them.
+High-level detail could be encoded in the color texture, but since the detail is geometric, computer renderings using detailed light models would result in a more realistic rendering if the appearance would change as a function of light direction.
+Beeler et al. propose a mesoscopic augmentation from the captured images to increase the geometric detail level, and point out that they are not reconstructed only because of a too small camera resolution. \cite{beeler2010high}
 
-PMVS \cite{pmvs} works by expanding patches in the reconstruction, resulting in a dense point cloud with oriented and colored points.
-For mesh generation, the result was imported into Meshlab \cite{meshlab}.
-The numerous outlier points were cleaned up manually, and a mesh was fitted using the Poisson surface reconstruction plugin.
-Results of different steps of the pipeline can be seen in figure \ref{fig:sample-arto-meshlab}.
+\simplefig{h}{%
+%\includegraphics[width=0.38\textwidth]{soodaheadorig}
+\includegraphics[width=0.9\textwidth]{soodaheadorigclose}
+\includegraphics[width=0.9\textwidth]{soodaheadreconsteyeswire}
+}{fig:soodaheadclosecompare}{
+	Close details from one camera, showing the mesoscopic level of detail, and a corresponding area as a transparent wireframe mesh, showing the amount of vertices.
+	Note that the mesh does not yet employ the full geometric properties of the source photograph, i.e.\ the pores and wrinkles.
+}
 
-PMVS divides the source images iteratively to smaller sets, and begins at a halved size by default with one fourth of the pixel count of the original.
-Using the original size was found to provide roughly twice the amount of points with four times longer processing time, but with no increased accuracy.
-The documentation of this parameter also suggests that a halved size is used, because a large part of colors are interpolated in the original image because of the color filter array in the image sensor (sec. \ref{sec:sensors}).
+%\simplegfx{h}{\textwidth}{arto-forehead-uvmap}{
+%	Texture map for the model in Figure \ref{fig:sample-arto-forehead}. Note the wrinkle colors in the forehead patches.
+%}
+%
+Other subjects were also scanned, and their results can be seen below.
+A simple lego structure provided to work surprisingly well, even though the lego blocks have a plain color without much texture; the only texture comes from the corners of different colored blocks.
+A textured shirt was tested and found to work with a fewer number of views, as the shirt is very planar and subsequent views do not bring much new information.
+A 
+
+\simplefig{h}{%
+\includegraphics[width=0.5\textwidth]{meshlab-head-pts}%
+\includegraphics[width=0.5\textwidth]{meshlab-head-solid}\\
+\includegraphics[width=0.5\textwidth]{meshlab-head-tex}%
+\includegraphics[width=0.5\textwidth]{meshlab-head-wired}
+}{fig:sample-sooda-meshlab}{
+	A dense point set, solid triangle mesh, wireframe rendering of the mesh, and the textured mesh in Meshlab.
+}
+
+\simplefig{h}{%
+\includegraphics[height=0.22\textheight]{bookorig}
+\includegraphics[height=0.22\textheight]{bookreconst}
+\includegraphics[height=0.22\textheight]{handorig}
+\includegraphics[height=0.22\textheight]{handreconst}\\
+\includegraphics[height=0.22\textheight]{plushieorig}
+\includegraphics[height=0.22\textheight]{plushiereconst}
+\includegraphics[height=0.22\textheight]{soodaheadorig}
+\includegraphics[height=0.22\textheight]{soodaheadreconst}\\
+\includegraphics[height=0.22\textheight]{statueorig}
+\includegraphics[height=0.22\textheight]{statuereconst}
+\includegraphics[height=0.22\textheight]{horseorig}
+\includegraphics[height=0.22\textheight]{horsereconst}\\
+}{fig:vsfm-compare}{
+	Comparison of original photos and unedited dense point reconstructions done in VisualSFM.
+	Subjects listed: book, hand, plushie, head, statue, horse.
+}
+
+Typical duration of the reconstruction steps and the used hardware are listed in Table \ref{tab:reconsttime}.
+Most of the time is taken by dense reconstruction in PMVS.
+Complete duration of the reconstruction process in Photoscan is comparable to VisualSFM.
+Different approaches remain to be tested.
+
+poisson 12 7
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{l l}
+		CPU & Intel i5-750\\
+		GPU & NVIDIA GeForce GTS 250\\
+		SIFT matching & 17 s\\
+		PBA bundle adjustment & 2 s\\
+		Undistortion & 63 s\\
+		Dense reconstruction & 20 min\\
+		Surface reconstruction & 90 s\\
+		Texturing & 15 s\\
+	\end{tabular}
+	\caption{
+		Typical durations of the major reconstruction steps in VisualSFM.
+	}
+	\label{tab:reconsttime}
+\end{table}
 
 %\simplefig{h}{%
 %%\includegraphics[width=0.4\textwidth]{meshlab}
@@ -287,7 +402,15 @@ The documentation of this parameter also suggests that a halved size is used, be
 %
 %\subsection{Accuracy}
 
-Video capture was experimented with three 800 W redhead halogen spot lights, with key parameters listed in table \ref{tab:samplevideoparams}.
+\subsubsection{Video capture}
+
+Video capture was experimented with three 800 W Inaro Redhead Varibeam spot lights, with key parameters listed in table \ref{tab:samplevideoparams}.
+As the cameras may not start to record at the same frame, a small utility was written to rename frames extracted from videos, given a manually set up list of synchronization times.
+The tool is written in Python and can be found in the source repository as \emph{sync.py}.
+
+The amount of light needed in video capture can easily be uncomfortable for the performing subject, in contrast to the momentarily flash pulse in still photography.
+in this experiment, the lights were particularly overly bright and the subject used sunglasses for eye protection.
+the ISO sensitivity level of Canon EOS 700D ranges up to 12800, but the highest levels are usually avoided as they are more sensitive to noise.
 
 \begin{table}[h]
 	\centering
@@ -306,6 +429,14 @@ Video capture was experimented with three 800 W redhead halogen spot lights, wit
 	}
 	\label{tab:samplevideoparams}
 \end{table}
+
+\simplefig{h}{%
+\includegraphics[width=0.45\textwidth]{artoglassestex}
+\includegraphics[width=0.45\textwidth]{artoglassessolid}
+}{fig:artoglassescompare}{
+	Photoscan reconstruction from video frames, textured and solid.
+	The solid rendering shows the relatively low vertex count and high amount of spatial noise, which are hidden in this particular textured demonstration view.
+}
 
 \clearpage
 
