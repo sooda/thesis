@@ -2,16 +2,36 @@
 % "further work remains to .."
 \section{Conclusion} \label{sec:conclusion} % conclusion/conclusions depending on the length
 
+The aim of this thesis was to study the principles of scanning the geometry and color of a subject in three dimensions to produce a digitally reconstructed model of the subject, and to build a flexible scanning rig for quickly photographing small subjects for use in reconstruction study.
+
 Realistic content is increasingly needed in computer graphics.
-Current processing power of desktop computers with graphics processing units can utilize millions of pixels of texture data in 3D models with ease, and the available power is still increasing.
+Current processing power of desktop and portable computers with powerful graphics processing units enables to use large amounts of data to synthesize a three-dimensional scene on a computer screen.
+Digitally reconstructing real objects is a powerful way to create the needed content.
+
+First part of this thesis surveyed the image formation process in digital cameras, and the 3D reconstruction principles that current algorithms build upon.
+Based on the camera technology study, the heart of the rig was selected to be an array of nine Canon EOS 700D digital single-lens reflex cameras.
+Software for jointly configuring the required manual settings in all cameras was surveyed and developed using the \emph{gphoto2} camera control library.
+A custom electronic remote shutter trigger tool was built to synchronize the cameras for capturing still photographs in an accurate way even with a moving subject.
+For video capture, the cameras still can be remotely triggered to start video capture, but as they lack accurate video synchronization, a maximum possible error of half a frame duration still exists.
+Artificially synchronizing consumer camera arrays is an interesting subject, as it is one of the biggest issues that separates consumer cameras from more expensive professional or engineering devices from the reconstruction point of view.
+
+The selected cameras offer the necessary manual controls, can be remotely controllable with any standard personal computer and give excellent image quality, with a reasonable price.
+Hardware of the rig is fully flexible and can be modified for small and medium subjects that can be photographed indoors.
+Any alternatives to the rig solution were found to be not configurable enough or overly expensive for the purpose.
+
+Sample results showing the expected minimum reconstruction quality were presented, and proposals for further study were given.
 
 Computer graphics has a clear connection to computer vision.
-Areas of computer graphics focus more on synthesizing content on a computer's screen, while computer vision analyses images from real life.
-However, they do use similar principles, and vision can be used to create model data for rendered graphics.
+Areas of computer graphics focus more on synthesizing content to build an image, while computer vision analyses images from real life.
+However, they both use similar principles, and vision can be used to create model data for rendered graphics.
+Similar ideas based on subject lighting can be employed in both fields.
 
-Scanning real-life objects directly brings TODO TODO.
+Interestingly, the field of multi-view reconstruction is increasingly active and the software presented in this thesis only scratches the surface.
+The rig built as part of this thesis makes it possible to easily gather photographs and video from multiple viewpoints and suggests to study the state-of-the-art algorithms that analyze visual cues in the photographed images, to reproduce the subject in a different lighting conditions and to animate the subject in a new way.
 
-In this thesis, a multi-view stereo rig was constructed with nine consumer cameras for scanning small subjects, such as human faces.
+Scanning the geometry and texture of real-life objects directly brings new opportunities on content usage, performance capture, ...
+
+In this thesis, a flexible multi-view stereo rig was constructed with nine consumer cameras for scanning small and medium subjects, such as human faces.
 
 Requirements for technical details were specified, based on higher-level specifications on the system usage.
 At the core of the design is nine Canon EOS 700D digital cameras with APS-C sensor sizes, utilizing 50 mm full-frame equivalent lenses, resulting in 18-megapixel images and a total rig footprint of a few squaremetres for most subjects.
@@ -20,6 +40,5 @@ With proper post-processing, the system is feasible for scanning both static hig
 
 Synchronization of still and video recording were evaluated. TODO.
 % Scanning accuracy TODO
-
 
 % (summary)
