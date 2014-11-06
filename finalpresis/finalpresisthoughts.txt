@@ -1,0 +1,136 @@
+first slide
+- hi this is about 3d scanning
+
+preintro
+- as computer graphics evolves, there is an increasingly deeper demand for high-quality content
+- here, i'm trying to present parts of those two technologies combined
+
+contents
+- blah blah
+
+motivation
+- computer hardware is becoming faster and faster
+- the level of detail is massive, and the development is not going to stop
+- generating the content manually is practically impossible (for realistic quality)
+- static geometry is difficult enough, and then there is computer animation
+- so why wouldn't you just capture a subject in real life, and reproduce that
+
+imaging
+- cameras are complicated.
+- the whole imaging process is complex, especially if you want to capture only surface color, instead of what it looks like in a naive environment
+- diffuse (uniform) lighting etc
+- computer graphics uses these material models that try to mimimc how light reflects off a surface (picture)
+- i'm trying to produce color data for those models
+- so static imaging is difficult? let's not even talk about video, which is often assumed a continuous stream of static frames.
+
+video
+- all right, what is video anyway? frames in sequence
+- assume the photographed subject is moving, otherwise no point
+- and we capture several frames per second, integrating light into the camera sensor for a fixed amount of time one after another
+- and so we get many problems too
+- motion blur occurs when the subject is moving fast enough so that it smears along the image that is being integrated
+- rolling shutter means that the imaging sensor is read out slowly
+- line skipping introduces aliasing and stuff: not every line of the sensor is used
+- last but not least, several cameras may be unable to synchronize each frame as a group
+
+simplified methods
+- a camera is a projective object
+- to formulate the problem properly, it is divided into several smaller steps
+- the camera projection is assumed to be linear, after any optical errors have been fixed
+- 3d scanning needs several smaller steps such as assuming something on the scene, detecting distinct easily distinguishable corners or features, matching them between all images, reconstructing depth for each one with triangulation, and then reconstructing a surface based on all the found three dimensional points
+
+depth from disparity
+- calculating depth is not that complicated
+- take two matching points in two different pictures from two cameras. both are projected linearly to image planes, thus the depth of that point can be calculated easily when you know the camera baseline and poses.
+- but wait, there is more. how do you match the points in the first place? how about image noise? how do you filter outliers? and so on.
+- a pipeline from pictures to a 3d point cloud does much more than this.
+
+stereo system
+- step one. have many cameras.
+- calibrate the cameras using a known geometry or by detecting similar points in the views automatically
+- use a system of equations and assume similar projections for all points in a view
+- for depth from disparity calculation, you need the camera poses to perform the triangulation.
+- given many views, the complete scene is reconstructed by finding the correspondences, triangulating, and filtering.
+
+reconstruction system
+- now, what i built
+- given the background knowledge, build a *practical* rig for 3d scanning
+- a particular interest is the human face or a complete head, and its animation.
+- i checked what kinds of cameras and reconstruction programs are available and did some conclusive plans on them
+
+rig implementation
+- so, entry-level digital single-lens reflex cameras were chosen.
+- such cameras are well controllable while still being reasonably cheap and high-quality. only missing feature is accurate synchronization in video mode.
+- a wired remote trigger tool was built for syncing static photographs easily.
+- magic lantern is a third-party firmware add-on for canon dslrs, adds some enhancements.
+- some additional hardware like supports and wiring was built.
+- software for controlling the cameras and stuff.
+
+remote trigger tool
+- the cameras support a wired remote shutter mechanism. i built a tool for running all of them concurrently.
+- it's a small cheap microcontroller with an usb communication port
+- commercial wireless devices are available, they are expensive (100e) and their timing unknown. however, could have been a viable option too
+- did this for open design and testing
+
+software
+- not much camera control libraries there
+- software consists of the camera control support and reconstruction programs
+- in this work, just the remote control was studied.
+- gphoto2 is an open source camera control library in the C programming language, typically used for downloading pictures. it supports also configuring parameters such as exposure time.
+
+previewer
+- a graphical grid using gphoto2 for displaying the live views of all cameras simultaneously
+- individual cameras are still easier to fix while looking through the viewfinder.
+
+control
+- as said, gphoto2 supports controlling several parameters. you can see some of them on the right.
+- gphoto2 includes also a command line tool in addition to the library part.
+- i wrote a small tool for downloading all the cameras as fast as possible.
+- also, a python script for talking to the remote box.
+
+experiments
+- i tested the synchronization capabilities and took some test scans.
+- also looked around what kinds of programs there are for performing the full end-to-end pipeline in software
+
+source data
+- three of the nine photographs used for a single scan
+
+output geometry
+- and this is plain reconstructed geometry rendered on a computer.
+- left is a point cloud and on the right is a textured mesh.
+- poor quality in facial hair
+
+textures
+- the coloring can be built as different types of texture maps
+- one preserves the original photographs and the other makes an easily modifiable image
+
+hand
+- this is my hand scanned
+- see the occluded areas in the fingers that are not seen properly by enough cameras
+
+legos
+- missing texture is obviously not recoverable
+
+rubber mask
+- a horse mask has really nice textures in most parts, just some are too uniformly colored
+
+level of detail
+- here you see a closeup of a single photo of a face scan and the corresponding reconstructed mesh
+- note the geometric detail near the eyes
+- some wrinkles are still only recovered as colors, not geometry
+
+issues
+- video sync is problematic, the cameras cannot sync their frames once they have started recording
+- the lighting environment has to be really even, without any shadows or bright reflections
+- the recovered data needs manual processing to be useful
+- the cameras sometimes misbehave a little
+
+future work
+- use it to survey current state-of-the-art algorithms using the high level of detail
+- of course, use it for future study
+
+conclusion
+- that's it.
+- my work consisted of surveying the background and building a 3d scanner
+- the quality is nice and improvable from the current state
+- i don't know what the future is going to offer
