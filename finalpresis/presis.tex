@@ -49,8 +49,7 @@ konsta.holtta@aalto.fi}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Multi-view stereo reconstruction for computer graphics content capture}
-	%\kuva{0.5}{}
-	(super general pipeline pic here maybe)
+	\center \includegraphics[height=0.4\textheight]{gfx/pinhole-camera}
 	\begin{itemize}
 		\item Interest in realistic content in computer graphics
 		\item Computer graphics synthesizes images from geometric data
@@ -62,6 +61,8 @@ konsta.holtta@aalto.fi}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Contents}
+	\begin{columns}[c]
+	\column{0.5\textwidth}
 	\begin{itemize}
 		\item Intro, motivation
 		\item Imaging fundamentals
@@ -70,6 +71,9 @@ konsta.holtta@aalto.fi}
 		\item Results
 		\item Conclusion
 	\end{itemize}
+	\column{0.5\textwidth}
+	\center \includegraphics[width=\textwidth]{gfx/legosorig}
+	\end{columns}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -95,18 +99,8 @@ konsta.holtta@aalto.fi}
 		\item Lens systems, geometric distortion, color distortion, depth of field, image resolution, frame rate, motion blur, compression quality, ...
 		\item Complete imaging pipeline is complex
 		\item Light travels from subject to sensor, to digital file
-		\item Assumed uniform lighting, still non-shiny subject
+		\item Assumed uniform lighting; still, non-shiny subject
 		\item Video = consecutive image frames
-	\end{itemize}
-\end{frame}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{frame}{Simplified methods}
-	\center \includegraphics[height=0.4\textheight]{gfx/pinhole-camera}
-	\begin{itemize}
-		\item Linear camera model, simple optical distortion models, orthogonal problems as separate steps
-		\item Assumptions, corner detection, correspondence matching, triangulation, ...
 	\end{itemize}
 \end{frame}
 
@@ -116,6 +110,7 @@ konsta.holtta@aalto.fi}
 	\begin{columns}[c]
 	\column{0.5\textwidth}
 	\begin{itemize}
+		\item Frame after frame
 		\item Moving subject
 		\item Non-flickering lighting
 		\item Motion blur
@@ -132,17 +127,17 @@ konsta.holtta@aalto.fi}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{2D to 3D}
+\begin{frame}{Simplified methods}
+	\center \includegraphics[height=0.6\textheight]{gfx/pinhole3d}
 	\begin{itemize}
-		\item Camera projection, calibration
-		\item Reconstruct 3D geometry $\Leftrightarrow$ apply projection in inverse
-		\item Determine scene from multiple viewpoints
+		\item Linear camera model, simple optical distortion models, orthogonal problems as separate steps
+		\item Assumptions, corner detection, correspondence matching, triangulation, surface reconstruction, ...
 	\end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Principle: depth from disparity}
+\begin{frame}{2D to 3D: depth from disparity}
 	\begin{columns}[c]
 	\column{0.5\textwidth}
 	\begin{itemize}
@@ -159,17 +154,19 @@ konsta.holtta@aalto.fi}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{(Multi-)Stereo system}
-	\hfill \includegraphics[width=0.5\textwidth]{epigeom}
+	\center \includegraphics[width=0.5\textwidth]{epigeom}
 	\begin{itemize}
-		\item Manual or self-calibration
+		\item Manual or self-calibration for cameras
+		\item Reconstruct 3D geometry $\Leftrightarrow$ apply projection in inverse
 		\item Need camera poses
 		\item Reconstruct 3D view
+		\item Determine scene from multiple viewpoints
 	\end{itemize}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Reconstruction system}
+\begin{frame}{Practical reconstruction system}
 	\hfill
 	\includegraphics[width=0.3\textwidth]{bunny}
 	\includegraphics[width=0.6\textwidth]{bunnyear}
@@ -190,6 +187,7 @@ konsta.holtta@aalto.fi}
 	\begin{itemize}
 		\item 9x Canon EOS 700D DSLR, 50 mm lens
 		\item Wired remote trigger tool
+		\item Magic Lantern
 		\item auxiliary HW, support SW
 		\item Not restricted to any specific reconstruction SW
 	\end{itemize}
@@ -204,8 +202,8 @@ konsta.holtta@aalto.fi}
 	\includegraphics[width=0.5\textwidth]{camsremote}%
 	\includegraphics[width=0.5\textwidth]{camsremoteclosed}
 	\begin{itemize}
-		\item Simultaneous or arbitrary focus and shutter release
-		\item Custom built on a microcontroller using wired remote connectors
+		\item Simultaneous or arbitrary focus/shutter release
+		\item Custom built on a microcontroller using standard wired remote connections and a USB port
 		\item Commercial tools mostly wireless, expensive
 	\end{itemize}
 \end{frame}
@@ -216,7 +214,7 @@ konsta.holtta@aalto.fi}
 	\begin{itemize}
 		\item Few options available
 		\item Just camera controls, based on \emph{gphoto2}
-		\item Generic open source library for cameras
+		\item Generic open source library for cameras in C
 		\item Preview tool, image download, camera configuration, remote shutter
 		\item 3D reconstruction development out of scope
 	\end{itemize}
@@ -242,13 +240,13 @@ konsta.holtta@aalto.fi}
 		\item Shutter speed, aperture, ...
 		\item Mostly implemented in gphoto2 CLI
 		\item Image download as soon as captured
-		\item USB connection to remote trigger box
+		\item USB connection to remote trigger box (Python)
 	\end{itemize}
 	\column{0.5\textwidth}
 	\begin{Verbatim}[fontsize=\scriptsize]
 ./forallp.sh \
-	--set-config imageformat=RAW \
-	--set-config imageformatsd=RAW \
+	--set-config imageformat="RAW" \
+	--set-config imageformatsd="RAW" \
 	--set-config shutterspeed="1/100" \
 	--set-config iso="100" \
 	--set-config colorspace="sRGB" \
@@ -327,12 +325,13 @@ No texture
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\begin{frame}{Rubber mask}
-\includegraphics[height=0.6\textheight]{horseorig}
-\includegraphics[height=0.6\textheight]{horsereconst}
+\begin{frame}{Rubber horse mask}
+\center
+\includegraphics[height=0.8\textheight]{horseorig}
+\includegraphics[height=0.8\textheight]{horsereconst}
 \center
 
-No texture
+Uniform color areas
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -345,12 +344,17 @@ No texture
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Issues}
+	\begin{columns}[c]
+	\column{0.5\textwidth}
 	\begin{itemize}
 		\item Video synchronization
 		\item Light requirements
 		\item Post processing
 		\item Camera quirks
 	\end{itemize}
+	\column{0.5\textwidth}
+	\includegraphics[width=\textwidth]{artoglassessolid}
+	\end{columns}
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -359,9 +363,10 @@ No texture
 	\begin{columns}[c]
 	\column{0.5\textwidth}
 	\begin{itemize}
-		\item (Actually use it)
+		\item Actually use the rig
 		\item Reproduce state-of-the-art
 		\item Mesoscopic face geometry
+		\item Research new ways
 	\end{itemize}
 	\column{0.5\textwidth}
 	\includegraphics[width=\textwidth]{horseclose-tex}
@@ -371,7 +376,7 @@ No texture
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}{Conclusion}
-	\center \includegraphics[width=0.6\textwidth]{totalsetup}
+	\center \includegraphics[height=0.6\textheight]{totalsetup}
 	\begin{itemize}
 		\item Background and feasibility study $\Rightarrow$ built reconstruction rig
 		\item Sub-millimeter-scale content
