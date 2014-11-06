@@ -1,0 +1,180 @@
+1
+first slide
+- hi this is about 3d scanning
+
+1
+preintro
+- cg evolves
+- increasingly deeper demand for hq content
+- parts of those two technologies combined
+
+1
+contents
+- blah blah
+
+2
+motivation
+- computer hw becoming faster and faster
+- lod massive, development not going to stop
+- generating content manually impossible
+- static geometry is difficult enough
+- and then there is computer animation
+- -> just capture a subject in real life
+- and reproduce that
+
+2
+imaging
+- cameras are complicated.
+- whole imaging process is complex
+- especially to capture only surface color..
+- instead of what it looks like in a naive environment
+- diffuse (uniform) lighting etc
+- cg, material models, imitate light reflection (pic)
+- trying to produce color data for those models
+- static imaging is difficult? how about video then?
+
+4
+video
+- all right
+- what is video anyway? frames in sequence
+- assume photographed subject moving, otherwise no point
+- capture N fps, integrating light fixed time
+- and so we get many problems too
+- motion blur: fast subject smeared as integrated
+- rolling shutter: imaging sensor read slowly
+- line skipping: aliasing etc: not every line used
+- last but not least sync as group maybe impossible
+
+5
+simplified methods
+- a camera is a projective object
+- formulate properly -> divide to steps
+- assume linear camera etc
+- assume sth on scene
+- detect distinct corners/features
+- match features
+- reconstruct depth for matches
+- reconstruct surface
+
+6
+depth from disparity
+- calculating depth not that complicated
+- take two matching points, both projected linearly
+- know camera baseline, poses, triangulate
+- but wait, there is more
+- how match in the first place?
+- noise, outliers etc
+- full pipeline does much more
+
+7
+stereo system
+- step one. have many cameras.
+- calibrate the cameras
+- known geometry/autodetect matches
+- system of eqs, similar projections
+- depth/disparity > need poses for triangulation
+- N views given -> match, triangulate, filter
+
+8
+practical reconstruction system
+- now, what i built
+- given knowledge, build *practical* 3d scanner
+- interest in face, maybe animation
+- looked in camera types, programs -> conclusions
+
+9
+rig implementation
+- entry-level dslr
+- controllable, cheap, hquality; cant sync video
+- wired remote for still sync and shoot
+- support magic lantern 3rd party fw addon
+- supports, wiring
+- cam ctrl utilities etc
+
+10
+remote trigger tool
+- cams support wired remote
+- built tool for concurrent shooting
+- small cheap micro, usb conn
+- commercial ones wireless, expensive, unknown
+- did this for open design and testing
+
+11
+software
+- sw consists of cam support, reconstruction then
+- not much camera ctl libraries there
+- just remote shoot, cam cfg in my work
+- gphoto2, open source, image download etc
+
+12
+previewer
+- graphical grid, simultaneous liveview
+- individually with viewfinder
+
+12
+control
+- some of params on the right
+- gphoto also cli tool
+- wrote small tool for concurrent fast download
+- also python for remote box
+
+13
+experiments
+- sync capabilities and scans
+- performing full end-to-end pipeline in sw
+
+14
+source data
+- 3 of 9 pics for full head scan
+
+14
+output geometry
+- plain reconstructed geometry rendered
+- point cloud, tex mesh
+- poor quality in facial hair
+
+15
+textures
+- color: different map types
+- one preserves the original photographs
+- othereasily modifiable image
+
+15
+hand
+- this is my hand scanned
+- occluded areas, not seen by all
+
+15
+legos
+- missing texture is obviously not recoverable
+
+16
+rubber mask
+- uniform colors bad, otherwise nice
+
+16
+level of detail
+- cropped part of one photo, its reconstruction
+- pore-level pixels
+- note geometric detail near the eyes
+- some wrinkles only in color, not geometry
+
+16
+issues
+- video sync is problematic
+- once started, cannot sync frames
+- require no shadows, reflections
+- needs manual processing to be useful
+- the cameras sometimes misbehave a little
+
+17
+future work
+- survey current state-art algos, high lod
+- of course, use it for future study
+
+18
+conclusion
+- that's it.
+- my work: survey background, build 3d scanner
+- quality nice and improvable from the current state
+- i don't know what the future is going to offer
