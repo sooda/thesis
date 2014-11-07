@@ -27,19 +27,21 @@ Reconstruction accuracy depends on not only measureable parameters of a stereo i
 }
 
 
+\subsection{Computer images} \label{sec:computer-images}
+
+In the digital world, with nearly no exceptions, images, as all data, are stored and presented as \emph{arrays of numbers}, in discrete form, as opposed to the continuous data in the real world.
+The standard way of encoding images as dicrete two-dimensional arrays is used throughout this thesis.
+A rectangular \emph{raster image} consists of a regular grid of picture elements, or \emph{pixels}.
+Each element in the array describes the intensity value for the particular picture element, or \emph{pixel}, in the image.
+Color images are described as several \emph{color channels}: the intensities for different colors are given separately.
+The most common model is the \emph{RGB} or \emph{red-green-blue} color model, where the primary colors are the same as in human eye; each pixel color is given as a triplet of these three colors.
+
 \subsection{Imaging} \label{sec:imaging} % {{{
 
 From the perspective of this thesis, images are taken with digital cameras that project a three-dimensional view from a single viewpoint to an image plane and store the resulting data in digital form.
 This section describes the process of capturing a still photograph.
-
-In the digital world, images are stored and presented as \emph{arrays of numbers}, in discrete form, as opposed to the continuous data in the real world.
-A rectangular \emph{raster image} consists of a regular grid of picture elements, or \emph{pixels}.
-Each pixel represents light intensity and color at a point.
 A digital camera has the same optical working principles as an analog film camera;
-the main differences are in image storage as a discrete array of pixels and acquisition using a \emph{sensor}, as opposed to a photosensitive film.
-Typically, color pictures are described with separate intensity channels, in e.g.\ Red-Green-Blue (RGB) space, as human vision is also trichromatic.
-A single RGB color encodes the intensities of the three primary colors (red, green and blue) separately.
-%digital images are only described as a discrete grid of numerical values that describe light intensities, whereas analog film .
+the main differences are in image storage as a discrete image, as opposed to a photosensitive film.
 
 Reconstruction algorithms assume a \emph{pinhole camera} model on the camera optics, and the images must be captured such that the model is accurate.
 However, as is described in this section, cameras in reality seldom match the simplified model thoroughly, and care must be taken when configuring the cameras and post-processing the images later.
@@ -367,7 +369,7 @@ Skew induced by rolling shutter is visible always, whereas motion blur is reduce
 \includegraphics[width=0.2\textwidth]{roll4000}
 }{fig:rollingeffect}{
 	Effects of motion blur and rolling shutter in a ruler, moving left.
-	The ruler does not bend and is vertical at all times, but appears skewed.
+	The ruler does not actually bend physically; it is vertical and rectangular at all times, but appears skewed.
 	Left: a stationary ruler.
 	Middle: 1/100 s shutter speed, ISO 100.
 	Right: 1/4000 s shutter speed, ISO 6400.
@@ -416,19 +418,24 @@ In conjunction with the digital signal processing in the camera, the sensor prod
 
 As introduced in the beginning of this section, digital images are represented as arrays of colored pixels.
 In order to obtain an appropriate image, the sensor must capture the light it sees also as a discrete array.
-The separate red, green and blue color bands are captured with separate parts of the sensor, as will be explained.
+The separate red, green and blue color bands are captured in color cameras with separate parts of the sensor, as will be explained.
 
 \paragraph{Photosites}
 A sensor consists of individual photosensitive semiconductor sites that each accumulate charge and ultimately encode a single numerical value, relative to the amount of light received.
+Physical pixels cover less than the full area of a sensor, as there are gaps between them;
+microlenses between the sites direct the light hitting the gaps to the neighboring pixels in modern sensors, with varying color performance.
+Because of the discrete nature of the pixel array, some cameras employ an analog low-pass filter in front of the sensor to hide high-frequency information that would show up as aliasing.
+
 A single pixel sensor acquires all light hitting it, independent of the wavelength.
-%Two principal methods to retrieve the red, green and blue color bands for each pixel are used in color cameras, one being cheaper and thus more common.
 The most common method to capture the three primary colors is to interleave red, green and blue colors in a single sensor by filtering the wavelength that can enter each pixel with a colored film over the sensor, with a special repeating pattern called \emph{color filter array}.
 The missing values for other colors bands are interpolated from surrounding pixels.
 The most popular interleaving pattern is the Bayer filter, illustrated in Figure \ref{fig:bayerpattern}.
-Other arrangements of red, green and blue are also used; some incorporate other colors, such as cyan, yellow, green, and magenta.
+Other arrangements than red, green and blue are also used; some incorporate other colors, such as cyan, yellow, green, and magenta.
 Very high-end cameras use three separate sensors with different wavelengths specially divided to them for increased accuracy;
-The increased cost induced from requiring three sensors instead of one makes the method infeasible for consumer cameras.
-%Another way to retrieve a color photograph is with three different sensors, one for each wavelength band, and to guide the light to them with prisms and filters; being more expensive than a single sensor, this method is used in some high-end cameras only.
+The increased cost induced from requiring three sensors and the accompanying optics instead of one makes the method infeasible for consumer cameras.
+
+Near the pixel sensors and their amplifiers is digital logic for reading out the data and passing it to an image processor.
+Quality and type of this support electronics affects some properties, most important of which are analog-digital converter noise and dynamic range, and speed at which the image is read out from the sensor.
 
 \simplefig{h}{\bayer{0.6}}{fig:bayerpattern}{
 	A small partly drawn subset of the repeating Bayer pattern.
@@ -443,13 +450,13 @@ The increased cost induced from requiring three sensors instead of one makes the
 \paragraph{Sensor technologies}
 Two major sensor types exist: and CCD (Charge-coupled Device) and CMOS (Complementary Metal-Oxide Semiconductor).
 The types vary by their manufacturing techniques and photosite internals.
-Both have proper applications, but CMOS is the one used in most still cameras because of its lower price and power consumption, and higher speed.
+Both have proper applications, but it suffices to say that CMOS is the one used in most still cameras because of its lower price and power consumption, and higher speed.
 A CMOS sensor converts light immediately to voltage, and has additional transfer circuitry at each pixel, reducing the \emph{fill factor}, the sensitive parts of the photosites.
-In a CCD, the charge is first stored as electrons, and a row is transferred serially from pixel to pixel to a separate voltage converter and amplifier.
+In a CCD, the charge is first stored as electrons as in a capacitor, and a row is transferred serially from pixel to pixel to a separate voltage converter and amplifier.
 Still, both are typically read out ultimately in a serial fashion, requiring longer reading time for larger amounts of pixels.
 A CCD typically uses additional photosites permanently blocked from the light for storing the accumulated charge temporarily.
 A CMOS sensor, on the other hand, cannot easily employ additional storage pixels, and is read sequentially, making the reading process resemble the rolling shutter effect.
-Rolling shutter is especially noticeable in videos shot with a CMOS camera, because a mechanical shutter is not used for video.
+Rolling shutter is especially noticeable in videos shot with a CMOS camera, because a mechanical shutter is not used for video and the readout process is relatively slow.
 
 %A CCD quickly shifts the accumulated charges from one pixel to another among a single row, while a CCD stores and amplifies a whole row of pixels at a time.
 %The CCD row can be temporarily shifted to an area that is masked from the light for storage.
@@ -464,44 +471,17 @@ Rolling shutter is especially noticeable in videos shot with a CMOS camera, beca
 As all electronic circuits, also image sensors are subject to signal noise.
 Each pixel transfer receives an additional random signal level that shows up as additive brightness, noticed usually only in low light conditions or black areas.
 Noise increases with sensor's signal gain, or \emph{exposure sensitivity} described using the ISO system (``film speed'').
+
 A more sensitive sensor needs less light for a bright-looking image, because the signal is amplified more before digitization.
 This amplification also amplifies the original signal noise, which is why the gain level should be kept as small as possible and the amount of light entering the sensor as large as possible.
 This leads to using bright lights in the imaged scene or a longer exposure time.
 Longer exposure time influences more motion blur, though.
+Better sensors advertised as more sensitive to light typically have less noise-sensitive circuitry, producing less noise for an identical exposure sensitivity value compared to another sensor.
+
 Photosites may also accumulate leaking charge on their own even though no light is entering the site because of \emph{dark current}.
 Additionally, the analog-digital converter introduces \emph{quantization error} where an analog signal is not perfectly represented by a discrete number; with the high bit depth of modern sensors, this is practically not an issue.
 A high bit depth also presents larger \emph{dynamic range}, i.e.\ the difference between the brightest and darkest possible representations.
 
-% ???
-
-{ \color{gray}
-\paragraph{random stuff to be moved}
-Some cameras use image stabilization by moving the sensor, as opposed to moving the optical elements inside the lens.
-In any case, image stabilization should be turned off for reconstruction because it affects the calibration of image formation: if any element in the image acquisition path moves, calibration parameters also change.
-The sensor also moves when a camera uses a sensor cleaning mechanism with ultrasonic vibration motor on the sensor.
-
-Physical pixels cover less than the full area of a sensor, as there are gaps between them;
-microlenses between the pixel sites direct the light hitting the gaps to the neighboring pixels, with varying color performance.
-Because of the discrete nature of the pixel array, some cameras employ an analog low-pass filter in front of the sensor to hide high-frequency information that would show up as aliasing.
-
-% support electronics
-
-Near the pixel sensors and their amplifiers is digital logic for reading out the data and passing it to an image processor.
-Quality of this support electronics affects some properties, most important of which are analog-digital converter noise and dynamic range, and speed that the image is read out from the sensor.
-A so-called raw image file can be saved with more expensive cameras contains the raw sensor data with very little processing done;
-when a raw file is not used, the camera processes the image with device-specific correction filters and applies e.g.~white balance correction, and finally saves the image as a standard image file such as JPEG.
-Clock speed of the conversion circuits with the main processor speed ultimately determine the maximum burst imaging speed.
-For example, for the Canon flagship camera EOS-1D X, a continuous shooting speed of 14 frames per second is advertised.
-With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate for the bit rate from the sensor is
-
-\begin{equation} \label{eq:eos1dspeed}
-5184 \times 3456 \times 14 \times 14 \approx 3,5\text{ Gbit/s}
-\end{equation}
-
-by average, or 0,4 gigabytes per second, requiring also high speed from the processor and mass storage.
-In reality, a number of other complicated factors also have a small effect.
-
-}
 % }}} image sensors
 
 
@@ -558,33 +538,45 @@ Short bursts of light in an otherwise dark environment are also good for stoppin
 
 % }}} light sources
 
-\subsubsection{Image download} % {{{
-
+\subsubsection{Data capture path} % {{{
 % data path intro
 
 The image information travels from the subject through the optics to the image sensor's surface, via an analog/digital converter, the camera's processor(s) and finally to a memory card or straight to a computer's storage via a wired or wireless connection.
-Many parts in this path contribute to the rate of which the images can be taken, usually measured in frames per second (FPS).
+Many parts in this path contribute to the quality of images and the rate of which the images can be taken, usually measured in frames per second (FPS).
 
 % fps
 
 An average DSLR can achieve around five frames per second of full resolution footage, while more expensive models can reach over 10 FPS.
-A digital still camera can often record video too, at a lower resolution and a higher FPS.
+A digital still camera can often also record video, at a lower resolution and a higher FPS.
+For example, for the Canon flagship camera EOS-1D X, a continuous shooting speed of 14 frames per second is advertised.
+With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate for the bit rate from the sensor is
+
+\begin{equation} \label{eq:eos1dspeed}
+5184 \times 3456 \times 14 \times 14 \approx 3.5\text{ Gbit/s}
+\end{equation}
+
+by average, or 0,4 gigabytes per second, requiring also high speed from the processor and mass storage.
+In reality, a number of other complicated factors also have a small effect.
 
 % XXX \ref{eq:eos1dspeed}
 
 % files
 
+A so-called raw image file can be saved with more expensive cameras, containing the raw sensor data with very little processing done.
 The raw files saved by DSLR cameras are compressed in a proprietary lossless format and contain also metadata about certain camera settings.
+When a raw file is not used, the camera processes the image with device-specific correction filters and applies e.g.~white balance correction and sharpening, and finally saves the image as a standard image file such as JPEG.
+%Clock speed of the conversion circuits with the main processor speed ultimately determine the maximum burst imaging speed.
+
 %Lossless compression maintains image quality and reduces file size depending on the complexity of the frame.
 %Some manufacturers encode the brightness values through a lookup table, and it's common to use a compression scheme known from standard file compressions, or a specific lossless image compression.
 
 Raw video consumes too much data to be feasible to use normally.
 Video files are almost always saved in a lossy video format, the H.264 format being common for modern cameras.
-Compression introduces loss of detail and artifacts typical to each algorithm, often visible as blocks or blurring.
+Compression introduces loss of detail and artifacts typical to the particular algorithm, often visible as blocks or blurring.
 Common bitrate for a full-HD (1920 by 1080 pixels) 24 FPS video is about 5 MB/s.
 Reconstruction from frames extracted from a compressed video may not be as good as from separately saved stills.
-Some expensive cameras can record raw video, and others can be tricked to that.
-Canon DSLRs can be tricked to dump the raw stream to a memory card, but only some models support the faster CF memory cards that can keep up with the amount of data with useful resolution.
+Some expensive cameras can record raw video, and others can be unofficially enhanced.
+Canon DSLRs can be tricked using a third-party software modification \cite{magiclantern} to dump the raw stream to a memory card, but only some models support the memory cards that can keep up with the amount of data with useful resolution.
 
 % storage
 
@@ -596,7 +588,7 @@ Machine vision cameras use a higher speed connection, such as the newer USB 3.0,
 For example, the 1 Gbit/s Ethernet connection can transfer a raw 12-bit full-hd stream at
 
 \begin{equation} \label{eq:gigabit-transfer}
-	\frac{1 \text{Gbit}/s}{1920 * 1080 \text{ px} * 12 \text{bit}/\text{px}} \approx 43 \frac{1}{s}
+	\frac{1 \text{ Gbit/s}}{1920 * 1080 \text{ px} * 12 \text{ bit/px}} \approx 43 \text{ Hz}
 \end{equation}
 
 where Gbit is $1024^3$ bits.
@@ -1549,7 +1541,8 @@ When rendering the points on a computer screen, pixels between them are interpol
 
 % http://en.wikipedia.org/wiki/File:Mesh_overview.svg
 
-(Should some of the main terms be defined in the beginning of the whole main section or the whole thesis? Probably...)
+% not. describe "in computer graphics, surfaces are shaded, not points"
+%{ \color{red} (Should some of the main terms be defined in the beginning of the whole main section or the whole thesis? Probably...) }
 
 A \emph{(polygon) mesh}, a data structure often used to describe 3D models, consists generally of \emph{vertices} connected by \emph{edges}, forming \emph{faces} of objects.
 The meshes often consist of triangles, which is the simplest possible polygon.
