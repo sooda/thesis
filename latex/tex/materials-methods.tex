@@ -95,10 +95,10 @@ In contrast, best Compact Flash (CF) cards, used in professional consumer DSLRs,
 A camera is required to have several properties, and the system as a whole must be taken as a global optimization problem, since some properties conflict each other.
 In detail, the technical camera features that should be considered are described in section \ref{sec:image-acquisition} and features that vary among different cameras are listed below.
 
-{\color{red} FIXME should this be separated in several smaller lists of things that affect a) image quality b) practical matters, etc? }
+On image quality:
 
 \begin{itemize}
-	\item CMOS/CCD sensor. CMOS suffers from rolling shutter in video mode, while CCD is more expensive and rare in larger formats.
+	\item CMOS/CCD sensor. CMOS suffers from rolling shutter in video mode, while global-shutter CCD is more expensive and rare in larger formats.
 
 	\item Resolution and sensor size. Higher resolution covers more detail, until the optical limits of the system are reached. A larger sensor has larger pixels, and is thus more sensitive to light and results in lower noise and lower required exposure time. On the other hand, at an equivalent subject distance, a deeper DOF is achieved with a smaller sensor.
 
@@ -106,19 +106,28 @@ In detail, the technical camera features that should be considered are described
 
 	\item Dynamic range, i.e. bit depth of the processing pipeline. Whereas JPEG pictures have only 8 bits per color channel, DSLRs and industrial cameras use more, often 12 or 14 bits per pixel in raw format, that contains the color filter array effects before interpolation. Postprocessing without reconstruction can use the added color resolution.
 
-	\item Lens quality. High sensor resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general. Fixed focal length lenses have less moving parts and hold their calibration better.
+	\item Lens quality. High sensor resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general. Fixed focal length lenses have less moving parts and hold their calibration better. The performance of good lenses is usually given as an MTF, or modulation transfer function, describing the best possible contrast.
+\end{itemize}
 
-	\item Lens features. While photography lenses typically support automatic focusing, MV lenses only have manually adjustable or fixed-distance focus. Of photography devices, compact cameras feature a non-changeable zoom lens, while system cameras feature interchangeable lenses.
+On practical matters affecting image quality:
+
+\begin{itemize}
+	\item Optical stabilization works by moving a glass element inside the lens or the sensor itself, effectively moving the image on the sensor, having also an effect on calibration.
 
 	\item Dust reduction, if enabled for some consumer cameras, is typically implemented as high-frequency vibration of the sensor on camera startup. Moving the sensor might result in small calibration problems.
 
-	\item Optical stabilization works by moving a glass element inside the lens or the sensor itself, effectively moving the image on the sensor, having also an effect on calibration.
-
 	\item Shutter lag. Lag measured between ordering the camera to take the picture to the actual moment where exposure starts should be consistent, and preferably small.
 
-	\item Continuous shooting rate, or the speed at which full-size pictures can be taken. Controlled by many factors, on consumer cameras, image processing speed and memory card write speed have most effect, and on MV cameras, the bus speed typically limits the rate and sensor speed is selected based on it.
-
 	\item Video frame rate, resolution, and compression. Cameras that support a raw format only use raw for still pictures and compress the video, as raw video is unnecessary in the consumer market and uses lots of space. For image processing, each frame should be as little compressed as possible. Some DSLRs support writing only full keyframes instead of predicted frames, resulting in higher quality and file size.
+
+\end{itemize}
+
+On practical matters affecting usability:
+
+\begin{itemize}
+	\item Lens features. While photography lenses typically support automatic focusing, MV lenses only have manually adjustable or fixed-distance focus. Of photography devices, compact cameras feature a non-changeable zoom lens, while system cameras feature interchangeable lenses.
+
+	\item Continuous shooting rate, or the speed at which full-size pictures can be taken. Controlled by many factors, on consumer cameras, image processing speed and memory card write speed have most effect, and on MV cameras, the bus speed typically limits the rate and sensor speed is selected based on it.
 
 	\item Configurability. Aperture, shutter speed and others should be manually controllable remotely, and repeatable without automatic features.
 
