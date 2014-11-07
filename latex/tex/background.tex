@@ -32,7 +32,7 @@ Reconstruction accuracy depends on not only measureable parameters of a stereo i
 In the digital world, with nearly no exceptions, images, as all data, are stored and presented as \emph{arrays of numbers}, in discrete form, as opposed to the continuous data in the real world.
 The standard way of encoding images as dicrete two-dimensional arrays is used throughout this thesis.
 A rectangular \emph{raster image} consists of a regular grid of picture elements, or \emph{pixels}.
-Each element in the array describes the intensity value for the particular picture element, or \emph{pixel}, in the image.
+Each element in the array describes the intensity value for the particular picture element.
 Color images are described as several \emph{color channels}: the intensities for different colors are given separately.
 The most common model is the \emph{RGB} or \emph{red-green-blue} color model, where the primary colors are the same as in human eye; each pixel color is given as a triplet of these three colors.
 
@@ -153,7 +153,7 @@ The diameter of a thin lens corresponds to the aperture diameter and to the stop
 As in any practical case, it is not infinitesimally small, and there will be some area of the scene that is imaged as sharp and others in front and behind of this area will be blurred.
 This effect is called \emph{depth of field (DOF)} and is illustrated in figure \ref{fig:irldof}.
 In artistic photos, a \emph{shallow} depth of field can be preferred; having the subject in focus separating separate it from the background by blurring the background.
-In 3D reconstruction, exactly the opposite is preferred: everything should be sharp, in deep focus.
+In 3D reconstruction, exactly the opposite is preferred: deep focus, i.e. objects at every depth from the camera should be sharp.
 The aperture size is presented as relative to the focal length and is commonly called the \emph{F number} \cite{szeliski10vision}, specified via the aperture diameter $d$:
 
 \begin{equation} \label{eq:fnumber}
@@ -197,7 +197,7 @@ When $f$ is the focal length, $N$ the aperture f number, $s$ the distance to the
 }
 
 
-In Figure \ref{fig:dofcoc}, $Z'$ and $Z$ are the maximum and minimum acceptable distances near the subject, and $Z' - Z = D$.
+In Figure \ref{fig:dofcoc} that depicts the formation of the circle of confusion, $Z'$ and $Z$ are the maximum and minimum acceptable distances near the subject, and $Z' - Z = D$.
 Sufficient depth of field is important to consider in near-field 3D scans, which translates to a small aperture, and consequently, really bright lights.
 The subject should fill whole image frame to use the pixel density effectively.
 Increasing the distance to the subject would increase depth of field, but enlarging the subject in the frame again would need a longer lens, which decreases depth of field.
@@ -207,7 +207,8 @@ A standard-considered formula in photography determines the maximum acceptable C
 For the standard ``full-frame'' 35 mm film size with an image size of 36 x 24 mm (approx.\ 43 mm diagonal), the CoC becomes $c = 43 \text{ mm} / 1500 \approx 0.03 \text{ mm}$.
 In reality, an intuitive way to determine the disk size is the size of a single pixel in a digital sensor replacing the film;
 the disk should not span too many pixels, so that accurate detail would be resolvable from the digital image.
-For a normal 50 mm lens with the subject at a distance of 1 m, an aperture of f/11 and a circle of confusion of 0.03 mm, the formula \ref{eq:dof} gives $D \approx 25 \text{cm}$. % , having the subject approximately in the middle of the acceptable range.
+For a normal 50 mm lens with the subject at a distance of 1 m, an aperture of f/11 and a circle of confusion of 0.03 mm, the formula \ref{eq:dof} gives depth of field of $D \approx 25 \text{cm}$. % , having the subject approximately in the middle of the acceptable range.
+For a reconstruction system, this purely perceptual guideline is typically ignored and the circle of confusion is determined by the sensor resolution.
 
 % diffraction
 
@@ -283,6 +284,7 @@ The effects of different parameters are depicted in Figure \ref{fig:raddist}.
 	Barrel-type radial distortion with different parameters.
 	Lines point from destination image pixels to locations to sample from in original image.
 	Left: $k_a = 0.16$, middle: $k_b = 0.08$, right: $k_a = -0.04, k_b = -0.04$.
+	Note how the shape of the distortion changes by the parameters.
 }
 
 % XXX HOXHOX THIS SOMEWHERE TODO BEGINNING
@@ -313,14 +315,14 @@ In recent digital image sensors, the sensor itself can be made inactive to light
 \simplegfx{h}{0.6\textwidth}{focalplaneshutter}{
 	Focal plane shutter has two moving curtains to cover the film, opening it momentarily so that each part of the film receives light for the same amount of time.
 	From left to right: initially, the film is blocked.
-	Once the first (shown in red) curtain moves away, the film is exposed to light.
+	Once the first curtain (shown in red) moves away, the film is exposed to light.
 	A second curtain (shown in blue) stops the light from entering again.
 	The shutter resets by moving back to the initial position.
 }
 
 \simplegfx{h}{0.6\textwidth}{focalplanerolling}{
-	Rolling shutter effect in a focal plane shutter happens when the exposure time is really short.
-	The shutters have to move at the same time, exposing only a part of the film at a time.
+	Rolling shutter effect in a focal plane shutter happens when the exposure time is short relative to the curtain speed.
+	The curtains have to move at the same time, exposing only a part of the film at a time.
 	Fast movement during the exposure leads to artifacts and a short flash light would illuminate only a part of the film.
 }
 
@@ -340,10 +342,10 @@ In film cameras, the focal plane shutter was originally two fabric ``curtains'';
 today, they are constructed from small, interleaved metal or plastic sheets.
 
 Some cameras have only an \emph{electronic shutter} instead of moving parts.
-Electronic image sensors cannot only be cleared and read out at a restricted rate, which is why they have some defects.
+Electronic image sensors can only be cleared and read out at a restricted rate, which is why they have some defects.
 
 Video film cameras that capture each frame to a separate part of film used a spinning wheel with a transparent window, called rotary disc shutter. \cite{wilson2004anton}
-This rotates at a precise speed synchronized to the frame rate, displaying a for a consistent duration for each frame.
+This rotates at a precise speed synchronized to the frame rate, exposing the film to light for a consistent duration for each frame.
 The size of the window constitutes to the amount of light and motion blur.
 Video is more discussed in the section \ref{sec:video}.
 
@@ -821,7 +823,7 @@ Their product cycle is typically longer and thus more reliable than in consumer 
 In industrial cameras, the different parts of the system are typically defined more accurately in terms of e.g.\ lens quality, sensor and pixel size, sensor noise, processing speed and communication protocol.
 
 \emph{Camcorders}, video cameras with recording capabilities, also vary from consumer to professional grade devices.
-Camcorders are not quite considered in this work because of their lower resolution relative to still cameras.
+Camcorders are not quite considered in this work because of their lower resolution relative to still cameras; many of their benefits lie in user interfaces designed for different purposes.
 Many still cameras support acceptable video recording.
 
 % some properties
@@ -829,7 +831,7 @@ Many still cameras support acceptable video recording.
 \paragraph{Resolution}
 Camera resolution is declared in million pixels, or megapixels (Mpix).
 Resolution and image size are related via pixel size that is the physical size of one photosite on the sensor.
-Pixel size is described as the physical length of one side ofa a photosite, and the pixels are typically square.
+Pixel size is described as the physical length of one side of a photosite, and the pixels are typically square.
 Newest consumer DSLRs can have a resolution of up to 20 megapixels.
 
 % sensors
@@ -856,7 +858,7 @@ Typical sensor sizes for different camera categories are as follows:
 \paragraph{Lens quality}
 To benefit from the sensor resolution, the camera objective should have an equivalent or better \emph{resolving power} (i.e.\ \emph{contrast}), provided as a chart of \emph{modulation transfer function} (MTF) which is a function of frequency, or number of black-and-white \emph{line pairs} per millimetre.
 A lens attenuates the frequencies of the optical patterns, such that at some point, dense line pairs are not resolved from each other but show up as gray.
-Machine vision cameras and system cameras use interchangeable lenses with often well specified MTFs provided by the manufacturer, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed and has poorer MTF that usually is not measured.
+Machine vision cameras and system cameras use interchangeable lenses with often well specified MTFs provided by the manufacturer, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed and has poorer MTF that usually is not provided.
 Compacts also accompany a \emph{zoom lens}; zooms are more complex systems and therefore more expensive to reach a good image quality.
 Calibration is also a problem with moving zoom elements that may not align to precisely same setting.
 Interchangeable lenses have a large selection of fixed focal length (``prime'') lenses with less moving parts and typically better optical quality.
@@ -878,7 +880,7 @@ Reading the pictures to a computer can be done via USB bus or a memory card read
 Industrial cameras typically have temporary memory for only one frame that is read out immediately via a bus.
 For video recording, this needs relatively large amounts of auxiliary hardware to save the raw frame feed.
 For example, according to eq. \ref{eq:gigabit-transfer}, one network interface per each camera would be needed for a decent video rate.
-Additionally, hard disks for data storage are needed.
+Additionally, hard disks for data storage would be required.
 
 % software support
 
@@ -893,7 +895,7 @@ Key standards for industrial cameras are:
 	\item Camera Link, partly proprietary (but significantly reverse-engineered) serial transfer protocol with special cable and connector types
 	\item GigE vision, standard interface for video data over gigabit Ethernet connection; licensed so that writing open source software directly based on the standard is not officially possible
 	\item IIDC/DCAM, Instrumentation \& Industrial Digital Camera or 1394-based Digital Camera Specification, data format standard used in IEEE 1394 (FireWire) cameras; an open specification
-	\item USB3 Vision, a standard for the USB 3 bus
+	\item USB3 Vision, a computer vision standard for the USB 3 bus
 \end{itemize}
 
 A standard-compliant industrial camera enables to use readily available software, reducing the need for in-house software and protecting from vendor lock-in.
@@ -915,7 +917,7 @@ Summarizing for the general feasibility of the most popular camera types in the 
 \begin{itemize}
 	\item System cameras with bigger sensors have good light sensitivity, excellent configurability with auxiliary hardware available, such as remote shutter releases, and decent software support.
 	\item Industrial machine vision cameras have both small and large sensors, support interchangeable lenses and need significant amount of additional hardware, and custom or expensive software to control. Video synchronization is usually not an issue, and parameter control has more freedom at the expense of more work.
-	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Raw images and external utilities are usually lacking. Resolution is less than in system cameras, and high-resolution cameras perform worse in low light because of smaller pixel size.
+	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Raw images and external utilities are usually lacking. Resolution may be less than in system cameras, and high-resolution compact cameras perform worse in low light because of smaller pixel size.
 	\item Others (smartphone cameras, webcams) have poorly documented features, bad optics and are not configurable properly in general.
 \end{itemize}
 
