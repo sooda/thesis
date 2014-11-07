@@ -45,7 +45,7 @@ A MVS scanning rig is a specially constructed machinery, consisting of a number 
 Plain \emph{stereo vision} based on fixed two-camera views has been in use in many applications varying from the robotics industry to 3D movie recording.
 Stereo vision compares the views of two cameras for depth cues, using similar principles as the human binocular vision.
 Multi-view stereo incorporates a multitude of cameras to acquire a more wide field of view at the same time.
-The process of acquiring multi-view stereo images and processing them for original 3D structure is called \emph{3D scanning}, \emph{3D capture} or \emph{3D reconstruction}.
+The process of acquiring multi-view stereo images and processing them for original 3D structure is called \emph{3D scanning}, \emph{3D capture}, \emph{3D reconstruction} or \emph{photogrammetry}.
 
 % static/dynamic definition, surface vs. motion capture, texture
 
@@ -88,28 +88,29 @@ The objective of this thesis is to construct a complete scanning rig to be used 
 The thesis is divided in two parts.
 First, the relevant theoretical background on digital image acquisition and multi-view stereo reconstruction is surveyed.
 After that, a more practical part follows: the constructed system is described and experiment scans for both shape and texture information are presented.
+It should be noted that this work deals with well-known theory and not much new is presented, but the theory is approached as it is relevant to the goal of this work.
 
 The research problem of ``scanning an object in 3D'' is formulated in such a way that proper hardware can be selected, and the quality and feasibility of the built system can be addressed.
 Performance of the reconstruction algorithms depends on the quality of their input.
-How an image is formed with a digital camera, what cameras are available in the market, and how a good input for a reconstruction algorithm can be achieved?
+How an image is formed with a digital camera, what cameras are available in the market, what issues are there in the reconstruction process, and how a good 2D input for a 3D reconstruction algorithm can be achieved?
 To further assess and understand the resulting quality of the reconstruction, the fundamentals of the reconstruction algorithms are presented.
 
 A digital camera based 3D scanning rig is constructed, supported by software tools for acquiring both static image data and video files.
 The key hardware for such rig consists of properly placed cameras, light sources, and a computer.
 Putting together all the parts for a general-purpose system needs studying of the end product as a whole.
 The camera synchronization and image acquisition are automated such that the output of the scanner can be fed directly to a reconstruction software without manual processing.
-Final result produced by the rig is a set of images or video, ready to be processed by reconstruction algorithms for producing a 3D mesh with detailed colors, possibly animated over time.
+Final result produced by the rig is a set of images or video, ready to be processed by reconstruction algorithms for producing 3D geometry with detailed colors, possibly animated over time.
 Feasible readily available programs for reconstructing 3D geometry and texture based on the captured image data are surveyed and listed, and two popular workflows are tested.
 Basic background techniques for taking also motion into account are presented, but the use of state-of-the-art algorithms is left for future implementations.
 
-Aim of the system is in hardware robustness, ease of use and general extendability.
+Aim of the system is in hardware robustness, ease of practical use and general extendability.
 Because there are no detailed plans on all further use of the machinery, it is built to support many kinds of studies in the future without requiring the user to know all implementation issues in detail, and documenting the process in the form of this thesis.
 A special case subject in this work is human face: an interesting target because of its complex surface material and diverse ability to produce many different expressions.
 
-The thesis is organised in eight sections, of which this introduction is the first.
+The thesis is organised in seven sections, of which this introduction is the first.
 Section \ref{sec:image-acquisition} presents the general theoretical background on the elementary methods in image acquisition using a digital camera and the issues in video recording.
 Similarly, relevant 3D reconstruction theory is described in section \ref{sec:static3d}, with focus on the basics that recent state-of-the-art builds on.
 Section \ref{sec:motioncapture} shortly extends the 3D topic by introducing issues on motion capture and reconstructing dynamic subjects.
 In section \ref{sec:implementation}, the implementation of the 3D scanning rig is described.
-Sections \ref{sec:experiments} and \ref{sec:discussion} show test experiments on the rig and discuss their results.
-Section \ref{sec:conclusion} proposes future work and concludes the thesis.
+Section \ref{sec:experiments} shows test experiments on the rig and discusses their results.
+Section \ref{sec:conclusion} concludes the thesis with proposals on future work.

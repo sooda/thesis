@@ -1602,6 +1602,10 @@ The selection can be taken based on e.g. the image with highest detail or best b
 	Image from \cite[p. 98]{heyden2005multiple}.
 }
 
+% TODO bump map
+To optimize the triangle rendering resources of GPUs and keep the rendering performance as realtime, the deepest level of geometry is typically colored using texture maps describing, not color, but \emph{surface roughness} and \emph{glossiness}.
+Accurate lighting models make heavy use of surface \emph{normals} and microgeometric details, instead of the absolute position of the geometry.
+Such information is typically kept in e.g.\ a \emph{normal map} or a \emph{bump map}, encoding the surface normal or roughness at each visible pixel.
 
 % }}} textures
 
