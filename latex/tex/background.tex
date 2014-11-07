@@ -1523,8 +1523,12 @@ Units originating from reconstruction of raster images can be simply scaled to m
 
 A multi-view reconstruction results in a set of three-dimensional points, with no \emph{connectivity information}, i.e.\ interpretation of \emph{surfaces}.
 In reality, all the pixels are projections of nearby surfaces, and a more natural and standard representation is obtained by fitting a surface on the points.
-Surfaces in computer graphics are described as collections of small patches with a polygon outline, often just triangles.
-When rendering the points on a computer screen, pixels between them are interpolated to contain all color information available in the source photographs.
+
+Computer graphics typically uses data structures based on piecewise described surfaces.
+The surfaces are described as collections of small patches with a polygon outline, often triangles, as it is the simplest polygon.
+When ultimately rendering the points on a computer screen using the graphics processing unit (GPU), pixels between them are interpolated to contain all color information available in the source photographs.
+Coloring the surfaces is known as \emph{shading}, and modern GPUs run \emph{shader programs} given by a programmer or an artist and specially crafted for a purpose, such as rendering photorealistically using detailed lighting models.
+Lighting models typically use several maps that describe parameters such as the surface color, roughness and glossiness.
 
 % }}} surface fitting
 
@@ -1541,13 +1545,11 @@ When rendering the points on a computer screen, pixels between them are interpol
 
 % http://en.wikipedia.org/wiki/File:Mesh_overview.svg
 
-% not. describe "in computer graphics, surfaces are shaded, not points"
-%{ \color{red} (Should some of the main terms be defined in the beginning of the whole main section or the whole thesis? Probably...) }
-
 A \emph{(polygon) mesh}, a data structure often used to describe 3D models, consists generally of \emph{vertices} connected by \emph{edges}, forming \emph{faces} of objects.
 The meshes often consist of triangles, which is the simplest possible polygon.
 Polygon meshes have a \emph{topology}; the connectivity information of vertices on a surface, describing neighbours of each point.
 Surface \emph{normals} describe the orientation of the polygon patches.
+Normals are important in rendering the surfaces realistically in any given lighting environment.
 Figure \ref{fig:stanfordbunny} depicts the vertex structure of a 3D model.
 
 A \emph{point cloud} is a loose term to describe a disorganized set of 3D points with no topology information; that is, a cloud consists only of a list of vertices, with possibly some attributes such as color or normal.
