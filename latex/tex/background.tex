@@ -1524,9 +1524,9 @@ Units originating from reconstruction of raster images can be simply scaled to m
 A multi-view reconstruction results in a set of three-dimensional points, with no \emph{connectivity information}, i.e.\ interpretation of \emph{surfaces}.
 In reality, all the pixels are projections of nearby surfaces, and a more natural and standard representation is obtained by fitting a surface on the points.
 
-Computer graphics typically uses data structures based on piecewise described surfaces.
+Computer graphics typically uses data structures based on piecewise surfaces.
 The surfaces are described as collections of small patches with a polygon outline, often triangles, as it is the simplest polygon.
-When ultimately rendering the points on a computer screen using the graphics processing unit (GPU), pixels between them are interpolated to contain all color information available in the source photographs.
+When ultimately rendering the polygons on a computer screen using the graphics processing unit (GPU), pixels inside them are interpolated to contain all color information available in the source photographs.
 Coloring the surfaces is known as \emph{shading}, and modern GPUs run \emph{shader programs} given by a programmer or an artist and specially crafted for a purpose, such as rendering photorealistically using detailed lighting models.
 Lighting models typically use several maps that describe parameters such as the surface color, roughness and glossiness.
 
@@ -1565,7 +1565,7 @@ The point cloud is all geometric information that is available, but the images p
 To work with the generated model and to render it properly with colors, it is imporant to recover the topology information.
 
 A popular method for surface reconstruction from a point set is \emph{marching cubes}. \cite{lorensen1987marching}
-The algorithm builds triangles in a divide-and-conquer approach based on whether points are inside or outside a cube in a grid.
+The algorithm builds triangles in a divide-and-conquer approach based on whether points are inside or outside a cube in a hierarchial grid.
 A number of improvements have been proposed that utilize marching cubes as a final step.
 The method of choice is currently \emph{poisson surface reconstruction}. \cite{kazhdan2006poisson,kazhdan2013screened}
 
@@ -1591,8 +1591,8 @@ Great accuracy can be acheived if a MVS structure is combined with a laser scan,
 % (XXX read meshlab src, references?)
 % parameterization + texturing from registered rasters
 
-When several cameras see the same view, the correct texture must be chosen on each vertex.
-The selection can be taken based on e.g. the image with highest detail or best brightness.
+When several cameras share the same view, the correct texture must be chosen on each vertex.
+The selection can be taken based on e.g. the image with highest viewed area or best brightness.
 
 %use the registered raster projections to find out best textures and build uv coordinates
 % TODO
@@ -1688,7 +1688,7 @@ Common application also for the entertainment industry is \emph{animation retarg
 %* edgels (edge pixels)
 
 In two dimensions, the dense reconstruction step can be skipped when using only features in image space, providing real-time performance. \cite{pilet2005real}
-Assuming that a precise object stays in the imaged volume, features can be detected and mapped to a point on the 3D surface, and tracked locally with no full-image reconstruction, while the tracked object is assumed to keep the same topology as a previously scanned model.
+Assuming that a particular object stays in the imaged volume, features can be detected and mapped to a point on the 3D surface, and tracked locally with no full-image reconstruction, while the tracked object is assumed to keep the same topology as a previously scanned model.
 
 %http://en.wikipedia.org/wiki/Facial_motion_capture the polar express, beowulf
 %Facial animation does not necessarily even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
