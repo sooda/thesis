@@ -1047,9 +1047,9 @@ Physically, the projected point in a camera is behind the aperture, on the film 
 \paragraph{Homogeneous coordinates}
 In computer graphics and vision, points are usually described in \emph{homogeneous coordinates}.
 Homogeneous coordinates add an extra dimension to the interpretation of coordinates, and each point becomes a line that crosses the origin in a dimension one higher than the original.
-In addition, several vector operations become more convenient to manipulate; for example, 3D translation is embedded in 4D matrices with homogeneous coordinates. \cite{hartley03multiview,heyden2005multiple}
+Several vector operations become more convenient to manipulate; for example, 3D translation is embedded in 4D matrices with homogeneous coordinates. \cite{hartley03multiview,heyden2005multiple}
 %Translation, perspective projection, rotation, and other operations are conveniently described as matrix transformations by using an additional dimension for points: $(x, y, z, 1)$.
-The space is scale-invariant; all points $(xw, yw, zw, w)$ map to the same 3D point $(x, y, z)$.
+The space is scale-invariant; all points $(xw, yw, zw, w)$ ($w \neq 0$) map to the same 3D point $(x, y, z)$.
 \cite{dubrofsky2009homography,hartley03multiview}
 
 %Homography definition (mapping of points and lines in $P^2$)
@@ -1115,7 +1115,7 @@ The internal parameters, intrinsics, encode how the image is formed on the senso
 For simplicity, it is often denoted $\alpha_x = m_x f$, $\alpha_y = m_y f$.
 $R = (u_0, v_0)$ is the image center (principal point).
 The parameters can also be presented separately without the matrix notation.
-For square pixels, $m_x = m_y$, and for a non-skewed (rectangular) sensor, $\gamma = 0$, which is often the case. \cite{hartley03multiview,szeliski10vision,heyden2005multiple}
+For square pixels, $m_x = m_y$, and for a non-skewed (rectangular) sensor, $\gamma = 0$, which is often the case and assumed by computer vision programs and libraries. \cite{hartley03multiview,szeliski10vision,heyden2005multiple}
 
 %Le image. Horizontal planar triangle, lines between camera origins etc. lecture11.pdf.
 
@@ -1139,7 +1139,7 @@ The checkerboard calibration step is often programmed to measure optical distort
 A single image of a three-dimensional calibration object is also sufficient for single-camera calibration. \cite{jokukirjoist}
 
 One way for calculating the calibration is \emph{direct linear transform (DLT)}:
-the whole matrix $P$ is solved from $x_i = PX_i$ by constructing a system of equations from the projections of some known points $i$, and minimizing an error metric, as the case is practically overconditioned. \cite{hartley03multiview}
+the whole matrix $P$ is solved from $x_i = PX_i$ by constructing a system of equations from the projections of some known points $i$, and minimizing an error metric, as the case is practically overconditioned and the measurements contain errors. \cite{hartley03multiview}
 
 A video-based method has been proposed by Svoboda for self-calibration.
 The method uses a number of synchronized frames and a laser pointer in a dark calibration volume to find corresponding points, not requiring any precise objects. \cite{svoboda2005convenient}
@@ -1207,8 +1207,8 @@ From similar triangles with a common vertex at $X$, the depth $Z$ is obtained: (
 The disparity $d$ is the difference of the points in their image planes, $d = x_r - x_l$.
 %If the image planes would be fixed as being physically correct, in the back side of the camera origins, the focal length should be negated to keep the correct interpretation and sign because the projected physical image is mirrored in both axes.
 %Image processing between the sensor and a picture file usually inverts this.
-As the equation \ref{eq:triangulation} shows, depth is inversely proportional to pixel disparity in the images.
-To map the depth to correct units, only focal length $f$ and the baseline $T$ are needed additionally; when using pixel coordinates instead of physical in $d$, also the pixel size should be taken into account in scaling $x_l$ and $x_r$.
+As Equation \ref{eq:triangulation} shows, depth is inversely proportional to pixel disparity in the images.
+To map the depth to correct units, only focal length $f$ and the baseline $T$ are needed additionally; when using pixel coordinates instead of physical units in $d$, also the pixel size should be taken into account in scaling $x_l$ and $x_r$.
 All of these are encoded in the camera parameters: the pixel size is part of the intrinsics, and the baseline is encoded in extrinsics.
 Algorithms such as those in OpenCV \cite{opencv} can compute depth from disparity images based on the difference between each pixel.
 The disparty image is a difference of each pixel value, which needs a search for each pixel;
@@ -1279,7 +1279,7 @@ Essential matrix $E$ is a matrix form of this relation; it includes the relative
 %\end{equation}
 
 \emph{Fundamental matrix} is a similar object; it also relates the corresponding points in stereo images.
-It has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account; that is, it encodes also intrinsic parameters.
+It has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account; i.e. it encodes also intrinsic parameters.
 %Inverting the matrix $M_i$ (section \ref{sec:coord}) in sensor-to-pixel coordinate transform and using it on pixel coordinates, world coordinates seen on the camera sensor can be obtained. % FIXME equations
 
 Given pixel coordinates $a_l$ and $a_r$ that match the points $A_l$ and $A_r$ as seen from cameras $C_l$ and $C_r$, respectively, the fundamental matrix $F$ is given as:
@@ -1328,8 +1328,8 @@ The fundamental matrix relates directly the pixels and epipolar lines, and as su
 %Epipole can be interpreted as the location of another camera as seen by other camera, as seen in the picture.
 
 %Now, given its position in the image plane of camera $C_l$ and the fundamental matrix $F$, finding the corresponding point in camera $C_r$'s image plane is seen as solving eq. \ref{eq:fundamental} for $a_r$.
-The essential and fundamental matrices can be seen as a more general configuration of the triangulation in Figure \ref{fig:simplestereo} and eq. \ref{eq:triangulation}.
-Once the points are found by solving \ref{eq:fundamental}, the depth can be obtained.
+The essential and fundamental matrices can be seen as a more general configuration of the triangulation in Figure \ref{fig:simplestereo} and Equation \ref{eq:triangulation}.
+Once the points are found by solving Equation \ref{eq:fundamental}, the depth can be obtained.
 
 % cite longuet-higgins 1981, the books too
 
@@ -1368,7 +1368,7 @@ Searching for well distinguished features in an image is called \emph{sparse} se
 A sparse set of feature matches is good for reconstructing initial calibration, as all the feature vectors can be matched together relatively quickly.
 For finding a complete depth map of the whole image, a slower \emph{dense} search is performed, using the obtained calibration.
 Dense matching runs through each pixel of the search space and tries to find a matching pixel from another image with e.g. template matching \cite{duda1973pattern}.
-The surrounding pixel values themselves inside a \emph{window} centered at the searched pixel are compared in the search area.
+The surrounding pixel values themselves inside a \emph{window} centered at the searched pixel are compared in the search area, which typically runs along the epipolar lines only.
 
 From the coordinate differences in image space between the two images, a disparity map is built.
 The disparities can then be directly transformed to depth values, yielding a point cloud.
@@ -1390,8 +1390,8 @@ Further, closeby points are only looked in a small window around the previous, n
 By virtually aligning the cameras such that their images are coplanar, the search only has to be performed on a line that is parallel to the line connecting the camera centers.
 Rectification can be done in multiple ways.
 Planer rectification projects the images on a common plane and rotates them such that corresponding lines are axis-aligned (horizontal or vertical) in both images. \cite{hartley03multiview}
-In Figure \ref{fig:rectif}, two cameras are situated at arbitrary positions, looking at different directions, and their view images are projected on a common plane, where they show up as trapezoids.
-In practice, a new image can be created that contains the old trapezoidal image, or the search can be performed in the original image in the direction of the epipolar line.
+In Figure \ref{fig:rectif}, two cameras are situated at arbitrary positions, viewing different directions, and their view images are projected on a common plane, where they show up as trapezoids.
+In practice, a new image can be created that contains the trapezoidal image and image search can be done along a single axis, or the search can be performed in the original image in the direction of the epipolar line.
 Other more complex methods, e.g.\ polar rectification, can handle more general camera configurations.
 
 \simplegfx{h}{0.6\textwidth}{rectif}{
@@ -1450,7 +1450,7 @@ Toldo et al. suggests to build a depth map individually per each view with appro
 \subsection{Structure from motion} \label{sec:sfm} % {{{
 
 
-The \emph{structure from motion (SfM)} problem, also called structure and motion, uses the scene feature matches between different views to determine both the scene structure and the camera motion between the views.
+The \emph{structure from motion (SfM)} problem, also called \emph{structure and motion}, uses the scene feature matches between different views to determine both the scene structure and the camera motion between the views.
 \cite{snavely2006photo,fitzgibbon1998automatic} 
 The camera does not have to physically move; the method can be used for multi-camera reconstruction with a static rig.
 Before SfM, the images must be rectified and features matched; the algorithm works on point locations instead of input images.
@@ -1495,15 +1495,13 @@ Ground truth data can also be obtained with a real 3D scanner, such as a laser r
 
 %Noise in subpixel-accurate match detection and (TODO survey errors, that one .doc) affects each reconstructed depth.
 In addition, uncertainty in depth depends more heavily on the pixel errors (i.e.\ disparity) if the baseline is short, as depicted in Figure \ref{fig:baselineerr}. % TODO image, recent in the paper notebook
-The common area seen by two cameras stretches in depth as the cameras come closer, but the disparity reduces by equation \ref{eq:triangulation}, making the point matching in turn more dependent on the image resolution.
+The common area seen by two cameras stretches in depth as the cameras come closer, but the disparity reduces by Equation \ref{eq:triangulation}, making the point matching in turn more dependent on the image resolution.
 
 \simplegfx{h}{\textwidth}{baselineerr}{
 	Exaggerated illustration of the effect of baseline difference $||A-B||$ on the depth error $Z_2 - Z_1$, with a small (left) and large (right) baseline.
 	Point $P$ is seen by the two cameras $A$ and $B$.
 	Points $P_l$ and $P_r$ depict the left and right possible points on the raster image, i.e.\ the possible range for the pixel.
 }
-
-Bundle adjustment optimizes uncertainty in camera poses and projection matrices together.
 
 When sparse feature matches are searched for matching picture points in different views, a number of features are first generated for each picture, and the matches are tested against picture pairs.
 False positive matches should be filtered out; common way to handle feature outliers is Random Sample Consensus (RANSAC).
