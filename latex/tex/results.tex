@@ -102,7 +102,7 @@ $f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expo
 Offset between two cameras $A$ and $B$ is then $t_{Al} - t_{Bl}$.
 The timings are depicted in Figure \ref{fig:flashtimeline} as a timeline with matching symbols.
 
-For perfectly synchronized videos, the frames would be identical, and time difference calculated with eq. \ref{eq:timingcalib} for each frame would be zero as $i_C$ and $f_C$ would be constants for all $C$.
+For perfectly synchronized videos, the frames would be identical, and time difference calculated with Equation \ref{eq:timingcalib} for each frame would be zero as $i_C$ and $f_C$ would be constants for all $C$.
 
 \simplegfx{h}{1.0\textwidth}{flashtimeline}
 {Illustration on timing calibration of two cameras using a flash light.
@@ -136,6 +136,10 @@ The method for measuring the synchronization error at a sub-frame precision can 
 A similar method using the recorded audio (as in Figure \ref{fig:flashaudio}) is more used in video photography \cite{pluraleyes,premierepromerge}, where similarities in the sound of the audio tracks recorded by the different cameras would be used for shifting the videos so that their clocks is in sync.
 For a small number of cameras, the audio tracks are simple to align manually in an audio editing software, or automatically with cross-correlation to find the time lag.
 
+In a work by Bradley et al., a \emph{moving-object synchronization} method \cite{bradley2008markerless} was suggested for post-process video synchronization using a detection of a rotated calibration grid.
+Bradley et al. noted that sub-frame offset effects were not noticeable during moderately fast motion.
+Optical flow was suggested for sub-frame synchronization if necessary.
+
 Another method for triggering multiple video recordings is to use a Magic Lantern based wired remote trigger by pressing the half-shutter, or focus button when a record key has been configured in ML to start recording.
 This method did not show any improvements in overcoming the offset, as opposed to the wireless remote.
 % it may be even worse, as the additional code in ML induces more lag.
@@ -166,7 +170,7 @@ For a complete body, the methods are identical but as the distance to the subjec
 
 \subsubsection{Photography setup}
 
-The nine cameras were set up in a dark hall as a $3 \times 3$ grid and two flash units were attached to two cameras, directed up and down to a white styrofoam board and a fabric diffuser to soften the light, shown in Figure \ref{fig:setupcams} and Figure \ref{fig:frontview}.
+The nine cameras were set up in a dark hall as a $3 \times 3$ grid and two flash units were attached to two cameras, directed up and down to a white styrofoam board and a fabric diffuser to soften the light, shown in Figure \ref{fig:totalsetuptwo} and Figure \ref{fig:frontview}.
 The flash units were a Canon Speedlite 430EX and a Yongnuo YN565EX II, set to normal front curtain sync.
 The top-facing Canon flash has only automatic mode, which was sufficient; the Yongnuo was set to manual full power, facing downwards to a piece of fabric.
 The Canon EOS 700Ds have internal pop-up flash lights; they were not used, as they were found to trigger inconsistently, and they are relatively too bright and small so that dark shadows and highlights would pose a problem.
@@ -247,8 +251,8 @@ PhotoScan uses a typical multi-view reconstruction pipeline, optimized for speed
 The steps consist of photo matching, camera parameter estimation, dense reconstruction, mesh generation and texture mapping.
 No detailed description is available on the implemented algorithms. \cite{photoscanalgorithms}
 
-VisualSFM \cite{visualsfm} performs the same structure from motion estimation and dense point cloud generation by combining several research projects into a single graphical user interface.
-The work pipeline in VisualSFM is composed in parts that are done mostly by external programs; feature extraction and matching is done first using SiftGPU \cite{chengchang2007siftcpu}, followed by SfM using PBA \cite{wu2011multicore}, and finally dense reconstruction is performed by PMVS/CMVS \cite{furukawa2010accurate,furukawa2012patch} (CMVS always resulted in only a single cluster due to the small number of views).
+VisualSFM \cite{wu2013towards} performs the same structure from motion estimation and dense point cloud generation by combining several research projects into a single graphical user interface.
+The work pipeline in VisualSFM is composed in parts that are done mostly by external programs; feature extraction and matching is done first using SiftGPU \cite{changchang2007siftgpu}, followed by SfM using PBA \cite{wu2011multicore}, and finally dense reconstruction is performed by PMVS/CMVS \cite{furukawa2010accurate,furukawa2012patch} (CMVS always resulted in only a single cluster due to the small number of views).
 Final Poisson surface reconstruction is done by opening the resulting dense point cloud in Meshlab and using its reconstruction plugin. \cite{meshlab}
 
 PMVS works by expanding a set of initially found patches iteratively in the reconstruction, resulting in a dense point cloud with oriented and colored points.
@@ -269,7 +273,7 @@ With the 18 million pixel count of the cameras, a human face is scanned with por
 Markerless capture has been suggested to be important for human subjects, as both the geometry and the texture can be scanned simultaneously, and variations of the texture over time are also seen when capturing video. \cite{bradley2010high}
 
 \paragraph{PhotoScan results}
-Using the source data shown partly in \ref{fig:sample-arto-photoscan-source}, a point cloud and a textured mesh were generated in PhotoScan, using a quality setting of ``High''.
+Using the source data shown partly in Figure \ref{fig:sample-arto-photoscan-source}, a point cloud and a textured mesh were generated in PhotoScan, using a quality setting of ``High''.
 The workflow in PhotoScan is similar to that of VisualSFM and other tools based on separate programs:
 initially, the scene structure is computed, resulting in a sparse point set of the subject and camera parameters.
 A dense point set computation is followed, and finally a textured triangle mesh is computed based on the dense points and source images.
@@ -331,22 +335,12 @@ A ``spherical'' mode where the subject is assumed to be a sphere and the texture
 \simplefig{h}{%
 \includegraphics[width=0.45\textwidth]{photoscannose}
 \includegraphics[width=0.45\textwidth]{meshlabnose}
-}{fig:soodaheadclosecompare}{
+}{fig:nosecompare}{
 	Surface smoothness comparison.
 	The mesh from Meshlab (right) is visually more smooth than the mesh from PhotoScan, while the polygon count is approximately the same.
 	Although not as visible, the same could be seen in the point clouds (not shown).
 }
 
-%\simplefig{h}{%
-%\includegraphics[width=0.38\textwidth]{arto-dense-close-solid}
-%\includegraphics[width=0.38\textwidth]{arto-dense-close-tex}\\
-%\includegraphics[width=0.38\textwidth]{horseclose-solid}
-%\includegraphics[width=0.38\textwidth]{horseclose-tex}
-%}{fig:soodaheadclosecompare}{
-%	Surface smoothness comparison.
-%	Top: PhotoScan.
-%	Bottom: Meshlab.
-%}
 \paragraph{VisualSFM and Meshlab results}
 This alternative was found to be slightly faster than PhotoScan, while the resulting geometry also contains fewer, but more accurate points.
 Same datasets were tested as with PhotoScan with similar results.
@@ -356,6 +350,7 @@ With the shorter baseline of approximately 30 cm, the SfM process was consistent
 This suggests that the SIFT feature descriptor may not be the best for this purpose, if it does not cope well with different viewpoints.
 
 The results of a face scan are depicted in Figure \ref{fig:sample-sooda-meshlab}; the surface has visibly less noise than that of PhotoScan's, but without a ground truth geometry, precise analysis is not possible.
+Comparison between surfaces generated from PhotoScan and Meshlab is depicted in Figure \ref{fig:nosecompare}.
 
 Figure \ref{fig:soodaheadclosecompare} shows a cropped region of one of the source photographs.
 Note that the skin pores and wrinkles are visually well noticeable in the photograph, but the triangular model is missing smallest of them.
@@ -534,7 +529,7 @@ The loss in resolution and compression quality results in poor surface details, 
 \includegraphics[width=0.3\textwidth]{videoframefacepart}
 \includegraphics[width=0.3\textwidth]{stillframefacepart}
 }{fig:artoglassesframe}{
-	Video frame quality comparison for the subject in \ref{fig:artoglassescompare}.
+	Video frame quality comparison for the subject in Figure \ref{fig:artoglassescompare}.
 	From left to right: a frame of a single camera, a cropped area from it, and a cropped area from a still photo.
 	Note the colored aliasing in the hair and the lack of surface detail in the skin in the cropped frame.
 }

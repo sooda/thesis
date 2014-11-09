@@ -1,6 +1,6 @@
 %Yhteenveto
 % "further work remains to .."
-\section{Conclusions} \label{sec:conclusion} % conclusion/conclusions depending on the length
+\section{Conclusions and future work} \label{sec:conclusion}
 The aim of this thesis was to study the principles of scanning the geometry and color of a subject in three dimensions in order to produce a digitally reconstructed model of the subject for usage in computer graphics, and to build a flexible and practical scanning rig for quickly photographing small subjects for use in reconstruction study.
 
 Realistic content is increasingly needed in computer graphics.
@@ -34,14 +34,15 @@ Also, identifying defects in current state-of-the-art is easier when high-resolu
 
 %With proper post-processing, the system is feasible for scanning both static high-resolution subjects, and dynamic subjects with less spatial resolution.
 
-\subsection{Suggestions for future work}
-
+\paragraph{Suggestions for future work}
 % some feckin intro
 The described example use cases and typical results presented a relatively careless use of the rig.
 Still, it can be deduced that the system is feasible for capturing many kinds of objects; even better quality would probably be achieved with tuning the physical setup and the algorithm parameters manually for each subject.
+Furthermore, the purposes of the rig -- to study the reconstruction field, and to scan content for actual practical use -- remain to be fulfilled.
+The user interface can be further improved from the current prototype phase to an actual product.
 
 % even lighting required
-As seen in several photos, such as in the smile in Figure \ref{fig:artoglassescompare} and Figure \ref{fig:artoglassesframe}, an even, diffuse lighting was not achieved using the current lighting and very dark shadows were introduced, making it difficult to scan the surface texture.
+As seen in several photos, such as in the smile in Figure \ref{fig:artoglassescompare} and Figure \ref{fig:artoglassesframe}, an even, diffuse lighting was not achieved using the current lighting and very dark shadows were introduced, making it difficult to scan the surface texture and resulting in low completeness of the subject surface.
 It is suggested to experiment devices used in professional photography, such as umbrellas and studio flash units inside soft boxes, possibly in combination with a large light tent where the system could be contained.
 Surrounding the subject completely with reflective white material would help, either close to the subject requiring holes for the cameras on the material, or completely using a large white tent and high-powered flash lights outside it.
 For example, the actors of the FIFA 14 video game were scanned inside a white tent with the Likeness Capture system. \cite{eafifa14,capturelab}
@@ -59,6 +60,8 @@ A typical head scan results in a point cloud of 0,5-5 million points depending o
 Still, to render the subjects in a different lighting environment with proper shadowing and mesoscopic surface details, even higher geometric detail would be necessary, which is not feasible in realtime.
 The advanced rendering techniques employing the surface microgeometry as textures such as \emph{bump maps} are beyond the scope of this thesis, but they present interesting future work in this field.
 The mesoscopic augmentation by Beeler et al.\ uses the same idea as high-detailed rendering, where the tiny details that are occluded by surrounding geometry are rendered darker. \cite{beeler2010high}
+Ghosh et al. \cite{ghosh2011multiview} photograph a same still subject in different illumination conditions by changing the lighting quickly, in order to scan for both diffuse and specular reflectance components of the surface.
+The current rig features possibilities for augmenting for such work.
 
 % animation replay on a mesh
 Interestingly, the video performance capture based on anchor frames by Beeler et al.\ \cite{beeler2011high} is able to record and replay a temporally consistent animation (i.e.\ constant mesh topology) with mesoscopic details, using a final geometry of several orders of magnitude less than the raw point cloud density achieved with the presented demonstration subjects.
@@ -116,3 +119,4 @@ The recent reconstruction algorithms base on many different methods; capturing c
 % http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
 %Reconstructing skin and cloth motion is another highly nonrigid application that can be scanned for acquisition of model parameters. \cite{pritchard2003cloth}
 % Performance-Driven Facial Animation, Lance Williams, Computer Graphics, Volume 24, Number 4, August 1990
+
