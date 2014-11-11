@@ -599,6 +599,7 @@ The purpose is to view the picture frame of each camera in realtime and change t
 Libgphoto2 provides an interface for reading a camera preview frame at a rate of several frames per second, speed depending on USB hardware performance, the number of cameras used in parallel because of USB bus limits, and CPU processing power as the images are resized to the screen.
 A preview feed is connected to each camera to download the frames as fast as possible, and the user interface displays them as a grid, with configurable camera order.
 Because libgphoto2 does not offer asynchronous image or configuration transfers, a new thread of execution is set up for each camera, and the preview pictures are transferred to the main screen via concurrency-safe queues in the application itself.
+The code control flow is described in a simplified form in Listing \ref{lst:gphotogridalgo}.
 
 % FIXME this to experiments?
 \paragraph{Timeline}
@@ -622,6 +623,43 @@ It is recommended to spread the cameras as evenly to all USB root hubs as possib
 The same is recommended when downloading the actual images.
 The USB hub where a device is connected can be verified in Linux by looking at the output of the \emph{lsusb} command-line tool.
 
+\begin{lstlisting}[
+	caption=Pseudocode for \emph{gphotogrid}.
+	The lock task runs only if synchronization is enabled.
+	The asynchronous UI settings are not shown.,
+	basicstyle=\ttfamily\footnotesize,
+	label=lst:gphotogridalgo,
+	float=h
+]
+per-camera preview feed {
+	while running {
+		download preview frame
+		record current time
+		push frame and time to queue
+		if sync enabled {
+			notify lock about finish
+			wait for next round from lock
+		}
+	}
+}
+
+locking task {
+	while running {
+		wait for all frames
+		notify loaders for next round
+	}
+}
+
+screen update requested {
+	for each camera {
+		each queued frame {
+			store frame time to timeline
+			count number of frames
+		}
+		scale last frame to screen
+	}
+}
+\end{lstlisting}
 % }}}
 
 \subsubsection{Configuration} % {{{
@@ -657,14 +695,40 @@ The workaround script \emph{release-uilock} was written as a reminder to perform
 % offloading
 
 A command-line tool called \emph{paraphotos} for downloading the images in realtime in parallel from each camera was developed in C++ using the same libgphoto2 library wrapper.
-The cameras send a notification when a new photo is taken with the shutter button or the remote release.
+The cameras send a notification via USB when a new photo is taken with the shutter button or the remote release.
 When this new file is found, it is downloaded and named by a running index and camera name.
 The user is notified when all cameras have finished for a single shoot;
 also, when the program is requested to quit, it first waits until the last pending download is finished.
-Each download task runs in a separate thread of execution to overcome the synchronous nature of libgphoto2, as well as the notifying task; Figure \ref{fig:img-get-process} depicts simplified code control flow.
+Each download task runs in a separate thread of execution to overcome the synchronous nature of libgphoto2, as well as the notifying task; a simplified code control flow is described in pseudocode in Listing \ref{lst:paraphotosalgo}.
 
-\simplegfx{h}{0.8\textwidth}{img-get-process}
-{FIXME: this is ugly, probably replace with pseudocode. Simplified flow graph of the paraphotos program control flow.}
+basic algo without debugprints etc.
+ctrl+c breaks the loops
+\begin{lstlisting}[
+	caption=Pseudocode for \emph{paraphotos}.
+	Ctrl-C (interrupt) signal is captured and it requests quit.
+	Many possible debug message prints not shown here.,
+	basicstyle=\ttfamily\footnotesize,
+	label=lst:paraphotosalgo,
+	float=h
+]
+per-camera download {
+	while quit not requested {
+		poll for event
+		if event is file addition {
+			download file
+			notify ui
+			wait for ui finish
+		}
+	}
+}
+ui notification {
+	while quit not requested {
+		wait for the number of cameras events
+		notify user about a ready image group
+		signal downloaders to continue
+	}
+}
+\end{lstlisting}
 
 Almost the same functionality could have have been achieved with the gphoto2 command-line utility; using the library directly with C++ resulted in cleaner code and probably faster operation.
 
