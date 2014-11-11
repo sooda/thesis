@@ -28,8 +28,9 @@ The microcontroller was programmed using the Mbed library for the particular mic
 Each camera connects to the trigger via a 2,5mm stereo plug, as the cameras have a standard 2,5mm jack for remote trigger.
 To secure the cameras from each other, the remote wires are connected with opto-isolators (TLP621-2).
 
-The ground signals of the isolators are connected accidentally together, so the cameras are not completely isolated - only their signal wires are.
-However, the USB connections of all cameras also connect to each other and to the trigger box via the computer they are connected to, which cannot be easily circumvented.
+The ground signals of the isolators in the built circuit are connected together by mistake, so the cameras are not completely isolated - only their signal wires are.
+However, common grounding is generally not an issue.
+Furthermore, the USB connections of all cameras also connect to each other and to the trigger box via the computer they are connected to, which cannot be easily circumvented.
 The diagrams depicted in this section show the fixed versions; the older ones used in the production device can be found in the git repository history at \url {http://github.com/sooda/thesis} if necessary.
 The repository contains the project files for the Cadsoft EAGLE pcb design software \cite{eaglepcb}; the diagrams for schematic and PCB layout are given here for illustration only.
 

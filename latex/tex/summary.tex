@@ -2,27 +2,26 @@
 % "further work remains to .."
 \section{Conclusions and future work} \label{sec:conclusion}
 The aim of this thesis was to study the principles of scanning the geometry and color of a subject in three dimensions in order to produce a digitally reconstructed model of the subject for usage in computer graphics, and to build a flexible and practical scanning rig for quickly photographing small subjects for use in reconstruction study.
-
 Realistic content is increasingly needed in computer graphics.
 Current processing power of desktop and portable computers with powerful graphics processing units enables to use large amounts of data to synthesize a three-dimensional scene on a computer screen.
 Digitally reconstructing real objects is a powerful way to create the needed content.
 
 First part of this thesis surveyed the image formation process in digital cameras and the 3D reconstruction principles that current algorithms build upon.
-Based on the camera technology study, the heart of the rig was selected to be an array of nine Canon EOS 700D digital single-lens reflex cameras using moderate 50 mm lenses with a field of view of a 80 mm full-frame lens.
-The cameras produce 18-megapixel images and the total footprint of the rig is a few squaremetres for most subjects.
+Based on the camera technology study, the heart of the rig was selected to be an array of nine crop-frame Canon EOS 700D digital single-lens reflex cameras using moderate 50 mm lenses with a field of view of a 80 mm full-frame lens.
+The cameras produce 18-megapixel images and the total footprint of the rig is a few squaremetres for most subjects including the subject.
 Software for jointly configuring the required manual settings in all cameras was surveyed and developed using the \emph{gphoto2} camera control library.
 A custom electronic remote shutter trigger tool was built to synchronize the cameras for capturing still photographs in an accurate way even with a moving subject.
 For video capture, the cameras still can be remotely triggered to start video capture, but as they lack accurate video synchronization, a maximum possible error of half a frame duration still exists.
 Artificially synchronizing consumer camera arrays is an interesting subject, as it is one of the biggest issues that separates consumer cameras from more expensive professional or engineering devices from the reconstruction point of view.
 
-The selected cameras offer the necessary manual controls, can be remotely controllable with any standard personal computer and give excellent image quality, with a reasonable price.
+The selected cameras offer the necessary manual controls, can be remotely controllable with any standard personal computer and offer excellent image quality with a reasonable price.
 Hardware of the rig is fully flexible and can be modified for small and medium subjects that can be photographed indoors.
 Any alternatives to the rig solution were found to be not configurable enough or overly expensive for the purpose.
 
 Computer graphics has a clear connection to computer vision.
 Areas of computer graphics focus more on synthesizing content to build an image, while computer vision analyses images from real life.
 Interestingly, they both use similar principles, and vision can be used to create model data for rendered graphics.
-Similar ideas based on subject lighting can be employed in both fields; this thesis still barely touched the confluence of the two, and further study is suggested to better dive in the subject.
+Similar ideas based on subject lighting can be employed in both fields; this thesis still barely touched the confluence of the two, and further study on state-of-the-art is suggested to better dive in the subject.
 The rig built as part of this thesis makes it possible to easily gather photographs and video from multiple viewpoints and suggests to study the state-of-the-art algorithms that analyze visual cues in the photographed images, to reproduce the subject in a different lighting conditions and to animate the subject in a new way.
 
 Constructing a 3D scanning rig was a large topic on its own and future work remains in studying the data that can be produced with the machinery.
@@ -42,21 +41,23 @@ Furthermore, the purposes of the rig -- to study the reconstruction field, and t
 The user interface can be further improved from the current prototype phase to an actual product.
 
 % even lighting required
-As seen in several photos, such as in the smile in Figure \ref{fig:artoglassescompare} and Figure \ref{fig:artoglassesframe}, an even, diffuse lighting was not achieved using the current lighting and very dark shadows were introduced, making it difficult to scan the surface texture and resulting in low completeness of the subject surface.
+As seen in several photos, such as in the smile in Figure \ref{fig:artoglassescompare} and Figure \ref{fig:artoglassesframe}, an even, diffuse lighting was not achieved using the current lighting and very dark shadows were introduced in certain self-occluded sections, making it difficult to scan the surface texture and resulting in low completeness of the scanned surface.
 It is suggested to experiment devices used in professional photography, such as umbrellas and studio flash units inside soft boxes, possibly in combination with a large light tent where the system could be contained.
-Surrounding the subject completely with reflective white material would help, either close to the subject requiring holes for the cameras on the material, or completely using a large white tent and high-powered flash lights outside it.
+Surrounding the subject and the rig with reflective white cover would help, either close to the subject requiring holes for the cameras on the cover, or completely using a large white tent and high-powered flash lights outside it.
 For example, the actors of the FIFA 14 video game were scanned inside a white tent with the Likeness Capture system. \cite{eafifa14,capturelab}
+
+% pairwise photos for coverage, better resolution
+Arranging the cameras in pairs and aligning the resulting point clouds could provide more coverage with the limited number of cameras.
+Pairwise scanning has been done before successfully \cite{eafifa14,beeler2010high,bradley2010high};
+the multi-view SfM approach was used for testing because of its simplicity.
 Careful positioning within the camera frames is encouraged to take use of the resolution.
 However, requiring the subject to fill more of the frame restricts the space for movement, which may or may not be favorable.
+For a smaller section of a face, the cameras could be used as plain stereo pairs such that each camera would only see a part of the subject, thus using the camera resolution more effectively for more high density data, as presented by Bradley et al.\ \cite{bradley2010high}
 
-% pairwise photos for coverage
-Arranging the cameras in pairs and aligning the resulting point clouds could provide more coverage with the limited number of cameras.
-Pairwise scanning has been done before successfully. \cite{eafifa14,beeler2010high,bradley2010high}
-The multi-view SfM approach was used for testing because of its simplicity.
 
 % normal map rendering and scanning
 % (probably shouldn't introduce new terms here, tell about them in bg with meshes)
-A typical head scan results in a point cloud of 0,5-5 million points depending on the subject, lighting and software used, eventually resulting in a triangular mesh with a number of triangles of the same order of magnitude.
+A typical head scan results in a point cloud of 0,5-5 million points depending on the subject, lighting, and software used, eventually resulting in a triangular mesh with a number of triangles of the same order of magnitude.
 Still, to render the subjects in a different lighting environment with proper shadowing and mesoscopic surface details, even higher geometric detail would be necessary, which is not feasible in realtime.
 The advanced rendering techniques employing the surface microgeometry as textures such as \emph{bump maps} are beyond the scope of this thesis, but they present interesting future work in this field.
 The mesoscopic augmentation by Beeler et al.\ uses the same idea as high-detailed rendering, where the tiny details that are occluded by surrounding geometry are rendered darker. \cite{beeler2010high}
@@ -65,27 +66,13 @@ The current rig features possibilities for augmenting for such work.
 
 % animation replay on a mesh
 Interestingly, the video performance capture based on anchor frames by Beeler et al.\ \cite{beeler2011high} is able to record and replay a temporally consistent animation (i.e.\ constant mesh topology) with mesoscopic details, using a final geometry of several orders of magnitude less than the raw point cloud density achieved with the presented demonstration subjects.
-
-% better resolution
-For a smaller section of a face, the cameras could be used as plain stereo pairs such that each camera would only see a part of the subject, thus using the camera resolution more effectively for more high density data, as presented by Bradley et al.\ \cite{bradley2010high}
+As presented in \cite{deng2007computer}, the Facial Action Coding System or similar could be used for animation to parameterize the face in a group of muscular actions for efficient replay.
+Such animations remain to be tested on this rig.
 
 % syncing
 The camera array synchronization and rolling shutter compensation methods proposed by Bradley et al.\ \cite{bradley2009synchronization} should be experimented on the system for preparing for computer animation, as both these issues are present in the current setup.
 Synchronization issues do not completely prohibit from using the rig, but the resulting quality may be suboptimal.
-However, generation of test content should be feasible.
-
-
-Surface capture of human skin is different from objects that consist of just connected rigid bodies: it stretches and shears in a highly non-predicatable way such that both its local geometry and texture changes, affected by the sub-surface properties of muscles etc.
-Traditional methods for tracking rigid objects are thus not viable for high quality.
-Joint motion capture has the rigid body assumption.
-
-% expression space rendering; bone animation
-As presented in \cite{deng2007computer}, the Facial Action Coding System or similar could be used for animation to parameterize the face in a group of muscular actions for efficient replay.
-%Facial expression space. Some techiques \cite{faceshift,something} use pre-recorded facial expressions to identify the subject's pose.
-%They suffer from not being able to accurately describe the temporal changes in finest details, but benefit from densely packed parameterization of facial expressions.
-%A separate mesh is stored as a three-dimensional template for each expression (such as happy or angry) and each frame is encoded, as a linear combination of these individual expressions.
-%Such feature vectors describe well each possible face, and importantly, they eliminate the need for encoding the movement of each vertex, which can be unnecessarily heavy to compute or store.
-%The results from this method can easily be mapped to other models than the face of the subject, as it is independent on the actual facial geometry and only uses weights for pre-modeled faces, making it interesting in computer animation.
+However, generation of initial test content is feasible.
 
 % nice fov
 For small subjects such as a human head, the chosen 50 mm focal length in combination with the crop frame camera presented to be optimal; a wider field of view would require the cameras to be closer to each other, which is not physically possible.
@@ -95,28 +82,15 @@ On the other hand, a smaller field of view would require the cameras to be unnec
 The rig captures the complex geometry and texture in preferably a diffuse lighting;
 For rendering the object in a new lighting, the object's surface material may be captured with a different system.
 Methods for capturing the reflectance properties of a material typically keep the material sample still and vary the properties of the light. \cite{debevec2000acquiring} \cite{aittala2013practical}
-Combining the different approaches produces both rich geometry and material data for complex digital reproduction.
+Combining the different approaches would produce both rich geometry and material data for complex digital reproduction.
 
-% animation models such as in \cite{zhang2007spacetime}
-
-% TODO a restricted volume for the subject from the nature of the system, to filter outliers
-
-
-The rig was found to be suitable for high-resolution capture of human faces, a target that is considered difficult because of the lack of well noticeable pattern.
+\paragraph{Final thoughts}
+The rig was found to be suitable for high-resolution capture of human faces, a target that is considered difficult because of the lack of well noticeable pattern and strong deformations.
 High resolution photographs recover detail that can be used for feature matching and successful reconstruction.
 By tweaking reconstruction parameters, applying soft makeup and using a more uniform lighting, the quality can be further improved;
 especially the surface color is challenging to recover uniformly because of specular highlights, even though the reconstruction succeeds.
-%Although readily available multi-view datasets could be used for performance evaluation, not many sets are publicly available.
-%the Stanford 3D Scanning Repository (models only)
-
-% TODO how these differ from marching cubes in the surface reconst?
-%volumetric reconstruction
-%octtree storage
-%octomap
-%space carving (photo-consistent shapes)
 The recent reconstruction algorithms base on many different methods; capturing content for studying the algorithms is a significant suggestion for future work topics.
 
 % http://www.siggraph.org/education/materials/HyperGraph/animation/character_animation/motion_capture/history1.htm
 %Reconstructing skin and cloth motion is another highly nonrigid application that can be scanned for acquisition of model parameters. \cite{pritchard2003cloth}
 % Performance-Driven Facial Animation, Lance Williams, Computer Graphics, Volume 24, Number 4, August 1990
-

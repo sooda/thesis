@@ -92,8 +92,6 @@ In a traditional right-handed system, X increases right, Y upwards and Z towards
 
 \subsubsection{Optics} % {{{
 
-% XXX szeliski here
-
 %Practical algorithms take lens imperfections into account (e.g. \cite{opencv}).
 
 In practice, no actual camera works ideally; a pinhole-resembling camera with a tiny hole could be built, but it would have poor light gathering power and low resolution limited by diffraction effects. \cite{greenleaf1950photographic}
@@ -107,7 +105,6 @@ Actual camera ``lenses'' (\emph{camera objectives}) consist of not only a single
 As an example, a mechanically simple fixed focal length Canon lens diagram is shown in Figure \ref{fig:canonef50mm}.
 There are several lenses, aligned so that their centers lie on the the optical axis parallel to it.
 Most objectives can be reduced to a \emph{thin lens} model (depicted in Figure \ref{fig:thinlens}), an ideal optical model of a single infinitesimally thin glass element.
-% XXX Some lenses implement optical stabilization as a moving element in the light path.
  \cite{greenleaf1950photographic,szeliski10vision}
 
 \simplefig{t}{%
@@ -262,8 +259,6 @@ The radial error model and correction proposed first by Brown \cite{brown1966dec
 	y_{corr} &= y(1 + k_1 r^2 + k_2 r^4 + k_3 r^6)
 \end{split} \end{align}
 
-% (XXX some software does this in a different way (inverse of this, maybe?)
-
 Trucco and Verri \cite{trucco1998introductory} use only the two first coefficients, and it is not rare to use only the first $k_1$; for lenses with low distortion, this is often enough.
 For tangential distortion, the corresponding correction has the following form:
 
@@ -281,7 +276,6 @@ r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
 
 The image size is normalized such that the coordinates $x$ and $y$ range from $-1$ to $1$, making the distortion parameters universal for all image resolutions.
 The effects of different parameters are depicted in Figure \ref{fig:raddist}.
-% TODO: only first and also ka and kb for comparison
 
 \simplegfx{h}{\textwidth}{raddist}{
 	Barrel-type radial distortion with different parameters.
@@ -290,7 +284,6 @@ The effects of different parameters are depicted in Figure \ref{fig:raddist}.
 	Note how the shape of the distortion changes by the parameters.
 }
 
-% XXX HOXHOX THIS SOMEWHERE TODO BEGINNING
 Because digital images consist of a discrete pixel array, the pixel coordinates given by the undistortion do not necessarily lie on exact pixel positions; the sampling should then interpolate between neighboring pixels, instead of taking the nearest color.
 Avoiding sampling artifacts is a fundamental issue in computer graphics.
 \cite{wolberg1990digital}
@@ -397,13 +390,6 @@ Skew induced by rolling shutter is visible always, whereas motion blur is reduce
 %	When the object moves, the subject appears distorted.
 %	Image by Wikipedia user Cmglee, licensed under CC BY-SA.
 %}
-
-%A digital CMOS exposure and ``electrical shutter'' works like this too; the sensor is reset and read row by row sequentially; this produces a strong rolling shutter effect especially in video cameras when the subject is moving fast relative to the camera.
-%
-%A CCD camera would not need a mechanical shutter, because the full image is read out at once.
-%Most still cameras have also a movie mode that holds the mechanical shutter open all the time, using the electrical shutter.
-%
-%The mechanical shutter can last only a finite amount of actuations (50 000-200 000 for a common system camera) as it wears out gradually.
 
 % other
 
@@ -569,8 +555,6 @@ With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate fo
 by average, or 0,4 gigabytes per second, requiring also high speed from the processor and mass storage.
 In reality, a number of other complicated factors also have a small effect.
 
-% XXX \ref{eq:eos1dspeed}
-
 % files
 
 A ``raw'' image file can be saved with more advanced cameras, containing the raw uncompressed sensor data with very little processing done.
@@ -725,7 +709,6 @@ This can be compensated to some degree with morphing or stroboscope lighting if 
 Within the scope of this thesis, synchronization issues can be divided roughly in three sources of error, assuming N cameras each having its own video file with same frame rate: \emph{offset}, \emph{drift} and \emph{jitter}.
 With the same frame rate, the frames can be indexed with numbers starting from 0.
 Times when the frames taken relative to a global clock is noted as $t_{Ci}$, where $C$ is a camera identifier and $i$ is the increasing frame index.
-% TODO something on the errors modulo frame length
 
 \emph{Offset} is the time difference of two streams: for an ideal camera $A$ at each frame $t_{Ai}$ for $i$, and an offset camera $B$ at $t_{Bi}$, a constant error $e$ is added:
 
@@ -846,11 +829,9 @@ Typical sensor sizes for different camera categories are as follows:
 	\item Sizes used by industrial machine vision cameras vary by application, in 5 to 10 mm range having resolutions from 0.5 to over 10 Mpix.
 \end{itemize}
 
-%sensor vibration to remove dust -> sensor position not very fixed \cite{rieke2009}. % TODO MEASURE!
+%sensor vibration to remove dust -> sensor position not very fixed \cite{rieke2009}.
 %no image stabilizer in sensor or lens \cite{photogrammetry.doc}
 %ring flash bending the lens assembly if attached to it \cite{rieke2009}.
-
-% http://www.agisoft.ru/forum/index.php?topic=1411.60
 
 % lenses, shutters
 
@@ -984,7 +965,6 @@ The \emph{extrinsic parameters} contain the camera location and rotation in anot
 \cite[p. 41]{hartley03multiview}, \cite{heyden2005multiple}
 This section reviews basic transforms whose results are needed in the later reconstruction steps.
 
-% FIXME especially this should be elsewhere
 \simplefig{h}{%
 \includegraphics[width=0.7\textwidth]{pinhole3d}
 }{fig:pinhole3d}{
@@ -1266,7 +1246,6 @@ Essential matrix $E$ is a matrix form of this relation; it includes the relative
 \emph{Fundamental matrix} is a similar object; it also relates the corresponding points in stereo images.
 It has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account; i.e. it encodes also intrinsic parameters.
 \cite[ch. 11]{hartley03multiview}
-%Inverting the matrix $M_i$ (Section \ref{sec:coord}) in sensor-to-pixel coordinate transform and using it on pixel coordinates, world coordinates seen on the camera sensor can be obtained. % FIXME equations
 
 Given pixel coordinates $a_l$ and $a_r$ that match the points $A_l$ and $A_r$ as seen from cameras $C_l$ and $C_r$, respectively, the fundamental matrix $F$ is given as:
 
@@ -1474,7 +1453,7 @@ Furthermore, if the scene structure is known beforehand (e.g.\ as a calibration 
 Ground truth data can also be obtained with a real 3D scanner, such as a laser ranging device. % david
 
 %Noise in subpixel-accurate match detection and (TODO survey errors, that one .doc) affects each reconstructed depth.
-In addition, uncertainty in depth depends more heavily on the pixel errors (i.e.\ disparity) if the baseline is short, as depicted in Figure \ref{fig:baselineerr}. % TODO image, recent in the paper notebook
+In addition, uncertainty in depth depends more heavily on the pixel errors (i.e.\ disparity) if the baseline is short, as depicted in Figure \ref{fig:baselineerr}.
 The common area seen by two cameras stretches in depth as the cameras come closer, but the disparity reduces by Equation \ref{eq:triangulation}, making the point matching in turn more dependent on the image resolution.
 
 \simplegfx{h}{\textwidth}{baselineerr}{
@@ -1574,15 +1553,12 @@ Great accuracy can be acheived if a MVS structure is combined with a laser scan,
 When several cameras share the same view, the correct texture must be chosen on each vertex.
 The selection can be taken based on e.g. the image with highest viewed area or best brightness.
 
-%use the registered raster projections to find out best textures and build uv coordinates
-% TODO
 \simplegfx{h}{0.6\textwidth}{texreproj}{
 	Texture mapping a triangle from a color image on a virtual image plane on a computer screen as $m_v$.
 	The triangle geometry is mapped on the color images, or textures, of the real cameras as $m_i$, and the triangular patch between the image vertices is stretched on the rendered triangle.
 	Image from \cite[p. 98]{heyden2005multiple}.
 }
 
-% TODO bump map
 To optimize the triangle rendering resources of GPUs and keep the rendering performance as realtime, the deepest level of geometry is typically colored using texture maps describing, not color, but \emph{surface roughness} and \emph{glossiness}.
 Accurate lighting models make heavy use of surface \emph{normals} and microgeometric details, instead of the absolute position of the geometry.
 Such information is typically kept in e.g.\ a \emph{normal map} or a \emph{bump map}, encoding the surface normal or roughness at each visible pixel.
