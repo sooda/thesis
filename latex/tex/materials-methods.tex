@@ -190,7 +190,6 @@ The front and back view of the camera are depicted in Figure \ref{fig:eos700d}.
 		Sensor type & CMOS\\
 		Sensor size & APS-C 22.3 x 14.9 mm\\
 		Pixel size & 4,3 x 4,3 $\text{\si\micro m}$\\
-		%CoC span at 0.019 mm & 4.4 pixels\\ % (FIXME move to lens)
 		Image resolution & 5184 x 3456 pixels (17,9 million) \\
 		Processor & Canon Digital Imaging Core (DIGIC) 5\\
 		Bits per pixel & 14\\
@@ -323,8 +322,8 @@ The method of choice was to use ready-made, heavy duty lighting stands.
 Millenium LST-310 (a brand by the Thomann music equipment store \cite{thomann}) is a sturdy three-legged lighting stand with a pole that can be extended several meters high.
 Additionally, it has a rotating horizontal bar at the top.
 Similar tripods were used in other projects in the same laboratory and they were found useful and rigid.
-The relatively heavy weight (10 kg) makes the support structures steady. % FIXME weight
-Four of these stands were bought, which should allow a moderate coverage around a subject. %and testing was done mostly with three, with three cameras in each.
+The relatively heavy weight (approximately 10 kg per stand) makes the support structures steady.
+Four of these stands were bought, which should allow a moderate coverage around a subject.
 
 For flexibility, each camera should be able to rotate in at least to horizontal or vertical pose, with arbitrary aiming position.
 Manfrotto 494 ball heads were used for this purpose, connected to the tripod rod with Manfrotto 035 Super Clamps.
@@ -389,6 +388,8 @@ The remote release jack is a three-contact connector, where one pin serves as a 
 The pins supply some current that flows back to the camera via the ground pin.
 It is safer to separate the cameras from each other electrically instead of connecting the similar remote wires of all cameras together.
 A commonly used method among the DIY community is to use opto-isolators to control each camera individually, isolated from the shared control circuit.
+Breeze Systems sells popular software for controlling multiple cameras simultaneously, and advertises third-party USB controlled relay boards for triggering the shutters remotely as programmed from a computer. \cite{breezesystemsremote}
+However, mechanical relays are slow and their timings are inconsistent; a transistor or opto-isolator based system would be better.
 
 \paragraph{Isolation}
 An opto-isolator provides a galvanically separated switch that can be used to electrically ``connect'' the release wire to the camera's ground such that no electrical signal path is shared between the cameras.
@@ -398,7 +399,7 @@ As an example, the opto-isolator device used in this work is shown in Figure \re
 The particular device works in open collector setting, exposing the collector pin that is left unconnected (``open'') and the emitter pin of the transistor.
 Another common setting is a powered device that outputs a voltage signal from a power supply.
 
-\subsection{Universally synchronized multi-trigger} % {{{
+\subsection{Universally synchronized multi-trigger hub} % {{{
 
 By connecting each camera to a separate opto-isolator and driving all of them from same source, all cameras are triggered simultaneously in a safe fashion.
 To fully automate the system, the trigger device should be connected to the computer that downloads the photos from the cameras.
@@ -407,7 +408,7 @@ Additionally, the cameras are enabled to shoot separately in addition to the syn
 An alternative method in synchronization could have been one third-party wireless remote trigger per camera;
 however, they are expensive (approximately 100 EUR per transceiver), may be not as consistent as a wired solution, and would require modifications to work connected to a computer.
 
-Custom, undocumented solutions previously used for hard synchronization for MV cameras by e.g.\ Bickel et al. \cite{bickel2007multi} include ready-made USB I/O boards such as those provided by \cite{datatranslation}
+Custom, undocumented solutions previously used for hard synchronization for MV cameras by e.g.\ Bickel et al. \cite{bickel2007multi} include ready-made USB I/O boards such as those provided by Data Translation \cite{datatranslation}.
 
 \subsubsection{Microcontroller platform}
 
@@ -527,16 +528,11 @@ The programs are available in \url {http://github.com/sooda/thesis} with source 
 
 \subsection{Custom camera control software} % {{{
 
-% breeze systems $129 per cam
-% smartshooter
-
-% FIXME clumsy
-% esper design etc.
-%General parallelized image acquisition from a large set of cameras has not yet established such a state that general purpose software would be easily available.
-%Commercial solutions probably exist, but they are often strictly bound to a specific hardware, expensive, and inflexible.
 
 Some custom techniques were used to preview images of all cameras simultaneously, configure the settings of each concurrently, and retrieve the captured images from them in order.
-
+Popular commercial programs for controlling multiple cameras include Breeze systems DSLR Remote Pro Multi-Camera \cite{breezesystemsmulti} (\$129 per camera) and Kuvacode SmartShooter \cite{smartshooter} (600 EUR for unlimited cameras).
+Both advertise features for controlling camera settings, and remote shooting with a delay of over 100 milliseconds between cameras.
+A custom tool was chosen to write for flexibility and convenient live preview.
 Like the MCU board layout and firmware, all programs and their sources can be downloaded from \url {http://github.com/sooda/thesis}.
 The programs have been verified to work under recent Linux and Mac OS X systems.
 
