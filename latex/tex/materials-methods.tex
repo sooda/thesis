@@ -534,7 +534,7 @@ Popular commercial programs for controlling multiple cameras include Breeze syst
 Both advertise features for controlling camera settings, and remote shooting with a delay of over 100 milliseconds between cameras.
 A custom tool was chosen to write for flexibility and convenient live preview.
 Like the MCU board layout and firmware, all programs and their sources can be downloaded from \url {http://github.com/sooda/thesis}.
-The programs have been verified to work under recent Linux and Mac OS X systems.
+The programs have been verified to work under recent Linux and Mac OS X systems, with slight still unresolved issues in Mac OS X.
 
 % }}}
 
@@ -567,6 +567,12 @@ Locking mechanisms were written for the wrapper to prevent more than one executi
 The library initialization was also protected, because it loads camera-specific sub-libraries only after first use; if many cameras are tried to initialise at the same time, another error would occur.
 
 The wrapper is written exclusively with libgphoto2 in mind, but as it actually hides the implementation details strongly, it could be ported to use e.g. EDSDK without affecting the actual applications using it.
+
+\paragraph{Mac OS X issues}
+The programs described in this section were written and tested in GNU/Linux systems, using libraries that would work also under Mac OS X.
+The gphoto2 library does not yet have official support for the Windows operating system.
+In a single Mac OS X laptop tested, parallel use of gphoto2 for multiple cameras showed concurrency issues, as the programs occasionally crashed with a segmentation fault, suggesting problems with differently implemented USB libraries for the operating system.
+The programs were also much slower than compared to the Linux machines used, which may also be an issue with the laptop's USB hardware.
 
 % }}}
 
