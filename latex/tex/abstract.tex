@@ -1,20 +1,21 @@
 \keywords{multi-view stereo, reconstruction, 3D scanning, computer graphics, imaging}
 \begin{abstractpage}[english]
-Although we live in a three-dimensional world, flat two-dimensional images of it are common.
-Computer graphics synthesizes visual content to a two-dimensional screen based on a given three-dimensional geometric model.
-Content is completely described as geometry, colors, and lighting models, but modeling accurate, realistic geometry by hand is time-consuming and difficult.
+In applications of three-dimensional computer graphics, realistic content is increasingly needed.
+Rendering of photorealistic models has become possible thanks to computing power, but creating the models is challenging to do by hand, as they need high level of detail in geometry, colors, and animation.
+This task is replaced by recovering content from photographs that describe the modeled subject from multiple viewpoints.
+In this thesis, elementary theory behind image acquisition and photograph-based reconstruction of geometry and colors is studied.
+Recent research and programs for content reconstruction are reviewed.
+Based on the studied background, a rig is built using a grid of nine off-the-shelf digital cameras, a custom built remote shutter trigger, and supporting software.
+The mission of the rig is to capture quality photographs and video in a reliable and practical manner for processing in multi-view reconstruction programs.
 
-In this thesis, the necessary background on image acquisition and principles of multi-view stereo reconstruction are studied.
-Based on the theoretical background, easily available cameras for a reconstruction rig are selected, and a rig is built with accompanying software for easy and practical image acquisition for reconstructing static and moving subjects.
-Using off-the-shelf commercial cameras only, a model of a real-life scene with geometry and color is reconstructed from photographs taken from multiple viewpoints in the scene, a process known as stereo reconstruction or 3D scanning.
-
-Multi-view stereo reconstruction acts as a confluence between computer graphics and computer vision.
-Computer vision studies the inverse process: reconstructing a three-dimensional model from its two-dimensional projections in photographs.
-Quality of the photographed imagery is directly related to the accuracy of the reconstructed model in both geometric precision and color texture resolution.
-Present state of reconstruction software is surveyed in this thesis.
-Several test subjects are scanned with the rig and reconstruction results of selected software packages are presented.
-The developed rig is shown to produce sub-millimeter scale accuracy in geometry and texture of subjects such as human faces.
-Finally, conclusions on the system feasibility and proposals for future research are given.
+The camera rig is configured to photograph single subjects for multi-view imagery that is processed directly for geometry and color, with little or no image processing done after automatically capturing the imagery.
+The rig is proved to work for the purpose of multi-view reconstruction by testing several subjects.
+Two typical multi-view stereo reconstruction software pipelines are described and reviewed.
+The rig is shown to perform well with little subject-specific tuning;
+issues in the setup are described and further improvements are suggested based on the captured test models.
+Pure image quality of the cameras was found to be excellent, and most problems arose from uneven lighting and practical issues.
+The developed rig was found to produce sub-millimeter scale accuracy in geometry and texture of subjects such as human faces.
+Further studies are suggested for lighting, video synchronization and state-of-the-art image processing and reconstruction algorithms.
 \end{abstractpage}
 
 \newpage
