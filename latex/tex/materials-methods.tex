@@ -20,7 +20,7 @@ Desirable properties of the system were given as:
 	\item Detail: high resolution should be used for achieving data for state-of-the-art algorithms
 	\item 3D and 4D: both static surface reconstruction and variations in geometry over time should be possible to scan
 	\item Open design: by documenting the rig well and selecting readily available generic components, a similar system could be built if there was such a need, and the already built system could be easily extended
-	\item Reasonable price: the total budget of all hardware and software combined should not exceed 10~000 EUR.
+	\item Reasonable price: the total budget of all hardware and software combined should not exceed 10~000 EUR. Typical commercial solutions are many times more expensive.
 \end{itemize}
 
 A general-purpose reconstruction rig has many practical matters to consider; some decisions can be judged by the understanding based on the pure mathematical background, while others are purely based on practical reasons.
@@ -58,8 +58,8 @@ Borshukov et al. used professional Sony/Panavision HDW-F900 video cameras for th
 Machine vision cameras have also been used where synchronization was especially important \cite{carceroni2002multi,bickel2007multi}; such cameras have also limited resolution.
 
 \paragraph{Specialized hardware requirements}
-Whereas self-contained consumer devices are not designed for and do not support any additional devices for capturing the imagery, machine vision devices need several high performance computers for reliable multi-camera capture because of the lack of local storage.
-While each camera outputs easily 1 Gbit/s worth of raw data or more (Equation \ref{eq:gigabit-transfer}), a common desktop computer and one additional hard disk per camera is needed if the capture is long enough and does not fit in a computer's RAM, increasing the system cost and complexity.
+Whereas self-contained consumer devices are not designed for and do not support any additional devices for capturing the imagery, machine vision devices need several high performance computers for reliable multi-camera capture because of the lack of local storage and image processing pipelines.
+While each camera outputs easily 1 Gbit/s worth of raw data or more, a common desktop computer and one additional hard disk per camera is needed if the capture is long enough and does not fit in a computer's RAM, increasing the system cost and complexity.
 %For a small number of cameras, existing buses on a PC might be enough, but a larger number requires even more bandwidth.
 Best mechanical hard disks currently have sequential write speed up to 1-1,4 Gbit/s as measured by Tom's Hardware \cite{tomshw-hddwrite};
 newer solid-state drives (SSD) generally are two to four times faster. \cite{tomshw-ssdwrite}
@@ -235,7 +235,7 @@ For wireless remote shutter, the camera natively supports an infrared remote con
 
 \subsubsection{Canon EF 50mm f/1.8 II}
 
-Canon's EF-mount 50mm f/1.8 II lens (priced at about 110 EUR), shown in Figure \ref{fig:canonef50mmlens} is well known for its excellent image quality at a low price.
+Canon's EF 50mm f/1.8 II lens (priced at about 110 EUR), shown in Figure \ref{fig:canonef50mmlens} is well known for its excellent image quality at a low price.
 The lens was introduced in 1990.
 The 50 mm focal length with the crop factor of 1.6 of the camera body provides a good shooting distance for the purposes of this work.
 Like most lenses at this focal length, the lens is nearly distortion free.
@@ -344,6 +344,7 @@ Wires and power adapters are fastened to the stand legs in long-term use to redu
 
 \simplegfx{h!}{0.8\textwidth}{totalsetup}{
 	Complete setup with cameras and spot lights for video recording.
+	In typical scans, the cameras would be slightly closer to each other.
 }
 
 \simplegfx{h!}{0.8\textwidth}{cases}{
@@ -357,7 +358,7 @@ Unwanted lighting artifacts include harsh shadows and sharp reflections.
 Most shadows affect the scanned colors in an unwanted way, since the subject is to be relighted in a digital environment where shadows are formed artificially by calculating the brightness in every illuminated pixel separately.
 Sharp reflections make reconstruction harder, since the position of the reflection depends on the viewing direction, making the appearance of the surface different in different views.
 
-In still photographs, flash units bounced from white objects are a practical way to achieve a good lighting.
+In still photographs, flash units ``bounced'' from white objects are a practical way to achieve a good lighting.
 Typical flash units are either bounced away from white umbrellas sold for this particular purpose, or shot through a large and semitransparent cloth.
 For video recording, either a continuous light source or a high-frequency stroboscope synchronized to the video frame rate would be needed.
 Since the selected cameras do not support frame synchronization, a continuous light is necessary.
@@ -428,7 +429,7 @@ When capturing moving targets, measuring this lag variation could be of interest
 \subsubsection{Hardware}
 
 \simplegfx{h}{0.6\textwidth}{nucleo}
-{STM32 Nucleo-F401RE microcontroller development board.}
+{STM32 Nucleo-F401RE microcontroller development board. \cite{}}
 
 The Nucleo-F401RE (Figure \ref{fig:nucleo}) is a prototyping board designed around the STM32F401RET6 microcontroller IC.
 This MCU contains a relatively powerful 32-bit ARM core, space for 512 KB of program code, 96 KB of RAM, 51 general-purpose I/O pins available on the board, and other peripherals such as timers and analog/digital converters.
@@ -449,7 +450,7 @@ Full schematic for the whole circuit is available in Appendix \ref{app:fullschem
 The circuit was drawn with the Cadsoft EAGLE, a pcb design software \cite{eaglepcb}; complete schematic and layout files are available in \url {http://github.com/sooda/thesis}.
 
 The circuit board was designed to fit in a recycled enclosure that has inside dimensions of exactly 5 by 3.9 inches (approximately 127 by 99 mm).
-The used housing has a removable lid, but any box with a height of 1.4 inches (35 mm) or more should fit.
+The used housing has a removable lid, but any box with a height of 1.4 inches (35 mm) or more should fit to the design.
 
 %\simplegfx{p}{0.8\textwidth}{singleopto} % TODO: disconnect ground from the camera side
 \simplefig{h}{%
@@ -460,7 +461,7 @@ The used housing has a removable lid, but any box with a height of 1.4 inches (3
 	Right: TLP621-2 dual opto-isolator in a DIP8 through-hole package, with physical dimensions of approximately 10 by 7 mm.
 }
 
-\simplegfx{h}{0.8\textwidth}{triggerboard}{
+\simplegfx{h}{0.7\textwidth}{triggerboard}{
 	Final version of the printed circuit board layout for the trigger box.
 	Full schematic is available in Appendix \ref{app:fullschematic}.
 }
@@ -480,7 +481,7 @@ The used housing has a removable lid, but any box with a height of 1.4 inches (3
 STMicroelectronics advertises the Mbed programming environment and library for the board as an option for writing software for the MCU. \cite{mbednucleo}
 The toolchain that compiles the binary for the board works also via the browser in a cloud service, but the libraries can be also installed locally.
 All MCU-side code was developed using the Mbed libraries, built locally with the GCC-ARM Embedded toolchain \cite{launchpad-gcc-arm}.
-Mbed hides the hardware complexity of the platform, making the total application source code small (less than 200 lines of C++) and relatively independent of hardware initialisation details.
+Mbed hides the hardware complexity of the platform, making the total application source code small (less than 200 lines of simple C++) and relatively independent of hardware initialisation details.
 A significant advantage in this hardware abstraction is that a novice could extend the program without previous knowledge on the particular hardware architecture.
 
 The MCU software, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no special drivers.
@@ -545,7 +546,7 @@ gPhoto2 \cite{gphoto2} is a well-known free and open-source application and libr
 The software consists of a command-line control tool of the same name, \emph{gphoto2}, and a library API, \emph{libgphoto2}.
 
 Instead of relying on each camera manufacturer separately for a software development kit, gphoto2 abstracts common operations behind the same interface.
-For example, Canon and Nikon, some of the biggest camera manufacturers, both provide SDKs for controlling their devices remotely via a USB connection from Windows and Mac OS X. \cite{canonedsdk} \cite{nikonsdk}
+For example, Canon and Nikon, some of the biggest camera manufacturers, both provide SDKs for controlling their devices remotely via a USB connection from Windows and Mac OS X. \cite{canonedsdk,nikonsdk}
 Sony provides an SDK for Android and iOS. \cite{sonysdk}
 Olympus has had an SDK, but it is no longer available. \cite{olympussdk}
 To support all vendors, one would have to write code for all APIs.
@@ -833,7 +834,7 @@ The following short listings review some of the commercial products that use 3D 
 % FIXME emphasis on differences
 
 The following list includes software-only reconstruction solutions available for purchase, that work as-is for any general input.
-
+% FIXME photomodeler
 \begin{description}
 	\item[Autodesk 123D Catch] is a free and popular web-based application for automatic reconstruction; photos are uploaded to a cloud service, and a textured mesh is generated automatically. \cite{autodesk123dcatch}
 	\item[Acute3D] Smart3DCapture is targeted for large-scale photogrammetry and cultural heritage digitization. The software is provided as a standalone program and a library, and it is used in Autodesk 123D Catch. \cite{acute3d}
