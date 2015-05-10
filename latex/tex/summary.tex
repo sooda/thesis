@@ -1,14 +1,17 @@
 %Yhteenveto
 % "further work remains to .."
+% XXX more cameras
 \section{Conclusions and future work} \label{sec:conclusion}
-The aim of this thesis was to study the principles of scanning the geometry and color of a subject in three dimensions in order to produce a digitally reconstructed model of the subject for usage in computer graphics, and to build a flexible and practical scanning rig for quickly photographing small subjects for use in reconstruction study.
-Realistic content is increasingly needed in computer graphics.
-Current processing power of desktop and portable computers with powerful graphics processing units enables to use large amounts of data to synthesize a three-dimensional scene on a computer screen.
-Digitally reconstructing real objects is a powerful way to create the needed content.
+
+The purpose of this thesis was to build a rig for turning real life subjects into three-dimensional digital models, using a technique called \emph{multi-view stereo reconstruction}.
+Modern reconstruction rigs are increasingly necessary for both content production and reconstruction research, as computing power increases and reconstruction methods advance.
+While the same methods are applicable for any number of digital cameras of any quality, the aim in this work was ease of use and high photographic quality.
+Based on the understanding built in the beginning of this thesis, requirements for the rig could be well specified and best settings could be chosen for the cameras and the photography environment.
+The end result is a rig of nine cameras tested to work for desirable subjects using two different software pipelines, with potential to expand by adding more cameras.
 
 First part of this thesis surveyed the image formation process in digital cameras and the 3D reconstruction principles that current algorithms build upon.
-Based on the camera technology study, the heart of the rig was selected to be an array of nine crop-sensor Canon EOS 700D digital single-lens reflex cameras using moderate 50 mm lenses with an equivalent field of view of an 80 mm full-frame lens.
-The cameras produce 18-megapixel images and the total footprint of the rig is less than five squaremetres for most setups including the subject.
+Based on the camera technology study, the heart of the rig was selected to be an array of nine Canon EOS 700D digital single-lens reflex cameras using 50 mm lenses with an equivalent field of view of an 80 mm lens for 35 mm format.
+The cameras produce 18-megapixel images and the total footprint of the rig is less than $5 m^2$ for most setups including the subject.
 Software for jointly configuring the required manual settings in all cameras was surveyed and developed using the \emph{gphoto2} camera control library.
 A custom electronic remote shutter trigger tool was built to synchronize the cameras for capturing still photographs in an accurate way even with a moving subject.
 For video capture, the cameras still can be remotely triggered to start video capture, but as they lack accurate video synchronization, a maximum possible error of half a frame duration still exists.
@@ -44,7 +47,7 @@ The user interface can be further improved from the current prototype phase to a
 As seen in several photos, such as in the smile in Figure \ref{fig:artoglassescompare} and Figure \ref{fig:artoglassesframe}, an even, diffuse lighting was not achieved using the current lighting and very dark shadows were introduced in certain self-occluded sections, making it difficult to scan the surface texture and resulting in low completeness of the scanned surface.
 It is suggested to experiment devices used in professional photography, such as umbrellas and studio flash units inside soft boxes, possibly in combination with a large light tent where the system could be contained.
 Surrounding the subject and the rig with reflective white cover would help, either close to the subject requiring holes for the cameras on the cover, or completely using a large white tent and high-powered flash lights outside it.
-For example, the actors of the FIFA 14 video game were scanned inside a white tent with the Likeness Capture system. \cite{eafifa14,capturelab}
+For example, the actors of the FIFA 14 video game were scanned inside a white tent with the Likeness Capture system \cite{eafifa14,capturelab}.
 
 % pairwise photos for coverage, better resolution
 Arranging the cameras in pairs and aligning the resulting point clouds could provide more coverage with the limited number of cameras.
@@ -52,25 +55,26 @@ Pairwise scanning has been done before successfully \cite{eafifa14,beeler2010hig
 the multi-view SfM approach was used for testing because of its simplicity.
 Careful positioning within the camera frames is encouraged to take use of the resolution.
 However, requiring the subject to fill more of the frame restricts the space for movement, which may or may not be favorable.
-For a smaller section of a face, the cameras could be used as plain stereo pairs such that each camera would only see a part of the subject, thus using the camera resolution more effectively for more high density data, as presented by Bradley et al.\ \cite{bradley2010high}
+For a smaller section of a face, the cameras could be used as plain stereo pairs such that each camera would only see a part of the subject, thus using the camera resolution more effectively for more high density data, as presented by Bradley et~al.\ \cite{bradley2010high}.
 
 
 % normal map rendering and scanning
 % (probably shouldn't introduce new terms here, tell about them in bg with meshes)
 A typical head scan results in a point cloud of 0,5-5 million points depending on the subject, lighting, and software used, eventually resulting in a triangular mesh with a number of triangles of the same order of magnitude.
-Still, to render the subjects in a different lighting environment with proper shadowing and mesoscopic surface details, even higher geometric detail would be necessary, which is not feasible in realtime.
+%Still, to render the subjects in a different lighting environment with proper shadowing and mesoscopic surface details, even higher geometric detail would be necessary, which is not feasible in realtime.
+In rendering the models for actual use, fewer triangles should be used with geometry details not encoded as triangles but textures instead.
 The advanced rendering techniques employing the surface microgeometry as textures such as \emph{bump maps} are beyond the scope of this thesis, but they present interesting future work in this field.
-The mesoscopic augmentation by Beeler et al.\ uses the same idea as high-detailed rendering, where the tiny details that are occluded by surrounding geometry are rendered darker. \cite{beeler2010high}
-Ghosh et al. \cite{ghosh2011multiview} photograph a same still subject in different illumination conditions by changing the lighting quickly, in order to scan for both diffuse and specular reflectance components of the surface.
+The mesoscopic augmentation by Beeler et~al.\ uses the same idea as high-detailed rendering, where the tiny details that are occluded by surrounding geometry are rendered darker \cite{beeler2010high}.
+Ghosh et~al.\ \cite{ghosh2011multiview} photograph a same still subject in different illumination conditions by changing the lighting quickly, in order to scan for both diffuse and specular reflectance components of the surface.
 The current rig features possibilities for augmenting for such work.
 
 % animation replay on a mesh
-Interestingly, the video performance capture based on anchor frames by Beeler et al.\ \cite{beeler2011high} is able to record and replay a temporally consistent animation (i.e.\ constant mesh topology) with mesoscopic details, using a final geometry of several orders of magnitude less than the raw point cloud density achieved with the presented demonstration subjects.
+Interestingly, the video performance capture based on anchor frames by Beeler et~al.\ \cite{beeler2011high} is able to record and replay a temporally consistent animation (i.e., constant mesh topology) with mesoscopic details, using a final geometry of several orders of magnitude less than the raw point cloud density achieved with the presented demonstration subjects.
 As presented in \cite{deng2007computer}, the Facial Action Coding System or similar could be used for animation to parameterize the face in a group of muscular actions for efficient replay.
 Such animations remain to be tested on this rig.
 
 % syncing
-The camera array synchronization and rolling shutter compensation methods proposed by Bradley et al.\ \cite{bradley2009synchronization} should be experimented on the system for preparing for computer animation, as both these issues are present in the current setup.
+The camera array synchronization and rolling shutter compensation methods proposed by Bradley et~al.\ \cite{bradley2009synchronization} should be experimented on the system for preparing for computer animation, as both these issues are present in the current setup.
 Synchronization issues do not completely prohibit from using the rig, but the resulting quality may be suboptimal.
 However, generation of initial test content is feasible.
 

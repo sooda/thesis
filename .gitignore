@@ -1,5 +1,4 @@
-*.swp
-*.swo
+*.sw[pon]
 *.vis
 *.o
 *.pyc

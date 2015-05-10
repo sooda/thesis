@@ -1,7 +1,11 @@
+% XXX \baselineskip
 \documentclass[english,12pt,a4paper,pdftex]{article}
 %\documentclass[english,12pt,a4paper,dvips]{article}
-
+%\usepackage[finnish,english]{babel}
 \usepackage[elec,utf8]{aaltothesis}
+
+% render without images:
+% \renewcommand{\includegraphics}[2][]{\fbox{#2}}
 
 % pdflatex, gfx in jpg/pdf
 \usepackage{graphicx}
@@ -107,7 +111,6 @@ linkcolor=blue,citecolor=black,pdfstartview=FitH]{hyperref}
 \setcounter{page}{1}
 
 \include{tex/introduction}
-
 \include{tex/background}
 \include{tex/materials-methods} % / design+integration / system implementation / more custom subsections
 \include{tex/results} % / results+verification

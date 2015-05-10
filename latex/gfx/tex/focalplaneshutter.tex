@@ -30,7 +30,7 @@
 		\draw [\clrfirst,fill=\clrfirst,fill opacity=0.3] (0,0) rectangle ++(\planeW,\planeH);
 
 		% shutter move
-		\draw [->] (0.5*\planeW,0.5*\planeH) -- ++(0,-1.0*\planeH);
+		\draw [->] (0.5*\planeW,0.5*\planeH) node [align=center,above] {hidden sensor\\under 1st curtain} -- ++(0,-1.0*\planeH) node [align=center,below] {first curtain\\exposes sensor};
 		% scene move
 		\draw [->] (\sceneWW,0.5*\planeH) -- ++(\sceneSpace,0);
 
@@ -43,7 +43,7 @@
 		\draw [\clrfirst,fill,fill opacity=0.2] (0,-\planeH-\planeSep) rectangle ++(\planeW,\planeH);
 
 		% shutter move
-		\draw [->] (0.5*\planeW,1.5*\planeH) -- ++(0,-1.0*\planeH);
+		\draw [->] (0.5*\planeW,1.5*\planeH) node [align=center, above] {second curtain\\hides sensor} -- ++(0,-1.0*\planeH) node [below] {sensor being exposed};
 		% scene move
 		\draw [->] (\sceneWW,0.5*\planeH) -- ++(\sceneSpace,0);
 	\end{scope}
@@ -58,7 +58,7 @@
 		\draw [\clrfirst,fill,fill opacity=0.2] (0,-\planeSep)
 		      -- ++(0,-\planeH) -- ++(\planeW,0) -- ++(0,\planeH);
 		% sensor
-		\draw [\clrback,dashed] (\backX,\backY) rectangle ++(\backW, \backH);
+		\draw [\clrback,dashed] (\backX,\backY) rectangle ++(\backW, \backH) node [align=center,pos=.5] {sensor hidden again};
 		% top on sensor
 		\draw [\clrsecond,fill,fill opacity=0.2] (0, 0) rectangle ++(\planeW, \planeH);
 	\end{scope}

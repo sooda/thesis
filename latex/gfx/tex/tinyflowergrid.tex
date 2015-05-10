@@ -1,0 +1,43 @@
+\documentclass[border=0cm]{standalone}
+\usepackage{tikz}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mygreen}{rgb}{0,1,0}
+\definecolor{myblue}{rgb}{0,0,1}
+\definecolor{mymagenta}{rgb}{1,0,1}
+\usetikzlibrary{calc,intersections,through,backgrounds}
+
+\begin{document}
+
+\def\w{23}
+\def\h{34}
+
+\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (image) at (0,0){\includegraphics[width=0.5\textwidth]{gfx/bitmap/tinyflower}};
+
+\begin{scope}[x={(image.south east)},y={(image.north west)}]
+
+\foreach \y in {0,1,...,\h}{
+	\draw[white,ultra thick,rounded corners] (0,\y/\h) -- ++(1,0);
+}
+\foreach \x in {0,1,...,\w}{
+	\draw[white,ultra thick,rounded corners] (\x/\w,0) -- ++(0,1);
+}
+
+\node [anchor=south west,inner sep=0] (Z) at (1.5,0.9) {\includegraphics{gfx/bitmap/tinyflower}};
+\node [font=\large,right of=Z,anchor=south west] {real size image};
+
+\draw [fill=mygray,ultra thick] (1.5, 0.6) node(A){} rectangle ++(0.1,0.1);
+\node [font=\large,right of=A,anchor=south west] {(0.5, 0.5, 0.5) gray};
+
+\draw [fill=mygreen,ultra thick] (1.5, 0.4) node(B){} rectangle ++(0.1,0.1);
+\node [font=\large,right of=B,anchor=south west] {(0, 1, 0) green};
+
+\draw [fill=myblue,ultra thick] (1.5, 0.2) node(C){} rectangle ++(0.1,0.1);
+\node [font=\large,right of=C,anchor=south west] {(0, 0, 1) blue};
+
+\draw [fill=mymagenta,ultra thick] (1.5, 0.0) node(D){} rectangle ++(0.1,0.1);
+\node [font=\large,right of=D,anchor=south west] {(1, 0, 1) magenta};
+\end{scope}
+
+\end{tikzpicture}
+\end{document}

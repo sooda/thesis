@@ -12,6 +12,7 @@ SRC := dippa.tex \
 	gfx/tex/simplestereo.pdf \
 	gfx/tex/epigeom.pdf \
 	gfx/tex/baselineerr.pdf \
+	gfx/tex/tinyflowergrid.pdf \
 	gfx/dot/img-get-process.dot.pdf
 
 all: dippa.pdf
@@ -23,7 +24,7 @@ clean:
 	rm -f dippa.pdf
 
 fullclean:
-	rm -f dippa*.pdf
+	rm -f dippa.pdf
 	rm -f dippa.aux tex/*.aux
 	rm -f *.bbl *.blg *.log *.out *.toc
 
