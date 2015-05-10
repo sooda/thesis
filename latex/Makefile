@@ -36,9 +36,12 @@ gfx/tex/%.pdf: gfx/tex/%.tex
 gfx/dot/%.pdf: gfx/dot/%.dot
 	dot -Tpng $< > $@
 
-dippa.pdf: $(SRC)
+dippa.pdf: $(SRC) dippa.bbl
 	pdflatex dippa
 	#pdflatex dippa
+
+dippa.bbl: dippa.bib
+	bibtex dippa
 
 dippa-final.pdf: $(SRC)
 	pdflatex dippa
