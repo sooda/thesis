@@ -379,10 +379,6 @@ As high level of geometry as produced initially by the surface generation proces
 	Meshlab produces a piecewise texture map similar to PhotoScan's generic mode.
 }
 
-%\simplegfx{h}{\textwidth}{arto-forehead-uvmap}{
-%	Texture map for the model in Figure \ref{fig:sample-arto-forehead}. Note the wrinkle colors in the forehead patches.
-%}
-%
 Other subjects that were also scanned and reconstructed using VisualSFM are summarized in Figure \ref{fig:vsfm-compare}.
 Text in a page of a book provides enough dense points that the text is well readable, while the paper itself does not contain any texture and is not reconstructed.
 Only problems in human scans are hair that is not well distinguishable (most features are similar) and does not present any definitive surface, and bright spots that result from a combination of bad lighting and sweating.
@@ -424,16 +420,6 @@ The mesh was built with Meshlab's Poisson surface reconstruction plugin with 12 
 	The artifact in the helmet is caused by a slight misalignment between two clouds.
 	Misalignment errors could be addressed by more careful alignment and outlier removal, or a bigger rig with more cameras.
 }
-
-%\simplefig{h}{%
-%%\includegraphics[width=0.4\textwidth]{meshlab}
-%\includegraphics[width=0.4\textwidth]{meshlab}
-%\includegraphics[width=0.4\textwidth]{meshlab}
-%}{fig:sample-arto-meshlab}{
-%	Arto in Meshlab
-%}
-
-%A simple lego structure provided to work surprisingly well, even though the lego blocks have a plain color without any texture; the only texture in the structure comes from the corners of different colored blocks.
 
 A simple structure of Lego blocks was scanned with poor results, as was expected; uniform-colored blocks with no texture and no geometry variations present a difficulty to point matching.
 The corners between blocks of different color are the only well reconstructed areas.

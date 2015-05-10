@@ -94,7 +94,7 @@ in this work, a standard 3D cartesian coordinate system is used.
 In cartesian coordinates, a point is described as a location relative to a selected origin reference, as a triplet of distances along three perpendicular X, Y and Z axes. % (Figure \ref{fig:coordsys}).
 In a traditional right-handed system, X increases right, Y upwards and Z towards the viewer.
 
-%\simplegfx{h}{0.6\textwidth}{coordsys}
+%\simplegfx{t}{0.6\textwidth}{coordsys}
 %{A 3D cartesian coordinate system. Origin at O, point location encoded in the triplet $(x,y,z)$ as individual lengths along the X, Y and Z axes, respectively.}
 
 % }}} pinhole
@@ -978,7 +978,7 @@ Its \emph{intrinsic parameters} model the properties of projection, but do not t
 The \emph{extrinsic parameters} contain the camera location and rotation in another global coordinate system, often structured as a matrix \cite[p. 41]{hartley03multiview}. % , \cite{heyden2005multiple}
 This section reviews basic transforms whose results are needed in the later reconstruction steps.
 
-\simplefig{h}{%
+\simplefig{t}{%
 \includegraphics[width=0.7\textwidth]{pinhole3d}
 }{fig:pinhole3d}{
 	Pinhole camera geometry.
@@ -1366,7 +1366,7 @@ Other more complex methods, e.g., polar rectification, can handle more general c
 Often, rectification is applied conveniently such that the search can be done along one axis of the image.
 
 
-\simplegfx{h}{0.5\textwidth}{rectification}{
+\simplegfx{t}{0.5\textwidth}{rectification}{
 	In planar image rectification, two images ($I_k$ and $I_l$) are projected to a common plane $\Pi_R$ as $I_k^l$ and $I_l^k$ respectively.
 	The common plane is parallel to the baseline vector $P_k-P_l$.
 	Image by Pollefeys \cite{pollefeys2004visual}.
@@ -1472,7 +1472,7 @@ Ground truth data can also be obtained with a real 3D scanner, such as a laser r
 In addition, uncertainty in depth depends more heavily on the pixel errors (i.e., disparity precision) if the baseline is short, as depicted in Figure \ref{fig:baselineerr}.
 The common area seen by two cameras stretches in depth as the cameras come closer, but the disparity reduces by Equation \ref{eq:triangulation}, making the point matching in turn more dependent on the image resolution.
 
-\simplegfx{h}{\textwidth}{baselineerr}{
+\simplegfx{t}{\textwidth}{baselineerr}{
 	Exaggerated illustration of the effect of baseline difference $||A-B||$ on the depth error $Z_2 - Z_1$, with a small (left) and large (right) baseline.
 	Point $P$ is seen by the two cameras $A$ and $B$.
 	Points $P_l$ and $P_r$ depict the left and right possible points on the raster image, i.e., the possible range for the pixel.
@@ -1509,7 +1509,7 @@ When ultimately rendering the polygons on a computer screen using the graphics p
 
 \subsubsection{Data structures} % {{{
 
-\simplefig{h}{%
+\simplefig{t}{%
 \includegraphics[width=0.3\textwidth]{bunny}
 \includegraphics[width=0.6\textwidth]{bunnyear}
 }{fig:stanfordbunny}{
