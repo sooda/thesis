@@ -270,7 +270,7 @@ Magic Lantern has an active user forum \cite{magiclanternforum}, a wiki, and an 
 As an open source project developed in a distributed fashion, it suffers from inconsistent documentation and coding style, and is occasionally best examined by reading source code, written in the C programming language.
 No ``stable'' release is offered for EOS 700D yet, but the unofficial testing version has been long in use.
 
-\simplegfx{t}{0.6\textwidth}{ml-menu}{
+\simplegfx{t}{0.9\textwidth}{ml-menu}{
 	Magic Lantern grid menu in movie mode, showing a subset of its features.
 }
 
@@ -298,7 +298,7 @@ A hobbyist-purposed manufacturer OpenBuilds targets open source projects, such a
 The cost of such profile is around 10-20 EUR/m, with varying prices for connection pieces; availability varies by supplier.
 
 Ready-made light or speaker stands come in a variety of sizes and share a common design with an extendable center rod and three legs.
-Typical light stands have an universal mount in top end of the rod for fastening a lamp.
+Typical light stands have a universal mount in top end of the rod for fastening a lamp.
 Speaker stands typically share a similar standard; in general, they are also heavier and thicker to support a larger mass.
 Most photography and audio/video studio stores offer a variety of light and speaker stands.
 
@@ -413,7 +413,7 @@ Another common setting is a powered device that outputs a voltage signal from a 
 A microcontroller (MCU) is a tiny computer in a single, usually fingernail-sized package containing a microprocessor core, RAM, nonvolatile program memory and peripheral devices; all parts required to run a single user-defined embedded application typically with no general operating system.
 The Arduino microcontroller board family \cite{arduino} is a popular example.
 The typical programming languages for microcontrollers are C and C++.
-Communication on the host PC end of an USB connection, when supported, can be implemented in any language.
+Communication on the host PC end of a USB connection, when supported, can be implemented in any language.
 
 In this work, a microcontroller prototyping platform called Nucleo-F401RE by STMicroelectronics \cite{stnucleo} was used.
 This platform has a built-in USB port for simple communication.
@@ -484,6 +484,7 @@ A significant advantage in this hardware abstraction is that a novice could exte
 
 The MCU software, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no special drivers.
 Communication protocol consists of flags for setting focus or shutter mode and entering bit flags that describe what cameras should be affected, in text mode.
+The least significant, i.e., rightmost, bit signifies the first camera.
 The device echoes the sent characters back, making it convenient to test with a serial console.
 The protocol is described in detail in Table \ref{tab:triggerprotocol}.
 
@@ -497,13 +498,13 @@ The reset button resets the whole microcontroller, restarting the program with n
 		Set focus pin state & Fxxxxxxxxxx\\
 		Set shutter pin state & Sxxxxxxxxxx\\
 		Reset all to unpressed & R\\
-		Example: push down focus on first and third & F101\\
+		Example: push down focus on 1st, 2nd and 4th & F1011\\
 	\end{tabular}
 	\caption{
-		Remote trigger protocol; the letter x signifies a single bit (digit 0 or 1) and can be omitted from the start, in which case it is assumed 0.
+		Remote trigger protocol; the letter x signifies a single bit (digit 0 or 1) and can be omitted from the left, in which case it is assumed 0.
 		Note that the messages set the whole button state instead of sending ``keypresses'';
 		to emulate a full keypress, the state must be set first to 1, followed by a set to 0 or a reset.
-		Each command must be finished with a space or newline character.
+		Each command must be finished with a space or a newline character.
 	}
 	\label{tab:triggerprotocol}
 \end{table}
@@ -560,7 +561,7 @@ Details on list of configurable properties and sequences for capturing pictures 
 \paragraph{gphoto2 wrapper}
 A ``wrapper'' code library was written in C++ for libgphoto2 to automate memory and resource management, simplify the usage of the raw library, and to write the programs themselves in clean C++; libgphoto2 itself is implemented in the C language and is not well documented.
 Libgphoto2 exposes the data as objects, and the wrapper simplifies their handling and implements some more complicated operations, such as creating a new camera object instance, configuring parameters, and downloading preview frames and actual shots.
-The library itself is also not thread-safe: if a camera is used in to threads of execution simultaneously, unexpected errors happen \cite{gphoto2}.
+The library itself is also not thread-safe: if a camera is used in two or more threads of execution simultaneously, unexpected errors happen \cite{gphoto2}.
 Locking mechanisms were written for the wrapper to prevent more than one executing threads from accessing a camera instance simultaneously.
 The library initialization was also protected, because it loads camera-specific sub-libraries only after first use; if many cameras are tried to initialise at the same time, another error would occur.
 
@@ -675,7 +676,7 @@ The following small command-line scripts were written using the gphoto2 command-
 	\item \emph{forallp}: as forall, but in parallel, saving time
 	\item \emph{post-download-by-camid}: download all previously shot files stored in the cameras to directories named by camera artist name
 	\item \emph{readconfig}: read and copy settings from one camera to all others currently connected
-	\item \emph{release-uilock}: unlock the physical user interface of connected cameras by fetching a listing the filesystem; a workaround for the Canon glitch described below
+	\item \emph{release-uilock}: unlock the physical user interface of connected cameras by fetching listings of their files; a workaround for the Canon glitch described below
 \end{itemize}
 
 The \emph{forall} and \emph{forallp} scripts are trivial shortcuts to autodetecting all cameras and passing commands to gphoto2 for each, and are useful for case-specific problems or setting individual configurations temporarily.
@@ -737,10 +738,16 @@ Video format should be set to 720p at 50 or 60 FPS or 1080p at 25 or 30 FPS.
 Both resolutions result in a video bitrate of approximately 5 MB/s with default settings.
 The video format is H.264 encoded in a Quicktime MOV file, with a stereo audio in raw lossless (PCM) format with 48 kHz sample rate and 16 bits per sample.
 
-The bitrate can be extended from Magic Lantern's menus, but bitrate changes are still experimental code and recording may stop if the camera or the memory card is not fast enough.
+The bitrate can be extended from Magic Lantern's menus (shown in Figure \ref{fig:ml-bitrate}), but bitrate changes are still experimental code and recording may stop if the camera or the memory card is not fast enough.
 Video keyframe rate can also be changed with a development version of Magic Lantern and probably will be stable in the future;
 in the video codec used, the frames can be \emph{I-frames} (intra-frames), with fully encoded data, or \emph{predicted frames}, encoding changes between frames, with less accurate information.
 Raw recording is also supported, but with the limited memory card speed, only a low resolution is achievable.
+
+\simplegfx{t}{0.9\textwidth}{ml-bitrate}{
+	The bitrate configuration dialog in Magic Lantern.
+	CBR stands for constant bitrate; QScale is a quality scaling factor.
+	Magic Lantern allows to modify the video quality at the expense of recording size and the risk of stopping the recording if the memory card cannot receive the data at the speed the camera offers.
+}
 
 % }}}
 
@@ -782,7 +789,7 @@ While libraries can be used to write new tools, many pieces of software are read
 Some of the most known state-of-the-art implementations are listed below.
 
 \begin{description}
-	\item[Camera Calibration Toolbox for Matlab,] \cite{camcalmatlab} also included built-in in OpenCV, is a more or less standard tool to single-camera and stereo camera calibration.
+	\item[Camera Calibration Toolbox for Matlab,] \cite{camcalmatlab} also included built-in in OpenCV, is a more or less standard tool for single-camera and stereo camera calibration.
 		The toolbox computes undistortion maps and intrinsic and extrinsic parameters with checkerboard images using non-linear optimization and planar homographies.
 
 	\item[Bundler] \cite{snavely2006photo} is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds, targeted for large-scale unordered photo collections, originally used for the Photo Tourism project.
@@ -899,7 +906,7 @@ The point cloud is filtered by certain visibility constraints, and the resulting
 
 PMVS divides the source images iteratively to smaller sets, and begins at a halved size by default with one fourth of the pixel count of the original.
 Forcing the original size was found to provide roughly twice the amount of points with four times longer processing time, but with no observed increase in accuracy.
-The documentation of this parameter also suggests that a halved size is used, because a large part of colors are interpolated in the original image because of the color filter array in the image sensor (Section \ref{sec:sensors}).
+The documentation of this parameter also suggests that a halved size is used, because a large part of the pixels in the color image is interpolated in the original image because of the color filter array in the image sensor (Section \ref{sec:sensors}).
 
 No software installation instructions are provided in this thesis; refer to documentation of the presented programs for installation and usage.
 The VisualSFM pipeline was built from source with no modifications done.

@@ -1,20 +1,25 @@
 \documentclass{standalone}
 \usepackage{tikz}
+\usetikzlibrary{calc,intersections,through,backgrounds,positioning}
 \begin{document}
-\begin{tikzpicture}[scale=0.3]
+\begin{tikzpicture}[scale=0.5]
 
 	\tikzset{%
 		dimen/.style={<->,>=latex,thin,every rectangle node/.style={fill=white,midway,font=\sffamily}},
 	}
 
-	\draw[fill] (0, 20) circle [radius=0.3];
-	\node at (0, 21) {$X$};
+	\def\h{10}
+	\def\planey{4} % image plane distance
+	\def\planew{6} % half of image plane width
+
+	\draw[fill] (0, \h) circle [radius=0.3];
+	\node at (0, \h+1) {$X$};
 
 
 	% origins, T
 	% TODO: circles, node ends not exactly at those points
 	\draw [dimen] (-9.5,0) -- (9.5, 0) node {$T$};
-	\draw [dimen] (0, 0.5) -- (0, 19.5) node {$Z$};
+	\draw [dimen] (0, 0.5) -- (0, \h-0.2) node {$Z$};
 	\draw[fill] (-10, 0) circle [radius=0.3];
 	\draw[fill] ( 10, 0) circle [radius=0.3];
 	\node at (-10, -1) {$C_l$};
@@ -24,34 +29,37 @@
 	\draw [->] (-10, 0) -- (-10, 10);
 	\draw [->] (10, 0) -- (10, 10);
 
-	% image planes, at y=4
-	\draw[thick] (-13, 4) -- (-7, 4);
-	\draw[thick] (13, 4) -- (7, 4);
+	% C-to-P
+	\draw [name path=leftline] (-10, 0) -- (0, \h);
+	\draw [name path=rightline] (10, 0) -- (0, \h);
 
-	\draw [dimen] (-6, 0.0) -- (-6, 4.0) node {$f$};
+
+	% image planes
+	\draw[ultra thick, name path=sensorleft] (-10-\planew, \planey) -- ++(2*\planew, 0);
+	\draw[ultra thick, name path=sensorright] (10-\planew, \planey) -- ++(2*\planew, 0);
+
+	\draw [dimen] (-10+\planew, 0.0) -- ++(0, \planey) node {$f$};
 
 
 	% intersection points at principals and xs
+	\path [name intersections={of=leftline and sensorleft,name=lefthit}];
+	\path [name intersections={of=rightline and sensorright,name=righthit}];
 	\draw[fill] (-10, 4) circle [radius=0.3];
 	\draw[fill] (10, 4) circle [radius=0.3];
 
 	\node at (-10.5, 3) {$c_l$};
 	\node at (10.5, 3) {$c_r$};
 
-	\node at (-9, 5) {$x_l$};
-	\node at (9, 5) {$x_r$};
-
-
-	% C-to-P
-	\draw (-10, 0) -- (0, 20);
-	\draw (10, 0) -- (0, 20);
-
+	%\node at (-10+2, \planey+1) {$x_l$};
+	\draw [dimen] (-10, \planey+1) -- ($(lefthit-1)+(0,1)$) node {$x_l$};
+	\draw [dimen] (10, \planey+1) -- ($(righthit-1)+(0,1)$) node {$-x_r$};
+	%\node at (10-2, \planey+1) {$x_r$};
 
 	% p
-	\draw[fill] (8, 4) circle [radius=0.3];
-	\node at (8, 3) {$p_r$};
-	\draw[fill] (-8, 4) circle [radius=0.3];
-	\node at (-8, 3) {$p_l$};
+	\draw[fill] (lefthit-1) circle [radius=0.3];
+	\node[below=0.2cm of lefthit-1] {$p_l$};
+	\draw[fill] (righthit-1) circle [radius=0.3];
+	\node[below=0.2cm of righthit-1] {$p_r$};
 
 
 \end{tikzpicture}

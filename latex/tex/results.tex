@@ -23,7 +23,7 @@ Assuming a negligible delay between the flash trigger signal and the actual phot
 The camera was set up to all manual settings and manual focus, and the focus signal was given before each measurement.
 Measurements matched consistently a 75 millisecond delay, repeated shots varying less than 1 \%.
 This excellent repeatability suggests that moderately moving subjects can be captured properly.
-If a synchronized light would be connected to the remote trigger instead of the cameras' flash contacts, this delay would be needed to take into account.
+If a synchronized light was connected to the remote trigger instead of the cameras' flash contacts, this delay would be needed to take into account.
 The used test program for the Nucleo board can be found in the microcontroller programs directory in the github repository by the name \emph{measure.cpp}.
 The different signals to all ten outputs in the remote trigger were measured with an oscilloscope to happen within 1,6 microseconds.
 
@@ -101,7 +101,7 @@ t_{Cl} &= t_{Ci} + t_{Cf} \\
 \end{split} \end{align}
 
 where $C$ is a camera identifier, $t_{Cl}$ is camera-relative time for the light pulse, $t_{Ci}$ is the starting time for the frame where the light shows up, and $t_{Cf}$ is the time inside the particular frame.
-The frame index $i$ marks the number of the frame in the video file, starts from 0, and there is $F$ = $1/\text{fps}$ seconds between the frames.
+The frame index $i$ marks the number of the frame in the video file, starts from 0, and there are $F$ = $1/\text{fps}$ seconds between the frames.
 $f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the ratio of exposure time and frame duration ($0.5$ in this case, referring to a characteristic to the camera, as it exposes the first and last rows in half the time between frames).
 Offset between two cameras $A$ and $B$ is then $t_{Al} - t_{Bl}$.
 The timings are depicted in Figure \ref{fig:flashtimeline} as a timeline with matching symbols.
@@ -137,7 +137,7 @@ In this example, $c = 0.5$.
 
 
 The method for measuring the synchronization error at a sub-frame precision can be used to calibrate the differences, which is useful in artificial sync with optical flow or other methods, where frame timing is used.
-A similar method using the recorded audio (as in Figure \ref{fig:flashaudio}) is more used in video photography \cite{pluraleyes,premierepromerge}, where similarities in the sound of the audio tracks recorded by the different cameras would be used for shifting the videos so that their clocks is in sync.
+A similar method using the recorded audio (as in Figure \ref{fig:flashaudio}) is more used in video production \cite{pluraleyes,premierepromerge}, where similarities in the sound of the audio tracks recorded by the different cameras would be used for shifting the videos so that their clocks is in sync.
 For a small number of cameras, the audio tracks are simple to align manually in an audio editing software, or automatically with cross-correlation to find the time lag.
 
 In a work by Bradley et~al., a \emph{moving-object synchronization} method \cite{bradley2008markerless} was suggested for post-process video synchronization using a detection of a rotated calibration grid.
@@ -150,7 +150,8 @@ This method did not show any improvements in overcoming the offset, as opposed t
 
 A typical measurement result is shown in Figure \ref{fig:flashtiming}.
 Audio recorded by the cameras' internal microphones at the same event is shown in Figure \ref{fig:flashaudio}, and the order of flash pulses in the three frames can be verified from the order of the sound emitted by the flash.
-Both methods show that the leftmost shown camera has started recording first, and subsequent time lags compared to it are approximately 21 and 31 milliseconds.
+Both methods show that the leftmost camera has started recording last, as it has been recording the least amount of time of all three before the flash is seen.
+Subsequent time lags compared to the first camera are approximately 21 and 31 milliseconds.
 A relatively long exposure time was used.
 
 From the results tested, it was deduced that the Canon EOS 700D implements exposure time in a similar way as a physical focal plane shutter with two artificial curtains, where the first curtain clears each particular sensor row, and the second curtain reads out the accumulated charge.
@@ -221,7 +222,7 @@ With a distance $d$ of one metre from lens to the subject, the Bundler guideline
 The key camera parameters used for photographing most samples are listed in Table \ref{tab:sampleshotparams}.
 In a dark environment with flash lights, the exposure time is not particularly important for a static subject; the short flash pulse dominates all light in the scene.
 The baseline was chosen by the guidelines proposed and by the difficulty in using the cameras in close proximity to each other.
-Initially, a slightly longer baseline of approximately 50 cm was used; it was furthermore reduced to 30.
+Initially, a slightly longer baseline of approximately 50 cm was used; it was subsequently reduced to 30.
 
 \begin{table}[h]
 	\centering
@@ -243,8 +244,8 @@ Initially, a slightly longer baseline of approximately 50 cm was used; it was fu
 
 \paragraph{Reconstruction software}
 The programs suggested in the previous section were used for evaluation due to their popularity and availability: PhotoScan \cite{photoscan} and VisualSFM \cite{wu2013towards}.
-Both were ran on a typical modern Linux installation.
-A free demo version of PhotScan was used, which does not include exporting the generated meshes; screenshots were taken in the user interface for illustration of results.
+Both were run on a typical modern Linux installation.
+A free demo version of PhotoScan was used, which does not include exporting the generated meshes; screenshots were taken in the user interface for illustration of results.
 VisualSFM and the related software were built from source.
 
 All photographs were captured using the developed software presented in the previous Section \ref{sec:implementation}.
@@ -270,11 +271,11 @@ For the subjects tested, the accuracy was of the same order of magnitude.
 Using the source data shown partly in Figure \ref{fig:sample-arto-photoscan-source}, a point cloud and a textured mesh were generated in PhotoScan, using a quality setting of ``High''.
 The workflow in PhotoScan is similar to that of VisualSFM and other tools based on separate programs:
 initially, the scene structure is computed, resulting in a sparse point set of the subject and camera parameters.
-A dense point set computation is followed, and finally a textured triangle mesh is computed based on the dense points and source images.
+A dense point set computation follows, and finally a textured triangle mesh is computed based on the dense points and the source images.
 Spatially uniform quality in the point cloud suggests that all PhotoScan's algorithm uses all cameras in a combined way, instead of, e.g., computing disparity maps in pairs and naively combining the maps, which would be recognizable by visible boundaries on the surface.
 
 Figure \ref{fig:sample-arto-photoscan} depicts the results from a dense point cloud and a textured mesh based on the point cloud.
-A typical face scan with surrounding geometry removed results in a high-density point cloud of 2-3 million points, which the software reduces into a textured mesh with exactly five times fewer triangles than the original points.
+A typical face scan, with surrounding geometry removed, results in a high-density point cloud of 2-3 million points, which the software reduces into a textured mesh with exactly five times fewer triangles than the original points.
 The meshing process was found to consume temporarily 4-5 GB of RAM on a typical human subject.
 
 PhotoScan was found to be relatively robust to baseline length, reconstructing the scene geometry well with a baseline almost twice as much as the 15 degree rule suggested in Bundler with no apparent increase in accuracy or matching performance when the baseline is halved.
@@ -382,7 +383,8 @@ As high level of geometry as produced initially by the surface generation proces
 Other subjects that were also scanned and reconstructed using VisualSFM are summarized in Figure \ref{fig:vsfm-compare}.
 Text in a page of a book provides enough dense points that the text is well readable, while the paper itself does not contain any texture and is not reconstructed.
 Only problems in human scans are hair that is not well distinguishable (most features are similar) and does not present any definitive surface, and bright spots that result from a combination of bad lighting and sweating.
-A horse head mask made of diffuse rubber has problems only in white and black areas that have no texture and either either provide incorrect or no points at all.
+A horse head mask made of diffuse rubber had problems only in textureless areas composed of exclusively white or black paint.
+Those areas either provided incorrect points or no points at all.
 Surprisingly, a poorly textured soft plushie provided well reconstructed geometry even in less textured areas, where the fabric provides enough detail to distinguish any correspondences.
 A mildly reflective painted statue presented difficulties in some shiny areas, but otherwise, the whole geometry was found to be correct and dense even in visually weakly textured areas.
 
@@ -407,7 +409,7 @@ A mildly reflective painted statue presented difficulties in some shiny areas, b
 The statue model was scanned four times at approximately 90 degrees of rotation between the shots, and the resulting four point clouds were aligned into one in Meshlab to evaluate a surface reconstruction for a fully closed subject.
 Results can be seen in Figure \ref{fig:statue-meshed}.
 Some noise exists where it was not cleaned up, and closest details are missing partly because of noise, bright highlight artifacts and selected level of detail in the surface reconstruction.
-Slight misalignment in the top can be seen in the point cloud version, and the holes in the bottom are errornously filled in the meshing process.
+Slight misalignment in the top can be seen in the point cloud version, and the holes in the bottom are errorneously filled in the meshing process.
 The mesh was built with Meshlab's Poisson surface reconstruction plugin with 12 as the tree depth and  7 as the solver divide depth.
 
 \simplefig{p}{%
@@ -471,7 +473,7 @@ The tool is written in Python and can be found in the source code repository as 
 
 The amount of light needed in video capture can easily be uncomfortable for the performing subject, in contrast to the momentary flash pulse in still photography.
 in this experiment, the lights were overly bright and the subject used sunglasses for eye protection; less than three lights resulted in harsh shadows in parts of the face.
-the ISO sensitivity level of Canon EOS 700D ranges up to 12800, but the highest levels are usually avoided as they are more sensitive to noise.
+The ISO sensitivity level of Canon EOS 700D ranges up to 12800, but the highest levels are usually avoided as they are extremely sensitive to noise.
 A default ``180 degree shutter'' was used, i.e., an exposure time of half the time between frames.
 A shorter exposure time is suggested with an increased ISO sensitivity to reduce motion blur.
 
@@ -494,7 +496,8 @@ A shorter exposure time is suggested with an increased ISO sensitivity to reduce
 \end{table}
 
 The videos were shot with the larger 50 cm baseline which VisualSFM could not handle; thus, results were analyzed only in PhotoScan.
-Incorrect camera poses resulted in some frames, when the subject was moving too quickly; in similar challenging pictures, VisualSFM typically did not reconstruct the parameters at all due to lack of enough matching features.
+In some frames, where the subject was moving too quickly, the resulting camera poses were incorrect.
+In similar challenging picture sets, VisualSFM typically did not reconstruct the parameters at all, due to lack of enough matching features.
 With less motion, correct camera poses were found and results were comparable to the static reconstruction, with fewer points and polygons reconstructed because of the lower resolution (1920 x 1080).
 A typical result is shown in Figure \ref{fig:artoglassescompare}; surface on the textureless and partly reflective sunglasses is incorrect, as was expected.
 

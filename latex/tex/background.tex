@@ -31,7 +31,9 @@ Quality of the outcome in a reconstruction pipeline depends on many factors of t
 In the digital world, with nearly no exceptions, images, are stored and represented as \emph{arrays of numbers}, i.e., in discrete form as opposed to the continuous data in the real world.
 The standard way of encoding images as dicrete two-dimensional arrays is used throughout this thesis.
 A rectangular \emph{raster image} consists of a regular grid of picture elements, or \emph{pixels}.
-Each element in the array describes the intensity value for the particular picture element.
+Each element in the array describes the intensity value for the particular picture element, as depicted in \ref{fig:tinyflowergrid}.
+\cite[ch. 2.2]{trucco1998introductory}
+
 Color images are described as several \emph{color channels}: the intensities for different colors are given separately.
 The most common model is the \emph{RGB} or \emph{red-green-blue} color model, where the primary colors are the same as in human eye; each pixel color is given as a triplet of these three colors.
 The intensity range may be arbitrary, but is typically a floating-point value or a small integer with zero indicating black and the maximum value indicating full color intensity.
@@ -65,7 +67,7 @@ However, as is described in this section, cameras in reality seldom match the si
 \simplegfx{t}{0.6\textwidth}{pinhole-camera}{
 	Pinhole camera principle.
 	The box represents a camera.
-	Image seen through the small hole is formed to the plane on the back of the box, rotated upside down, as rays of light travel from the subject through the hole.
+	Image formed through the small hole is formed to the plane on the back of the box, rotated 180 degrees, as rays of light travel from the subject through the hole.
 }
 
 A physical camera is in its simplest form modeled as a \emph{pinhole camera}; an ideal device that \emph{projects} an image on its film through an infinitesimal aperture, rotated 180 degrees around the \emph{optical axis}, i.e., the line that runs through the pinhole and is perpendicular to the image plane \cite{greenleaf1950photographic,kingslake1989history}.
@@ -175,7 +177,7 @@ The aperture size is presented as relative to the focal length and is commonly c
 	Right: F/1.8, 0.2 s exposure, with only a small sharp area.
 	The image blurs and the distinctively brighter small lamps on the keys show as increasingly larger bright spots as the circle of confusion increases.
 }
-Clearly, doubling the area of the aperture equals to an increase of the diameter $d$ by $\sqrt 2 \approx 1.4$.
+Clearly, doubling the area of the aperture equals to an increase of the diameter $d$ by a factor of $\sqrt 2 \approx 1.4$.
 The aperture size is typically denoted as $f/\#$, where $\#$ is replaced by the number, such as $f/1$ or $f/1.4$.
 This makes the light energy reaching the film universal among all focal lengths.
 Full multiples of $\sqrt 2$ are called \emph{stops}.
@@ -284,7 +286,7 @@ The two independent types of distortion are combined by summing both to the orig
 	y_{corr} &= y (1 + K_1 r^2 + K_2 r^4 + K_3 r^6) + 2 P_2 x y + P_1 (r^2 + 2 y^2)
 \end{split} \end{align}
 
-The image size is normalized such that the distance from image center as specified by $x$ and $y$ has a maximum value of $-1$, making the distortion parameters universal for all image resolutions.
+The image size is normalized such that the origin lies at the image center, and the distances $x$ and $y$ have a maximum absolute value of $1$, making the distortion parameters universal for all image resolutions.
 The effects of different parameters are depicted in Figure \ref{fig:raddist}.
 
 \simplegfx{t}{\textwidth}{raddist}{
@@ -465,8 +467,10 @@ Rolling shutter is especially noticeable in videos shot with a CMOS camera, beca
 \paragraph{Error sources}
 % XXX FIXME unify refs
 Various steps of the image processing contribute to image noise; the major sources are shot noise and several electrical noises.
-\emph{Shot noise} exists due to the particle-nature of light; each photon adds up some charge to the sensor, and if the number of photons is small, statistical noise remain \cite{?}.
+\emph{Shot noise} exists due to the particle-nature of light; each photon adds some electrical charge to the sensor, and if the overall number of photons is small, statistical noise will be present \cite{?}.
 This type of noise is visible in less bright areas.
+Obviously, no electronically better sensor can improve the visibility of shot noise.
+The only way to reduce it is by exposing the sensor to more light: for this reason, sensors with a larger surface area are preferred in applications where noise is unwanted.
 
 As all electronic circuits, also image sensors are subject to signal noise. % bad language
 Each pixel transfer receives an additional random signal level that shows up as additive brightness, noticed usually only in poorly illuminated conditions or black areas.
@@ -542,7 +546,7 @@ Short bursts of light in an otherwise dark environment are also suitable for sto
 
 The image information travels from the subject through the optics to the image sensor's surface, via an analog/digital converter, the camera's processor(s) and finally to mass storage \cite{szeliski10vision}.
 The final mass storage is typically on the camera in consumer devices, or on a computer reached by a wired connection for more sophisticated machine vision cameras.
-Many parts in this path contribute to the quality of images and the rate of which the images can be taken, usually measured in frames per second (FPS).
+Many parts in this path contribute to the quality of images and the rate at which the images can be taken, usually measured in frames per second (FPS).
 
 % fps
 
@@ -1155,7 +1159,7 @@ It is described further in Section \ref{sec:sfm}.
 The scale of values affects the numerical calibration accuracy \cite{hartley1997defense,hartley03multiview}.
 A similarity transform is often initially applied to modify the values to a more consistent range.
 Coordinate system centroid is moved to image center, and the coordinate axes are scaled such that the average point distance from the origin becomes 1.
-The 3D points are scaled accordingly, which is only ideal if the calibration object has an uniform geometry \cite{hartley03multiview}.
+The 3D points are scaled accordingly, which is only ideal if the calibration object has uniform geometry \cite{hartley03multiview}.
 
 % }}} camera calibration
 
@@ -1173,9 +1177,7 @@ In the following section, this search problem in finding corresponding pixels, m
 
 %Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
 
-\simplefig{h!}{
-\includegraphics{simplestereo}
-}{fig:simplestereo}{
+\simplegfx{t}{\textwidth}{simplestereo}{
 	A very simple stereo setup, pictured from above.
 	The image planes (thick lines) are imaginary, as a real film in a camera would exist behind the camera origin and project the image as rotated around principal axis, as described earlier in Section \ref{sec:imaging}.
 	The coordinates are given in units of the world coordinate system, common with the camera origins.
@@ -1210,7 +1212,7 @@ this is discussed in the following.
 
 \subsubsection{Epipolar geometry} % {{{
 
-\simplefig{h!}{
+\simplefig{t}{
 \includegraphics{epigeom}
 }{fig:epigeom}
 {Two camera views on same scene.
@@ -1222,28 +1224,43 @@ All epipolar lines in a view join in the same point ($e_l$ and $e_r$).}
 % TODO: small algorithm for pairwise windowed point matching on the line (hox! and link to point matching section maybe)
 
 In stereo vision, the same scene of interest is seen by two or more cameras at the same time.
-The cameras are rarely aligned perfectly as in the stereo setup described above, however.
-\emph{Epipolar geometry} encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with similar triangulation.
+The cameras are rarely aligned perfectly as in the stereo setup described above.
+\emph{Epipolar geometry} \cite[ch. 7.3]{trucco1998introductory} encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with similar triangulation as in the simple stereo setup.
 \cite{hartley03multiview}
-
-As seen in Figure \ref{fig:epigeom}, a point seen by camera $C_l$ at 3D point A could be anywhere on the line between $C_l$'s origin and A, because a certain line passing through the principal point always projects to a point.
+% truccoverri chap 7.3
+As seen in Figure \ref{fig:epigeom}, a 3D point A seen by the left camera $C_l$ could be anywhere on the line between $C_l$'s origin and A, because a certain line passing through the principal point always projects to a point (the camera position is equal to the principal point, i.e., the pinhole)
 This line is seen as a single point $A_l$.
-From another viewpoint in camera $C_r$, this line equals to some line on the right image plane.
+From another viewpoint in the right camera $C_r$, this line equals to some line on the right image plane.
 The matching point must be on that line.
 The inverse applies for any point on $C_r$ and a line on $C_l$.
-These special lines on the image planes are called \emph{epipolar lines}, and they all coincide at a special point called \emph{epipole}, $e_l$ and $e_r$.
+These special lines on the image planes are called \emph{epipolar lines}, and they all coincide at a special point called \emph{epipole}, $e_l$ and $e_r$ (on the same plane as, but not necessarily inside, the projected image).
 For example, the line from $C_l$ to $A$ projects to the line from $e_r$ and $A_r$ on the right plane, and likewise, the line from $C_l$ to $B$ projects to the line from $e_r$ and $B_r$, which can be easily seen from the triangles in the figure.
 
+% XXX normalized cam coords
 % FIXME:
-\emph{Essential matrix} \cite{hartley03multiview} encodes how the camera poses differ, to match one image's point in another.
-When $A_l$, $A_r$ specify the points in Figure \ref{fig:epigeom} by the corresponding camera coordinates, and the baseline difference is a vector from $C_l$ to $C_r$, it holds that $(A_l-C_l) \cdot (C_r - C_l) \times (A_r-C_r) = 0$, as all the vectors are coplanar.
+\emph{Essential matrix} \cite{hartley03multiview} describes how the camera poses differ, to match one image's point in another.
+When $A_l$, $A_r$ specify the points in Figure \ref{fig:epigeom}, and the baseline difference is a vector from $C_l$ to $C_r$, it holds that
+\begin{equation} \label{eq:esscrossprod}
+	(A_l-C_l) \cdot (C_r - C_l) \times (A_r-C_r) = 0
+\end{equation}
+, as all the vectors are coplanar.
 The cross product yields a normal to the plane, which is perpendicular to all the vectors, thus the dot product equals zero.
+In practice, the coordinates are given within the camera coordinate frames:
+\begin{align*}
+	X_l &= A_l - C_l\\
+	X_r &= A_r - C_r\\
+	T &= C_r - C_l
+\end{align*}
+Then, Equation \ref{eq:esscrossprod} becomes
+\begin{equation}
+	X_l^T T \times X_r = 0
+\end{equation}
 Essential matrix $E$ is a matrix form of this relation.
-It includes the relative rotation and translation of the two cameras:
-
+It includes the relative rotation and translation of the two cameras in a single matrix:
 \begin{equation} \label{eq:essential}
 	A_l E A_r = 0
 \end{equation}
+% XXX  by the corresponding camera coordinates --- AA_l . T x AA_r
 
 %\begin{align*} \label{eq:essential}
 %	%A_r &= R (A_l - t) \\
@@ -1255,7 +1272,8 @@ It includes the relative rotation and translation of the two cameras:
 %\end{align*}
 
 %where $T$ is the cross-product form of $t$ encoded in a matrix form as below. The essential matrix is obtained as $E = R T$.
-
+% blah blah these coords ($X_l$, $X_r$) are in camera coordinate frames but from the images only pixel values can be measured
+% no prior calibration known
 \emph{Fundamental matrix} \cite[ch. 11]{hartley03multiview} is a similar object to essential matrix, as it also relates the corresponding points in stereo images.
 It has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account.
 Thus, fundamental matrix encodes also intrinsic parameters.
@@ -1266,6 +1284,7 @@ Given pixel coordinates $a_l$ and $a_r$ that match the points $A_l$ and $A_r$ as
 	a_l F a_r = 0
 \end{equation}
 
+% assdfasdoh estimating the fundamental matrix from a set of matching points in two images, the epipolar geometry and thus the 3D position of the points are recovered.
 
 %\[
 %\hat pAl = M_p A_l\\
@@ -1480,7 +1499,7 @@ The common area seen by two cameras stretches in depth as the cameras come close
 
 When sparse feature matches are searched for matching picture points in different views, a number of features are first generated for each picture, and the matches are tested against picture pairs.
 False positive matches should be filtered out; common way to handle feature outliers is Random Sample Consensus (RANSAC).
-Random subsets of the sample space is iterated, and samples that do not fit well to a model that is constructed for a smaller set are ignored.
+Random subsets of the sample space are iterated, and samples that do not fit well to a model that is constructed for a smaller set are ignored.
 The iteration that matches most samples is selected. \cite{hartley03multiview}
 
 %Detail calculation (error on surface ~= avg reprojection error?) compute millimetres
@@ -1568,7 +1587,7 @@ Great accuracy can be acheived if a MVS structure is combined with a laser scan,
 When several cameras share the same view, the correct texture must be chosen on each vertex.
 The selection can be taken based on some goodness criteria, e.g., the image with highest viewed area or best brightness.
 
-\simplegfx{t}{0.6\textwidth}{texreproj}{
+\simplegfx{t}{\textwidth}{texreproj}{
 	Texture mapping a triangle from a color image on a virtual image plane on a computer screen as $m_v$.
 	The triangle geometry is mapped on the color images, or textures, of the real cameras as $m_i$, and the triangular patch between the image vertices is stretched on the rendered triangle.
 	Image from \cite[p. 98]{heyden2005multiple}.
@@ -1620,7 +1639,7 @@ In computer animation, the movement data is encoded as positions of certain vert
 The term \emph{4D} in the reconstruction context refers to time-varying 3D data.
 Analogous to the case of traditional 2D video consisting of separate discrete frames of pixels, a sequence of dynamic 3D data is, in a simple case, individual ``frames'' of point clouds.
 
-For a source data in the form of video files per camera, effectively a sequence of sets of synchronized pictures, each set of frames can be considered a static geometry on which the reconstruction would be done.
+For source data in the form of video files per camera, effectively a sequence of sets of synchronized pictures, each set of frames can be considered a static geometry on which the reconstruction would be done.
 A naive alignment to previous or first frame is possible to average out the object movement if only its local surface movement is of interest.
 Still, reconstructing each frame group separately would not produce the same topology for the mesh, as each frame contains a different point cloud and is not connected to the previous reconstruction, unless some algorithm that takes this into account is used.
 
@@ -1675,12 +1694,13 @@ Markerless capture is important in scanning facial movement, because time-varyin
 
 Tracking is done by looking for the same feature as in a previous frame in the neighborhood where it was previously.
 State-of-the-art 2D tracking methods include Kanade-Lucas-Tomasi (KLT) \cite{lucas1981iterative,tomasi1991detection}, Tracking-Learning-Detection (TLD) \cite{kalal2012tracking}, and Consensus-based Matching and Tracking (CMT) \cite{nebehay2014consensus}, all based on \emph{optical flow} \cite{horn1981determining,gibson1950perception,beauchemin1995computation}.
-Given source and destination images, optical flow is the apparent motion in the scene, given as a motion vector for each pixel.
+Given source and destination images, optical flow is the apparent motion in the scene between the images, given as a motion vector for each pixel.
 Estimating the flow is based on the brightness constancy constraint: the intensity of the source and destination pixels is the same \cite{horn1974determining}.
-Optical flow is also used in morphing frames between frames in a video to virtually synchronize the cameras to a common clock \cite{bradley2009synchronization}.
-% The Matrix.
 
-%By combining the movement tracking to a mesh whose dynamics are modeled physically, motion can be estimated from a single image. \cite{decarlo1996integration} % (not in the scope)
+Optical flow is also used in interpolating new frames for non-synchronized cameras \cite{bradley2009synchronization}.
+The assumption of stereo reconstruction that the cameras encode the same scene can then be virtually achieved by interpolating the motion vectors between two frames to obtain an intermediate frame that then temporally matches that of another camera.
+%Similarly, videos can be slowed down such that the resulting motion appears smoother by estimating a number of intermediate frames \cite{eugster2011slowmovideo}.
+% The Matrix.
 
 % }}} 2d tracking
 

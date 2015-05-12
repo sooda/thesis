@@ -58,19 +58,25 @@ another layer was used as a ground plane, but the ground signals are routed also
 The circuit is also simple enough to implement on a prototyping board with jumper wires.
 Figure \ref{fig:triggerboard-brd-big} shows the board layout without a ground plane drawn.
 
-\subsection{Finished device}
+\subsection{Complete device}
 
+% 0.9: just enough width to fit both in a single page
 \simplefig{p}{%
-\includegraphics[height=\textwidth, angle=90]{camsremote}
+\includegraphics[width=0.95\textwidth]{camsremoteclosed}
+}{fig:camsremote-closed}
+{The remote tool enclosure with the lid closed and wires connected}
+\simplefig{p}{%
+\includegraphics[width=0.95\textwidth]{camsremote}
 }{fig:camsremote-full}
 {Components installed to the board and fitted in the enclosure}
 
-The PCB was built with a milling machine produced by LPKF Laser \& Electronics AG.
+The PCB was engraved with a milling machine produced by LPKF Laser \& Electronics AG.
 A recycled enclosure was used with custom drilled end caps for the 2,5 mm jacks for the camera connections in one end, and Nucleo board's micro-USB, LEDs and buttons on other end.
+For replicating the device identically, a similar box with inside dimensions of at least 127 by 99 mm for the PCB and 35 mm of height can be used.
 Of the two buttons, the red one is the user button, and black one is the reset button.
 The red LED shows that the power is on, and the yellow LED is on when the focus command has been received.
 
-The device is shown in Figure \ref{fig:camsremote-full}, and Figure \ref{fig:camsremote-full} shows the same with the case opened, exposing the circuit board, soldered parts and the connectors mounted on the end.
+The completed device is shown in Figure \ref{fig:camsremote-closed}, and Figure \ref{fig:camsremote-full} shows the same with the case opened, exposing the circuit board, soldered parts and the connectors mounted on the end.
 
 %Much of the physical space is taken by the microcontroller board and the bulky through-hole mounted opto-isolators.
 %The size of the trigger box could be reduced to approximately half of its size by using surface mount opto-isolators and designing the microcontroller itself on the same circuit board, removing the large pin headers.

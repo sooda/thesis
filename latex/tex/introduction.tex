@@ -50,7 +50,7 @@ The process of acquiring multi-view stereo images and processing them for origin
 
 The need for \emph{dynamic} content divides 3D scanning in two parts.
 \emph{Static} subjects, i.e., stationary rigid bodies, present a simpler problem.
-Dynamic subjects move or deform over time, such as human limbs, skin, and clothing.
+Dynamic subjects, such as human limbs, skin, and clothing, move or deform over time.
 Static capture is simpler to accomplish, as the time when the pictures are taken does not affect the outcome; even a single moving camera can be used.
 
 %(Other applications (uses). Movies. Remedy. Medical [essential physics of, bushberg]!).
@@ -83,13 +83,13 @@ It should be noted that this work deals with well-known theory and not much new 
 
 The research problem of ``scanning an object visually in 3D'' is formulated in such a way that proper hardware can be selected, and the quality and feasibility of the built system can be addressed.
 Performance of the reconstruction algorithms depends on the quality of their input.
-How an image is formed with a digital camera, what cameras are available in the market, what issues are there in the reconstruction process, and how a good 2D input for a 3D reconstruction algorithm can be achieved?
+How an image is formed with a digital camera, what cameras are available in the market, what are the typical issues in the reconstruction process, and how can a good 2D input for a 3D reconstruction algorithm be achieved?
 To further assess and understand the resulting quality of the reconstruction, the fundamentals of the reconstruction algorithms are presented, and state-of-the-art MVS research is quickly surveyed for quality expectations.
 
 % second part
 
 A digital camera based 3D scanning rig is constructed, supported by software tools for acquiring both static image data and video files.
-The key hardware for such rig consists of properly placed cameras, light sources, and a computer.
+The key hardware for such a rig consists of properly placed cameras, light sources, and a computer.
 Putting together all the parts for a general-purpose system needs studying of the end product as a whole.
 The camera synchronization and image acquisition are automated such that the output of the scanner can be fed directly to a reconstruction software without manual processing.
 Final result produced by the rig is a set of images or video, ready to be processed by reconstruction algorithms for producing 3D geometry with detailed colors, possibly animated over time.
@@ -98,7 +98,7 @@ Basic background techniques for taking also motion into account are presented, b
 
 % work objective, motivation specs
 
-Aim of the system is in hardware robustness, ease of practical use and general extendability.
+The aim of the system is in hardware robustness, ease of practical use and general extendability.
 Because there are no detailed plans on all further use of the machinery, it is built to support many kinds of studies in the future without requiring the user to know all implementation issues in detail, and documenting the process in the form of this thesis.
 A special case subject in this work is human face: an interesting and challenging target because of its complex surface material and diverse ability to produce many different expressions.
 
@@ -107,7 +107,7 @@ A special case subject in this work is human face: an interesting and challengin
 The thesis is organised in seven sections, of which this introduction is the first.
 Section \ref{sec:image-acquisition} presents the general theoretical background on the elementary methods in image acquisition using a digital camera and the issues in video recording.
 Similarly, relevant 3D reconstruction theory is described in Section \ref{sec:static3d}, with focus on the basics that recent state-of-the-art builds on.
-Section \ref{sec:motioncapture} shortly extends the 3D topic by introducing issues on motion capture and reconstructing dynamic subjects.
+Section \ref{sec:motioncapture} briefly extends the 3D topic by introducing issues on motion capture and reconstructing dynamic subjects.
 In Section \ref{sec:implementation}, the implementation of the 3D scanning rig is described.
 Section \ref{sec:experiments} shows test experiments on the rig and discusses their results.
 Section \ref{sec:conclusion} concludes the thesis with proposals on future work.
