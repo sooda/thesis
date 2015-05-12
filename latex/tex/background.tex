@@ -1228,13 +1228,13 @@ The cameras are rarely aligned perfectly as in the stereo setup described above.
 \emph{Epipolar geometry} \cite[ch. 7.3]{trucco1998introductory} encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with similar triangulation as in the simple stereo setup.
 \cite{hartley03multiview}
 % truccoverri chap 7.3
-As seen in Figure \ref{fig:epigeom}, a 3D point A seen by the left camera $C_l$ could be anywhere on the line between $C_l$'s origin and A, because a certain line passing through the principal point always projects to a point (the camera position is equal to the principal point, i.e., the pinhole)
+As seen in Figure \ref{fig:epigeom}, a 3D point A seen by the left camera $C_l$ could be anywhere on the line between $C_l$'s origin and A, because a line passing through the principal point always projects to a point (the camera position is equal to the principal point, i.e., the pinhole).
 This line is seen as a single point $A_l$.
-From another viewpoint in the right camera $C_r$, this line equals to some line on the right image plane.
+From another view, seen by the right camera $C_r$, this line equals to some line on the right image plane.
 The matching point must be on that line.
 The inverse applies for any point on $C_r$ and a line on $C_l$.
 These special lines on the image planes are called \emph{epipolar lines}, and they all coincide at a special point called \emph{epipole}, $e_l$ and $e_r$ (on the same plane as, but not necessarily inside, the projected image).
-For example, the line from $C_l$ to $A$ projects to the line from $e_r$ and $A_r$ on the right plane, and likewise, the line from $C_l$ to $B$ projects to the line from $e_r$ and $B_r$, which can be easily seen from the triangles in the figure.
+For example, the line from $C_l$ to $A$ projects to the line from $e_r$ to $A_r$ on the right plane, and likewise, the line from $C_l$ to $B$ projects to the line from $e_r$ to $B_r$, which can be easily seen from the triangles in the figure.
 
 % XXX normalized cam coords
 % FIXME:
@@ -1243,8 +1243,8 @@ When $A_l$, $A_r$ specify the points in Figure \ref{fig:epigeom}, and the baseli
 \begin{equation} \label{eq:esscrossprod}
 	(A_l-C_l) \cdot (C_r - C_l) \times (A_r-C_r) = 0
 \end{equation}
-, as all the vectors are coplanar.
-The cross product yields a normal to the plane, which is perpendicular to all the vectors, thus the dot product equals zero.
+as all the vectors are coplanar.
+The cross product yields a normal to the plane, which is perpendicular to all the vectors, and then the dot product equals zero.
 In practice, the coordinates are given within the camera coordinate frames:
 \begin{align*}
 	X_l &= A_l - C_l\\
@@ -1255,7 +1255,7 @@ Then, Equation \ref{eq:esscrossprod} becomes
 \begin{equation}
 	X_l^T T \times X_r = 0
 \end{equation}
-Essential matrix $E$ is a matrix form of this relation.
+Essential matrix $E$ is a matrix form of this relation, and it provides a standard foundation on the epipolar geometry.
 It includes the relative rotation and translation of the two cameras in a single matrix:
 \begin{equation} \label{eq:essential}
 	A_l E A_r = 0
@@ -1272,26 +1272,21 @@ It includes the relative rotation and translation of the two cameras in a single
 %\end{align*}
 
 %where $T$ is the cross-product form of $t$ encoded in a matrix form as below. The essential matrix is obtained as $E = R T$.
-% blah blah these coords ($X_l$, $X_r$) are in camera coordinate frames but from the images only pixel values can be measured
-% no prior calibration known
 \emph{Fundamental matrix} \cite[ch. 11]{hartley03multiview} is a similar object to essential matrix, as it also relates the corresponding points in stereo images.
 It has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account.
+The described vectors ($X_l$, $X_r$) are in normalized camera coordinate frames, but from the photographed images in actual image processing, only pixel values can be measured.
 Thus, fundamental matrix encodes also intrinsic parameters.
+% no prior calibration known
 
 Given pixel coordinates $a_l$ and $a_r$ that match the points $A_l$ and $A_r$ as seen from cameras $C_l$ and $C_r$, respectively, the fundamental matrix $F$ is given as:
-
 \begin{equation} \label{eq:fundamental}
 	a_l F a_r = 0
 \end{equation}
-
-% assdfasdoh estimating the fundamental matrix from a set of matching points in two images, the epipolar geometry and thus the 3D position of the points are recovered.
 
 %\[
 %\hat pAl = M_p A_l\\
 %\hat A_r = M_p A_r
 %\]
-%
-%and using it on pixel coordinates, the world coords can be obtained, plugging in to the Equation \ref{eq:essential}
 %
 %\[
 %A_r^T E A_l = 0\\
@@ -1300,21 +1295,15 @@ Given pixel coordinates $a_l$ and $a_r$ that match the points $A_l$ and $A_r$ as
 %\hat A_r^T F \hat A_l = 0
 %\]
 %
-%the fundamental matrix
-%
 %\[
 %F = M_p^-T E M_p^-1 = M_p^-T R T M_p^-1
 %\]
 
-The fundamental matrix relates directly the pixels and epipolar lines, and as such it is useful in image processing where the images are described as pixels in a raster image rather than physical coordinates.
-%Epipole can be interpreted as the location of another camera as seen by other camera, as seen in the picture.
-
-%Now, given its position in the image plane of camera $C_l$ and the fundamental matrix $F$, finding the corresponding point in camera $C_r$'s image plane is seen as solving Equation \ref{eq:fundamental} for $a_r$.
 The essential and fundamental matrices can be seen as a more general configuration of the triangulation in Figure \ref{fig:simplestereo} and Equation \ref{eq:triangulation}.
-Once the points are found by solving Equation \ref{eq:fundamental}, the depth can be obtained.
-\cite{hartley03multiview}
+The matrices can be estimated by forming a system of linear equations using Equation \ref{eq:essential} or \ref{eq:fundamental} and at least eight point correspondences, using some method to solve the equations, e.g., \emph{eight-point algorithm} \cite[p. 155]{hartley03multiview}.
+Having estimated the matrix, the epipolar geometry and thus the 3D position of any point with two matching pixel coordinates are easily recovered \cite[p. 162]{hartley03multiview}.
 
-% cite longuet-higgins 1981, the books too
+% cite longuet-higgins 1981
 
 % }}} epipolar geometry
 
@@ -1329,6 +1318,7 @@ Matching is often also called \emph{correspondence} searching:
 Given a pixel in one image, what is the corresponding pixel in another image taken from the same scene?
 Pixels correspond to each other if they represent the same physical point.
 Matching pixels for the previously introduced methods are found in the image space by comparing the color neighborhood.
+
 % TODO some sift descriptor theory, angle histogram stuff
 To describe the pixel's visual characteristics, its surrounding environment is typically encoded as a \emph{feature}, an easily recognizable property vector, \emph{feature descriptor} or \emph{feature vector}.
 \cite[ch. 4]{szeliski10vision}
