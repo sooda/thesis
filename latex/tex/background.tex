@@ -154,7 +154,7 @@ For objects at distances approaching infinity ($a = \infty$), $b$ becomes equal 
 \paragraph{Aperture}
 The size of the hole where light effectively goes through is called \emph{aperture}; the hole itself is called \emph{aperture stop} and it is located inside the the objective in between its lenses.
 The diameter of a thin lens corresponds to the aperture diameter and to the stop's \emph{entrance pupil}, the aperture stop seen from the front of the objective.
-Size of the aperture also directly determines the amount of light entering the image plane, and thus the relative exposure time for a required amount of light energy: increasing the aperture area twice halves the required exposure time.
+Size of the aperture also directly determines the amount of light entering the image plane, and thus the relative exposure time for a required amount of light energy: doubling the aperture area halves the required exposure time.
 \cite{greenleaf1950photographic}
 
 % TODO: dof graph: varying distance, N lines for different f/#
@@ -816,7 +816,7 @@ Many still cameras support acceptable video recording.
 
 \paragraph{Pixels}
 Camera sensor resolution is declared in millions of pixels, or megapixels (MP).
-Resolution and image size are related via \emph{pixel size} that is the physical size of one photosite on the sensor.
+Pixel resolution and image size are related via \emph{pixel size} that is the physical size of one photosite on the sensor.
 Pixel size is described as the physical length of one side of a photosite; virtually all sensors today employ square pixels.
 System cameras have largest sensors and pixels, and pixel size typically decreases as the sensor size decreases, as manufacturers pursue for higher resolution.
 The physical size of the image sensor varies according to use, and ultimately determines resolution, pixel size and light sensitivity.
@@ -904,7 +904,7 @@ Summarizing for the general feasibility of the most popular camera types in the 
 \begin{itemize}
 	\item System cameras with bigger sensors have high light sensitivity, excellent configurability with auxiliary hardware available, such as remote shutter releases, and decent software support.
 	\item Industrial machine vision cameras have both small and medium sensors, support interchangeable lenses and need significant amount of additional hardware, and custom or expensive software to control. Video synchronization is usually not an issue, and parameter control has more freedom at the expense of more work.
-	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Raw images and external utilities are usually lacking. Resolution may be less than in system cameras, and high-resolution compact cameras perform worse in low light because of smaller pixel size.
+	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Raw images and external utilities are usually lacking. Pixel resolution may be less than in system cameras, and high-resolution compact cameras perform worse in low light because of smaller pixel size.
 	\item Others (smartphone cameras, webcams) have poorly documented features, cheaper optics and are not configurable properly in general.
 \end{itemize}
 
@@ -1064,7 +1064,7 @@ The transformation chain is encoded as follows in Equation \ref{eq:projxform}, g
 	&= M T R X\\
 	&= P X\\
 \end{split} \end{align}
-where $x$ is a 2d pixel in a discrete image, and $X_s$ is still in physical units on the projected image on the sensor.
+where $x$ is a 2D pixel in a discrete image, and $X_s$ is still in physical units on the projected image on the sensor.
 $R$, $T$ encode the camera rotation and translation (extrinsics);
 $M_p$ projects the world coordinates to the camera sensor - still in world coordinates, and finally the affine $M_i$ transforms the points from the sensor to pixel coordinates on the digital discretized image.
 The transformation pipeline is depicted in Figure \ref{fig:projxformworld}.
