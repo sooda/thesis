@@ -1,7 +1,7 @@
 \documentclass{standalone}
 \usepackage{tikz}
 \begin{document}
-\begin{tikzpicture}[scale=5]
+\begin{tikzpicture}[scale=3]
 
 \newcommand*{\render}[2]{
 	\foreach \y in {-10,...,10} {
@@ -23,12 +23,16 @@
 
 \render{-0.16}{0.00}
 
-\begin{scope}[xshift = 2.5cm]
+\begin{scope}[xshift = 2.2cm]
 	\render{0.00}{-0.08}
 \end{scope}
 
-\begin{scope}[xshift = 5cm]
+\begin{scope}[xshift = 4.4cm]
 	\render{-0.04}{-0.04}
+\end{scope}
+
+\begin{scope}[xshift = -2.2cm]
+	\render{0.16}{0.00}
 \end{scope}
 
 \end{tikzpicture}

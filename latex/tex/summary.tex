@@ -1,13 +1,12 @@
 %Yhteenveto
 % "further work remains to .."
-% XXX more cameras
 \section{Conclusions and future work} \label{sec:conclusion}
 
 The purpose of this thesis was to build a rig for turning real life subjects into three-dimensional digital models, using a technique called \emph{multi-view stereo reconstruction}.
 Modern reconstruction rigs are increasingly necessary for both content production and reconstruction research, as computing power increases and reconstruction methods advance.
 While the same methods are applicable for any number of digital cameras of any quality, the aim in this work was ease of use and high photographic quality.
 Based on the understanding built in the beginning of this thesis, requirements for the rig could be well specified and best settings could be chosen for the cameras and the photography environment.
-The end result is a rig of nine cameras tested to work for desirable subjects using two different software pipelines, with potential to expand by adding more cameras.
+The end result is a rig of nine cameras tested to work for desired subjects using two different software pipelines, with potential to expand by adding more cameras.
 
 First part of this thesis surveyed the image formation process in digital cameras and the 3D reconstruction principles that current algorithms build upon.
 Based on the camera technology study, the heart of the rig was selected to be an array of nine Canon EOS 700D digital single-lens reflex cameras using 50 mm lenses with an equivalent field of view of an 80 mm lens for 35 mm format.
@@ -15,30 +14,30 @@ The cameras produce 18-megapixel images and the total footprint of the rig is le
 Software for jointly configuring the required manual settings in all cameras was surveyed and developed using the \emph{gphoto2} camera control library.
 A custom electronic remote shutter trigger tool was built to synchronize the cameras for capturing still photographs in an accurate way even with a moving subject.
 For video capture, the cameras still can be remotely triggered to start video capture, but as they lack accurate video synchronization, a maximum possible error of half a frame duration still exists.
-Artificially synchronizing consumer camera arrays is an interesting subject, as it is one of the biggest issues that separates consumer cameras from more expensive professional or engineering devices from the reconstruction point of view.
+Artificially synchronizing consumer camera arrays is an interesting subject, as it is one of the biggest issues that separates consumer cameras from more expensive professional or industrial devices from the reconstruction point of view.
 
-The selected cameras offer the necessary manual controls, can be remotely controllable with any standard personal computer and offer excellent image quality with a reasonable price.
+The selected cameras offer the necessary manual controls, can be remotely controlled with any standard personal computer and offer excellent image quality with a reasonable price.
 Hardware of the rig is fully flexible and can be modified for small and medium subjects that can be photographed indoors.
-Any alternatives to the rig solution were found to be not configurable enough or overly expensive for the purpose.
+Alternatives to the rig solution were found to be not configurable enough or overly expensive for the purpose.
 
 Computer graphics has a clear connection to computer vision.
 Areas of computer graphics focus more on synthesizing content to build an image, while computer vision analyses images from real life.
 Interestingly, they both use similar principles, and vision can be used to create model data for rendered graphics.
-Similar ideas based on subject lighting can be employed in both fields; this thesis still barely touched the confluence of the two, and further study on state-of-the-art is suggested to better dive in the subject.
+Similar ideas based on subject lighting can be employed in both fields; this thesis still barely touched the confluence of the two, and further study on state-of-the-art is suggested to better dive into the subject.
 The rig built as part of this thesis makes it possible to easily gather photographs and video from multiple viewpoints and suggests to study the state-of-the-art algorithms that analyze visual cues in the photographed images, to reproduce the subject in a different lighting conditions and to animate the subject in a new way.
 
 Constructing a 3D scanning rig was a large topic on its own and future work remains in studying the data that can be produced with the machinery.
 Using the rig for content capture is practical once set up; new subjects can be scanned with the press of a few buttons.
 The field of 3D reconstruction needs content to evolve, even more so for content-specific improvements.
 Scanning the geometry and texture of real-life objects directly brings new practical opportunities on content usage and performance capture.
-The rig is to be used for digitizing real-life objects in higher resolution than what have been previously possible, and studying the process, helping to understand how different algorithms behave on different inputs.
+The rig is to be used for digitizing real-life objects in higher resolution than what has been previously possible, and studying the process, helping to understand how different algorithms behave on different inputs.
 Also, identifying defects in current state-of-the-art is easier when high-resolution test data can be scanned for testing new hypotheses.
 
 %With proper post-processing, the system is feasible for scanning both static high-resolution subjects, and dynamic subjects with less spatial resolution.
 
 \paragraph{Suggestions for future work}
 % some feckin intro
-The described example use cases and typical results presented a relatively careless use of the rig.
+The example use cases and typical results presented a relatively careless use of the rig.
 Still, it can be deduced that the system is feasible for capturing many kinds of objects; even better quality would probably be achieved with tuning the physical setup and the algorithm parameters manually for each subject.
 Furthermore, the purposes of the rig -- to study the reconstruction field, and to scan content for actual practical use -- remain to be fulfilled.
 The user interface can be further improved from the current prototype phase to an actual product.
@@ -60,11 +59,11 @@ For a smaller section of a face, the cameras could be used as plain stereo pairs
 
 % normal map rendering and scanning
 % (probably shouldn't introduce new terms here, tell about them in bg with meshes)
-A typical head scan results in a point cloud of 0,5-5 million points depending on the subject, lighting, and software used, eventually resulting in a triangular mesh with a number of triangles of the same order of magnitude.
+A typical head scan results in a point cloud of 0.5-5 million points depending on the subject, lighting, and software used, eventually resulting in a triangular mesh with a number of triangles of the same order of magnitude.
 %Still, to render the subjects in a different lighting environment with proper shadowing and mesoscopic surface details, even higher geometric detail would be necessary, which is not feasible in realtime.
 In rendering the models for actual use, fewer triangles should be used with geometry details not encoded as triangles but textures instead.
 The advanced rendering techniques employing the surface microgeometry as textures such as \emph{bump maps} are beyond the scope of this thesis, but they present interesting future work in this field.
-The mesoscopic augmentation by Beeler et~al.\ uses the same idea as high-detailed rendering, where the tiny details that are occluded by surrounding geometry are rendered darker \cite{beeler2010high}.
+The mesoscopic augmentation by Beeler et~al.\ uses the same idea as high-detail rendering, where the tiny details that are occluded by surrounding geometry are rendered darker \cite{beeler2010high}.
 Ghosh et~al.\ \cite{ghosh2011multiview} photograph a same still subject in different illumination conditions by changing the lighting quickly, in order to scan for both diffuse and specular reflectance components of the surface.
 The current rig features possibilities for augmenting for such work.
 
@@ -89,9 +88,9 @@ Methods for capturing the reflectance properties of a material typically keep th
 Combining the different approaches would produce both rich geometry and material data for complex digital reproduction.
 
 \paragraph{Final thoughts}
-The rig was found to be suitable for high-resolution capture of human faces, a target that is considered difficult because of the lack of well noticeable pattern and strong deformations.
+The rig was found to be suitable for high-resolution capture of human faces, a target that is considered difficult due to the lack of well noticeable pattern and strong deformations.
 High resolution photographs recover detail that can be used for feature matching and successful reconstruction.
-By tweaking reconstruction parameters, applying soft makeup and using a more uniform lighting, the quality can be further improved;
+By tweaking reconstruction parameters, applying soft makeup and using more uniform lighting, the quality can be further improved;
 especially the surface color is challenging to recover uniformly because of specular highlights, even though the reconstruction succeeds.
 The recent reconstruction algorithms base on many different methods; capturing content for studying the algorithms is a significant suggestion for future work topics.
 

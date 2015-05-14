@@ -7,7 +7,7 @@ Synchronization was considered important from the beginning, and it was unknown 
 Photographing test subjects and running reconstruction using popular programs was considered a good way to evaluate the system as a whole, as the system was planned to be used for such methods.
 Subjects with different surface material were chosen to test if the material type would perform as expected.
 
-\subsection{Synchronization issues}
+\subsection{Synchronization}
 
 Synchronizing the image sources temporally is important for reconstruction algorithms to work correctly.
 A synchronized system captures images from all cameras with a reasonably small time difference between them, so that subject movement does not introduce unnecessary errors.
@@ -22,10 +22,10 @@ An input pin of the Nucleo-F401RE MCU was connected to the hot shoe flash presen
 Assuming a negligible delay between the flash trigger signal and the actual photo exposure, the time between shutter signal and signal from the flash connector is the shutter delay.
 The camera was set up to all manual settings and manual focus, and the focus signal was given before each measurement.
 Measurements matched consistently a 75 millisecond delay, repeated shots varying less than 1 \%.
-This excellent repeatability suggests that moderately moving subjects can be captured properly.
-If a synchronized light was connected to the remote trigger instead of the cameras' flash contacts, this delay would be needed to take into account.
+This level of repeatability suggests that moderately moving subjects can be captured properly.
+If a synchronized light was connected to the remote trigger instead of the cameras' flash contacts, this delay would be needed to be taken into account.
 The used test program for the Nucleo board can be found in the microcontroller programs directory in the github repository by the name \emph{measure.cpp}.
-The different signals to all ten outputs in the remote trigger were measured with an oscilloscope to happen within 1,6 microseconds.
+The different signals to all ten outputs in the remote trigger were measured with an oscilloscope to happen within 1.6 microseconds.
 
 A special flash synchronization method was considered using the hot shoe signals of all cameras.
 When the camera orders the flash to fire, its shutter is expected to be fully open.
@@ -71,10 +71,10 @@ Two such images are depicted in Figure \ref{fig:fansynctest}.
 
 % intro
 
-The EOS 700D does not support an external clock signal for timing the frames in video recording, but relies on an internal clock to sync the frames within a single video file.
-It can be safely assumed that the clock speed has little variation, and thus, little drift or jitter occur in the videos.
-Recording offset remains an issue:
-processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a Canon wireless remote control would be used for starting several cameras at once, the offset was found to be sometimes almost as much as the duration of two frames.
+The EOS 700D does not support an external clock signal for timing the frames in video recording, but relies on an accurate internal clock to sync the frames within a single video file.
+It can be assumed that the clock speed has little variation, and thus, little drift or jitter occur in the videos during timespans of at most a few minutes.
+Even if errors in a single clock were measurable, offsets would still be the dominant source of errors.
+The processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a Canon wireless remote control was used for starting several cameras at once, the offset was found to be sometimes almost as much as the duration of two frames.
 
 % what was done
 
@@ -162,12 +162,11 @@ For this reason, decreasing the exposure time only helps in motion blur, but not
 
 %The mask, human heads, legos, books
 
-Test subjects were scanned using the system for validation and analysis.
-Different datasets were used on two popular reconstruction software pipelines.
+Test subjects were scanned using the system for validation and analysis and reconstruction was performed using two software pipelines.
 Proposals for a typical scanning setup and minimum quality of instant results are shown in this section.
-The results answer questions on what kinds of surfaces can be reconstructed well; different types of materials are given for the datasets.
+The results answer questions on what kinds of surfaces can be reconstructed well; different types of materials were selected for the datasets.
 It was expected that areas with low texture or high reflectivity would pose most problems.
-No particular tuning of any algoritmic configuration parameters were tested, which suggests that higher quality than that of presented here can be achieved with more careful work.
+No particular tuning of any algoritmic configuration parameters were tested, which suggests that higher quality than that presented here can be achieved with more careful work.
 No makeup, light polarizers or any such improvements were tested; the subjects were photographed as-is in normal lighting.
 
 The system is flexible to extend for complete body scanning with limited accuracy; tests for such subjects were left out due to lack of time and space in the hall where the system was used.
@@ -261,10 +260,10 @@ Markerless capture has been suggested to be important for human subjects, as bot
 The native resolution of each photograph obtained was 5124 x 3456 pixels; the subjects never filled the frame completely, but free space was left around them on purpose to make rotating and placing the subject easier.
 Moreover, human subjects would typically not stay completely still.
 The free space provides robustness that can be altered by bringing the subject closer to the cameras.
-As an approximation, only 25 \% of the pixel count was used for the subject.
-For the final resolution of the color texture, 4096 x 4096 pixels was used in the images that follow in this section.
+Approximately 25 \% of the pixel count was used for the subject.
+For the final resolution of the color texture that was combined from all views, 4096 x 4096 pixels was used in the images that follow in this section.
 The resulting accuracy of the color textures is easily determined by the physical size of the subject.
-Assuming 20 cm coverage for the shorter image axis and a planar subject, image coverage would be $3456 / 200 \approx 17$ pixels per millimeter, or approx. 0.06 mm per pixel.
+Assuming approx. 30 cm coverage (by Equation \ref{eq:areasize}) for the shorter image axis and a planar subject, image coverage would be $3456 / 300 \approx 11$ pixels per millimeter, or $\approx 0.09$ mm per pixel.
 For the subjects tested, the accuracy was of the same order of magnitude.
 
 \paragraph{PhotoScan results}
@@ -441,7 +440,6 @@ PhotoScan was configured to use CPU only; the dense reconstruction in PMVS is al
 Different approaches remain to be tested; both have a similar working pipeline.
 
 \begin{table}[t]
-	% FIXME photoscan here too, it probably performs more work as it takes longer
 	\centering
 	\begin{tabular}{l l l}
 		Step & PhotoScan & VisualSFM+Meshlab \\ \hline
@@ -477,24 +475,6 @@ The ISO sensitivity level of Canon EOS 700D ranges up to 12800, but the highest 
 A default ``180 degree shutter'' was used, i.e., an exposure time of half the time between frames.
 A shorter exposure time is suggested with an increased ISO sensitivity to reduce motion blur.
 
-\begin{table}[b]
-	\centering
-	\begin{tabular}{l l}
-		Camera baseline & 30 +/- 5 cm\\
-		F number & f/14\\
-		Resolution & 1920 x 1080\\
-		FPS & 25\\
-		Exposure time & 1/50\\
-		ISO sensitivity & 800\\
-		Subject distance & 90 +/- 10 cm\\
-		Lighting & total 2400 W halogen light\\
-	\end{tabular}
-	\caption{
-		Key parameters in the video recording test.
-	}
-	\label{tab:samplevideoparams}
-\end{table}
-
 The videos were shot with the larger 50 cm baseline which VisualSFM could not handle; thus, results were analyzed only in PhotoScan.
 In some frames, where the subject was moving too quickly, the resulting camera poses were incorrect.
 In similar challenging picture sets, VisualSFM typically did not reconstruct the parameters at all, due to lack of enough matching features.
@@ -504,6 +484,25 @@ A typical result is shown in Figure \ref{fig:artoglassescompare}; surface on the
 The camera uses the lossy h.264 video format and typically a bitrate of 5 MB/s.
 In comparison, the size taken by a single full-frame JPEG still photo is approximately 9 MB.
 The loss in resolution and compression quality results in poor surface details, as is depicted in Figure \ref{fig:artoglassesframe}.
+
+\begin{table}[t]
+	\centering
+	\begin{tabular}{l l}
+		Camera baseline & 30 +/- 5 cm\\
+		F number & f/14\\
+		Resolution & 1920 x 1080\\
+		FPS & 25\\
+		Exposure time & 1/50\\
+		ISO sensitivity & 800\\
+		Subject distance & 90 +/- 10 cm\\
+		Lighting & total 2400 W halogen spot lights\\
+	\end{tabular}
+	\caption{
+		Key parameters in the video recording test.
+	}
+	\label{tab:samplevideoparams}
+\end{table}
+
 
 \simplefig{p}{%
 \includegraphics[width=0.45\textwidth]{artoglassestex}%
@@ -522,4 +521,17 @@ The loss in resolution and compression quality results in poor surface details, 
 	From left to right: a frame of a single camera, a cropped area from it, and a cropped area from a still photo.
 	Note the colored aliasing in the hair and the lack of surface detail in the skin in the cropped frame.
 }
+
+\subsubsection{Final thoughts}
+
+Both PhotoScan and VisualSFM+Meshlab appeared to produce highly usable models, and both support similar output formats for the point cloud, mesh, and texture.
+Comparing the results, it can be concluded that PhotoScan appeared more robust to the shooting conditions and always gave results of some quality.
+Given carefully tuned conditions, the VisualSFM method gave more freedom in selecting different parameters and external programs, and might result in a better level of detail, given enough time for testing.
+The community visible in PhotoScan's forums \cite{agisoftforum} appears active, and the existing forum topics give a quick start to the use of the program and to reconstruction rigs.
+Infinite Realities uses PhotoScan for rigs containing tens of DSLRs \cite{ir-ltd} and describes some of their methods in the forum for guidance.
+
+While PhotoScan does not disclose the details of its algorithms, the algorithms used by VisualSFM and Meshlab are well specified.
+Meshlab's code is quite directly adapted from scientific papers on state-of-the-art, and being open source, it is freely available for modifications.
+The fact that VisualSFM uses external applications for parts of the reconstruction process and only performs camera alignment by itself, it can be readily used for trying other approaches on those steps performed externally by replacing the other applications.
+The much faster processing speed of VisualSFM and Meshlab is also tempting.
 

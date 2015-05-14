@@ -13,7 +13,7 @@
 	\def\planew{6} % half of image plane width
 
 	\draw[fill] (0, \h) circle [radius=0.3];
-	\node at (0, \h+1) {$X$};
+	\node at (0, \h+1) {$\vec X$};
 
 
 	% origins, T
@@ -22,8 +22,8 @@
 	\draw [dimen] (0, 0.5) -- (0, \h-0.2) node {$Z$};
 	\draw[fill] (-10, 0) circle [radius=0.3];
 	\draw[fill] ( 10, 0) circle [radius=0.3];
-	\node at (-10, -1) {$C_l$};
-	\node at (10, -1) {$C_r$};
+	\node at (-10, -1) {$\vec C_l$};
+	\node at (10, -1) {$\vec C_r$};
 
 	% headings
 	\draw [->] (-10, 0) -- (-10, 10);
@@ -47,8 +47,8 @@
 	\draw[fill] (-10, 4) circle [radius=0.3];
 	\draw[fill] (10, 4) circle [radius=0.3];
 
-	\node at (-10.5, 3) {$c_l$};
-	\node at (10.5, 3) {$c_r$};
+	\node at (-10.5, 3) {$\vec c_l$};
+	\node at (10.5, 3) {$\vec c_r$};
 
 	%\node at (-10+2, \planey+1) {$x_l$};
 	\draw [dimen] (-10, \planey+1) -- ($(lefthit-1)+(0,1)$) node {$x_l$};
@@ -57,9 +57,9 @@
 
 	% p
 	\draw[fill] (lefthit-1) circle [radius=0.3];
-	\node[below=0.2cm of lefthit-1] {$p_l$};
+	\node[below=0.2cm of lefthit-1] {$\vec p_l$};
 	\draw[fill] (righthit-1) circle [radius=0.3];
-	\node[below=0.2cm of righthit-1] {$p_r$};
+	\node[below=0.2cm of righthit-1] {$\vec p_r$};
 
 
 \end{tikzpicture}

@@ -28,14 +28,14 @@ In this thesis, such scanning methods are studied and a rig for performing photo
 % what is 3d content, technically; connection to computer vision
 
 The structure of 3D content is universally described as surfaces consisting of connected polygons, mapped with pictures to add high-detailed color.
-While computer graphics synthetizes images by drawing millions of polygons to produce a realistic image, \emph{computer vision} tries to attain the inverse:
+While computer graphics synthesizes images by drawing millions of polygons to produce a realistic image, \emph{computer vision} tries to attain the inverse:
 to study images of 3D surroundings computationally for understanding the geometric structure in them.
 Among the applications of computer vision, reconstructing such 3D structure from two-dimensional images is an important one.
 3D reconstruction naturally unites computer vision and computer graphics.
 
 % bring mvs in
 
-\emph{Multi-view stereo (MVS)} is a method for extracting the visible 3D geometry and color information of a subject, given several images of it taken from different angles (\emph{views}).
+\emph{Multi-view stereo (MVS)} is a method for extracting the visible 3D geometry and color information of a subject, given several images of the subject taken from different angles (\emph{views}).
 MVS can be applied to an unordered collection of pictures or to the imagery of a more strict set of calibrated cameras.
 A MVS scanning rig is a specially constructed machinery, consisting of a number of cameras and software, for shooting photos from different views and processing the photos using computer vision.
 
@@ -48,7 +48,7 @@ The process of acquiring multi-view stereo images and processing them for origin
 
 % static/dynamic definition, surface vs. motion capture, texture
 
-The need for \emph{dynamic} content divides 3D scanning in two parts.
+The need for \emph{dynamic} content divides this particular application of 3D scanning in two types.
 \emph{Static} subjects, i.e., stationary rigid bodies, present a simpler problem.
 Dynamic subjects, such as human limbs, skin, and clothing, move or deform over time.
 Static capture is simpler to accomplish, as the time when the pictures are taken does not affect the outcome; even a single moving camera can be used.
@@ -64,10 +64,7 @@ The motion information is then reinterpreted for a 3D model to move its parts vi
 \emph{Surface capture} refers to a more detailed scan of the motion of a complete surface, such as a human face or a cloth, possibly augmented on a skeletal motion capture data for a complete body.
 Capturing the movement in high resolution to scan the whole surface deformation and colors is a recent interest, requiring much more computational power than traditional motion capture.
 Advances in camera resolution and speed make it possible to use only surface texture details for tracking motion without separate markers.
-Recent movies and video games have shown that by capturing real motion of facial expressions instead of simulating them produces significant results.
-% la noire? matrix?
-
-% XXX less background, more contents and motivation
+Recent movies and video games have shown that by capturing real motion of facial expressions instead of simulating them produces realistic high-quality results.
 
 \subsection{Goal and scope of the thesis}
 
@@ -76,8 +73,9 @@ Recent movies and video games have shown that by capturing real motion of facial
 The objective of this thesis is to construct a complete scanning rig to be used as a part of an end-to-end pipeline for scanned 3D content generation, using multi-view stereo methods.
 The thesis is divided in two parts.
 First, the relevant theoretical background on photographic digital image acquisition and multi-view stereo reconstruction is surveyed.
-After that, a more practical part follows: the constructed system is described and experiment scans for both shape and texture information are presented.
-It should be noted that this work deals with well-known theory and not much new is presented, but the theory is approached as is relevant to the goal of this work.
+After that, a more practical part follows: the constructed system is described and test scans for both shape and texture information are presented.
+It should be noted that this work deals with well-known theory only and the theory is approached as is relevant to the goal of this work.
+Deeply studying state-of-the-art and developing new theory is only suggested for future work.
 
 % what is the first part about; its purpose and motivation
 
@@ -92,7 +90,7 @@ A digital camera based 3D scanning rig is constructed, supported by software too
 The key hardware for such a rig consists of properly placed cameras, light sources, and a computer.
 Putting together all the parts for a general-purpose system needs studying of the end product as a whole.
 The camera synchronization and image acquisition are automated such that the output of the scanner can be fed directly to a reconstruction software without manual processing.
-Final result produced by the rig is a set of images or video, ready to be processed by reconstruction algorithms for producing 3D geometry with detailed colors, possibly animated over time.
+The final result produced by the rig is a set of images or video, ready to be processed by reconstruction algorithms for producing 3D geometry with detailed colors, possibly animated over time.
 Feasible readily available programs for reconstructing 3D geometry and texture given the captured image data are surveyed and listed, and two popular workflows are tested.
 Basic background techniques for taking also motion into account are presented, but the use of state-of-the-art algorithms is left for future implementations.
 
@@ -106,7 +104,7 @@ A special case subject in this work is human face: an interesting and challengin
 
 The thesis is organised in seven sections, of which this introduction is the first.
 Section \ref{sec:image-acquisition} presents the general theoretical background on the elementary methods in image acquisition using a digital camera and the issues in video recording.
-Similarly, relevant 3D reconstruction theory is described in Section \ref{sec:static3d}, with focus on the basics that recent state-of-the-art builds on.
+Relevant 3D reconstruction theory is described in Section \ref{sec:static3d}, with focus on the basics that recent state-of-the-art builds on.
 Section \ref{sec:motioncapture} briefly extends the 3D topic by introducing issues on motion capture and reconstructing dynamic subjects.
 In Section \ref{sec:implementation}, the implementation of the 3D scanning rig is described.
 Section \ref{sec:experiments} shows test experiments on the rig and discusses their results.

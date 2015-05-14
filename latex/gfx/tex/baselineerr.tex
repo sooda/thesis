@@ -46,24 +46,24 @@
 	\draw [dimen] (A) -- (B) node {baseline};
 
 	\path [name intersections={of=ALl and ARr}];
-	\node [fill=red,inner sep=1pt,label=90:$Z_2$] at (intersection-1) {} coordinate (Za);
+	\node [fill=red,inner sep=1pt,label=90:$\vec Z_2$] at (intersection-1) {} coordinate (Za);
 	\draw [thin] (intersection-1) -- ++(\guideline, 0) coordinate (Zaa);
 
 	\path [name intersections={of=ARl and ALr}];
-	\node [fill=red,inner sep=1pt,label=-90:$Z_1$] at (intersection-1) {} coordinate (Zb);
+	\node [fill=red,inner sep=1pt,label=-90:$\vec Z_1$] at (intersection-1) {} coordinate (Zb);
 	\draw [thin] (intersection-1) -- ++(\guideline, 0) coordinate (Zbb);
 	\draw [dimen] (Zaa) -- (Zbb) node {#3};
 
 	\path [name intersections={of=ALl and sensoraxis,name=uuh}];
 	\path [name intersections={of=ALr and sensoraxis,name=aah}];
-	\node [fill=red,inner sep=1pt,label=-100:$P_l$,left] at (uuh-1) {};
-	\node [fill=red,inner sep=1pt,label=-80:$P_r$,right,right] at (aah-1) {};
+	\node [fill=red,inner sep=1pt,label=-100:$\vec P_l$,left] at (uuh-1) {};
+	\node [fill=red,inner sep=1pt,label=-80:$\vec P_r$,right,right] at (aah-1) {};
 	\draw [ultra thick] (uuh-1) -- (aah-1);
 
 	\path [name intersections={of=ARl and sensoraxis,name=uuh}];
 	\path [name intersections={of=ARr and sensoraxis,name=aah}];
-	\node [fill=red,inner sep=1pt,label=-100:$P_l$] at (uuh-1) {};
-	\node [fill=red,inner sep=1pt,label=-80:$P_r$] at (aah-1) {};
+	\node [fill=red,inner sep=1pt,label=-100:$\vec P_l$] at (uuh-1) {};
+	\node [fill=red,inner sep=1pt,label=-80:$\vec P_r$] at (aah-1) {};
 	\draw [ultra thick] (uuh-1) -- (aah-1);
 
 }
