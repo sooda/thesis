@@ -448,32 +448,32 @@ Rolling shutter is especially noticeable in videos shot with a CMOS camera, beca
 \cite{taylor1998ccd,caspeelectronic,litwiller2001ccd}
 
 \paragraph{Error sources}
-% XXX unify refs and describe shot noise better
 % XXX specify sensitivity and use different terms for different types of sensitivity
-Various steps of the image processing contribute to image noise; the major sources are shot noise and several electrical noises.
-\emph{Shot noise} exists due to the particle-nature of light; each photon adds some electrical charge to the sensor, and if the overall number of photons is small, statistical noise will be present \cite{?}.
+Various steps of the image processing contribute to image noise; the major sources are shot noise and several electrical noises \cite{szeliski10vision,litwiller2001ccd}.
+\emph{Shot noise} exists due to the particle-nature of light; each photon adds a constant electrical charge to the photosite it hits, and if the overall number of photons is small, statistical Poisson-distributed noise will be present \cite{szeliski10vision}.
 This type of noise is visible in less bright areas.
-Obviously, no electronically better sensor can improve the visibility of shot noise.
+Clearly, no electronically better sensor can improve the visibility of shot noise.
 The only way to reduce it is by exposing the sensor to more light: for this reason, sensors with a larger surface area are preferred in applications where noise is unwanted.
 
-As all electronic circuits, also image sensors are subject to signal noise. % bad language
-Each pixel transfer receives an additional random signal level that shows up as additive brightness, noticed usually only in poorly illuminated conditions or black areas.
+The Gaussian-distributed \emph{electrical noise} has various sources in sampling, transfer and conversion.
+Each pixel receives an additional random signal level that shows up as additive brightness, also noticed usually only in poorly illuminated conditions or black areas.
 Noise increases with sensor's signal gain, or \emph{exposure sensitivity}, described using the ISO system (``film speed'').
-Sometimes \emph{sensitivity} or \emph{responsivity} refers also to the raw signal the photosite sensor produces per optical energy. \cite{litwiller2001ccd}
+Sensor \emph{responsivity} usually refers to the raw signal the photosite sensor produces per optical energy \cite{litwiller2001ccd}.
+The resulting digital value depends on this and many other terms on the signal path.
 
-A more sensitive sensor needs less light for a bright-looking image, because the signal is amplified more before digitization.
-This amplification also amplifies the original signal noise, which is why the gain level should be kept as small as possible and the amount of light entering the sensor as large as possible.
+A more sensitive ISO setting on a sensor requires less light for a bright-looking image, because the signal is amplified more before digitization.
+This amplification also amplifies the original signal noise.
+Additionally, the reduced exposure time allows the shot noise to be more visible.
+Due to these reasons, the gain level should be kept as small as possible and the amount of light entering the sensor as large as possible.
 This leads to requiring bright lighting in the imaged scene or a longer exposure time.
-Better sensors advertised as more sensitive to light typically have less noise-sensitive circuitry, resulting in higher signal to noise ratio.
-\cite{el2005cmos}
+Higher ISO should be used only if shorter exposures are desired due to a moving subject.
+Better sensors advertised as more responsive to light typically have larger sensors or less noise-sensitive circuitry, resulting in higher signal to noise ratio \cite{el2005cmos}.
 
-Photosites may also accumulate leaking charge on their own even though no light is entering the site because of \emph{dark current}.
+Photosites may also accumulate leaking charge on their own even though no light is entering the site because of \emph{dark current} \cite{el2005cmos,litwiller2001ccd}.
 Additionally, the analog-digital converter introduces \emph{quantization error} where an analog signal is not perfectly represented by a discrete number; with the high bit depth of modern sensors, this is practically not an issue.
-A high bit depth also presents larger \emph{dynamic range}, i.e., the difference between the brightest and darkest possible representations.
-\cite{el2005cmos,litwiller2001ccd}
+A high bit depth also presents larger \emph{dynamic range}, i.e., the difference between the brightest and darkest possible representations \cite{el2005cmos,litwiller2001ccd}.
 
 % }}} image sensors
-
 
 \subsubsection{Lighting} \label{sec:bg-lighting} % {{{
 
@@ -507,7 +507,7 @@ The same restriction provides a basis to other algorithms, such as object tracki
 Examples of complex surfaces containing much specularity are glossy textures and sweaty human skin.
 On the contrary, in photographs and image synthesis, shadows and reflections are natural, and images without them would look odd to the eye; capturing only albedo of surfaces - the color reflectivity of a surface - is particular to texture capture in reconstruction.
 In practice, polarizing filters may be used in front of the lights and in the camera lenses, to filter out most of the specular lighting.
-Advanced rendering methods may take advantage of also the specular component \cite{semedicaljuttu?}; however, capturing such material properties is typically done separately from the geometry capture \cite{aittala2013practical}.
+Advanced capture and rendering methods may take advantage of also the specular component \cite{ghosh2011multiview}; however, capturing such material properties is easily done separately from the geometry capture \cite{aittala2013practical}.
 
 %Surfaces modeled in computer graphics are often relighted with functions of surface normal and light and view directions, given as unit vectors, as in Figure \ref{fig:brdfdiagram}.
 
@@ -691,7 +691,7 @@ Digital video analogously downloads data from the image sensor and clears it dur
 Concurrent recording of multiple view video is more complicated than shooting still photos simultaneously.
 The cameras should be synchronized together to hold their shutters open at the same time during each frame.
 An assumption of stereo vision is that the images encode a static scene, i.e., geometrically same objects, which would not hold otherwise.
-This can be compensated to some degree with stroboscopic lighting or morphing between recorded frames if hard syncing is not possible. \cite{bradley2009synchronization}
+Lack of proper synchronization can be compensated to some degree with stroboscopic lighting or morphing between recorded frames if hard syncing is not possible. \cite{bradley2009synchronization}
 
 Within the scope of this thesis, synchronization issues can be divided roughly in three sources of error, assuming N cameras each having its own video file with same frame rate: \emph{offset}, \emph{drift} and \emph{jitter}.
 With the same frame rate, the frames can be indexed with numbers starting from 0.
@@ -1257,7 +1257,7 @@ Having estimated the matrix, the epipolar geometry and thus the 3D position of a
 
 % }}} epipolar geometry
 
-\subsubsection{Features and point matching} % {{{
+\subsubsection{Features and matching} % {{{
 
 %salient geometric features for matching
 % XXX needs a better intro
@@ -1266,12 +1266,11 @@ To reconstruct a whole scene from a full image, all pairwise points must be \emp
 Matching is often also called \emph{correspondence} searching:
 Given a pixel in one image, which is the corresponding pixel in another image taken from the same scene?
 Pixels correspond to each other if they represent the same physical point.
-Matching pixels for the previously introduced methods are found in the image space by comparing the color neighborhood.
-To describe the pixel's visual characteristics, its surrounding environment is typically encoded as a \emph{feature}, an easily recognizable property vector, \emph{feature descriptor} or \emph{feature vector}.
-\cite[ch. 4]{szeliski10vision}
+Matching pixels for the previously introduced methods are found in the image space by comparing pixel intensity of some fixed window.
+To describe the point's visual characteristics and to efficiently compare the characteristics of different points, the surrounding environment is typically encoded as a \emph{feature}, an easily recognizable property vector \cite[ch. 4]{szeliski10vision}.
 
-For successful matching, and furthermore correct geometry, images from different views should represent the same object.
-Different views must be imaged at the same time, and be free of visible artifacts, such as specular highlights.
+For successful matching, and correct geometry, images from different views should represent the same object.
+Different views must be imaged at the same time, and be free of visible view-dependent artifacts, such as specular highlights.
 Artifacts may introduce outliers, if matches are detected wrongly, or holes in the geometry, if matches are not detected at all.
 
 \paragraph{Features}
@@ -1279,26 +1278,26 @@ Artifacts may introduce outliers, if matches are detected wrongly, or holes in t
 Edges or corners are the typical features that are detected automatically at specific steps of reconstruction.
 They are essentially high-frequency information in the image that can be interpreted as a 2D discrete function;
 thus, \emph{edge detection} can be performed by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found \cite{marr1980theory}.
-Another popular method is \emph{blob detection}, based on the laplacian of a Gaussian-filtered image \cite{?}.
+Another popular method is \emph{blob detection}, based on, e.g., the laplacian of a Gaussian-filtered image.
+Blob detection is typically performed in computer vision using difference-of-gaussian-based (DoG) methods due to its faster execution than in Laplacian-of-Gaussians \cite[p. 152]{szeliski10vision}.
 Edge and blob detection methods work as a basis for several feature matching and detection algorithms. % XXX cite, describe blob and edge detection
 
 % XXX some sift descriptor theory, angle histogram stuff
 \emph{Scale-invariant feature transform (SIFT)} \cite{lowe1999object} is a well-known algorithm for local feature detection and description.
 A fast GPU implementation is also available \cite{changchang2007siftgpu}.
-After detecting keypoints with blob detection, SIFT encodes the local pixel neighborhood as a spatial histogram of gradients in the 2D image domain.
-Blob detection is typically performed in computer vision using difference-of-gaussian-based (DoG) methods due to its faster execution than in laplacian-of-gaussians \cite[p. 152]{szeliski10vision}.
-Invariance to scaling and rotation in feature descriptors such as SIFT make them useful in describing features that can be matched between unaligned images taken from relatively close views.
+After detecting keypoint candidates with blob detection, SIFT encodes the local pixel neighborhood as a spatial histogram of gradients in the 2D image domain.
+Invariance to scaling and rotation in feature descriptors such as SIFT make them useful in describing features that can be matched between unaligned images.
 %Other similar commonly used means are \emph{Speeded Up Robust Features (SURF)} \cite{bay2006surf}, \emph{Harris corner detector} \cite{harris1988combined}, and \emph{difference-of-gaussian-based (DoG)} methods \cite[p. 152]{szeliski10vision}.
 
 \paragraph{Search}
 Searching for well distinguished features in an image is called \emph{sparse} search.
-A sparse set of feature matches is suitable for reconstructing initial calibration, as all the feature vectors can be matched together relatively quickly.
+A sparse set of feature matches is suitable for reconstructing initial calibration, as all the feature vectors can be compared against each other relatively quickly.
 For finding a complete depth map of the whole image, a slower \emph{dense} search is performed, using the obtained calibration.
 Dense matching runs through each pixel of the search space and tries to find a matching pixel from another image, e.g., with template matching \cite{duda1973pattern}.
 The surrounding pixel values themselves inside a \emph{window} centered at the searched pixel are compared in the search area, which typically runs along the epipolar lines only.
 
-From the coordinate differences in image space between the two images, a disparity map is built.
-The disparities can then be directly transformed to depth values, yielding a point cloud.
+%From the coordinate differences in image space between the two images, a disparity map is built.
+%The disparities can then be directly transformed to depth values, yielding a point cloud.
 %Other more sophisticated algorithms too find dense matches but may not use an intermediate disparity map.
 
 % }}}
@@ -1511,7 +1510,8 @@ The method of choice is currently \emph{Poisson surface reconstruction} \cite{ka
 
 Before fitting a surface on the points, the point data set should be processed either manually or automatically to remove outliers, such as wrongly detected points or geometry of the surrounding scene not part of the object itself.
 Specular highlights and other artifacts on the surface may also introduce outliers.
-Manual work is a simple way to delete the points that are not part of the actual object, but also automatic methods exist \cite{?} if manually filtering the subject would be repetitive, e.g., when recording many expressions on a human face.
+Manual work is a simple way to delete the points that are not part of the actual object.
+If manually filtering the subject would be repetitive, e.g., when recording many expressions on a human face in a constant environment, automatic methods could be used, e.g., nearest-neighbor or point grouping methods \cite{pcl}.
 
 % assuming X on the geometry to fit a model
 

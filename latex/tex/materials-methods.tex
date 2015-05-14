@@ -81,13 +81,13 @@ The cameras may still not support the maximum rate that can be achieved by the c
 	\begin{tabular}{l l l}
 		Bus type & Max. theoretical speed & full-HD FPS\\
 		\hline \\
-		Camera Link & 5.44 Gb/s & 218 Hz\\
-		USB 3.0 & 3.2 Gb/s & 128 Hz\\
+		Camera Link \cite{ni2013choosing} & 5.44 Gb/s & 218 Hz\\
+		USB 3.0 \cite{ni2013choosing} & 3.2 Gb/s & 128 Hz\\
 		CF card \cite{tomshw-cfwrite} & 1030 Mb/s & 41 Hz\\
-		GigE & 1.0 Gb/s & 40 Hz\\
-		IEEE 1394 & 800 Mb/s & 32 Hz\\
+		GigE \cite{ni2013choosing} & 1.0 Gb/s & 40 Hz\\
+		IEEE 1394 \cite{ni2013choosing} & 800 Mb/s & 32 Hz\\
 		SD card \cite{tomshw-sdwrite} & 490 Mb/s & 19 Hz\\
-		USB 2.0 & 480 Mb/s & 19 Hz\\
+		USB 2.0 \cite{ni2013choosing} & 480 Mb/s & 19 Hz\\
 	\end{tabular}
 	\caption{Bus speeds and corresponding naive maximum frame rates per second for 1920 x 1080 pixels x 12 bits; actual speeds would be lower}
 	\label{tab:busspeeds}
@@ -126,7 +126,7 @@ On practical matters affecting image quality:
 On practical matters affecting usability:
 
 \begin{itemize}
-	\item Lens features. While photography lenses typically support automatic focusing, machine vision lenses only have manually adjustable or fixed-distance focus \cite{?}. Of photography devices, compact cameras feature a non-changeable zoom lens, while system cameras feature interchangeable lenses.
+	\item Lens features. While photography lenses typically support electronic and even automatic focusing, machine vision lenses typically have mechanically adjustable focus and aperture. Of photography devices, compact cameras feature a non-changeable zoom lens, while system cameras feature interchangeable lenses.
 
 	\item Continuous shooting rate, or the speed at which full-size pictures can be taken. Controlled by many factors, on consumer cameras, image processing speed and memory card write speed have most effect, and on MV cameras, the bus speed typically limits the rate, and sensor speed is selected based on the bus speed.
 
