@@ -241,39 +241,38 @@ Its cause is small misalignments in separate elements in a single optical system
 %Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
 % FIXME centi-pixel etc. villiers \cite{villiers2008centi}
 \simplefig{t}{%
-\includegraphics[width=0.2\textwidth]{barrel-distortion}
-\includegraphics[width=0.2\textwidth]{pincushion-distortion}
+\includegraphics[width=0.32\textwidth]{wall-pincushion}
+\includegraphics[width=0.32\textwidth]{wall}
+\includegraphics[width=0.32\textwidth]{wall-barrel}
 }{fig:distortions}{
-	Barrel (left) and pincushion distortions that would show up in an image of a grid of straight lines.
-	For a lens with no distortion, the lines would not be curved but in a perfect grid.
-	(FIXME placeholder, replaced by real-world images) % yes, building/trees? would bend but not related to close range. speaker? ruler? legos? something measurable
+	Simulated pincushion (left) and barrel (right) distortions by applying undistortion on an undistorted image (center) using OpenCV.
 }
 
 Because stereo vision assumes that the images are free of nonlinearities, i.e., straight lines in the world should remain straight in 2D images after the projective transformation, it is important to correct the geometric distortions beforehand \cite{szeliski10vision}.
 The radially symmetric radial error model and correction proposed first by Brown \cite{brown1971close,brown1966decentering} and used directly or with slight alternations in programming libraries, e.g., OpenCV, \cite{opencv} is % to create a new image of the original pixel values at new positions is
 \begin{align} \label{eq:radialdist} \begin{split}
-	x_{corr} &= x(1 + \alpha_1 r^2 + \alpha_2 r^4 + \alpha_3 r^6)\\
-	y_{corr} &= y(1 + \alpha_1 r^2 + \alpha_2 r^4 + \alpha_3 r^6).
+	x_{corr} &= x(1 + \kappa_1 r^2 + \kappa_2 r^4 + \kappa_3 r^6)\\
+	y_{corr} &= y(1 + \rho_1 r^2 + \kappa_2 r^4 + \kappa_3 r^6).
 \end{split} \end{align}
-where $x$ and $y$ are the original coordinates in the distorted image on the film or image sensor, $x_{corr}$ and $y_{corr}$ are the corrected ones, $\alpha_1$, $\alpha_2$, $\alpha_3$ are coefficients specific to the radial distortion and $r$ equals to the distance to optical origin, located at $(x_c,~y_c)$:
+where $x$ and $y$ are the original coordinates in the distorted image on the film or image sensor, $x_{corr}$ and $y_{corr}$ are the corrected ones, $\kappa_1$, $\kappa_2$, $\kappa_3$ are coefficients specific to the radial distortion and $r$ equals to the distance to optical origin, located at $(x_c,~y_c)$:
 \begin{equation}
 r = \sqrt{(x - x_c)^2 + (y - y_c)^2}
 \end{equation}
 
-Trucco and Verri \cite{trucco1998introductory} present only the two first coefficients, and it is not rare to use only the first $\alpha_1$; for lenses with low distortion, this is often enough.
+Trucco and Verri \cite{trucco1998introductory} present only the two first coefficients, and it is not rare to use only the first $\kappa_1$; for lenses with low distortion, this is often enough.
 A complete derivation of the model involves detailed trigonometric analysis of thin prism models on lens elements, which results simply in Equation \ref{eq:radialdist}, a simple polynomial.
 For tangential-only distortion, the corresponding correction has the following form:
 \begin{align} \label{eq:tangdist} \begin{split}
-x_{corr} &= x + 2 \beta_1 x y + \beta_2 (r^2 + 2 x^2)\\
-y_{corr} &= y + 2 \beta_2 x y + \beta_1 (r^2 + 2 y^2)
+x_{corr} &= x + 2 \rho_1 x y + \rho_2 (r^2 + 2 x^2)\\
+y_{corr} &= y + 2 \rho_2 x y + \rho_1 (r^2 + 2 y^2)
 \end{split} \end{align}
-where $x$, $y$ $x_{corr}$, $y_{corr}$ and $r$ are as in Equation \ref{eq:radialdist} and $\beta_1$ and $\beta_2$ are new coefficients specific to tangential distortion.
+where $x$, $y$ $x_{corr}$, $y_{corr}$ and $r$ are as in Equation \ref{eq:radialdist} and $\rho_1$ and $\rho_2$ are new coefficients specific to tangential distortion.
 
 The two independent types of distortion are combined by summing both to the original coordinate, combining Equations \ref{eq:radialdist} and \ref{eq:tangdist}:
 
 \begin{align} \label{eq:bothdist} \begin{split}
-	x_{corr} &= x (1 + \alpha_1 r^2 + \alpha_2 r^4 + \alpha_3 r^6) + 2 \beta_1 x y + \beta_2 (r^2 + 2 x^2)\\
-	y_{corr} &= y (1 + \alpha_1 r^2 + \alpha_2 r^4 + \alpha_3 r^6) + 2 \beta_2 x y + \beta_1 (r^2 + 2 y^2)
+	x_{corr} &= x (1 + \kappa_1 r^2 + \kappa_2 r^4 + \kappa_3 r^6) + 2 \rho_1 x y + \rho_2 (r^2 + 2 x^2)\\
+	y_{corr} &= y (1 + \kappa_1 r^2 + \kappa_2 r^4 + \kappa_3 r^6) + 2 \rho_2 x y + \rho_1 (r^2 + 2 y^2)
 \end{split} \end{align}
 
 The effects of different parameters are depicted in Figure \ref{fig:raddist}.
@@ -283,7 +282,7 @@ A typical image sensor is not a square but a rectangle, and clips the distortion
 \simplegfx{t}{\textwidth}{raddist}{
 		Purely radial distortion correction with different values of two parameters.
 	The arrows point from original coordinates $(x, y)$ to corrected ones $(x_{corr}, y_{corr})$; the inverse would be necessary for undistortion.
-	From left to right: $\alpha_1 = 0.16$, $\alpha_1 = -0.16$, $\alpha_2 = -0.08$, $\alpha_1 = -0.04, \alpha_2 = -0.04$.
+	From left to right: $\kappa_1 = 0.16$, $\kappa_1 = -0.16$, $\kappa_2 = -0.08$, $\kappa_1 = -0.04, \kappa_2 = -0.04$.
 	The different shapes of second and fourth order polynomials are easily visible: the higher-order terms are visible have most effect in the farthest sides of the image.
 }
 
