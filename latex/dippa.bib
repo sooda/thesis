@@ -32,7 +32,7 @@
   year={1992},
   publisher={SPIE Press}
 }
-@article{gibson1950perception,
+@book{gibson1950perception,
   title={The perception of the visual world.},
   author={Gibson, James J},
   year={1950},
@@ -69,7 +69,7 @@
 -- kirjat konenäöstä/3d:stä {{{
 % tutorial
 @inproceedings{pollefeys2004visual,
-  title={Visual 3D Modeling from Images.},
+  title={Visual {3D} Modeling from Images.},
   author={Pollefeys, Marc},
   booktitle={VMV},
   pages={3},
@@ -200,7 +200,7 @@
   volume={2},
   pages={1150--1157},
   year={1999},
-  organization={Ieee}
+  organization={IEEE}
 }
 % 2d haar wavelets, integral images; like sift, faster
 @incollection{bay2006surf,
@@ -223,14 +223,16 @@
 }
 % derivatives, kernels etc. basic things
 @article{marr1980theory,
-  title={Theory of edge detection},
-  author={Marr, David and Hildreth, Ellen},
-  journal={Proceedings of the Royal Society of London. Series B. Biological Sciences},
-  volume={207},
-  number={1167},
-  pages={187--217},
-  year={1980},
-  publisher={The Royal Society}
+  author = {Marr, D. and Hildreth, E.},
+  title = {Theory of Edge Detection},
+  volume = {207},
+  number = {1167},
+  pages = {187--217},
+  year = {1980},
+  doi = {10.1098/rspb.1980.0020},
+  publisher = {The Royal Society},
+  issn = {0080-4649},
+  journal = {Proceedings of the Royal Society of London B: Biological Sciences}
 }
 
 % }}}
@@ -248,7 +250,7 @@
   note={Accessed 2015-05-09}
 }
 @misc{ten24,
-  title={Ten 24 3D scanning service},
+  title={Ten 24 {3D} scanning service},
   author={{Ten24}},
   howpublished={\url{http://www.ten24.info}},
   note={Accessed 2014-10-21}
@@ -283,7 +285,7 @@ http://www.ten24.info/ten24/?page_id=299
 @inproceedings{pilet2005real,
   title={Real-time nonrigid surface detection},
   author={Pilet, Julien and Lepetit, Vincent and Fua, Pascal},
-  booktitle={IEEE Computer Society Conference on Computer Vision and Pattern Recognition, CVPR},
+  booktitle={IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR)},
   volume={1},
   pages={822--828},
   year={2005},
@@ -318,14 +320,24 @@ http://www.ten24.info/ten24/?page_id=299
 }
 % structured light, MV cams, registration, graph refinement, textured surface
 @article{li2009robust,
-  title={Robust single-view geometry and motion reconstruction},
-  author={Li, Hao and Adams, Bart and Guibas, Leonidas J and Pauly, Mark},
-  journal={ACM Transactions on Graphics (TOG)},
-  volume={28},
-  number={5},
-  pages={175},
-  year={2009},
-  publisher={ACM}
+ author = {Li, Hao and Adams, Bart and Guibas, Leonidas J. and Pauly, Mark},
+ title = {Robust Single-view Geometry and Motion Reconstruction},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {December 2009},
+ volume = {28},
+ number = {5},
+ month = dec,
+ year = {2009},
+ issn = {0730-0301},
+ pages = {175:1--175:10},
+ articleno = {175},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/1618452.1618521},
+ doi = {10.1145/1618452.1618521},
+ acmid = {1618521},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {3D scanning, animation reconstruction, geometry synthesis, non-rigid registration, partial scans, template tracking},
 }
 % selfcal, sequential vs extended sfm, castle sequence, twisted rectification
 @inproceedings{pollefeys1999hand,
@@ -356,18 +368,25 @@ http://www.ten24.info/ten24/?page_id=299
 }
 % single page paper on pro cameras and tex and motion
 @inproceedings{borshukov05universal,
-  title={Universal capture -- image-based facial animation for {The Matrix Reloaded}},
-  author={Borshukov, George and Piponi, Dan and Larsen, Oystein and Lewis, John P and Tempelaar-Lietz, Christina},
-  booktitle={ACM Siggraph 2005 Courses},
-  pages={16},
-  year={2005},
-  organization={ACM}
+ author = {Borshukov, George and Piponi, Dan and Larsen, Oystein and Lewis, J. P. and Tempelaar-Lietz, Christina},
+ title = {Universal Capture: Image-based Facial Animation for "The Matrix Reloaded"},
+ booktitle = {ACM SIGGRAPH 2003 Sketches \& Applications},
+ series = {SIGGRAPH '03},
+ year = {2003},
+ location = {San Diego, California},
+ pages = {1--1},
+ numpages = {1},
+ url = {http://doi.acm.org/10.1145/965400.965469},
+ doi = {10.1145/965400.965469},
+ acmid = {965469},
+ publisher = {ACM},
+ address = {New York, NY, USA},
 }
 % application on internet photos
 @inproceedings{goesele2007multi,
   title={Multi-view stereo for community photo collections},
   author={Goesele, Michael and Snavely, Noah and Curless, Brian and Hoppe, Hugues and Seitz, Steven M},
-  booktitle={IEEE 11th International Conference on Computer Vision, ICCV 2007},
+  booktitle={IEEE 11th International Conference on Computer Vision (ICCV)},
   pages={1--8},
   year={2007},
   organization={IEEE}
@@ -484,13 +503,24 @@ http://www.ten24.info/ten24/?page_id=299
 }
 % miika's material reflectivity properties capture
 @article{aittala2013practical,
-  title={Practical {SVBRDF} capture in the frequency domain.},
-  author={Aittala, Miika and Weyrich, Tim and Lehtinen, Jaakko},
-  journal={ACM Trans. Graph.},
-  volume={32},
-  number={4},
-  pages={110},
-  year={2013}
+ author = {Aittala, Miika and Weyrich, Tim and Lehtinen, Jaakko},
+ title = {Practical SVBRDF Capture in the Frequency Domain},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {July 2013},
+ volume = {32},
+ number = {4},
+ month = jul,
+ year = {2013},
+ issn = {0730-0301},
+ pages = {110:1--110:12},
+ articleno = {110},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/2461912.2461978},
+ doi = {10.1145/2461912.2461978},
+ acmid = {2461978},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {SVBRDF, appearance capture, fourier analysis, reflectance},
 }
 % extensive descriptions of rolling shutter, perspproj with roll distortion, velocity estimation
 @incollection{ait2006simultaneous,
@@ -505,7 +535,7 @@ http://www.ten24.info/ten24/?page_id=299
 @inproceedings{bradley2009synchronization,
   title={Synchronization and rolling shutter compensation for consumer video camera arrays},
   author={Bradley, Derek and Atcheson, Bradley and Ihrke, Ivo and Heidrich, Wolfgang},
-  booktitle={IEEE Computer Society Conference on Computer Vision and Pattern Recognition Workshops, CVPR},
+  booktitle={IEEE Computer Society Conference on Computer Vision and Pattern Recognition Workshops (CVPR)},
   pages={1--8},
   year={2009},
   organization={IEEE}
@@ -544,7 +574,7 @@ http://www.ten24.info/ten24/?page_id=299
 
 % dunno. mannequin head with texture scanned, errors measured
 @article{winder2008technical,
-  title={Technical validation of the Di3D stereophotogrammetry surface imaging system},
+  title={Technical validation of the {Di3D} stereophotogrammetry surface imaging system},
   author={Winder, RJ and Darvann, Tron Andre and McKnight, Wesley and Magee, JDM and Ramsay-Baggs, P},
   journal={British Journal of Oral and Maxillofacial Surgery},
   volume={46},
@@ -555,19 +585,27 @@ http://www.ten24.info/ten24/?page_id=299
 }
 % mentions 3d; testing ~10 different cameras and giving measurement errors finally
 @article{rieke2009evaluation,
-  title={Evaluation of the geometric stability and the accuracy potential of digital cameras--Comparing mechanical stabilisation versus parameterisation},
-  author={Rieke-Zapp, D and Tecklenburg, W and Peipe, J and Hastedt, H and Haig, Claudia},
-  journal={ISPRS Journal of Photogrammetry and Remote Sensing},
-  volume={64},
-  number={3},
-  pages={248--258},
-  year={2009},
-  publisher={Elsevier}
+ title = "Evaluation of the geometric stability and the accuracy potential of digital cameras — Comparing mechanical stabilisation versus parameterisation ",
+ journal = "{ISPRS} Journal of Photogrammetry and Remote Sensing ",
+ volume = "64",
+ number = "3",
+ pages = "248 - 258",
+ year = "2009",
+ note = "Theme Issue: Image Analysis and Image Engineering in Close Range Photogrammetry ",
+ issn = "0924-2716",
+ doi = "http://dx.doi.org/10.1016/j.isprsjprs.2008.09.010",
+ url = "http://www.sciencedirect.com/science/article/pii/S0924271608001068",
+ author = "D. Rieke-Zapp and W. Tecklenburg and J. Peipe and H. Hastedt and Claudia Haig",
+ keywords = "Geometric stability",
+ keywords = "Camera calibration",
+ keywords = "Accuracy assessment",
+ keywords = "Digital camera ",
 }
 % master thesis, image analysis, compression effects and tests, noise, blur
-@article{hollsten2013imagequality,
-  title={The effect of image quality on the reconstruction of 3D geometry from photographs},
+@mastersthesis{hollsten2013imagequality,
   author={Hollsten, Fredrik},
+  title={The effect of image quality on the reconstruction of {3D} geometry from photographs},
+  school={Aalto University School of Science},
   year={2013}
 }
 % depth resolution dZ, perceptual measurements
@@ -656,56 +694,92 @@ http://www.ten24.info/ten24/?page_id=299
   publisher={IEEE}
 }
 % restricted screw motion, projective ambiguity, point tracking
-@incollection{fitzgibbon1998automatic,
-  title={Automatic 3D model construction for turn-table sequences},
-  author={Fitzgibbon, Andrew W and Cross, Geoff and Zisserman, Andrew},
-  booktitle={3D Structure from Multiple Images of Large-Scale Environments},
-  pages={155--170},
-  year={1998},
-  publisher={Springer}
+@inproceedings{fitzgibbon1998automatic,
+ author = {Fitzgibbon, Andrew W. and Cross, Geoff and Zisserman, Andrew},
+ title = {Automatic {3D} Model Construction for Turn-Table Sequences},
+ booktitle = {Proceedings of the European Workshop on 3D Structure from Multiple Images of Large-Scale Environments},
+ series = {SMILE'98},
+ year = {1998},
+ isbn = {3-540-65310-4},
+ pages = {155--170},
+ numpages = {16},
+ url = {http://dl.acm.org/citation.cfm?id=646488.694783},
+ acmid = {694783},
+ publisher = {Springer-Verlag},
+ address = {London, UK, UK},
 }
-@inproceedings{bickel2007multi,
-  title={Multi-scale capture of facial geometry and motion},
-  author={Bickel, Bernd and Botsch, Mario and Angst, Roland and Matusik, Wojciech and Otaduy, Miguel and Pfister, Hanspeter and Gross, Markus},
-  booktitle={ACM Transactions on Graphics (TOG)},
-  volume={26},
-  number={3},
-  pages={33},
-  year={2007},
-  organization={ACM}
+@article{bickel2007multi,
+ author = {Bickel, Bernd and Botsch, Mario and Angst, Roland and Matusik, Wojciech and Otaduy, Miguel and Pfister, Hanspeter and Gross, Markus},
+ title = {Multi-scale Capture of Facial Geometry and Motion},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {July 2007},
+ volume = {26},
+ number = {3},
+ month = jul,
+ year = {2007},
+ issn = {0730-0301},
+ articleno = {33},
+ url = {http://doi.acm.org/10.1145/1276377.1276419},
+ doi = {10.1145/1276377.1276419},
+ acmid = {1276419},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {animation, face modeling, motion capture},
 }
 @article{ghosh2011multiview,
-  title={Multiview face capture using polarized spherical gradient illumination},
-  author={Ghosh, Abhijeet and Fyffe, Graham and Tunwattanapong, Borom and Busch, Jay and Yu, Xueming and Debevec, Paul},
-  journal={ACM Transactions on Graphics (TOG)},
-  volume={30},
-  number={6},
-  pages={129},
-  year={2011},
-  publisher={ACM}
+ author = {Ghosh, Abhijeet and Fyffe, Graham and Tunwattanapong, Borom and Busch, Jay and Yu, Xueming and Debevec, Paul},
+ title = {Multiview Face Capture Using Polarized Spherical Gradient Illumination},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {December 2011},
+ volume = {30},
+ number = {6},
+ month = dec,
+ year = {2011},
+ issn = {0730-0301},
+ pages = {129:1--129:10},
+ articleno = {129},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/2070781.2024163},
+ doi = {10.1145/2070781.2024163},
+ acmid = {2024163},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {computational illumination, face capture, message passing, polarization},
 }
-
 % mapping application in archaeology
 @article{lerma2010terrestrial,
-  title={Terrestrial laser scanning and close range photogrammetry for 3D archaeological documentation: the Upper Palaeolithic Cave of Parpall{\'o} as a case study},
-  author={Lerma, Jos{\'e} Luis and Navarro, Santiago and Cabrelles, Miriam and Villaverde, Valent{\'\i}n},
-  journal={Journal of Archaeological Science},
-  volume={37},
-  number={3},
-  pages={499--507},
-  year={2010},
-  publisher={Elsevier}
+  title = "Terrestrial laser scanning and close range photogrammetry for 3D archaeological documentation: the Upper Palaeolithic Cave of Parpalló as a case study ",
+  journal = "Journal of Archaeological Science ",
+  volume = "37",
+  number = "3",
+  pages = "499 - 507",
+  year = "2010",
+  note = "",
+  issn = "0305-4403",
+  doi = "http://dx.doi.org/10.1016/j.jas.2009.10.011",
+  url = "http://www.sciencedirect.com/science/article/pii/S0305440309003781",
+  author = "José Luis Lerma and Santiago Navarro and Miriam Cabrelles and Valentín Villaverde",
+  keywords = "Terrestrial laser scanning",
+  keywords = "Close range photogrammetry",
+  keywords = "Documentation",
+  keywords = "Rock art",
+  keywords = "Cave",
+  keywords = "Interpretation",
+  keywords = "Analysis "
 }
 % fast moving cloth, single pic motion capture, parameterized model
-@inproceedings{pritchard2003cloth,
-  title={Cloth motion capture},
-  author={Pritchard, David and Heidrich, Wolfgang},
-  booktitle={Computer Graphics Forum},
-  volume={22},
-  number={3},
-  pages={263--271},
-  year={2003},
-  organization={Wiley Online Library}
+@article{pritchard2003cloth,
+  author = {Pritchard, D. and Heidrich, W.},
+  title = {Cloth Motion Capture},
+  journal = {Computer Graphics Forum},
+  volume = {22},
+  number = {3},
+  publisher = {Blackwell Publishing, Inc},
+  issn = {1467-8659},
+  url = {http://dx.doi.org/10.1111/1467-8659.00673},
+  doi = {10.1111/1467-8659.00673},
+  pages = {263--271},
+  year = {2003},
 }
 % reviews; cool comparison of sensors
 @article{remondino2011heritage,
@@ -725,7 +799,7 @@ http://www.ten24.info/ten24/?page_id=299
 @inproceedings{pons2005modelling,
   title={Modelling dynamic scenes by registering multi-view image sequences},
   author={Pons, J-P and Keriven, Renaud and Faugeras, Olivier},
-  booktitle={IEEE Computer Society Conference on Computer Vision and Pattern Recognition, CVPR},
+  booktitle={IEEE Computer Society Conference on Computer Vision and Pattern Recognition (CVPR)},
   volume={2},
   pages={822--827},
   year={2005},
@@ -742,7 +816,7 @@ http://www.ten24.info/ten24/?page_id=299
 }
 % joining scanned statues for complete view coverage
 @article{huber2003fully,
-  title={Fully automatic registration of multiple 3D data sets},
+  title={Fully automatic registration of multiple {3D} data sets},
   author={Huber, Daniel F and Hebert, Martial},
   journal={Image and Vision Computing},
   volume={21},
@@ -753,36 +827,56 @@ http://www.ten24.info/ten24/?page_id=299
 }
 % combining mvs views for scanning a machined object
 @article{eggert1998simultaneous,
-  title={Simultaneous registration of multiple range views for use in reverse engineering of {CAD} models},
-  author={Eggert, David W and Fitzgibbon, Andrew W and Fisher, Robert B},
-  journal={Computer Vision and Image Understanding},
-  volume={69},
-  number={3},
-  pages={253--272},
-  year={1998},
-  publisher={Elsevier}
+  title = "Simultaneous Registration of Multiple Range Views for Use in Reverse Engineering of {CAD} Models ",
+  journal = "Computer Vision and Image Understanding ",
+  volume = "69",
+  number = "3",
+  pages = "253 - 272",
+  year = "1998",
+  note = "",
+  issn = "1077-3142",
+  doi = "http://dx.doi.org/10.1006/cviu.1998.0667",
+  url = "http://www.sciencedirect.com/science/article/pii/S1077314298906671",
+  author = "David W. Eggert and Andrew W. Fitzgibbon and Robert B. Fisher"
 }
 % icp registration
 @article{zhang1994iterative,
-  title={Iterative point matching for registration of free-form curves and surfaces},
-  author={Zhang, Zhengyou},
-  journal={International journal of computer vision},
-  volume={13},
-  number={2},
-  pages={119--152},
-  year={1994},
-  publisher={Springer}
+ author = {Zhang, Zhengyou},
+ title = {Iterative Point Matching for Registration of Free-form Curves and Surfaces},
+ journal = {International Journal of Computer Vision},
+ issue_date = {Oct. 1994},
+ volume = {13},
+ number = {2},
+ month = oct,
+ year = {1994},
+ issn = {0920-5691},
+ pages = {119--152},
+ numpages = {34},
+ url = {http://dx.doi.org/10.1007/BF01427149},
+ doi = {10.1007/BF01427149},
+ acmid = {195970},
+ publisher = {Kluwer Academic Publishers},
+ address = {Hingham, MA, USA},
 }
 % retargeting
-@inproceedings{sumner2004deformation,
-  title={Deformation transfer for triangle meshes},
-  author={Sumner, Robert W and Popovi{\'c}, Jovan},
-  booktitle={ACM Transactions on Graphics (TOG)},
-  volume={23},
-  number={3},
-  pages={399--405},
-  year={2004},
-  organization={ACM}
+@article{sumner2004deformation,
+ author = {Sumner, Robert W. and Popovi\'{c}, Jovan},
+ title = {Deformation Transfer for Triangle Meshes},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {August 2004},
+ volume = {23},
+ number = {3},
+ month = aug,
+ year = {2004},
+ issn = {0730-0301},
+ pages = {399--405},
+ numpages = {7},
+ url = {http://doi.acm.org/10.1145/1015706.1015736},
+ doi = {10.1145/1015706.1015736},
+ acmid = {1015736},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Animation, Correspondence, Deformations},
 }
 % 8-view replay, consistent topology
 @article{starck2007surface,
@@ -797,14 +891,19 @@ http://www.ten24.info/ten24/?page_id=299
 }
 % old model for parameterizing muscles to vertices
 @inproceedings{waters1987muscle,
-  title={A muscle model for animation three-dimensional facial expression},
-  author={Waters, Keith},
-  booktitle={ACM SIGGRAPH Computer Graphics},
-  volume={21},
-  number={4},
-  pages={17--24},
-  year={1987},
-  organization={ACM}
+ author = {Waters, Keith},
+ title = {A Muscle Model for Animation Three-dimensional Facial Expression},
+ booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
+ series = {SIGGRAPH '87},
+ year = {1987},
+ isbn = {0-89791-227-6},
+ pages = {17--24},
+ numpages = {8},
+ url = {http://doi.acm.org/10.1145/37401.37405},
+ doi = {10.1145/37401.37405},
+ acmid = {37405},
+ publisher = {ACM},
+ address = {New York, NY, USA},
 }
 % di4d
 @article{al2013new,
@@ -854,33 +953,48 @@ http://www.ten24.info/ten24/?page_id=299
   year={1981}
 }
 % correspondences, 3d scanner data registration
-@inproceedings{brown2007global,
-  title={Global non-rigid alignment of 3-D scans},
-  author={Brown, Benedict J and Rusinkiewicz, Szymon},
-  booktitle={ACM Transactions on Graphics (TOG)},
-  volume={26},
-  number={3},
-  pages={21},
-  year={2007},
-  organization={ACM}
+@article{brown2007global,
+ author = {Brown, Benedict J. and Rusinkiewicz, Szymon},
+ title = {Global Non-rigid Alignment of {3-D} Scans},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {July 2007},
+ volume = {26},
+ number = {3},
+ month = jul,
+ year = {2007},
+ issn = {0730-0301},
+ articleno = {21},
+ url = {http://doi.acm.org/10.1145/1276377.1276404},
+ doi = {10.1145/1276377.1276404},
+ acmid = {1276404},
+ publisher = {ACM},
+ address = {New York, NY, USA},
 }
-
 -- }}}
 -- tiheä rekonstruktio {{{
 % mv cams
 @article{carceroni2002multi,
-  title={Multi-view scene capture by surfel sampling: From video streams to non-rigid 3D motion, shape and reflectance},
-  author={Carceroni, Rodrigo L and Kutulakos, Kiriakos N},
-  journal={International Journal of Computer Vision},
-  volume={49},
-  number={2-3},
-  pages={175--214},
-  year={2002},
-  publisher={Springer}
+ author = {Carceroni, Rodrigo L. and Kutulakos, Kiriakos N.},
+ title = {Multi-View Scene Capture by Surfel Sampling: From Video Streams to Non-Rigid {3D} Motion, Shape and Reflectance},
+ journal = {International Journal of Computer Vision},
+ issue_date = {September-October 2002},
+ volume = {49},
+ number = {2-3},
+ month = sep,
+ year = {2002},
+ issn = {0920-5691},
+ pages = {175--214},
+ numpages = {40},
+ url = {http://dx.doi.org/10.1023/A:1020145606604},
+ doi = {10.1023/A:1020145606604},
+ acmid = {598521},
+ publisher = {Kluwer Academic Publishers},
+ address = {Hingham, MA, USA},
+ keywords = {3D motion capture, 3D reconstruction, Phong reflectance model, deformation analysis, direct estimation methods, illumination modeling, image warping, motion analysis, multi-view motion estimation, multi-view stereo, multiple-view geometry, reflectance modeling, space carving, stereoscopic vision},
 }
 % aligning mvs photos on accurate depth data for color
 @inproceedings{liu2006multiview,
-  title={Multiview geometry for texture mapping 2d images onto 3d range data},
+  title={Multiview geometry for texture mapping {2D} images onto {3D} range data},
   author={Liu, Lingyun and Stamos, Ioannis and Yu, Gene and Wolberg, George and Zokai, Siavash},
   booktitle={IEEE Computer Society Conference on Computer Vision and Pattern Recognition},
   volume={2},
@@ -890,35 +1004,53 @@ http://www.ten24.info/ten24/?page_id=299
 }
 % cuda stuff
 @article{chang2011gpu,
-  title={{GPU-friendly} multi-view stereo reconstruction using surfel representation and graph cuts},
-  author={Chang, Ju Yong and Park, Haesol and Park, In Kyu and Lee, Kyoung Mu and Lee, Sang Uk},
-  journal={Computer Vision and Image Understanding},
-  volume={115},
-  number={5},
-  pages={620--634},
-  year={2011},
-  publisher={Elsevier}
+   title = "{GPU}-friendly multi-view stereo reconstruction using surfel representation and graph cuts ",
+   journal = "Computer Vision and Image Understanding ",
+   volume = "115",
+   number = "5",
+   pages = "620 - 634",
+   year = "2011",
+   note = "Special issue on 3D Imaging and Modelling ",
+   issn = "1077-3142",
+   doi = "http://dx.doi.org/10.1016/j.cviu.2010.11.017",
+   url = "http://www.sciencedirect.com/science/article/pii/S1077314210002559",
+   author = "Ju Yong Chang and Haesol Park and In Kyu Park and Kyoung Mu Lee and Sang Uk Lee",
+   keywords = "Multi-view stereo",
+   keywords = "3D shape reconstruction",
+   keywords = "Surfel",
+   keywords = "Graph cuts",
+   keywords = "{GPU}",
+   keywords = "Massive parallel processing "
 }
 % camera and projector, simple
-@inproceedings{rocchini2001low,
-  title={A low cost 3D scanner based on structured light},
-  author={Rocchini, CMPPC and Cignoni, Paulo and Montani, Claudio and Pingi, Paolo and Scopigno, Roberto},
-  booktitle={Computer Graphics Forum},
-  volume={20},
-  number={3},
-  pages={299--308},
-  year={2001},
-  organization={Wiley Online Library}
+@article{rocchini2001low,
+  author = {Rocchini, C. and Cignoni, P. and Montani, C. and Pingi, P. and Scopigno, R.},
+  title = {A low cost 3D scanner based on structured light},
+  journal = {Computer Graphics Forum},
+  volume = {20},
+  number = {3},
+  publisher = {Blackwell Publishers Ltd},
+  issn = {1467-8659},
+  url = {http://dx.doi.org/10.1111/1467-8659.00522},
+  doi = {10.1111/1467-8659.00522},
+  pages = {299--308},
+  keywords = {Global Illumination, Rapid/Interactive Updates, Radiosity, Particle Tracing, Textures, Reconstruction},
+  year = {2001},
 }
-@inproceedings{labatut2009robust,
-  title={Robust and efficient surface reconstruction from range data},
-  author={Labatut, Patrick and Pons, J-P and Keriven, Renaud},
-  booktitle={Computer Graphics Forum},
-  volume={28},
-  number={8},
-  pages={2275--2290},
-  year={2009},
-  organization={Wiley Online Library}
+@article{labatut2009robust,
+ author = {Labatut, P. and Pons, J.-P. and Keriven, R.},
+ title = {Robust and Efficient Surface Reconstruction From Range Data},
+ journal = {Computer Graphics Forum},
+ volume = {28},
+ number = {8},
+ publisher = {Blackwell Publishing Ltd},
+ issn = {1467-8659},
+ url = {http://dx.doi.org/10.1111/j.1467-8659.2009.01530.x},
+ doi = {10.1111/j.1467-8659.2009.01530.x},
+ pages = {2275--2290},
+ keywords = {surface reconstruction, minimum s – t cut, Delaunay triangulation},
+ keywords = {I.3.5 [Computer Graphics]: Computational Geometry and Object Modeling},
+ year = {2009},
 }
 % outdoor large scene
 @article{vu2012high,
@@ -932,49 +1064,83 @@ http://www.ten24.info/ten24/?page_id=299
   publisher={IEEE}
 }
 % shirt inside white area and halogen lamps
-@inproceedings{bradley2008markerless,
-  title={Markerless garment capture},
-  author={Bradley, Derek and Popa, Tiberiu and Sheffer, Alla and Heidrich, Wolfgang and Boubekeur, Tamy},
-  booktitle={ACM Transactions on Graphics (TOG)},
-  volume={27},
-  number={3},
-  pages={99},
-  year={2008},
-  organization={ACM}
+@article{bradley2008markerless,
+ author = {Bradley, Derek and Popa, Tiberiu and Sheffer, Alla and Heidrich, Wolfgang and Boubekeur, Tamy},
+ title = {Markerless Garment Capture},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {August 2008},
+ volume = {27},
+ number = {3},
+ month = aug,
+ year = {2008},
+ issn = {0730-0301},
+ pages = {99:1--99:9},
+ articleno = {99},
+ numpages = {9},
+ url = {http://doi.acm.org/10.1145/1360612.1360698},
+ doi = {10.1145/1360612.1360698},
+ acmid = {1360698},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {cloth modeling, image processing, motion capture, object scanning/acquisition, surface reconstruction},
 }
 % soft-syncd video cams and led panels
 @article{bradley2010high,
-  title={High resolution passive facial performance capture},
-  author={Bradley, Derek and Heidrich, Wolfgang and Popa, Tiberiu and Sheffer, Alla},
-  journal={ACM Transactions on Graphics (TOG)},
-  volume={29},
-  number={4},
-  pages={41},
-  year={2010},
-  publisher={ACM}
+ author = {Beeler, Thabo and Hahn, Fabian and Bradley, Derek and Bickel, Bernd and Beardsley, Paul and Gotsman, Craig and Sumner, Robert W. and Gross, Markus},
+ title = {High-quality Passive Facial Performance Capture Using Anchor Frames},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {July 2011},
+ volume = {30},
+ number = {4},
+ month = jul,
+ year = {2011},
+ issn = {0730-0301},
+ pages = {75:1--75:10},
+ articleno = {75},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/2010324.1964970},
+ doi = {10.1145/2010324.1964970},
+ acmid = {1964970},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {facial performance capture, motion capture, space-time geometry reconstruction},
 }
 % XXX article vs. inproceedings
 @inproceedings{beeler2011high,
-  title={High-quality passive facial performance capture using anchor frames},
-  author={Beeler, Thabo and Hahn, Fabian and Bradley, Derek and Bickel, Bernd and Beardsley, Paul and Gotsman, Craig and Sumner, Robert W and Gross, Markus},
-  booktitle={ACM Transactions on Graphics (TOG)},
-  volume={30},
-  number={4},
-  pages={75},
-  year={2011},
-  organization={ACM}
+ author = {Beeler, Thabo and Hahn, Fabian and Bradley, Derek and Bickel, Bernd and Beardsley, Paul and Gotsman, Craig and Sumner, Robert W. and Gross, Markus},
+ title = {High-quality Passive Facial Performance Capture Using Anchor Frames},
+ booktitle = {ACM SIGGRAPH 2011 Papers},
+ series = {SIGGRAPH '11},
+ year = {2011},
+ isbn = {978-1-4503-0943-1},
+ location = {Vancouver, British Columbia, Canada},
+ pages = {75:1--75:10},
+ articleno = {75},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/1964921.1964970},
+ doi = {10.1145/1964921.1964970},
+ acmid = {1964970},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {facial performance capture, motion capture, space-time geometry reconstruction},
 }
-@article{beeler2010high,
-  title={High-quality single-shot capture of facial geometry},
-  author={Beeler, Thabo and Bickel, Bernd and Beardsley, Paul and Sumner, Bob and Gross, Markus},
-  journal={ACM Transactions on Graphics (TOG)},
-  volume={29},
-  number={4},
-  pages={40},
-  year={2010},
-  publisher={ACM}
+@inproceedings{beeler2010high,
+ author = {Beeler, Thabo and Bickel, Bernd and Beardsley, Paul and Sumner, Bob and Gross, Markus},
+ title = {High-quality Single-shot Capture of Facial Geometry},
+ booktitle = {ACM SIGGRAPH 2010 Papers},
+ series = {SIGGRAPH '10},
+ year = {2010},
+ isbn = {978-1-4503-0210-4},
+ location = {Los Angeles, California},
+ pages = {40:1--40:9},
+ articleno = {40},
+ numpages = {9},
+ url = {http://doi.acm.org/10.1145/1833349.1778777},
+ doi = {10.1145/1833349.1778777},
+ acmid = {1778777},
+ publisher = {ACM},
+ address = {New York, NY, USA},
 }
-
 
 % }}}
 -- harva sfm rekonstruktio {{{
@@ -992,14 +1158,22 @@ same axis, multiple stereo pairs with different baselines
 }
 % actual math
 @article{beardsley1997sequential,
-  title={Sequential updating of projective and affine structure from motion},
-  author={Beardsley, Paul A and Zisserman, Andrew and Murray, David W},
-  journal={International Journal of Computer Vision},
-  volume={23},
-  number={3},
-  pages={235--259},
-  year={1997},
-  publisher={Springer}
+ author = {Beardsley, P. A. and Zisserman, A. and Murray, D. W.},
+ title = {Sequential Updating of Projective and Affine Structure from Motion},
+ journal = {International Journal of Computer Vision},
+ issue_date = {June/July 1997},
+ volume = {23},
+ number = {3},
+ month = jun,
+ year = {1997},
+ issn = {0920-5691},
+ pages = {235--259},
+ numpages = {25},
+ url = {http://dx.doi.org/10.1023/A:1007923216416},
+ doi = {10.1023/A:1007923216416},
+ acmid = {261681},
+ publisher = {Kluwer Academic Publishers},
+ address = {Hingham, MA, USA},
 }
 % bundle adjustment in general
 @incollection{triggs2000bundle,
@@ -1041,14 +1215,23 @@ same axis, multiple stereo pairs with different baselines
 }
 % the microsoft project
 @article{snavely2006photo,
-  title={Photo tourism: exploring photo collections in 3D},
-  author={Snavely, Noah and Seitz, Steven M and Szeliski, Richard},
-  journal={ACM transactions on graphics (TOG)},
-  volume={25},
-  number={3},
-  pages={835--846},
-  year={2006},
-  publisher={ACM}
+ author = {Snavely, Noah and Seitz, Steven M. and Szeliski, Richard},
+ title = {Photo Tourism: Exploring Photo Collections in 3D},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {July 2006},
+ volume = {25},
+ number = {3},
+ month = jul,
+ year = {2006},
+ issn = {0730-0301},
+ pages = {835--846},
+ numpages = {12},
+ url = {http://doi.acm.org/10.1145/1141911.1141964},
+ doi = {10.1145/1141911.1141964},
+ acmid = {1141964},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {image-based modeling, image-based rendering, photo browsing, structure from motion},
 }
 % paper for the pba software
 @inproceedings{wu2011multicore,
@@ -1117,14 +1300,19 @@ same axis, multiple stereo pairs with different baselines
 }
 % the original
 @inproceedings{lorensen1987marching,
-  title={Marching cubes: A high resolution 3D surface construction algorithm},
-  author={Lorensen, William E and Cline, Harvey E},
-  booktitle={ACM Siggraph Computer Graphics},
-  volume={21},
-  number={4},
-  pages={163--169},
-  year={1987},
-  organization={ACM}
+ author = {Lorensen, William E. and Cline, Harvey E.},
+ title = {Marching Cubes: A High Resolution {3D} Surface Construction Algorithm},
+ booktitle = {Proceedings of the 14th Annual Conference on Computer Graphics and Interactive Techniques},
+ series = {SIGGRAPH '87},
+ year = {1987},
+ isbn = {0-89791-227-6},
+ pages = {163--169},
+ numpages = {7},
+ url = {http://doi.acm.org/10.1145/37401.37422},
+ doi = {10.1145/37401.37422},
+ acmid = {37422},
+ publisher = {ACM},
+ address = {New York, NY, USA},
 }
 % function from pts with poisson and then march
 @inproceedings{kazhdan2006poisson,
@@ -1134,14 +1322,24 @@ same axis, multiple stereo pairs with different baselines
   year={2006}
 }
 @article{kazhdan2013screened,
-  title={Screened poisson surface reconstruction},
-  author={Kazhdan, Michael and Hoppe, Hugues},
-  journal={ACM Transactions on Graphics (TOG)},
-  volume={32},
-  number={3},
-  pages={29},
-  year={2013},
-  publisher={ACM}
+ author = {Kazhdan, Michael and Hoppe, Hugues},
+ title = {Screened Poisson Surface Reconstruction},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {June 2013},
+ volume = {32},
+ number = {3},
+ month = jul,
+ year = {2013},
+ issn = {0730-0301},
+ pages = {29:1--29:13},
+ articleno = {29},
+ numpages = {13},
+ url = {http://doi.acm.org/10.1145/2487228.2487237},
+ doi = {10.1145/2487228.2487237},
+ acmid = {2487237},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {Screened Poisson equation, adaptive octree, finite elements, surface fitting},
 }
 % blend shapes and morphing, facial action coding system
 @incollection{deng2007computer,
@@ -1168,13 +1366,24 @@ same axis, multiple stereo pairs with different baselines
 }
 % generated water in a box, not so cameraish
 @article{bojsen2012tracking,
-  title={Tracking surfaces with evolving topology.},
-  author={Bojsen-Hansen, Morten and Li, Hao and Wojtan, Chris},
-  journal={ACM Trans. Graph.},
-  volume={31},
-  number={4},
-  pages={53},
-  year={2012}
+ author = {Bojsen-Hansen, Morten and Li, Hao and Wojtan, Chris},
+ title = {Tracking Surfaces with Evolving Topology},
+ journal = {ACM Transactions on Graphics},
+ issue_date = {July 2012},
+ volume = {31},
+ number = {4},
+ month = jul,
+ year = {2012},
+ issn = {0730-0301},
+ pages = {53:1--53:10},
+ articleno = {53},
+ numpages = {10},
+ url = {http://doi.acm.org/10.1145/2185520.2185549},
+ doi = {10.1145/2185520.2185549},
+ acmid = {2185549},
+ publisher = {ACM},
+ address = {New York, NY, USA},
+ keywords = {fluid simulation, implicit surfaces, mesh deformation, non-rigid tracking},
 }
 % skin reflectance model, scanned lighted around and then relighted
 @inproceedings{debevec2000acquiring,
@@ -1191,27 +1400,43 @@ same axis, multiple stereo pairs with different baselines
 
 % text-only survey
 @article{moeslund2001survey,
-  title={A survey of computer vision-based human motion capture},
-  author={Moeslund, Thomas B and Granum, Erik},
-  journal={Computer Vision and Image Understanding},
-  volume={81},
-  number={3},
-  pages={231--268},
-  year={2001},
-  publisher={Elsevier}
+ author = {Moeslund, Thomas B. and Granum, Erik},
+ title = {A Survey of Computer Vision-based Human Motion Capture},
+ journal = {Computer Vision and Image Understanding},
+ issue_date = {March 2001},
+ volume = {81},
+ number = {3},
+ month = mar,
+ year = {2001},
+ issn = {1077-3142},
+ pages = {231--268},
+ numpages = {38},
+ url = {http://dx.doi.org/10.1006/cviu.2000.0897},
+ doi = {10.1006/cviu.2000.0897},
+ acmid = {376905},
+ publisher = {Elsevier Science Inc.},
+ address = {New York, NY, USA},
 }
 % also a text-only survey
 @article{moeslund2006survey,
-  title={A survey of advances in vision-based human motion capture and analysis},
-  author={Moeslund, Thomas B and Hilton, Adrian and Kr{\"u}ger, Volker},
-  journal={Computer vision and image understanding},
-  volume={104},
-  number={2},
-  pages={90--126},
-  year={2006},
-  publisher={Elsevier}
+ author = {Moeslund, Thomas B. and Hilton, Adrian and Kr\"{u}ger, Volker},
+ title = {A Survey of Advances in Vision-based Human Motion Capture and Analysis},
+ journal = {Computer Vision and Image Understanding},
+ issue_date = {November 2006},
+ volume = {104},
+ number = {2},
+ month = nov,
+ year = {2006},
+ issn = {1077-3142},
+ pages = {90--126},
+ numpages = {37},
+ url = {http://dx.doi.org/10.1016/j.cviu.2006.08.002},
+ doi = {10.1016/j.cviu.2006.08.002},
+ acmid = {1225846},
+ publisher = {Elsevier Science Inc.},
+ address = {New York, NY, USA},
+ keywords = {human motion, initialization, pose estimation, recognition, review, tracking},
 }
-
 % }}}
 -- kirjastot {{{
 
@@ -1250,7 +1475,7 @@ same axis, multiple stereo pairs with different baselines
   year={2007}
 }
 @misc{vedaldi2011sift++,
-  title={{SIFT++, a lightweight C++ implementation of SIFT}},
+  title={{SIFT++, a lightweight C++ implementation of SIFT, http://vision.ucla.edu/~vedaldi/code/siftpp/siftpp.html}},
   author={Vedaldi, Andrea},
   year={2011}
 }
@@ -1287,7 +1512,7 @@ same axis, multiple stereo pairs with different baselines
 @misc{meshlab,
   title={Meshlab},
   author={ISTI-CNR},
-  howpublished={\url{http://meshlab.sourceforge.net/}},
+  howpublished={\url{http://meshlab.sourceforge.net}},
   note={Accessed 2014-04-18}
 }
 @misc{magiclantern,
@@ -1305,7 +1530,7 @@ same axis, multiple stereo pairs with different baselines
 @misc{canonedsdk,
   title={{ED-SDK}},
   author={{Canon Digital Imaging Developer Programme}},
-  howpublished={\url{https://www.didp.canon-europa.com/}},
+  howpublished={\url{https://www.didp.canon-europa.com}},
   note={Accessed 2014-10-22}
 }
 @misc{eaglepcb,
@@ -1323,13 +1548,13 @@ same axis, multiple stereo pairs with different baselines
 @misc{gphoto2,
   title={{gPhoto}},
   key={gPhoto},
-  howpublished={\url{http://www.gphoto.org/}},
+  howpublished={\url{http://www.gphoto.org}},
   note={Accessed 2014-10-22}
 }
 @misc{wxwidgets,
   title={{wxWidgets}},
   key={wxWidgets},
-  howpublished={\url{https://www.wxwidgets.org/}},
+  howpublished={\url{https://www.wxwidgets.org}},
   note={Accessed 2014-10-22}
 }
 
@@ -1342,7 +1567,7 @@ same axis, multiple stereo pairs with different baselines
 @misc{photoscan,
   title={Photoscan},
   author={{Agisoft}},
-  howpublished={\url{http://www.agisoft.com/}},
+  howpublished={\url{http://www.agisoft.com}},
   note={Accessed 2014-10-22}
 }
 @misc{faceshift,
@@ -1382,7 +1607,7 @@ same axis, multiple stereo pairs with different baselines
   note={Accessed 2014-10-22}
 }
 @misc{di4d,
-  title={{DI4D}},
+  title={{Di4D}},
   author={{Dimensional Imaging Ltd.}},
   howpublished={\url{http://www.di4d.com/index.html}},
   note={Accessed 2014-10-22}
@@ -1457,7 +1682,7 @@ same axis, multiple stereo pairs with different baselines
 @misc{3dmd,
   title={{3D} imaging systems and software},
   author={{3dMD}},
-  howpublished={\url{http://www.3dmd.com/}},
+  howpublished={\url{http://www.3dmd.com}},
   note={Accessed 2014-11-09}
 }
 @misc{vstars,
