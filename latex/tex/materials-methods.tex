@@ -243,8 +243,8 @@ At a distance of one metre $d = 1$ m, the sensor size of $s_x \times s_y$ = $22.
 	a_y &= s_y \times \frac{d}{f} = 14.9 \text{mm} \times \frac{1 \text{m}}{50 \text{mm}} = 298 \text{mm}
 \end{split} \end{align}
 which is easily seen from similar triangles with a common corner.
-From Equation \ref{eq:dof}, the depth of field at this setting is about 16 cm for a f-number of f/11, or 20 cm for f/14, at circle of confusion of 0.019 mm (using the d/1500 rule), a reasonable depth for the given area size.
-This circle of confusion would give span $0.019 mm / 22.3 mm * 5184 px \approx 4.4$ pixels.
+From Equation \ref{eq:dof}, the depth of field (using the d/1500 rule) at this setting is about 16 cm for a f-number of f/11, or 20 cm for f/14, at circle of confusion of 0.019 mm, a reasonable depth for the given area size.
+This circle of confusion would span $0.019 \text{mm} / 22.3 \text{mm} * 5184 \text{px} \approx 4.4$ pixels.
 
 \simplefig{t}{%
 \includegraphics[width=0.8\textwidth]{canon50mmlens}
@@ -480,7 +480,7 @@ All MCU-side code was developed using the Mbed libraries, built locally with the
 Mbed hides the hardware complexity of the platform, making the total application source code small (less than 200 lines of simple C++) and relatively independent of hardware initialisation details.
 A significant advantage in this hardware abstraction is that a novice could extend the program without previous knowledge on the particular hardware architecture.
 
-The MCU software, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no special drivers.
+The MCU software fox the trigger hub, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no special drivers.
 Communication protocol consists of flags for setting focus or shutter mode and entering bit flags that describe what cameras should be affected, in text mode.
 The least significant, i.e., rightmost, bit signifies the first camera.
 The device echoes the sent characters back, making it convenient to test with a serial console.
@@ -682,7 +682,7 @@ The \emph{forall} and \emph{forallp} scripts are trivial shortcuts to autodetect
 
 With \emph{readconfig}, one camera is first configured manually, and the settings are cloned to others automatically with the script.
 
-Either libgphoto2 or the EOS 700D camera has a bug that locks the camera's physical user interface when configuring the cameras and even quitting the program:
+Either libgphoto2 or the EOS 700D camera has a bug that locks the camera's physical user interface when configuring the cameras and even only starting and exiting the program:
 it appears that this is a safety feature that is left on after disconnecting the configuration connection, and probably gphoto2 does not release it properly.
 When setting or getting any configuration, the camera screen turns off and all buttons stop responding until the camera is rebooted, USB cable is unplugged, or if gphoto2 touches the camera's filesystem.
 Listing the files is thus enough and it has no side effects.

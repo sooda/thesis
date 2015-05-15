@@ -537,7 +537,7 @@ For example, for the high-end Canon DSLR camera EOS-1D X, a continuous shooting 
 With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate for the bit rate from the sensor is
 
 \begin{equation} \label{eq:eos1dspeed}
-5184 \times 3456 \times 14 \times 14 \approx 3.5\text{ Gbit/s}
+5184 \times 3456 \times 14 \times 14 \approx 3.5\text{ Gb/s}
 \end{equation}
 by average, or 0.4 gigabytes per second, requiring also high speed from the processor and mass storage.
 %In reality, a number of other factors also have a small effect.
@@ -1015,9 +1015,9 @@ The transformation chain \cite[p. 163]{hartley03multiview} is encoded as follows
 	&= \bm K \bm T \bm R \vec P\\
 	&= \bm M \vec P\\
 \end{split} \end{align}
-where $\vec p$ is a 2D pixel in a discrete image, and $\vec P$ is still in physical units on the projected image on the sensor.
+where $\vec p$ is a 2D pixel in a discrete image, and $\vec P$ is still in physical units.
 $\bm R$, $\bm T$ encode the camera rotation and translation (extrinsics) and transform the point to a camera-centric coordinate frame;
-$\bm K_p$ projects the world coordinates to the camera sensor (still in world coordinates), and finally the affine $\bm K_s$ transforms the points from the sensor to pixel coordinates on the digital image (not necessarily yet discretized).
+$\bm K_p$ projects the camera-centric world coordinates to the camera sensor (still in world coordinates), and finally the affine $\bm K_s$ transforms the points from the sensor to pixel coordinates on the digital image (not necessarily yet discretized).
 %The transformation pipeline is depicted in Figure \ref{fig:projxformworld}.
 
 %\simplegfx{p}{1.0\textwidth}{projxformworld}{
@@ -1026,7 +1026,7 @@ $\bm K_p$ projects the world coordinates to the camera sensor (still in world co
 %}
 
 The whole projection $\bm M = \bm K_i \bm K_p \bm T \bm R$ can be used as-is without decomposing it to separate matrices, unless the individual parameters are needed.
-The matrices $\bm K_s$ and $\bm K_p$ are usually not decomposed but presented as a single intrinsic matrix $\bm K$.
+The matrices $\bm K_s$ and $\bm K_p$ are usually not decomposed but presented as a single intrinsic matrix $\bm K$, and $\bm R$ and $\bm T$ are usually given as a single extrinsic matrix.
 As the chain consists of several matrices, some of them are defined only up to scale; the coordinate systems' units can be chosen freely.
 %Software packages usually do not decompose the chain, because it is not needed and unique parameters cannot be found because of scaling.
 
@@ -1059,7 +1059,7 @@ For simplicity, the final matrix where pixel size and focal length are combined 
 Also, $\bm K$ is often given without the homogeneous part, as a $3 \times 3$ matrix.
 $(u_0, v_0)$ is the image center (principal point).
 The parameters can also be presented separately without the matrix notation.
-For square pixels, $m_x = m_y$, and for a non-skewed (rectangular) sensor, $\gamma = 0$, which is often the case and assumed by computer vision programs and libraries. \cite{hartley03multiview,szeliski10vision,heyden2005multiple}
+For square pixels, $m_x = m_y$, and for a non-skewed (rectangular) sensor, $\gamma = 0$, which is often the case and assumed by computer vision programs and libraries \cite{hartley03multiview,szeliski10vision,heyden2005multiple}.
 
 %Le image. Horizontal planar triangle, lines between camera origins etc. lecture11.pdf.
 
@@ -1152,8 +1152,8 @@ As Equation \ref{eq:triangulation} shows, depth is inversely proportional to pix
 To map the depth to correct units, only focal length $f$ and the baseline $T$ are needed additionally; when using pixel coordinates instead of physical units in $d$, also the pixel size should be taken into account in scaling $x_l$ and $x_r$.
 All of these are encoded in the camera parameters: the pixel size is part of the intrinsics, and the baseline is encoded in extrinsics.
 Algorithms such as those in OpenCV \cite{opencv} can compute depth from disparity images based on the difference between each pixel.
-The disparty image is a difference of each pixel value, which needs a search for each pixel;
-this search is discussed in the following.
+The disparty image is a depth difference of each pixel value, which needs a search for each pixel;
+more general camera calibrations and this search are discussed in the following.
 
 % }}} binocular disparity
 
@@ -1399,7 +1399,7 @@ Pollefeys \cite{pollefeys2004visual} gives the following formula to minimize:
 	\text{min}_{\bm M_k, \vec P_i} \sum_{k=1}^m \sum_{i=1}^n D(\vec p_{ki}, \bm M_k \vec P_i)^2
 \end{equation}
 
-when the goal is to find the projection matrices $\bm M_k$ and the 3D points $\vec P_i$ for all views $k$ and points $i$, where $D(\vec A,\vec B)$ is the Euclidean distance between $\vec A$ and $\vec B$ and $\vec p_i$ the known, fixed matching 2D image feature positions for each unknown 3D point $\vec P_i$.
+when the goal is to find the projection matrices $\bm M_k$ and the 3D points $\vec P_i$ for all views $k$ and points $i$, where $D(\vec A,\vec B)$ is the Euclidean distance between $\vec A$ and $\vec B$ and $\vec p_{ki}$ the known, fixed matching 2D image feature positions for the unknown 3D point $\vec P_i$ in the $k$th image.
 In practice, this nonlinear optimization problem is approached in iterative means.
 According to Wu \cite{wu2013towards}, bundle adjustment should be performed using a Levenberg-Marquardt or Preconditioned Conjugate Gradient method.
 %Beardsley et~al.\ use an iterative extended kalman filter \cite{beardsley1997sequential}

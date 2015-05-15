@@ -96,13 +96,13 @@ Thus, the flash light's starting time in the video's internal clock is the frame
 
 \begin{align} \begin{split} \label{eq:timingcalib}
 t_{Cl} &= t_{Ci} + t_{Cf} \\
-&= i_C * F + f_C / R * F \\
-&= (i_C + f_C / r * c) * F
+&= i_C  F + f_C / R F \\
+&= (i_C + f_C / r c) F
 \end{split} \end{align}
 
 where $C$ is a camera identifier, $t_{Cl}$ is camera-relative time for the light pulse, $t_{Ci}$ is the starting time for the frame where the light shows up, and $t_{Cf}$ is the time inside the particular frame.
 The frame index $i$ marks the number of the frame in the video file, starts from 0, and there are $F$ = $1/\text{fps}$ seconds between the frames.
-$f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the ratio of exposure time and frame duration ($0.5$ in this case, referring to a characteristic to the camera, as it exposes the first and last rows in half the time between frames).
+$f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the ratio of exposure time and frame duration due to rolling shutter ($0.5$ in this case, referring to a characteristic to the camera, as it exposes the first and last rows in half the time between frames).
 Offset between two cameras $A$ and $B$ is then $t_{Al} - t_{Bl}$.
 The timings are depicted in Figure \ref{fig:flashtimeline} as a timeline with matching symbols.
 
@@ -211,17 +211,17 @@ The general setup is shown in Figure \ref{fig:totalsetuptwo}, and a closer depic
 The Bundler SfM system recommends to take photos at least every $\alpha = 15$ degrees around a subject \cite{bundlerfaq}.
 Similar rough guidelines are usually suggested, such as a camera baseline of 10-20 \% of the distance to the subject.
 % visualsize photomodel3d recommends 12 degrees http://www.visualsize.com/FAQ/3Dmodel.php
-With a distance $d$ of one metre from lens to the subject, the Bundler guideline yields a baseline $b$ of approximately 26 cm by trigonometry: % Equation \ref{eq:baselinedegrees}:
+With a distance $s$ of one metre from lens to the subject, the Bundler guideline yields a baseline $b$ of approximately 26 cm by trigonometry: % Equation \ref{eq:baselinedegrees}:
 
 \begin{align} \begin{split} \label{eq:baselinedegrees}
-	\sin \alpha/2 &= \frac{b/2}{d}\\
-	b &= 2 d \sin \alpha/2
+	\sin \alpha/2 &= \frac{b/2}{s}\\
+	b &= 2 s \sin \alpha/2
 \end{split} \end{align}
 
 The key camera parameters used for photographing most samples are listed in Table \ref{tab:sampleshotparams}.
 In a dark environment with flash lights, the exposure time is not particularly important for a static subject; the short flash pulse dominates all light in the scene.
 The baseline was chosen by the guidelines proposed and by the difficulty in using the cameras in close proximity to each other.
-Initially, a slightly longer baseline of approximately 50 cm was used; it was subsequently reduced to 30.
+Initially, a slightly longer baseline of approximately 50 cm was used; it was subsequently reduced to 30 cm.
 
 \begin{table}[h]
 	\centering
@@ -461,22 +461,22 @@ Different approaches remain to be tested; both have a similar working pipeline.
 \afterpage{\clearpage}
 \subsubsection{Video capture}
 
-% redheads: 3x 800W = f/16 1/40 iso100
-% big arealight: cotelux
-% supplier: kinoflo
-
+% big arealight: kinoflo cotelux
 % EA/FIFA: f/14 1/20 iso100 (video screenshot)
+
 Video capture was experimented with three 800 W Inaro Redhead Varibeam spot lights and no significant changes in camera setup, with key parameters listed in Table \ref{tab:samplevideoparams}.
 As the cameras may not start recording at the same frame, a small utility was written to rename frames extracted from videos, given a manually set up list of temporal synchronization offsets.
 The tool is written in Python and can be found in the source code repository as \emph{sync.py}.
 
 The amount of light needed in video capture can easily be uncomfortable for the performing subject, in contrast to the momentary flash pulse in still photography.
-in this experiment, the lights were overly bright and the subject used sunglasses for eye protection; less than three lights resulted in harsh shadows in parts of the face.
-The ISO sensitivity level of Canon EOS 700D ranges up to 12800, but the highest levels are usually avoided as they are extremely sensitive to noise.
+in this experiment, the lights were bright enough to be remarkably uncomfortable, and the subject used sunglasses for eye protection; less than three lights resulted in harsh shadows in parts of the face.
+Halogen spotlights were found to produce enough heat to make the subject sweat within minutes of continuous recording.
 A default ``180 degree shutter'' was used, i.e., an exposure time of half the time between frames.
-A shorter exposure time is suggested with an increased ISO sensitivity to reduce motion blur.
+Motion blur was found to be an issue in some frames during quick motion; a shorter exposure time coupled with higher ISO sensitity would help.
+The ISO sensitivity level of Canon EOS 700D ranges up to 12800, but the highest levels are usually avoided as they are extremely sensitive to noise.
 
-The videos were shot with the larger 50 cm baseline which VisualSFM could not handle; thus, results were analyzed only in PhotoScan.
+The videos were shot with the larger 50 cm baseline which was later found to be intolerable for VisualSFM.
+Thus, the results were analyzed only in PhotoScan.
 In some frames, where the subject was moving too quickly, the resulting camera poses were incorrect.
 In similar challenging picture sets, VisualSFM typically did not reconstruct the parameters at all, due to lack of enough matching features.
 With less motion, correct camera poses were found and results were comparable to the static reconstruction, with fewer points and polygons reconstructed because of the lower resolution (1920 x 1080).
@@ -484,7 +484,7 @@ A typical result is shown in Figure \ref{fig:artoglassescompare}; surface on the
 
 The camera uses the lossy h.264 video format and typically a bitrate of 5 MB/s.
 In comparison, the size taken by a single full-frame JPEG still photo is approximately 9 MB.
-The loss in resolution and compression quality results in poor surface details, as is depicted in Figure \ref{fig:artoglassesframe}.
+The loss in resolution and compression quality results in poor description of surface details, as is depicted in Figure \ref{fig:artoglassesframe}.
 
 \begin{table}[t]
 	\centering
