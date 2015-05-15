@@ -9,15 +9,12 @@
 
 % TODO: image of a scene, a camera with optics and sensor, and a computer, all connected
 
-% tell also briefly what calibration is
-
 % TODO this is the first actual paragraph and needs to be much better
 
-%Stereo vision works by analyzing two or more images for depth cues.
-% TODO in addition too hollsten's number of points, note also the actual accuracy of the model
+% in addition too hollsten's number of points, note also the actual accuracy of the model?
 This section describes the background theory for basic image acquisition steps in a camera and for main concerns that affect reconstruction quality.
 The major steps in an image acquisition pipeline inside a single camera are depicted in Figure \ref{fig:camerapipeline} and are studied in this section at the necessary level of detail for the application.
-Quality of the outcome in a reconstruction pipeline depends on many factors of the used stereo imaging rig, such as camera positioning, lens imperfections, camera focus, camera sensor noise, image compression, and algorithmic accuracy \cite{hollsten2013imagequality,kyto2011method,rieke2009evaluation}.
+Quality of the outcome in a reconstruction pipeline depends on many factors of the used stereo imaging rig, such as camera positioning, lens imperfections, lens focusing, sensor noise, image compression, and algorithmic accuracy \cite{hollsten2013imagequality,kyto2011method,rieke2009evaluation}.
 
 % NOTE: not 1.0 to fit paragraphs
 \simplegfx{b}{0.95\textwidth}{camerapipeline}{
@@ -447,7 +444,6 @@ A CMOS sensor, on the other hand, cannot easily employ additional storage pixels
 Rolling shutter is especially noticeable in videos shot with a CMOS camera, because a mechanical shutter is not used for video and the readout process is relatively slow \cite{taylor1998ccd,caspeelectronic}.
 
 \paragraph{Error sources}
-% XXX specify sensitivity and use different terms for different types of sensitivity
 Various steps of the image processing contribute to image noise; the major sources are shot noise and several electrical noises \cite{szeliski10vision,litwiller2001ccd}.
 \emph{Shot noise} exists due to the particle-nature of light; each photon adds a constant electrical charge to the photosite it hits, and if the overall number of photons is small, statistical Poisson-distributed noise will be present \cite[p. 74]{nakamura2005image}.
 This type of noise is visible in less bright areas.
@@ -948,7 +944,6 @@ A surface is more natural than the point-based output of the dense reconstructio
 % }}}
 
 \subsection{Coordinate systems and transforms} \label{sec:coord} % {{{
-% (XXX rename?)
 
 % intro, now using pinhole
 
@@ -1072,12 +1067,12 @@ For square pixels, $m_x = m_y$, and for a non-skewed (rectangular) sensor, $\gam
 
 \subsection{Camera calibration} % {{{
 
-% XXX bad language
 \emph{Calibrating} a camera means \emph{measuring} its intrinsic and extrinsic parameters in order to map its data to a known coordinate frame.
-Reconstruction algorithms need to relate points between images to recover depth.
-Such relations are calculated via known camera parameters.
-Calibration is not necessarily a manual step before scanning.
-Self-calibration and structure from motion techniques can recover camera calibration from a static scene automatically. \cite{pollefeys1999hand,hartley03multiview}
+For only one camera, the camera itself could be chosen to be at the origin and its extrinsic parameters could be chosen as identity transform.
+Intrinsic parameters are still necessary for knowning the projection.
+For multiple cameras, one of them can be chosen as origin, the extrinsics of the others are then relative to that.
+Calibration is not necessarily a manual step before scanning, but is often done with a physical calibration object if exact metric calibration is necessary.
+Self-calibration and structure from motion techniques can recover camera calibration from a static scene automatically \cite{pollefeys1999hand,hartley03multiview}.
 
 It is sometimes convenient to store intrinsics and extrinsics separately if the intrinsic matrix is constant for several pictures, for example.
 The intrinsics need then be calibrated beforehand only once.
@@ -1258,8 +1253,6 @@ Having estimated the matrix, the epipolar geometry and thus the 3D position of a
 
 \subsubsection{Features and matching} % {{{
 
-%salient geometric features for matching
-% XXX needs a better intro
 Previously, fundamentals for reconstructing a three-dimensional location for a point pair were introduced, assuming known positions for the same point in different images.
 To reconstruct a whole scene from a full image, all pairwise points must be \emph{matched} \cite[ch. 4]{szeliski10vision}.
 Matching is often also called \emph{correspondence} searching:
@@ -1279,14 +1272,12 @@ They are essentially high-frequency information in the image that can be interpr
 thus, \emph{edge detection} can be performed by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found \cite{marr1980theory}.
 Another popular method is \emph{blob detection}, based on, e.g., the laplacian of a Gaussian-filtered image.
 Blob detection is typically performed in computer vision using difference-of-gaussian-based (DoG) methods due to its faster execution than in Laplacian-of-Gaussians \cite[p. 152]{szeliski10vision}.
-Edge and blob detection methods work as a basis for several feature matching and detection algorithms. % XXX cite, describe blob and edge detection
+Edge and blob detection methods work as a basis for several feature matching and detection algorithms.
 
-% XXX some sift descriptor theory, angle histogram stuff
 \emph{Scale-invariant feature transform (SIFT)} \cite{lowe1999object} is a well-known algorithm for local feature detection and description.
 A fast GPU implementation is also available \cite{changchang2007siftgpu}.
 After detecting keypoint candidates with blob detection, SIFT encodes the local pixel neighborhood as a spatial histogram of gradients in the 2D image domain.
 Invariance to scaling and rotation in feature descriptors such as SIFT make them useful in describing features that can be matched between unaligned images.
-%Other similar commonly used means are \emph{Speeded Up Robust Features (SURF)} \cite{bay2006surf}, \emph{Harris corner detector} \cite{harris1988combined}, and \emph{difference-of-gaussian-based (DoG)} methods \cite[p. 152]{szeliski10vision}.
 
 \paragraph{Search}
 Searching for well distinguished features in an image is called \emph{sparse} search.
@@ -1331,34 +1322,39 @@ Often, rectification is applied conveniently such that the search can be done al
 \subsubsection{Multi-view stereo} % {{{
 % (trifocal tensor etc.?)
 
-% intro
-
-{ \color{red} (FIXME) this is kind of WIP, describing what contents would fit here }
-
 \emph{Multi-view stereo} (MVS) is stereo vision using more than two cameras.
-In the research literature, MVS varyingly refers to both the big picture of a whole reconstruction pipeline using several pictures, and just the dense reconstruction after system calibration has been done.
+In the research literature, MVS varyingly refers to both the big picture of a whole reconstruction pipeline using several pictures, and also just the dense reconstruction after system calibration has been done.
 Reconstruction using a large set of cameras has two major choices:
 One way is to extend the two-view geometry theory further to many cameras, recovering the whole subject at once using many views simultaneously.
 Other very common method is to arrange the cameras in binocular pairs, reconstruct each pair separately to obtain a depth map from each pairwise view, and finally merge the resulting points to a single set.
-
 Many of the following studies build a point cloud first and apply Poisson surface reconstruction \cite{kazhdan2006poisson} to recover a surface.
 
 Okutomi and Kanade \cite{okutomi1993multiple} noted that a short baseline suffers from low precision and a longer one requires a larger space in searching and matching.
 They approach the issue by combining several stereo pairs with different baselines, making correct point selection simple by using a minimized sum of errors.
+A clear disadvantage of this approach is the increased number of cameras required.
 
 The method by Fitzgibbon et~al.\ \cite{fitzgibbon1998automatic} assumes a restricted geometry using a turntable with only single-axis rotational motion.
 A single camera only is required, but the method does not extend to general cases.
+The setting is comparable to a number of cameras photographing the subject arranged around it; surrounding geometry must first be removed.
 
 Bickel et~al.\ \cite{bickel2007multi} acquire a 3D face mesh surface with a commercial solution by 3dMD \cite{3dmd} and then apply basic triangulation methods on markers to track a deforming face and its wrinkles.
+Their method uses a hybrid of fast low-resolution cameras for tracking and slower high-resolution cameras for recovering fine details.
+Additional computation is done on post-processing the generated mesh.
 
-Beeler et~al.\ \cite{beeler2010high} perform a dense reconstruction in pairs using image pyramids and cross-correlation in block matching, with a last step to refine the surface, gathered using Poisson reconstruction, by augmenting pore-level details assumed from lighting properties.
+Beeler et~al.\ \cite{beeler2010high} perform a dense reconstruction in pairs using image pyramids and cross-correlation in block matching.
+Normals on the points are computed using finite differences on disparity maps, and a surface mesh is computed using Poisson reconstruction.
+The mesh is augmented with pore-level details assumed from lighting properties on surface microgeometry smaller than possible for normal disparity computation.
 
-Bradley et~al.\ \cite{bradley2008markerless,bradley2010high} use seven stereo camera pair arrangements directed to different parts of the subject, and combine the resulting 3D point clouds into a single one for meshing and animating with optical flow.
+Bradley et~al.\ \cite{bradley2010high} use seven stereo camera pair arrangements directed to different parts of the subject, and combine the resulting 3D point clouds into a single one for meshing and animating with optical flow.
+The geometry is tracked by using optical flow to compute vertex positions between successive frames.
+An initial mesh is computed and manually refined, which is then modified preserving the vertex connectivity.
+Too fast movement not suitable for optical flow is tracked separately with a priori knowledge of the subject, such as special constraints on a human mouth.
 
-Ghosh et~al.\ \cite{ghosh2011multiview} compute a single output directly with no merging of intermediate point clouds by assuming the subject as a deformed cylinder.
+Ghosh et~al.\ \cite{ghosh2011multiview} compute a single output directly with no merging of intermediate point clouds by assuming that the subject is a deformed cylinder.
+The cylinder is divided in small parts that individually deform based on the captured data, which easily preserves the subject structure.
 
 The large-scale approach by Snavely et~al.\ \cite{snavely2006photo} presents methods and user interfaces that are not restricted on pre-calibrated or pairwise cameras, but instead are designed for unordered image collections.
-The method presents only the structure from motion solution.
+The method presents only the structure from motion solution and is suitable for thousands of views.
 
 Toldo et~al.\ \cite{toldo2013accurate,toldo2013towards} present an algorithm with visibility constraint filtering on a point cloud combined from a disparity map on each camera, with no requirements on camera structure such as pairing.
 The point cloud is converted to a mesh with Poisson surface reconstruction.
@@ -1422,7 +1418,6 @@ The quality of the reconstruction is measured by reprojecting the 3D points back
 Furthermore, if the scene structure is known beforehand (e.g., as a calibration object, whose physical properties are measured), the resulting quality of the structure can be compared to ground truth.
 Ground truth data can also be obtained with a real 3D scanner, such as a laser ranging device. % david
 
-%Noise in subpixel-accurate match detection and (TODO survey errors, that one .doc) affects each reconstructed depth.
 In addition, uncertainty in depth depends more heavily on the pixel errors (i.e., disparity precision) if the baseline is short, as depicted in Figure \ref{fig:baselineerr}.
 The ability to discern the position of tiny features in images is some absolute value in pixel units.
 When the disparity approaches the scale of this uncertainty, it becomes increasingly difficult to extract an accurate value for depth.
@@ -1434,7 +1429,6 @@ Given an absolute uncertainty $\Delta d$ for the measured disparity $d$, the err
 \end{equation}
 clearly increases quickly as the measured disparity $d$ becomes smaller.
 
-% XXX osittaisderivaatta
 \simplegfx{t}{\textwidth}{baselineerr}{
 	The effect of baseline difference $||A-B||$ on the depth error $Z_2 - Z_1$, with a small (left) and large (right) baseline.
 	Point $P$ is seen by the two cameras $A$ and $B$.
@@ -1599,8 +1593,8 @@ Typical methods include fitting each frame of the mesh to another pre-recorded o
 %Kalman
 %Fiducials / AR
 %perf of cloth anim capture
-% XXX again a bit bad intro paragraph
 The applications of dynamic reconstruction require tracking of individual points or objects in order to usefully handle the moved subject, as the applications typically require a known model whose movements are recorded.
+A new model for each frame would not be suitable.
 Non-static human motion capture in video gaming or movies, where post-processing time is available, can rely on manual work to perfect the quality.
 In realtime applications, the full frame is typically not reconstructed again, but only selected keypoints that are tracked in 2D are triangulated, and a previously scanned model is deformed based on them.
 
@@ -1610,7 +1604,8 @@ However, the simplest tracking method is to leave tracking out completely: depen
 
 In three dimensions, a template model is often scanned beforehand that is then morphed to match the target object to keep the topology (i.e., vertex neighborhood connectivity) constant.
 This technique adapts well to non-rigid deforming subjects. \cite{bojsen2012tracking,li2009robust}
-Starck et~al.\ use a different approach with the same topology-preserving idea by subdividing a sphere \cite{starck2007surface}.
+Starck et~al.\ \cite{starck2007surface} use a different approach with the same topology-preserving idea by subdividing a sphere and mapping it on the scanned subject.
+A similar method is used by Ghosh et~al.\ \cite{ghosh2011multiview} using a cylinder instead of a sphere.
 Common application also for the entertainment industry is \emph{animation retargeting}: using a completely separate character, and deforming it on each frame based on the current state of the scanned object, fitting the model's vertices to the scanned set \cite{sumner2004deformation}.
 % siggraph14 doghead
 

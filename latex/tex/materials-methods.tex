@@ -37,9 +37,8 @@ Cameras are chosen among pocket cameras, system cameras, and industrial machine 
 Section \ref{sec:cameratypes} presented the typical properties of different camera categories in general, and compared them to technical requirements.
 In this section, the focus is more on the feasibility of the properties on reconstruction, and on selecting a collection of feasible cameras fitting in the budget.
 
-\paragraph{General problem requirements}
-% FIXME bad language
-Small subjects in the range of a metre or less introduce concerns in shallow depth of field, forcing the lens aperture small, and consequently, requiring bright lights or slow shutter speeds.
+\paragraph{General requirements}
+Small subjects in the range of a metre or less introduce concerns in shallow depth of field, forcing the lens aperture small using a large image sensor, and consequently, requiring bright lights or slow shutter speeds.
 For automatic capture using multiple cameras simultaneously, reliability in configurations and controls is important.
 Due to the large count of cameras required, practical features are also necessary to take into account, such as availability of external power supply instead of batteries.
 For static photography, external shutter releases are required for the cameras for simultaneous shooting.
@@ -47,11 +46,11 @@ Furthermore, it must be possible to download the imagery from the cameras direct
 %External shutter release mechanisms have been studied more on DSLRs than compact cameras, and most compacts do not have one;
 %the manufacturers do not provide official specifications electrical connections for rempte shutter releases, but they have been reverse-engineered for many models by individual hobbyists.
 %Machine vision (MV) cameras, in contrast, support only external shutters.
-With a fixed budget, maximizing the surface coverage of the subject requires to strongly consider the camera price, as long as the minimum required features are covered: with more cameras, a larger subset of the subject surface can be photographed, resulting in a more complete model.
+With a fixed budget, maximizing the scanned surface coverage of the subject requires to strongly consider the camera price, as long as the minimum required features are covered: with more cameras, a larger subset of the subject surface can be photographed, resulting in a more complete model.
 Cheaper compact cameras typically lack in lens robustness, raw image formats, remote configuration and manual modes.
 More expensive models have comparable features, and their prices rise into the same range as with DSLRs that are more understood in the field.
-In the other end of the spectrum, machine vision cameras have the best flexibility but may require customized tools and are expensive.
-All the properties should be looked as a whole; especially large pixel count does not necessarily imply better pictures if the MTF of the optical system is poor.
+In the other end of the spectrum, machine vision cameras have the best flexibility but may require customized, vendor-specific tools and are expensive.
+All the properties should be looked as a whole; e.g., large pixel count does not necessarily imply better pictures if the MTF of the optical system is poor.
 
 \paragraph{Previous work}
 DSLRs have been popular in commercial static capture setups \cite{ir-ltd,ten24,capturelab,agisoftforum,winder2008technical} probably due to their price compared to specialized hardware, and software availability.
@@ -61,7 +60,7 @@ Also standard commercial video cameras have been used \cite{bradley2010high}, bu
 As an example, Borshukov et~al.\ used professional Sony/Panavision HDW-F900 video cameras for the movie The Matrix Reloaded \cite{borshukov05universal} producing uncompressed video, with a list price exceeding \$80000 \cite{sonyhdwf900r}.
 Machine vision cameras have also been used where synchronization was especially important \cite{carceroni2002multi,bickel2007multi}; such cameras have also limited resolution.
 
-\paragraph{Specialized hardware requirements}
+\paragraph{Specialized hardware}
 Self-contained consumer devices contain the image processing pipeline from sensor to mass storage by themselves.
 In contrast, machine vision devices need several high performance computers for reliable multi-camera capture because of the lack of local storage and image processing pipelines.
 A machine vision camera contains typically only the imaging sensor and a processor for a control interface, it outputs easily 1 Gbit/s worth of raw data or more.
@@ -160,12 +159,13 @@ In this section, the selected key parts are described in detail.
 Precise information on all hardware used can be found in Appendix \ref{app:hardwareused}.
 
 In general, machine vision cameras were considered overly expensive, although they perform best in synchronized video and output the frames in lossless raw format.
-Compact cameras do not have significant advantages over DSLRs, when comparing models where both have comparable required features, such as remote controllability and external shutter release options.
-{ \color{red} FIXME: actual table of the sample models reviewed somewhere here. }
+Compact cameras do not have significant advantages over DSLRs, when comparing models where both have comparable required features, such as external shutter release options and options for external flash units.
+The biggest advantage of DSLRs over compacts is the proven compatibility with other parts of the system (hence the name \emph{system camera}) and mature support for remote controls.
+
 A DSLR is a good choice for still photos because of moderate price compared to image quality, and availability of usable software and best range of accessories.
 Video recording is notably worse than with machine vision cameras that can produce raw data, synchronized output, and (typically) higher resolution.
 Because of a price difference of almost an order of magnitude for cameras having a comparable resolution, it was decided to leave high-performance video tracking as a minor feature, and concentrate on static subjects.
-Canon was chosen over other brands because of firmware customizability \cite{magiclantern}, previously acquired personal knowledge of the manufacturer, well specified remote control abilities compared to alternatives \cite{canonedsdk}, and previously proven work using the same brand \cite{ir-ltd,ten24,capturelab,agisoftforum}.
+Canon was chosen over other brands because of firmware customizability \cite{magiclantern}, previously acquired personal knowledge of the manufacturer, well specified and mature remote control abilities compared to alternatives (see Section \ref{sec:cameracontrollib}), and previously proven work using the same brand \cite{ir-ltd,ten24,capturelab,agisoftforum,ghosh2011multiview}.
 
 \subsubsection{Canon EOS 700D DSLR}
 
@@ -174,10 +174,10 @@ Canon was chosen over other brands because of firmware customizability \cite{mag
 }{fig:eos700d}
 {Canon EOS 700D DSLR camera body}
 
-Canon EOS 700D body, also known as the Rebel T5i, introduced in 2013, is the newest of Canon's consumer range DSLRs, with a price at about 600 EUR at the point of writing.
-Key features are shown in Table \ref{tab:eos700dfeatures}.
-It was decided to build the rig around nine of them.
-The front and back view of the camera are depicted in Figure \ref{fig:eos700d}.
+Canon EOS 700D body, also known as the Rebel T5i, introduced in 2013, is the newest of Canon's consumer range DSLRs, with a price at about 600-700 EUR at the point of writing.
+More expensive models would not add considerable value to the rig, as their advantages are mostly in durability for practical photography.
+Key features are shown in Table \ref{tab:eos700dfeatures} and the front and back view of the camera are depicted in Figure \ref{fig:eos700d}.
+The built rig consists of nine cameras arranged as a $3 \times 3$ grid.
 
 \begin{table}[t]
 	\centering
@@ -535,7 +535,7 @@ The programs have been verified to work under recent Linux and Mac OS X systems,
 
 % }}}
 
-\subsubsection{Camera control library} % {{{
+\subsubsection{Camera control library} \label{sec:cameracontrollib} % {{{
 
 \paragraph{Camera libraries}
 gPhoto2 \cite{gphoto2} is a well-known free and open-source application and library in the C programming language for controlling digital cameras on Unix-like operating systems, supporting over a thousand cameras.
@@ -769,8 +769,8 @@ Canon EOS 700D stores this information properly in the files.
 
 There exist several generic computer vision and geometry and image processing libraries.
 The most common ones are OpenCV \cite{opencv}, Point Cloud Library (PCL) \cite{pcl} and Computational Geometry Algorithms Library (CGAL) \cite{cgal}.
-These are written in the C and C++ languages and they have bindings to several scripting languages too.
-For future work using the rig, these libraries present a well known basis for developing own tools.
+These are written in the C and C++ programming languages and they have bindings to several scripting languages too.
+For future work using the rig, these libraries present a well supported basis for developing own tools.
 
 OpenCV contains a large set of utilities for 2D image processing and extends also to camera calibration and 3D reprojection.
 It is probably the most commonly known and most used computer vision algorithm package.
@@ -778,7 +778,7 @@ It is probably the most commonly known and most used computer vision algorithm p
 PCL contains a set of algorithms for filtering, segmentation, registration, visualization, and more for working on data sets that consist of points that may share attributes such as colors and normals.
 PCL is popular in robotics involving three-dimensional computer vision; its algorithms apply well to point cloud data obtained using a LIDAR or similar range imaging device.
 
-CGAL provides access to more strictly specified data structures and algorithms extending in combinatorics, convex hulls, polygons, arrangements, mesh processing, triangulations, voronoi diagrams, visualization and more, with a more mathematically rigorous approach.
+CGAL provides more strictly specified data structures and algorithms extending in combinatorics, convex hulls, polygons, arrangements, mesh processing, triangulations, voronoi diagrams and more, with an approach more suited in general computer graphics and geometry.
 
 % }}}
 
@@ -794,16 +794,15 @@ Some of the most known state-of-the-art implementations are listed below.
 	\item[Bundler] \cite{snavely2006photo} is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds, targeted for large-scale unordered photo collections, originally used for the Photo Tourism project.
 
 	\item[SiftGPU] \cite{changchang2007siftgpu} is a fast SIFT implementation for graphics processing units (GPUs).
-		It is built on Sift++ \cite{vedaldi2011sift++}; both are based on difference of gaussians, a method for edge detection \cite{marr1980theory}.
+		It is built on Sift++ \cite{vedaldi2011sift++}, an separately developed open source SIFT implementation.
 
-	\item[PBA,] \cite{wu2011multicore} Multicore (parallel) bundle adjustment, is a fast bundle adjustment library built with the modern parallel nature of multi-processor computers in mind.
+	\item[PBA], \cite{wu2011multicore} Multicore (parallel) bundle adjustment, is a fast bundle adjustment library built with the modern parallel nature of multi-processor computers in mind.
 
 	\item[PMVS], Patch-based, multi-view stereopsis, starts from a set of matching keypoints (features) and a pre-acquired camera calibration, and expands the keypoints to a dense patch set iteratively, resulting in a high number of oriented points.
 		PMVS is usually combined with CMVS, a clustering tool that decomposes the input set to smaller clusters that are more convenient to process, when the amount of different views is large \cite{furukawa2010accurate,furukawa2012patch}.
 % xxx viewpoint invariant patch, repetition analysis http://www.academia.edu/2021718/3D_Digitization_using_Structure_from_Motion
-% xxx2 graclus, wat pba
 
-	\item[VisualSFM] \cite{wu2013towards} is a common and free but closed-source full-scale pipeline that implements a structure from motion algorithm and simplifies the workflow of several external programs, finally visualizing the results.
+	\item[VisualSFM] \cite{wu2013towards} is a common and free but closed-source full-scale pipeline that implements a structure from motion algorithm and simplifies the workflow of several external programs, visualizing the results in real time.
 		The needed external tools are feature matching, bundle adjustment and dense reconstruction.
 		VisualSFM is probably the most common tool in the open source and research community for practical use.
 		It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, its own radial undistortion model and SfM for camera estimation, PBA for bundle adjustment, and finally PMVS/CMVS for dense matching.
@@ -830,16 +829,15 @@ Some of the most known state-of-the-art implementations are listed below.
 
 There is a large selection of commercial software available, often accompanied with a 3D scanning device or a complete service.
 Some companies offer completely specialized rigs, some sell a scanning device and a general-purpose software alongside it which can be used as standalone and some only sell software, leaving the hardware implementation to the user.
-The following short listings review some of the commercial products that use 3D scanning as a key idea.
-
-% FIXME emphasis on differences
+The short listings here review some of the commercial products that use 3D scanning as a key idea.
 
 The following list includes software-only reconstruction solutions available for purchase, that work as-is for any general input.
 
 \begin{description}
 	\item[Autodesk 123D Catch] \cite{autodesk123dcatch} is a free and popular web-based application for automatic reconstruction; photos are uploaded to a cloud service, and a textured mesh is generated automatically.
+		Not much is left to the user, and the targeted user base appears to be those with no particular knowledge on the technology itself.
 
-	\item[Acute3D] \cite{acute3d} Smart3DCapture is targeted for large-scale photogrammetry and cultural heritage digitization. The software is provided as a standalone program and a library, and it is used in Autodesk 123D Catch.
+	\item[Acute3D Smart3DCapture] \cite{acute3d} is targeted for large-scale photogrammetry and cultural heritage digitization. The software is provided as a standalone program and a library, and it is used internally in Autodesk 123D Catch.
 
 	\item[Agisoft PhotoScan] \cite{photoscan}  has two editions, for 3D designers and professional geographic content manipulation; among the geographic features, it is very suitable for multi-view reconstruction in content generation, and has an active forum for its users \cite{agisoftforum}. It can be scripted with the Python programming language. Infinite Realities \cite{ir-ltd} uses PhotoScan commercially for reconstructing whole human bodies.
 
@@ -880,7 +878,7 @@ In contrast to the above, the following list includes complete systems that are 
 
 From the lists above, two main methods were chosen based on popularity and availability, namely PhotoScan and VisualSFM combined with Meshlab.
 The former is a commercial solution, and the latter is composed of free software parts developed for research.
-The rig will first be tested and used using either one; for algorithm development, custom implementations may freely be used to replace them, as the rig itself does not require any specific software.
+The rig will first be tested for use with both; for algorithm development, custom implementations may freely be used to replace them, as the rig itself does not require any specific software.
 Agisoft PhotoScan is a self-contained pipeline, and VisualSFM does only part of the SFM reconstruction, leaving work to external programs that it runs automatically, providing flexibility in selecting the different algorithms.
 These two were used in evaluating the system in the following part (Section \ref{sec:experiments}).
 
@@ -903,12 +901,11 @@ Final Poisson surface reconstruction is done by opening the resulting dense poin
 PMVS works by expanding a set of initially found patches iteratively in the reconstruction, resulting in a dense point cloud with oriented and colored points.
 The point cloud is filtered by certain visibility constraints, and the resulting points have few outliers \cite{furukawa2012patch}.
 
-% XXX how observed
 PMVS divides the source images iteratively to smaller sets, and begins at a halved size by default with one fourth of the pixel count of the original.
-Forcing the original size was found to provide roughly twice the number of points with four times longer processing time, but with no observed increase in accuracy, as if a noisy object were interpolated with more points.
+Forcing the original size was found to provide roughly twice the number of points with four times longer processing time, but with no observed increase in accuracy, as if a spatially noisy object were interpolated with more points.
 The documentation of this parameter also suggests that a halved size is used, because a large part of the pixels in the color image is interpolated in the original image because of the color filter array in the image sensor (Section \ref{sec:sensors}).
 
 No software installation instructions are provided in this thesis; refer to documentation of the presented programs for installation and usage.
-The VisualSFM pipeline was built from source with no modifications done.
+Testing was done on the Linux operating system, and the VisualSFM pipeline was built from source with no modifications done.
 
 % }}}
