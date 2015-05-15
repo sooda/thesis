@@ -78,7 +78,7 @@ The cameras may still not support the maximum rate that can be achieved by the c
 \begin{table}[h]
 	\centering
 	\begin{tabular}{l l l}
-		Bus type & Max. theoretical speed & full-HD FPS\\
+		Bus type & max.~theoretical speed & full-HD FPS\\
 		\hline \\
 		Camera Link \cite{ni2013choosing} & 5.44 Gb/s & 218 Hz\\
 		USB 3.0 \cite{ni2013choosing} & 3.2 Gb/s & 128 Hz\\
@@ -98,52 +98,81 @@ In detail, the technical camera features that should be considered are described
 Main properties affecting image quality directly are as follows:
 
 \begin{itemize}
-	\item CMOS/CCD sensor. CMOS suffers from rolling shutter in video mode, while global-shutter CCD is more expensive and rare in larger formats but also more sensitive.
+	\item CMOS/CCD sensor..
+		CMOS suffers from rolling shutter in video mode, while global-shutter CCD is more expensive and rare in larger formats but also more sensitive.
 
-	\item Resolution and sensor size. Higher resolution covers more detail, until the optical limits of the system are reached. A larger sensor has larger pixels, and is thus more sensitive to light and results in lower noise and lower required exposure time. On the other hand, at an equivalent subject distance, a deeper DOF is achieved with a smaller sensor.
+	\item Resolution and sensor size.
+		Higher resolution covers more detail, until the optical limits of the system are reached.
+		A larger sensor has larger pixels, and is thus more sensitive to light and results in lower noise and lower required exposure time.
+		On the other hand, at an equivalent subject distance, a deeper DOF is achieved with a smaller sensor.
 
-	\item Low noise. Sensor noise degrades image quality in general, adds error to subpixel position estimation and complicates correspondence search, etc.
+	\item Low noise.
+		Sensor noise degrades image quality in general, adds error to subpixel position estimation and complicates correspondence search, etc.
 
-	\item Dynamic range, i.e., bit depth of the processing pipeline. Whereas JPEG pictures have only 8 bits per color channel, the typically higher bit depth of the sensor is available in raw image formats.  % DSLRs and industrial cameras use more, often 12 or 14 bits per pixel in raw format, that contains the color filter array effects before interpolation. % Postprocessing without reconstruction can use the added color resolution.
+	\item Dynamic range, i.e., bit depth of the processing pipeline.
+		Whereas JPEG pictures have only 8 bits per color channel, the typically higher bit depth of the sensor is available in raw image formats.  % DSLRs and industrial cameras use more, often 12 or 14 bits per pixel in raw format, that contains the color filter array effects before interpolation. % Postprocessing without reconstruction can use the added color resolution.
 
-	\item Lens quality. High sensor resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general. Fixed focal length lenses have less moving parts and hold their calibration better. The performance of good lenses is usually given as an MTF, or modulation transfer function, describing the best possible contrast.
+	\item Lens quality.
+		High sensor resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general.
+		Fixed focal length lenses have less moving parts and hold their calibration better.
+		The performance of good lenses is usually given as an MTF, or modulation transfer function, describing the best possible contrast.
 \end{itemize}
 
 On practical matters affecting image quality:
 
 \begin{itemize}
-	\item Optical stabilization works by moving a glass element inside the lens or the sensor itself, effectively moving the image on the sensor, having also a negative effect on calibration. Such feature would be turned off as harmful and unnecessary, since the cameras would be mounted rigidly.
+	\item Optical stabilization works by moving a glass element inside the lens or the sensor itself, effectively moving the image on the sensor, having also a negative effect on calibration.
+		Such feature would be turned off as harmful and unnecessary, since the cameras would be mounted rigidly.
 
-	\item Dust reduction, if enabled for some consumer cameras, is typically implemented as high-frequency vibration of the sensor on camera startup. Moving the sensor might result in small calibration problems.
+	\item Dust reduction.
+		If enabled for some consumer cameras, it is typically implemented as high-frequency vibration of the sensor on camera startup.
+		Moving the sensor might result in small calibration problems.
 
-	\item Shutter lag. Lag measured between ordering the camera to take the picture to the actual moment where exposure starts should be consistent, and preferably small.
+	\item Shutter lag.
+		Lag measured between ordering the camera to take the picture to the actual moment where exposure starts should be consistent, and preferably small.
 
-	\item Video frame rate, resolution, and compression. Cameras that support a raw format only use raw for still pictures and compress the video. Raw video is often unnecessary in the consumer market and poses high requirements on memory space and processing speed. For image processing, each frame should be as little compressed as possible. Some DSLRs support writing only full keyframes instead of predicted frames, resulting in higher quality and file size.
+	\item Video frame rate, resolution, and compression.
+		Cameras that support a raw format only use raw for still pictures and compress the video.
+		Raw video is often unnecessary in the consumer market and poses high requirements on memory space and processing speed.
+		For image processing, each frame should be as little compressed as possible.
+		Some DSLRs support writing only full keyframes instead of predicted frames, resulting in higher quality and file size.
 
 \end{itemize}
 
 On practical matters affecting usability:
 
 \begin{itemize}
-	\item Lens features. While photography lenses typically support electronic and even automatic focusing, machine vision lenses typically have mechanically adjustable focus and aperture. Of photography devices, compact cameras feature a non-changeable zoom lens, while system cameras feature interchangeable lenses.
+	\item Lens features.
+		While photography lenses typically support electronic and even automatic focusing, machine vision lenses typically have mechanically adjustable focus and aperture.
+		Of photography devices, compact cameras feature a non-changeable zoom lens, while system cameras feature interchangeable lenses.
 
-	\item Continuous shooting rate, or the speed at which full-size pictures can be taken. Controlled by many factors, on consumer cameras, image processing speed and memory card write speed have most effect, and on MV cameras, the bus speed typically limits the rate, and sensor speed is selected based on the bus speed.
+	\item Continuous shooting rate, or the speed at which full-size pictures can be taken.
+		Controlled by many factors, on consumer cameras, image processing speed and memory card write speed have most effect, and on MV cameras, the bus speed typically limits the rate, and sensor speed is selected based on the bus speed.
 
-	\item Configurability. Aperture, shutter speed and others should be manually controllable remotely, and repeatable without automatic features.
+	\item Configurability.
+		Aperture, shutter speed and others should be manually controllable remotely, and repeatable without automatic features.
 
-	\item Remote trigger. Practically all DSLRs support wired or wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol in the data bus. % Some protocols may have global commands to send throughout a group of cameras. (FireWire?) Otherwise, software trigger suffers from sporadic jitter from operating system and protocol non-determinism.
+	\item Remote trigger.
+		Practically all DSLRs support wired or wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol in the data bus. % Some protocols may have global commands to send throughout a group of cameras. (FireWire?) Otherwise, software trigger suffers from sporadic jitter from operating system and protocol non-determinism.
 
-	\item For consumer cameras, USB read speed supported by the camera. Retrieving saved image or video data takes less time for faster interfaces.
+	\item For consumer cameras, USB read speed supported by the camera.
+		Retrieving saved image or video data takes less time for faster interfaces.
 
-	\item External flashes. Practically all system cameras can be wired to an external flash unit; only some compact cameras support this. Industrial cameras are always externally triggered, some supporting a separate independent signal and some via the transfer bus.
+	\item External flashes.
+		Practically all system cameras can be wired to an external flash unit; only some compact cameras support this.
+		Industrial cameras are always externally triggered, some supporting a separate independent signal and some via the transfer bus.
 
-	\item External power supply. Not needing to charge batteries adds value to the ease of use.
+	\item External power supply.
+		Not needing to charge batteries adds value to the ease of use.
 
-	\item Weight and size. A smaller and lighter camera requires less bulky support structures.
+	\item Weight and size.
+		A smaller and lighter camera requires less bulky support structures.
 
-	\item Price. With a fixed budget, cheaper cameras can cover a larger area of the subject at a time because more cameras fit in the budget.
+	\item Price.
+		With a fixed budget, cheaper cameras can cover a larger area of the subject at a time because more cameras fit in the budget.
 
-	\item Availability. For an easily replicable system, it should be simple to purchase the hardware.
+	\item Availability.
+		For an easily replicable system, it should be simple to purchase the hardware.
 \end{itemize}
 
 %Having a much smaller production rate than larger manufacturers that target consumers (such as Canon, Nikon, Pentax or Sony), machine vision cameras have a broad price range from a few hundred euros to thousands, well correlated with pixel count and frame rate.
@@ -435,7 +464,7 @@ The microcontroller has unused I/O pins for 22 outputs in total, and if individu
 For each output, a Toshiba TLP621-2 dual opto-isolator was used, mainly because they were readily available; any similar device would work.
 An output pin in the microcontroller drives an LED of the isolator, making the corresponding transistor conductive.
 Schematic of one camera controller is shown in Figure \ref{fig:singleopto}.
-Each LED is driven through a current-limiting resistor of 220 ohms, resulting in approx. 10 milliamperes of LED current with the LED voltage drop of 1.15 V specified by Toshiba datasheet, matching the specified test condition in the datasheet \cite{tlp621}.
+Each LED is driven through a current-limiting resistor of 220 ohms, resulting in approx.\ 10 milliamperes of LED current with the LED voltage drop of 1.15 V specified by Toshiba datasheet, matching the specified test condition in the datasheet \cite{tlp621}.
 This results in the transistor conducting the current in the camera remote connection.
 The cameras have shown to consistently respond to this well.
 
@@ -837,13 +866,18 @@ The following list includes software-only reconstruction solutions available for
 	\item[Autodesk 123D Catch] \cite{autodesk123dcatch} is a free and popular web-based application for automatic reconstruction; photos are uploaded to a cloud service, and a textured mesh is generated automatically.
 		Not much is left to the user, and the targeted user base appears to be those with no particular knowledge on the technology itself.
 
-	\item[Acute3D Smart3DCapture] \cite{acute3d} is targeted for large-scale photogrammetry and cultural heritage digitization. The software is provided as a standalone program and a library, and it is used internally in Autodesk 123D Catch.
+	\item[Acute3D Smart3DCapture] \cite{acute3d} is targeted for large-scale photogrammetry and cultural heritage digitization.
+		The software is provided as a standalone program and a library, and it is used internally in Autodesk 123D Catch.
 
-	\item[Agisoft PhotoScan] \cite{photoscan}  has two editions, for 3D designers and professional geographic content manipulation; among the geographic features, it is very suitable for multi-view reconstruction in content generation, and has an active forum for its users \cite{agisoftforum}. It can be scripted with the Python programming language. Infinite Realities \cite{ir-ltd} uses PhotoScan commercially for reconstructing whole human bodies.
+	\item[Agisoft PhotoScan] \cite{photoscan}  has two editions, for 3D designers and professional geographic content manipulation; among the geographic features, it is very suitable for multi-view reconstruction in content generation, and has an active forum for its users \cite{agisoftforum}.
+		It can be scripted with the Python programming language.
+		Infinite Realities \cite{ir-ltd} uses PhotoScan commercially for reconstructing whole human bodies.
 
-	\item[Faceshift] \cite{faceshift} provides a realtime markerless face capture in a feature space that describes virtual muscle and bone movements, using a single camera and pre-trained poses. The software runs currently with a depth sensor such as Microsoft Kinect.
+	\item[Faceshift] \cite{faceshift} provides a realtime markerless face capture in a feature space that describes virtual muscle and bone movements, using a single camera and pre-trained poses.
+		The software runs currently with a depth sensor such as Microsoft Kinect.
 
-	\item[3DF Zephyr Pro] \cite{3dfzephyr} by 3DFlow is an automatic reconstruction software that takes photographs as input. A free SfM software, \textbf{3DF Samantha}, is provided too.
+	\item[3DF Zephyr Pro] \cite{3dfzephyr} by 3DFlow is an automatic reconstruction software that takes photographs as input.
+		A free SfM software, \textbf{3DF Samantha}, is provided too.
 		The company is a spin-off of a university thesis project \cite{toldo2013accurate,toldo2013towards}.
 
 	\item[Pix4dMapper] \cite{pix4d} converts aerial images to geometric surface models for mapping related applications.
@@ -858,11 +892,13 @@ The following list includes software-only reconstruction solutions available for
 In contrast to the above, the following list includes complete systems that are offered as a service or as an addition to a program only.
 
 \begin{description}
-	\item[MotionScan] is the technology used for the video game L.A.\ Noire \cite{rockstar2011noire}, developed by CaptiveMotion. It uses tens of cameras to recover detailed structure and is targeted for video game content generation.
+	\item[MotionScan] is the technology used for the video game L.A.\ Noire \cite{rockstar2011noire}, developed by CaptiveMotion.
+		It uses tens of cameras to recover detailed structure and is targeted for video game content generation.
 
 	\item[Pendulum Studios] \cite{alterego} provides a capture system called Alter Ego that integrates with game engines, used in several video games.
 
-	\item [FARO] \cite{faro} manufactures hardware and provides scanning software for 3D documentation and surveying, and provides a free application for Kinect-based scanning. Many commercial applications are listed, ranging from product development to crime scene analysis.
+	\item [FARO] \cite{faro} manufactures hardware and provides scanning software for 3D documentation and surveying, and provides a free application for Kinect-based scanning.
+		Many commercial applications are listed, ranging from product development to crime scene analysis.
 	%\item[Fuel3D] is a complete low-cost handheld scanning system.
 
 	\item[Dimensional Imaging ltd.] \cite{di4d} provides DI3D and DI4D systems and software for static and dynamic surface capture, respectively, used for video games, research and medical applications.

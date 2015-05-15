@@ -51,7 +51,8 @@ Two such images are depicted in Figure \ref{fig:fansynctest}.
 \includegraphics[width=0.49\textwidth]{fan-a}
 \includegraphics[width=0.49\textwidth]{fan-b}
 }{fig:fansynctest}{
-	Frames from two cameras in a synchronization test with a PC fan. A marking on the end of a fan blade can be seen in the right side.
+	Frames from two cameras in a synchronization test with a PC fan.
+	A marking on the end of a fan blade can be seen in the right side.
 	The position of the marking does not differ distinctively in the pictures.
 }
 
@@ -93,13 +94,11 @@ Sometimes only part of the frame would be exposed to the flash light as a rollin
 Because the CMOS sensor is cleared and read line by line, the time of the flash can be deduced from the first bright line in the image.
 The rows are zeroed from light in succession in the same way as a mechanical focal plane shutter moves and exposed until read.
 Thus, the flash light's starting time in the video's internal clock is the frame's start time plus the duration that it takes for the rows before the overexposed one to show up:
-
 \begin{align} \begin{split} \label{eq:timingcalib}
 t_{Cl} &= t_{Ci} + t_{Cf} \\
-&= i_C  F + f_C / R F \\
+&= F i_C + F f_C / R \\
 &= (i_C + f_C / r c) F
 \end{split} \end{align}
-
 where $C$ is a camera identifier, $t_{Cl}$ is camera-relative time for the light pulse, $t_{Ci}$ is the starting time for the frame where the light shows up, and $t_{Cf}$ is the time inside the particular frame.
 The frame index $i$ marks the number of the frame in the video file, starts from 0, and there are $F$ = $1/\text{fps}$ seconds between the frames.
 $f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the ratio of exposure time and frame duration due to rolling shutter ($0.5$ in this case, referring to a characteristic to the camera, as it exposes the first and last rows in half the time between frames).
@@ -131,7 +130,7 @@ In this example, $c = 0.5$.
 
 \simplegfx{p}{\textwidth}{flashaudio}{
 	Trimmed audio recordings near the same moment as in Figure \ref{fig:flashtiming}, extracted from the video files, in top-bottom order.
-	First rows of the frames have been exposed at approx. $t = 0.03 \text{ s}$.
+	First rows of the frames have been exposed at approx.\ $t = 0.03 \text{ s}$.
 	The flash outputs a distinct ``pop'' sound, comparable to the start of the bright part in Figure \ref{fig:flashtiming}.
 }
 
@@ -212,7 +211,6 @@ The Bundler SfM system recommends to take photos at least every $\alpha = 15$ de
 Similar rough guidelines are usually suggested, such as a camera baseline of 10-20 \% of the distance to the subject.
 % visualsize photomodel3d recommends 12 degrees http://www.visualsize.com/FAQ/3Dmodel.php
 With a distance $s$ of one metre from lens to the subject, the Bundler guideline yields a baseline $b$ of approximately 26 cm by trigonometry: % Equation \ref{eq:baselinedegrees}:
-
 \begin{align} \begin{split} \label{eq:baselinedegrees}
 	\sin \alpha/2 &= \frac{b/2}{s}\\
 	b &= 2 s \sin \alpha/2
@@ -263,7 +261,7 @@ The free space provides robustness that can be altered by bringing the subject c
 Approximately 25 \% of the pixel count was used for the subject.
 For the final resolution of the color texture that was combined from all views, 4096 x 4096 pixels was used in the images that follow in this section.
 The resulting accuracy of the color textures is easily determined by the physical size of the subject.
-Assuming approx. 30 cm coverage (by Equation \ref{eq:areasize}) for the shorter image axis and a planar subject, image coverage would be $3456 / 300 \approx 11$ pixels per millimeter, or $\approx 0.09$ mm per pixel.
+Assuming approx.\ 30 cm coverage (by Equation \ref{eq:areasize}) for the shorter image axis and a planar subject, image coverage would be $3456 / 300 \approx 11$ pixels per millimeter, or $\approx 0.09$ mm per pixel.
 For the subjects tested, the accuracy was of the same order of magnitude.
 
 \paragraph{PhotoScan results}

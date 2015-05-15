@@ -93,9 +93,6 @@ in this work, a standard 3D cartesian coordinate system is used.
 In cartesian coordinates, a point is described as a location relative to a selected origin reference, as a triplet of distances along three perpendicular X, Y and Z axes. % (Figure \ref{fig:coordsys}).
 In a traditional right-handed system, X increases right, Y upwards and Z towards the viewer.
 
-%\simplegfx{t}{0.6\textwidth}{coordsys}
-%{A 3D cartesian coordinate system. Origin at O, point location encoded in the triplet $(x,y,z)$ as individual lengths along the X, Y and Z axes, respectively.}
-
 % }}} pinhole
 
 \subsubsection{Optics} % {{{
@@ -136,7 +133,6 @@ When the camera objective is adjusted for the object to be in focus, its paramet
 Illustrated in Figure \ref{fig:thinlens}, the thin lens model and its focal length $f$ encode a relation between an object at a distance $a$ and its \emph{focused} image at a distance $b$ on the other side, as shown in Equation \ref{eq:thinlens}.
 A camera system typically has a \emph{magnification} of much less than one, i.e., the image on its film is rendered smaller than the imaged subject, as $a >> b$.
 For objects at distances approaching infinity ($a = \infty$), $b$ becomes equal to $f$, and the thin lens resembles a pinhole with film distance $f$.
-
 \begin{equation} \label{eq:thinlens}
 	\frac{1}{a} + \frac{1}{b} = \frac{1}{f}
 \end{equation}
@@ -155,7 +151,6 @@ This effect is called \emph{depth of field (DOF)} and is illustrated in Figure \
 In artistic photos, a \emph{shallow} depth of field can be preferred, having the subject in focus to separate it from the blurred background.
 In 3D reconstruction, exactly the opposite is preferred: deep focus, i.e., objects at every depth from the camera should be sharp.
 The aperture size is presented as relative to the focal length and is commonly called the \emph{F number} \cite{szeliski10vision,greenleaf1950photographic}, specified via the aperture diameter $d$:
-
 \begin{equation} \label{eq:fnumber}
 	N = \frac{f}{d}
 \end{equation}
@@ -182,7 +177,6 @@ Every point nearer or further away shows up on the film as a circle (for circula
 
 Depth of field is defined as difference between the shortest and farthest object distances that still generate an acceptable CoC, found geometrically.
 When $f$ is the focal length, $N$ the aperture f number, $s$ the distance to the subject, and $c$ the maximum acceptable CoC, the depth of field $D$ is (Greenleaf \cite{greenleaf1950photographic}):
-
 \begin{equation} \label{eq:dof}
 	D = \frac{2 s f^2 N c (s - f)} {f^4 - N^2 c^2 (s - f)^2}
 \end{equation}
@@ -194,7 +188,6 @@ When $f$ is the focal length, $N$ the aperture f number, $s$ the distance to the
 	It can be easily seen that for subjects at longer distances, the depth of field increases.
 }
 
-
 In Figure \ref{fig:dofcoc} that depicts the formation of the circle of confusion, $Z'$ and $Z$ are the maximum and minimum acceptable distances near the subject, and $Z' - Z = D$.
 Sufficient depth of field is important to consider in near-field 3D scans, which translates to a small aperture, and consequently, relatively bright lights in order to maintain a short exposure time.
 The subject should fill whole image frame to use the pixel density effectively.
@@ -203,7 +196,7 @@ Increasing the distance to the subject would increase depth of field, but enlarg
 Acceptable size of the CoC depends on the resolving power of the viewer; when a photograph is looked at, the print size and distance of the image determines the circle \cite{greenleaf1950photographic}.
 A standard-considered formula in photography determines the maximum acceptable CoC by dividing the image size by 1500, originating from human vision performance \cite[p. 88, 92]{kingslake1992optics}.
 As an example, for the standard ``full-frame'' 35 mm film size with an image size of 36 x 24 mm (approx.\ 43 mm diagonal), the CoC yields $c = 43 \text{ mm} / 1500 \approx 0.03 \text{ mm}$.
-For a normal 50 mm lens with the subject at a distance of 1 m, a small aperture of f/11 and using a circle of confusion of 0.03 mm, the Equation \ref{eq:dof} gives depth of field of $D \approx 25 \text{cm}$. 
+For a normal 50 mm lens with the subject at a distance of 1 m, a small aperture of f/11 and using a circle of confusion of 0.03 mm, the Equation \ref{eq:dof} gives depth of field of $D \approx 25 \text{cm}$.
 
 In a computer vision system, this purely perceptual guideline is typically ignored and the circle of confusion is determined by the sensor resolution or pixel size.
 The disk should not span too many pixels, so that accurate detail would be resolvable from the digital image.
@@ -236,7 +229,6 @@ In addition to radial, tangential distortion is less significant, and it is ofte
 Its cause is small misalignments in separate elements in a single optical system; lenses being offset from each other and not being parallel to the image plane \cite{brown1966decentering,kingslake1989history}.
 
 %Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
-% FIXME centi-pixel etc. villiers \cite{villiers2008centi}
 \simplefig{t}{%
 \includegraphics[width=0.32\textwidth]{wall-pincushion}
 \includegraphics[width=0.32\textwidth]{wall}
@@ -266,12 +258,10 @@ y_{corr} &= y + 2 \rho_2 x y + \rho_1 (r^2 + 2 y^2)
 where $x$, $y$ $x_{corr}$, $y_{corr}$ and $r$ are as in Equation \ref{eq:radialdist} and $\rho_1$ and $\rho_2$ are new coefficients specific to tangential distortion.
 
 The two independent types of distortion are combined by summing both to the original coordinate, combining Equations \ref{eq:radialdist} and \ref{eq:tangdist}:
-
 \begin{align} \label{eq:bothdist} \begin{split}
 	x_{corr} &= x (1 + \kappa_1 r^2 + \kappa_2 r^4 + \kappa_3 r^6) + 2 \rho_1 x y + \rho_2 (r^2 + 2 x^2)\\
 	y_{corr} &= y (1 + \kappa_1 r^2 + \kappa_2 r^4 + \kappa_3 r^6) + 2 \rho_2 x y + \rho_1 (r^2 + 2 y^2)
 \end{split} \end{align}
-
 The effects of different parameters are depicted in Figure \ref{fig:raddist}.
 The image dimensions are usually normalized such that the origin lies at the image center, and the distance $r$ from the center has a maximum value of $1$, making the distortion parameters universal for all image resolutions.
 A typical image sensor is not a square but a rectangle, and clips the distortion circle accordingly, such that the maximum values along the different axes are different.
@@ -535,7 +525,6 @@ Many parts in this path contribute to the quality of images and the rate at whic
 
 For example, for the high-end Canon DSLR camera EOS-1D X, a continuous shooting speed of 14 frames per second is advertised \cite{eos1dx}.
 With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate for the bit rate from the sensor is
-
 \begin{equation} \label{eq:eos1dspeed}
 5184 \times 3456 \times 14 \times 14 \approx 3.5\text{ Gb/s}
 \end{equation}
@@ -568,7 +557,7 @@ Finally, the bulk storage of the captured frames happens to a mass storage devic
 
 \subsection{Video} \label{sec:video} % {{{
 
-%Hox ALL-I (intra) vs. IPB (intra-predict-bidirpredict)
+%Hox ALL-I (intra) / IPB (intra-predict-bidirpredict)
 
 % intro, connection to reconstruction
 
@@ -604,7 +593,8 @@ Video that contains full frames only is called \emph{progressive}.
 
 % on fps
 
-Consumer video cameras, video-capable pocket cameras and DSLRs typically offer a few choices of frame rate. Traditionally, the movie industry has used 24 FPS; 25 and 30 are common alternatives used in TV broadcast, some cameras being capable to twice the speed at a lower resolution.
+Consumer video cameras, video-capable pocket cameras and DSLRs typically offer a few choices of frame rate.
+Traditionally, the movie industry has used 24 FPS; 25 and 30 are common alternatives used in TV broadcast, some cameras being capable to twice the speed at a lower resolution.
 Actual FPS is slowed down from the advertised by a factor of 1.001 because of historical reasons. % in monochrome and color TV backwards compatibilities.
 30 and 24 FPS refer to approximately 29.970 and 23.976 FPS, respectively.
 \cite{musburger2010single}
@@ -694,19 +684,17 @@ With the same frame rate, the frames can be indexed with numbers starting from 0
 Times when the frames taken relative to a global clock is noted as $t_{Ci}$, where $C$ is a camera identifier and $i$ is the increasing frame index.
 
 \emph{Offset} is the time difference of two streams: for an ideal camera $A$ at each frame $t_{Ai}$ for $i$, and an offset camera $B$ at $t_{Bi}$, a constant error $e$ is added:
-
 \begin{equation} \label{eq:timeoffset}
 	t_{Bi} = t_{Ai} + e
 \end{equation}
 
-Drift is a property of one a camera that advertises to record at some speed and actually works at some other speed. Similarly, for cameras $A$ and $B$, a constant $d$ is added for each frame index $i$:
-
+Drift is a property of one a camera that advertises to record at some speed and actually works at some other speed.
+Similarly, for cameras $A$ and $B$, a constant $d$ is added for each frame index $i$:
 \begin{equation} \label{eq:timedrift}
 	t_{Bi} = t_{Ai} + d i
 \end{equation}
 
 Jitter is the random offset $j(i)$ between frames of an ideal camera A and a camera B:
-
 \begin{equation} \label{eq:timejitter}
 	t_{Bi} = t_{Ai} + j(i)
 \end{equation}
@@ -883,8 +871,11 @@ Summarizing for the general feasibility of the most popular camera types in the 
 
 \begin{itemize}
 	\item System cameras with bigger sensors have high light sensitivity, excellent configurability with auxiliary hardware available, such as remote shutter releases, and decent software support.
-	\item Industrial machine vision cameras have both small and medium sensors, support interchangeable lenses and need significant amount of additional hardware, and custom or expensive software to control. Video synchronization is usually not an issue, and parameter control has more freedom at the expense of more work.
-	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower. Raw images and external utilities are usually lacking. Pixel resolution may be less than in system cameras, and high-resolution compact cameras perform worse in low light because of smaller pixel size.
+	\item Industrial machine vision cameras have both small and medium sensors, support interchangeable lenses and need significant amount of additional hardware, and custom or expensive software to control.
+		Video synchronization is usually not an issue, and parameter control has more freedom at the expense of more work.
+	\item Compact cameras, designed for the general public for all-purpose point-and-shooting are cheap, have non-changeable zoom lenses and are in general slower.
+		Raw images and external utilities are usually lacking.
+		Pixel resolution may be less than in system cameras, and high-resolution compact cameras perform worse in low light because of smaller pixel size.
 	\item Others (smartphone cameras, webcams) have poorly documented features, cheaper optics and are not configurable properly in general.
 \end{itemize}
 
@@ -972,7 +963,6 @@ This section reviews basic transforms whose results are needed in the later reco
 Light rays travel through the pinhole camera's aperture to the image plane that is $f$ units behind the aperture, while the camera origin is set to the aperture \cite{hartley03multiview}.
 This configuration is depicted in Figure \ref{fig:pinhole3d}.
 The pinhole model (or, \emph{perspective projection}) states that the world point $(P_x, P_y, P_z)$ is projected via direct light rays to the 2D image plane at $(p_u, p_v)$:
-
 \begin{equation}
 \begin{pmatrix}
 p_u \\ p_v
@@ -1061,7 +1051,7 @@ $(u_0, v_0)$ is the image center (principal point).
 The parameters can also be presented separately without the matrix notation.
 For square pixels, $m_x = m_y$, and for a non-skewed (rectangular) sensor, $\gamma = 0$, which is often the case and assumed by computer vision programs and libraries \cite{hartley03multiview,szeliski10vision,heyden2005multiple}.
 
-%Le image. Horizontal planar triangle, lines between camera origins etc. lecture11.pdf.
+%Le image, Horizontal planar triangle, lines between camera origins etc, lecture11.pdf.
 
 % }}} coord systems and transforms
 
@@ -1097,7 +1087,7 @@ The method uses a number of synchronized frames and a laser pointer in a dark ca
 It can be used to calibrate an arbitrarily large unknown set of cameras automatically.
 It is described further in Section \ref{sec:sfm}.
 
-%many single planar chessboard pics vs. a single image of an accurate 3d model.
+%many single planar chessboard pics vs a single image of an accurate 3d model.
 %Single three-dimensional calibration object is also sufficient blbl
 %cv::stereocalibrate, cv::calibratecamera
 %TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
@@ -1121,8 +1111,6 @@ In the following section, this search problem in finding corresponding pixels, m
 
 \subsubsection{Binocular disparity} \label{sec:binocular} % {{{
 
-%Essential, fundamental matrices. Correspondence problem. Rectification, undistortion. Epipolar geometry.
-
 \simplegfx{t}{\textwidth}{simplestereo}{
 	A very simple stereo setup, pictured from above.
 	The image planes (thick lines) are imaginary, as a real film in a camera would exist behind the camera origin and project the image as rotated around principal axis, as described earlier in Section \ref{sec:imaging}.
@@ -1130,14 +1118,10 @@ In the following section, this search problem in finding corresponding pixels, m
 	The symbols $\vec C$ are the camera origins ($T$ units between each other); $\vec c$ the principal points; $x$ the one-axis image plane coordinates of $\vec p$ w.r.t.~the principal points; and $f$ is the focal length.
 	The unknown is $Z$, i.e., depth of point $\vec X$.
 }
-% this figure would need to be bigger and have also the back side planes (sensors) as opposed to the (normalized?) image planes (at f=1?)
+% back planes to the figure? too much content then i guess
 
-%Next, the setup of binocular stereo vision is described. Common stereo vision rigs use the simplest possible case: two identical cameras with a fixed distance, both oriented to the same direction, parallel to the line connecting them, as in Figure \ref{fig:simplestereo}.
-
-%Assuming known calibration with identical cameras (same focal length and sensor) in a setup described above, visualized in Figure \ref{fig:simplestereo}, points can be triangulated as follows:
 Assuming a planar setup with identical cameras (same focal length and sensor) with parallel optical axes as visualized in Figure \ref{fig:simplestereo}, a 3D point can be triangulated given its known projection on both cameras.
 From similar triangles with a common vertex at $X$, the depth $Z$ is obtained as follows:
-
 \begin{align} \label{eq:triangulation} \begin{split}
 	\frac{Z}{T} &= \frac{Z-f}{T - x_l + x_r} = \frac{Z-f}{T - d}\\
 	ZT - Zd &= ZT - fT\\
@@ -1215,7 +1199,9 @@ It includes the relative rotation and translation of the two cameras in a single
 %	A_l^T T
 %\end{align*}
 
-%where $T$ is the cross-product form of $t$ encoded in a matrix form as below. The essential matrix is obtained as $E = R T$.
+%where $T$ is the cross-product form of $t$ encoded in a matrix form as below.
+%The essential matrix is obtained as $E = R T$.
+
 \emph{Fundamental matrix} \cite[ch. 11]{hartley03multiview} is a similar object to essential matrix, as it also relates the corresponding points in stereo images.
 It has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account.
 The described vectors ($\vec X_l$, $\vec X_r$) are in normalized camera coordinate frames, but from the photographed images in actual image processing, only pixel values can be measured.
@@ -1394,11 +1380,9 @@ As a last step, bundle adjustment globally optimizes the \emph{bundles of light 
 Several algorithms and implementations are available, while the basic idea and the underlying problem is the same:
 a cost function is used to optimize jointly all camera parameter estimates such that the reprojection errors are minimized through all views.
 Pollefeys \cite{pollefeys2004visual} gives the following formula to minimize:
-
 \begin{equation}
 	\text{min}_{\bm M_k, \vec P_i} \sum_{k=1}^m \sum_{i=1}^n D(\vec p_{ki}, \bm M_k \vec P_i)^2
 \end{equation}
-
 when the goal is to find the projection matrices $\bm M_k$ and the 3D points $\vec P_i$ for all views $k$ and points $i$, where $D(\vec A,\vec B)$ is the Euclidean distance between $\vec A$ and $\vec B$ and $\vec p_{ki}$ the known, fixed matching 2D image feature positions for the unknown 3D point $\vec P_i$ in the $k$th image.
 In practice, this nonlinear optimization problem is approached in iterative means.
 According to Wu \cite{wu2013towards}, bundle adjustment should be performed using a Levenberg-Marquardt or Preconditioned Conjugate Gradient method.
@@ -1556,7 +1540,7 @@ Several studies have presented methods to augment the base geometry by adding wr
 %(Simply a rendering technique, that level of detail in 3D structure might not be needed).
 %%Still, structured light and/or shading assumptions [shape from single image cues/shading trucco+verri p.225] done too.
 %
-%(video: 3d topology different in each frame; most algos do just stills. simple to combine them to a pre-recorded mesh)
+%(video: 3d topology different in each frame; most algos do just stills, simple to combine them to a pre-recorded mesh)
 %
 %Rendered facial animation: on bones and stuff.
 % }}} rendering
