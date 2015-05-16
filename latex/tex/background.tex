@@ -19,7 +19,7 @@ Quality of the outcome in a reconstruction pipeline depends on many factors of t
 % NOTE: not 1.0 to fit paragraphs
 \simplegfx{b}{0.95\textwidth}{camerapipeline}{
 	Image processing pipeline in a typical modern camera consists of several optical and digital steps with additional post-processing.
-	Image from \cite[p.\ 74]{szeliski10vision}.
+	Image from \cite[p.~74]{szeliski10vision}.
 }
 
 
@@ -29,7 +29,7 @@ In the digital world, with nearly no exceptions, images are stored and represent
 The way of encoding images as dicrete two-dimensional arrays is used throughout this thesis.
 A rectangular \emph{raster image} consists of a regular grid of picture elements, or \emph{pixels}.
 Each number describes the intensity value for the particular pixel, as depicted in Figure \ref{fig:tinyflowergrid}.
-\cite[ch. 2.2]{trucco1998introductory}
+\cite[ch.~2.2]{trucco1998introductory}
 
 Color images are described as several \emph{color channels}: the intensities for different colors are given separately.
 The most common model is the \emph{RGB} or \emph{red-green-blue} model, where the primary colors are the same as in human eye; each pixel color is given as a triplet of these three colors.
@@ -97,7 +97,7 @@ In a traditional right-handed system, X increases right, Y upwards and Z towards
 
 \subsubsection{Optics} % {{{
 
-In practice, no actual camera works ideally; a pinhole-resembling camera with a tiny hole could be built, but it would have poor light gathering power and low resolution limited by diffraction effects \cite{greenleaf1950photographic}.
+In practice, no actual camera works ideally; a pinhole-resembling camera with a tiny hole could be built, but it would have poor light gathering power and low resolution limited by diffraction effects \cite[p.~29]{greenleaf1950photographic}.
 Light sensitivity is increased by using a larger hole, and the light rays are directed using carefully manufactured lens systems.
 Refraction properties of light rays and manufacturing defects introduce additional distortions that must be taken into account.
 %In practice, lens distortions deviate the rays nonlinearly, and no system is in perfect focus, so that one point spreads out as a circle.
@@ -107,7 +107,7 @@ Actual camera ``lenses'' (\emph{camera objectives}) consist of not only a single
 %where the focal length can be changed.
 As an example, a mechanically simple fixed focal length Canon lens diagram is shown in Figure \ref{fig:canonef50mm}.
 There are several lenses, aligned so that their centers lie on the the optical axis parallel to it.
-Most objectives can be reduced to a \emph{thin lens} model (depicted in Figure \ref{fig:thinlens}), an ideal optical model of a single infinitesimally thin glass element \cite{greenleaf1950photographic,szeliski10vision}.
+Most objectives can be reduced to a \emph{thin lens} model (depicted in Figure \ref{fig:thinlens}), an ideal optical model of a single infinitesimally thin glass element \cite[p.~21]{greenleaf1950photographic} \cite[p.~61]{szeliski10vision}.
 
 \simplefig{t}{%
 \includegraphics[width=0.49\textwidth]{canonef50mm-1}%
@@ -129,7 +129,7 @@ Most objectives can be reduced to a \emph{thin lens} model (depicted in Figure \
 \paragraph{Focusing}
 A subject is said to be \emph{in focus} when the light rays originating from it converge at the same point on the camera's film.
 When the camera objective is adjusted for the object to be in focus, its parameters are changed slightly and a different thin lens is formed.
-\emph{Focal length} is a fundamental property of a lens and determines its amount of magnification \cite{szeliski10vision,greenleaf1950photographic}.
+\emph{Focal length} is a fundamental property of a lens and determines its amount of magnification \cite[p.~61]{szeliski10vision} \cite[p.~13]{greenleaf1950photographic}.
 Illustrated in Figure \ref{fig:thinlens}, the thin lens model and its focal length $f$ encode a relation between an object at a distance $a$ and its \emph{focused} image at a distance $b$ on the other side, as shown in Equation \ref{eq:thinlens}.
 A camera system typically has a \emph{magnification} of much less than one, i.e., the image on its film is rendered smaller than the imaged subject, as $a >> b$.
 For objects at distances approaching infinity ($a = \infty$), $b$ becomes equal to $f$, and the thin lens resembles a pinhole with film distance $f$.
@@ -143,14 +143,14 @@ For objects at distances approaching infinity ($a = \infty$), $b$ becomes equal 
 The size of the hole where light effectively goes through is called \emph{aperture}; the hole itself is called \emph{aperture stop} and it is located inside the the objective in between its lenses.
 The diameter of a thin lens corresponds to the aperture diameter and to the stop's \emph{entrance pupil}, the aperture stop seen from the front of the objective.
 Size of the aperture also directly determines the amount of light entering the image plane, and thus the relative exposure time for a required amount of light energy: doubling the aperture area halves the required exposure time.
-\cite{greenleaf1950photographic}
+\cite[ch.~13]{greenleaf1950photographic}
 
 % TODO: dof graph: varying distance, N lines for different f/#
 As in any practical case, the aperture is not infinitesimally small, and there will be some area of the scene that is imaged as sharp and others in front and behind of this area will be blurred.
 This effect is called \emph{depth of field (DOF)} and is illustrated in Figure \ref{fig:irldof}.
 In artistic photos, a \emph{shallow} depth of field can be preferred, having the subject in focus to separate it from the blurred background.
 In 3D reconstruction, exactly the opposite is preferred: deep focus, i.e., objects at every depth from the camera should be sharp.
-The aperture size is presented as relative to the focal length and is commonly called the \emph{F number} \cite{szeliski10vision,greenleaf1950photographic}, specified via the aperture diameter $d$:
+The aperture size is presented as relative to the focal length and is commonly called the \emph{F number} \cite[p.~23]{greenleaf1950photographic}, specified via the aperture diameter $d$:
 \begin{equation} \label{eq:fnumber}
 	N = \frac{f}{d}
 \end{equation}
@@ -167,16 +167,15 @@ The aperture size is presented as relative to the focal length and is commonly c
 Clearly, doubling the area of the aperture equals to an increase of the diameter $d$ by a factor of $\sqrt 2 \approx 1.4$.
 The aperture size is typically denoted as $f/\#$, where $\#$ is replaced by the number, such as $f/1$ or $f/1.4$.
 This makes the light energy reaching the film universal among all focal lengths.
-Full multiples of $\sqrt 2$ are called \emph{stops}.
-\cite{szeliski10vision}
+Full multiples of $\sqrt 2$ are called \emph{stops}, and the equivalent f number changes as a function of subject distance \cite[p.~23]{greenleaf1950photographic}, which is left out here for simplicity.
 
 \paragraph{Circle of confusion}
-As the blur happens gradually, the ``level of sharpness'' at each point is often defined via a \emph{circle of confusion} (CoC) \cite{greenleaf1950photographic}.
+As the blur happens gradually, the ``level of sharpness'' at each point is often defined via a \emph{circle of confusion} (CoC) \cite[p.~25]{greenleaf1950photographic}.
 The distance from the lens along the optical axis where perfect focus is attained is called the \emph{focal plane}.
 Every point nearer or further away shows up on the film as a circle (for circular apertures), instead of a point; when this circle is significantly larger than the resolving power of the observer, the image of this point is perceived as blurred.
 
 Depth of field is defined as difference between the shortest and farthest object distances that still generate an acceptable CoC, found geometrically.
-When $f$ is the focal length, $N$ the aperture f number, $s$ the distance to the subject, and $c$ the maximum acceptable CoC, the depth of field $D$ is (Greenleaf \cite{greenleaf1950photographic}):
+When $f$ is the focal length, $N$ the aperture f number, $s$ the distance to the subject, and $c$ the maximum acceptable CoC, the depth of field $D$ is (Greenleaf \cite[p.~25]{greenleaf1950photographic}):
 \begin{equation} \label{eq:dof}
 	D = \frac{2 s f^2 N c (s - f)} {f^4 - N^2 c^2 (s - f)^2}
 \end{equation}
@@ -193,8 +192,8 @@ Sufficient depth of field is important to consider in near-field 3D scans, which
 The subject should fill whole image frame to use the pixel density effectively.
 Increasing the distance to the subject would increase depth of field, but enlarging the subject in the frame again would need a higher focal length, which decreases depth of field.
 
-Acceptable size of the CoC depends on the resolving power of the viewer; when a photograph is looked at, the print size and distance of the image determines the circle \cite{greenleaf1950photographic}.
-A standard-considered formula in photography determines the maximum acceptable CoC by dividing the image size by 1500, originating from human vision performance \cite[p. 88, 92]{kingslake1992optics}.
+Acceptable size of the CoC depends on the resolving power of the viewer; when a photograph is looked at, the print size and distance of the image determines the circle \cite[p.~26]{greenleaf1950photographic}.
+A standard-considered formula in photography determines the maximum acceptable CoC by dividing the image size by 1500, originating from human vision performance \cite[p.~88,~92]{kingslake1992optics}.
 As an example, for the standard ``full-frame'' 35 mm film size with an image size of 36 x 24 mm (approx.\ 43 mm diagonal), the CoC yields $c = 43 \text{ mm} / 1500 \approx 0.03 \text{ mm}$.
 For a normal 50 mm lens with the subject at a distance of 1 m, a small aperture of f/11 and using a circle of confusion of 0.03 mm, the Equation \ref{eq:dof} gives depth of field of $D \approx 25 \text{cm}$.
 
@@ -209,11 +208,11 @@ When properties such as type of the subject texture, and the quality of the opti
 \paragraph{Diffraction}
 The required amount of light is not the only factor that limits the minimum aperture size.
 \emph{Diffraction} is an effect which reduces image sharpness with small apertures.
-When a light ray diverges on a small aperture due to the wavelike nature of light, the different distances traveled make the rays interfere each other and produce a two-dimensional diffraction pattern, called an \emph{airy disk} \cite{greenleaf1950photographic}.
+When a light ray diverges on a small aperture due to the wavelike nature of light, the different distances traveled make the rays interfere each other and produce a two-dimensional diffraction pattern, called an \emph{airy disk} \cite[ch.~4]{greenleaf1950photographic}.
 The disk blurs the image in a similar fashion as an object that is out of focus, as each light ray produces its own particular disk.
 Size of the airy disk is relative to the size of the aperture and the light wavelength.
 Thus, the aperture size must be chosen as a compromise between the unwanted effects of DOF and diffraction.
-The disk size can be approximated \cite{greenleaf1950photographic} by
+The disk size can be approximated \cite[p.~29]{greenleaf1950photographic} by
 \begin{equation} \label{eq:airydisk}
 	c = 1.22 \frac{\lambda f}{d} = 1.22 \lambda N
 \end{equation}
@@ -273,7 +272,7 @@ A typical image sensor is not a square but a rectangle, and clips the distortion
 	The different shapes of second and fourth order polynomials are easily visible: the higher-order terms are visible have most effect in the farthest sides of the image.
 }
 
-The Brown's model describes the distortion characteristics for a lens system on an otherwise perfect image, but typically the inverse transform is required, because a distorted image is given as noted by Villiers et~al.\ \cite{villiers2008centi}. % and implemented in OpenCV \cite{opencv}.
+The Brown's model describes the distortion characteristics for a lens system on an otherwise perfect image, but typically the inverse transform is required, because a distorted image is given as noted by Villiers et~al.~\cite{villiers2008centi}. % and implemented in OpenCV \cite{opencv}.
 For each pixel in the undistorted destination image, the pixel value is necessary to find from the distorted source, but the mapping described by the model works to the other way.
 However, Villiers et~al.\ note that as plain barrel and pincushion distortion can be considered as inverse transforms to each other, the same model can actually be used for the inverse direction if the more complex tangential part is left out \cite{villiers2008centi}.
 
@@ -294,7 +293,7 @@ Throughout this thesis, interpolation is assumed to be performed as necessary wh
 % shutter, why needed
 
 A static scene is imaged by exposing the photosensitive film (or digital sensor) to the light passing through the optics for a short time, keeping the camera and subject steady.
-A \emph{mechanical shutter} blocks the light before and after the exposure \cite{greenleaf1950photographic}.
+A \emph{mechanical shutter} blocks the light before and after the exposure \cite[ch.~13]{greenleaf1950photographic}.
 In recent digital image sensors, the sensor itself can be made inactive to light or cleared quickly from the accumulated charge; this is called \emph{electronic shutter} \cite{caspeelectronic,kodakshutter}.
 
 % mechanical stuff
@@ -319,9 +318,9 @@ All shutters serve the same purpose: to restrict the light from entering the ima
 %A shutter is a mechanical device that blocks light to the film and can be moved momentarily out of the way and back.
 There are several types of constructions for shutters, depending on the application.
 Some cheaper compact cameras have a small \emph{diaphragm shutter}, or \emph{leaf shutter} in the lens center near the aperture stop.
-A leaf shutter moves quickly away from the light path and back, either as a single opaque piece or as several \emph{leaves}, analogously to the aperture stop whose size can be changed \cite{greenleaf1950photographic}.
+A leaf shutter moves quickly away from the light path and back, either as a single opaque piece or as several \emph{leaves}, analogously to the aperture stop whose size can be changed \cite[p.~117]{greenleaf1950photographic}.
 
-A \emph{focal plane shutter} \cite{greenleaf1950photographic}, used in most system cameras, is installed in front of the film plane.
+A \emph{focal plane shutter} \cite[p.~123]{greenleaf1950photographic}, used in most system cameras, is installed in front of the film plane.
 Leaf shutters would be expensive to install in each interchangeable lens, and a focal plane shutter can operate at higher speeds.
 Focal plane shutter consists of two curtains that move to the same direction; one moves out of the way of the film to let light pass to it, and another moves to cover it back again when the exposure time has elapsed.
 Figure \ref{fig:focalplaneshutter} illustrates the working principle of a planar shutter.
@@ -399,15 +398,15 @@ In order to obtain an appropriate image, the sensor must capture the light it se
 The separate red, green and blue color bands are captured in color cameras with separate parts of the sensor, as will be explained.
 
 \paragraph{Photosites}
-A sensor consists of individual photosensitive semiconductor sites that each accumulate charge and ultimately encode a single numerical value, relative to the amount of light received \cite[ch. 3]{nakamura2005image}.
+A sensor consists of individual photosensitive semiconductor sites that each accumulate charge and ultimately encode a single numerical value, relative to the amount of light received \cite[ch.~3]{nakamura2005image}.
 Physical pixels cover less than the full area of a sensor, as there are gaps between them;
-microlenses between the sites direct the light hitting the gaps to the neighboring pixels in modern sensors, with varying color performance \cite[p. 64]{nakamura2005image} \cite{el2005cmos}.
+microlenses between the sites direct the light hitting the gaps to the neighboring pixels in modern sensors, with varying color performance \cite[p.~64]{nakamura2005image} \cite{el2005cmos}.
 %Because of the discrete nature of the pixel array, some cameras use an analog low-pass filter in front of the sensor to hide high-frequency information that would show up as aliasing.
 
 A single pixel sensor acquires all light hitting it, independent of the wavelength.
 The most common method to capture the three primary colors is to interleave red, green and blue colors in a single sensor by filtering the wavelength that can enter each pixel with a colored film over the sensor, with a special repeating pattern called \emph{color filter array}.
 The missing values for other colors bands are interpolated from surrounding pixels.
-The most popular interleaving pattern is the Bayer filter \cite[p. 76]{szeliski10vision}, illustrated in Figure \ref{fig:bayerpattern}.
+The most popular interleaving pattern is the Bayer filter \cite[p.~76]{szeliski10vision}, illustrated in Figure \ref{fig:bayerpattern}.
 Other arrangements than red, green and blue are also used; some incorporate other colors, such as cyan, yellow, green, and magenta \cite{park2003implementing}.
 %Very high-end cameras use three separate sensors with different wavelengths specially divided to them for increased accuracy;
 %The increased cost induced from requiring three sensors and the accompanying optics instead of one makes the method infeasible for consumer cameras.
@@ -426,7 +425,7 @@ Two major sensor types exist: CCD (Charge-coupled Device) and CMOS (Complementar
 The types vary by their manufacturing techniques and photosite internals \cite{nakamura2005image,taylor1998ccd,el2005cmos}.
 
 Both CCD and CMOS have their applications, but it suffices to say that CMOS is the one used in most still cameras because of its lower price and power consumption, and higher speed.
-A CMOS sensor converts light immediately to voltage, and has additional transfer circuitry at each pixel, reducing the \emph{fill factor}, the sensitive parts of the photosites \cite[p. 62]{nakamura2005image}.
+A CMOS sensor converts light immediately to voltage, and has additional transfer circuitry at each pixel, reducing the \emph{fill factor}, the sensitive parts of the photosites \cite[p.~62]{nakamura2005image}.
 In a CCD, the charge is first stored as electrons as in a capacitor, and a row is transferred serially from pixel to pixel to a separate voltage converter and amplifier.
 Still, both are typically read out ultimately in a serial fashion, requiring longer reading time for larger amounts of pixels.
 A CCD typically uses additional photosites permanently blocked from the light for storing the accumulated charge temporarily.
@@ -435,7 +434,7 @@ Rolling shutter is especially noticeable in videos shot with a CMOS camera, beca
 
 \paragraph{Error sources}
 Various steps of the image processing contribute to image noise; the major sources are shot noise and several electrical noises \cite{szeliski10vision,litwiller2001ccd}.
-\emph{Shot noise} exists due to the particle-nature of light; each photon adds a constant electrical charge to the photosite it hits, and if the overall number of photons is small, statistical Poisson-distributed noise will be present \cite[p. 74]{nakamura2005image}.
+\emph{Shot noise} exists due to the particle-nature of light; each photon adds a constant electrical charge to the photosite it hits, and if the overall number of photons is small, statistical Poisson-distributed noise will be present \cite[p.~74]{nakamura2005image}.
 This type of noise is visible in less bright areas.
 Clearly, no electronically better sensor can improve the visibility of shot noise.
 The only way to reduce it is by exposing the sensor to more light: for this reason, sensors with a larger surface area are preferred in applications where noise is unwanted.
@@ -443,7 +442,7 @@ The only way to reduce it is by exposing the sensor to more light: for this reas
 The Gaussian-distributed \emph{electrical noise} has various sources in sampling, transfer and conversion.
 Each pixel receives an additional random signal level that shows up as additive brightness, also noticed usually only in poorly illuminated conditions or black areas.
 Noise increases with sensor's signal gain, or \emph{exposure sensitivity}, described using the ISO system (``film speed'').
-Sensor \emph{responsivity} usually refers to the raw signal the photosite sensor produces per optical energy \cite[p. 78]{nakamura2005image}.
+Sensor \emph{responsivity} usually refers to the raw signal the photosite sensor produces per optical energy \cite[p.~78]{nakamura2005image}.
 The resulting digital value depends on this and many other terms on the signal path.
 
 A more sensitive ISO setting on a sensor requires less light for a bright-looking image, because the signal is amplified more before digitization.
@@ -486,7 +485,7 @@ In Figure \ref{fig:nayarbrdf}, different types of reflections seen by the camera
 Ideally, the camera would only record the diffuse reflection that represents the surface color (\emph{albedo});
 any shadows and the specular components are unwanted artifacts from the standpoint of simple color reconstruction.
 \emph{Specular highlight} or \emph{specular reflection} refer to a mirror reflection of the lamp on the imaged surface.
-Because most reconstruction methods fundamentally assume uniform lighting conditions, a property called \emph{brightness constancy} (i.e., the brightness and color of a surface looks the same, regardless of viewing direction or time moment), they perform poorly when a light shines off a surface differently in different views \cite[ch. 8.3]{trucco1998introductory}.
+Because most reconstruction methods fundamentally assume uniform lighting conditions, a property called \emph{brightness constancy} (i.e., the brightness and color of a surface looks the same, regardless of viewing direction or time moment), they perform poorly when a light shines off a surface differently in different views \cite[ch.~8.3]{trucco1998introductory}.
 As images describe the color via the brightness that reflects off of a surface, the perceived brightness must be held constant.
 The same restriction provides a basis to other algorithms, such as object tracking \cite{horn1974determining,horn1981determining}.
 
@@ -501,7 +500,7 @@ Advanced capture and rendering methods may take advantage of also the specular c
 As the surface should be illuminated as evenly as possible to minimize specular highlights and shadows, it is important to pay attention to light sources.
 The often used photography terms \emph{soft} and \emph{hard} lighting refer to the size and power of light sources: bright spotlights are hard, and larger and relatively less bright lamps are soft.
 Softness can be added by increasing the light's area while holding its power constant using a ``diffuser'', such as a large surface where light is reflected off or a white cloth between the lamp and the imaged subject.
-\cite[p. 108]{langford2000basic}
+\cite[p.~108]{langford2000basic}
 %Effects of a soft versus hard light are illustrated in Figure \ref{fig:lighthardness}.
 
 Powerful electronic flash units use usually a gas-filled tube that is excited with high voltage to produce a short, bright burst of light for some milliseconds;
@@ -536,7 +535,7 @@ Due to the large amount of data to be transferred and processed, video is typica
 
 A ``raw'' image file can be saved with more advanced cameras, containing the plain sensor data with very little processing done.
 The raw files saved by DSLR cameras are packed in a proprietary lossless format and contain also metadata about certain camera settings.
-When a raw file is not used, the camera processes the image with device-specific correction filters and applies image enhancements, e.g., white balance correction and sharpening, and finally saves the image as a standard image file such as JPEG \cite[p. 412]{szeliski10vision}.
+When a raw file is not used, the camera processes the image with device-specific correction filters and applies image enhancements, e.g., white balance correction and sharpening, and finally saves the image as a standard image file such as JPEG \cite[p.~412]{szeliski10vision}.
 For such automatic in-camera processing, all cameras should be identical for consistent reconstruction results.
 %Clock speed of the conversion circuits with the main processor speed ultimately determine the maximum burst imaging speed.
 
@@ -806,7 +805,7 @@ Typical sensor sizes for different camera categories are as follows:
 % XXX fix references
 To benefit from the sensor resolution, the camera objective should have an equivalent or better \emph{resolving power}, provided as a chart of \emph{modulation transfer function} (MTF) which is a function of frequency, or number of black-and-white \emph{line pairs} per millimetre.
 A lens attenuates the frequencies of the optical patterns, such that at some point, dense line pairs are not resolved from each other but show up as gray.
-\cite[p. 71]{kingslake1992optics}
+\cite[p.~71]{kingslake1992optics}
 
 Machine vision cameras and system cameras use interchangeable lenses with often well specified MTFs provided by the manufacturer, while cheaper compact cameras, phones and webcams are designed for a single lens that cannot be removed and has poorer MTF that usually is not provided \cite{sick2006machine}.
 Compacts also accompany a \emph{zoom lens}; zooms are more complex systems and therefore more expensive to reach an image quality comparable to others.
@@ -946,7 +945,7 @@ The camera is reduced to the pinhole model; distortions caused by the optical sy
 
 The camera is a projective object located somewhere in the imaged scene.
 Its \emph{intrinsic parameters} model the properties of projection, but do not take into account the camera location in any global coordinate system.
-The \emph{extrinsic parameters} contain the camera location and rotation in another global coordinate system, often structured as a matrix \cite[p. 41]{hartley03multiview}. % , \cite{heyden2005multiple}
+The \emph{extrinsic parameters} contain the camera location and rotation in another global coordinate system, often structured as a matrix \cite[p.~41]{hartley03multiview}. % , \cite{heyden2005multiple}
 This section reviews basic transforms whose results are needed in the later reconstruction steps.
 
 \simplefig{t}{%
@@ -997,7 +996,7 @@ When comparing points between different cameras that view the same scene, the ca
 One of the cameras is often conveniently chosen as the origin of a global coordinate frame, so that its extrinsic parameters become unity transforms (many programming libraries may assume this, e.g., OpenCV \cite{opencv}).
 %Each three-dimensional point in the world is transformed to the small sensor inside the camera, which is then digitized to a discrete two-dimensional grid of pixels, with different coordinate units.
 
-The transformation chain \cite[p. 163]{hartley03multiview} is encoded as follows in Equation \ref{eq:projxform}, given a point $\vec P$ in homogeneous coordinates (4-dimensional vector) representing a 3D location described in physical (\emph{metric}) coordinates:
+The transformation chain \cite[p.~163]{hartley03multiview} is encoded as follows in Equation \ref{eq:projxform}, given a point $\vec P$ in homogeneous coordinates (4-dimensional vector) representing a 3D location described in physical (\emph{metric}) coordinates:
 \begin{align} \label{eq:projxform} \begin{split}
 	\vec p
 	&= \bm K_s \vec P\\
@@ -1074,7 +1073,7 @@ A known pattern is fast to detect and results in correct physical units when the
 % www.vision.caltech.edu/bouguetj/calib_doc/papers/zhan99.pdf
 
 The checkerboard calibration step is often programmed to measure optical distortion at the same time \cite{opencv,camcalmatlab}.
-A single image of a three-dimensional calibration object is also sufficient for single-camera calibration \cite[p. 181]{hartley03multiview}.
+A single image of a three-dimensional calibration object is also sufficient for single-camera calibration \cite[p.~181]{hartley03multiview}.
 
 One general way for calculating the calibration is \emph{direct linear transform (DLT)}:
 the whole matrix $\bm M$ is solved from $\vec x_i = \bm M \vec X_i$ by constructing a system of equations from the projections of some known points $i$, and minimizing an error metric, as the case is practically overconditioned and the measurements contain errors \cite{hartley03multiview}.
@@ -1156,7 +1155,7 @@ All epipolar lines in a view join in the same point ($e_l$ and $e_r$).}
 
 In stereo vision, the same scene of interest is seen by two or more cameras at the same time.
 The cameras are rarely aligned perfectly as in the stereo setup described above.
-\emph{Epipolar geometry} \cite[ch. 7.3]{trucco1998introductory} encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with similar triangulation as in the simple stereo setup.
+\emph{Epipolar geometry} \cite[ch.~7.3]{trucco1998introductory} encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with similar triangulation as in the simple stereo setup.
 \cite{hartley03multiview}
 % truccoverri chap 7.3
 As seen in Figure \ref{fig:epigeom}, a 3D point $\vec A$ seen by the left camera $\vec C_l$ could be anywhere on the line between $\vec C_l$'s origin and $\vec A$, because a line passing through the principal point always projects to a point (the camera position is equal to the principal point, i.e., the pinhole).
@@ -1202,7 +1201,7 @@ It includes the relative rotation and translation of the two cameras in a single
 %where $T$ is the cross-product form of $t$ encoded in a matrix form as below.
 %The essential matrix is obtained as $E = R T$.
 
-\emph{Fundamental matrix} \cite[ch. 11]{hartley03multiview} is a similar object to essential matrix, as it also relates the corresponding points in stereo images.
+\emph{Fundamental matrix} \cite[ch.~11]{hartley03multiview} is a similar object to essential matrix, as it also relates the corresponding points in stereo images.
 It has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras, which are obtained after the projective transform that takes the intrinsics into account.
 The described vectors ($\vec X_l$, $\vec X_r$) are in normalized camera coordinate frames, but from the photographed images in actual image processing, only pixel values can be measured.
 Thus, fundamental matrix encodes also intrinsic parameters.
@@ -1230,8 +1229,8 @@ Given pixel coordinates $\vec a_l$ and $\vec a_r$ that match the points $\vec A_
 %\]
 
 The essential and fundamental matrices can be seen as a more general configuration of the triangulation in Figure \ref{fig:simplestereo} and Equation \ref{eq:triangulation}.
-The matrices can be estimated by forming a system of linear equations using Equation \ref{eq:essential} or \ref{eq:fundamental} and at least eight point correspondences, using some method to solve the equations, e.g., \emph{eight-point algorithm} \cite[p. 155]{hartley03multiview}.
-Having estimated the matrix, the epipolar geometry and thus the 3D position of any point with two matching pixel coordinates are easily recovered \cite[p. 162]{hartley03multiview}.
+The matrices can be estimated by forming a system of linear equations using Equation \ref{eq:essential} or \ref{eq:fundamental} and at least eight point correspondences, using some method to solve the equations, e.g., \emph{eight-point algorithm} \cite[p.~155]{hartley03multiview}.
+Having estimated the matrix, the epipolar geometry and thus the 3D position of any point with two matching pixel coordinates are easily recovered \cite[p.~162]{hartley03multiview}.
 
 % cite longuet-higgins 1981
 
@@ -1240,12 +1239,12 @@ Having estimated the matrix, the epipolar geometry and thus the 3D position of a
 \subsubsection{Features and matching} % {{{
 
 Previously, fundamentals for reconstructing a three-dimensional location for a point pair were introduced, assuming known positions for the same point in different images.
-To reconstruct a whole scene from a full image, all pairwise points must be \emph{matched} \cite[ch. 4]{szeliski10vision}.
+To reconstruct a whole scene from a full image, all pairwise points must be \emph{matched} \cite[ch.~4]{szeliski10vision}.
 Matching is often also called \emph{correspondence} searching:
 Given a pixel in one image, which is the corresponding pixel in another image taken from the same scene?
 Pixels correspond to each other if they represent the same physical point.
 Matching pixels for the previously introduced methods are found in the image space by comparing pixel intensity of some fixed window.
-To describe the point's visual characteristics and to efficiently compare the characteristics of different points, the surrounding environment is typically encoded as a \emph{feature}, an easily recognizable property vector \cite[ch. 4]{szeliski10vision}.
+To describe the point's visual characteristics and to efficiently compare the characteristics of different points, the surrounding environment is typically encoded as a \emph{feature}, an easily recognizable property vector \cite[ch.~4]{szeliski10vision}.
 
 For successful matching, and correct geometry, images from different views should represent the same object.
 Different views must be imaged at the same time, and be free of visible view-dependent artifacts, such as specular highlights.
@@ -1257,7 +1256,7 @@ Edges or corners are the typical features that are detected automatically at spe
 They are essentially high-frequency information in the image that can be interpreted as a 2D discrete function;
 thus, \emph{edge detection} can be performed by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found \cite{marr1980theory}.
 Another popular method is \emph{blob detection}, based on, e.g., the laplacian of a Gaussian-filtered image.
-Blob detection is typically performed in computer vision using difference-of-gaussian-based (DoG) methods due to its faster execution than in Laplacian-of-Gaussians \cite[p. 152]{szeliski10vision}.
+Blob detection is typically performed in computer vision using difference-of-gaussian-based (DoG) methods due to its faster execution than in Laplacian-of-Gaussians \cite[p.~152]{szeliski10vision}.
 Edge and blob detection methods work as a basis for several feature matching and detection algorithms.
 
 \emph{Scale-invariant feature transform (SIFT)} \cite{lowe1999object} is a well-known algorithm for local feature detection and description.
@@ -1285,7 +1284,7 @@ The surrounding pixel values themselves inside a \emph{window} centered at the s
 In order to triangulate a 3D point from two photographs, the location of the point in both images must be known, as described above.
 %The dense correspondence search is typically not done with feature matching but comparing pixels directly instead.
 Given a single pixel in one image, its corresponding pair would naively be searched by looking at every possible pixel in another with template matching.
-Rectification is a process that simplifies this search problem by restricting the search to a single dimension using the epipolar lines \cite[p. 157]{trucco1998introductory} \cite[ch. 7.1]{pollefeys2004visual}.
+Rectification is a process that simplifies this search problem by restricting the search to a single dimension using the epipolar lines \cite[p.~157]{trucco1998introductory} \cite[ch.~7.1]{pollefeys2004visual}.
 %Further, closeby points are only looked in a small window around the previous, not spanning the whole search space.
 
 By virtually aligning the cameras such that their images are coplanar, the search only has to be performed on a line that is parallel to the line connecting the camera centers.
@@ -1319,37 +1318,37 @@ Okutomi and Kanade \cite{okutomi1993multiple} noted that a short baseline suffer
 They approach the issue by combining several stereo pairs with different baselines, making correct point selection simple by using a minimized sum of errors.
 A clear disadvantage of this approach is the increased number of cameras required.
 
-The method by Fitzgibbon et~al.\ \cite{fitzgibbon1998automatic} assumes a restricted geometry using a turntable with only single-axis rotational motion.
+The method by Fitzgibbon et~al.~\cite{fitzgibbon1998automatic} assumes a restricted geometry using a turntable with only single-axis rotational motion.
 A single camera only is required, but the method does not extend to general cases.
 The setting is comparable to a number of cameras photographing the subject arranged around it; surrounding geometry must first be removed.
 
-Bickel et~al.\ \cite{bickel2007multi} acquire a 3D face mesh surface with a commercial solution by 3dMD \cite{3dmd} and then apply basic triangulation methods on markers to track a deforming face and its wrinkles.
+Bickel et~al.~\cite{bickel2007multi} acquire a 3D face mesh surface with a commercial solution by 3dMD \cite{3dmd} and then apply basic triangulation methods on markers to track a deforming face and its wrinkles.
 Their method uses a hybrid of fast low-resolution cameras for tracking and slower high-resolution cameras for recovering fine details.
 Additional computation is done on post-processing the generated mesh.
 
-Beeler et~al.\ \cite{beeler2010high} perform a dense reconstruction in pairs using image pyramids and cross-correlation in block matching.
+Beeler et~al.~\cite{beeler2010high} perform a dense reconstruction in pairs using image pyramids and cross-correlation in block matching.
 Normals on the points are computed using finite differences on disparity maps, and a surface mesh is computed using Poisson reconstruction.
 The mesh is augmented with pore-level details assumed from lighting properties on surface microgeometry smaller than possible for normal disparity computation.
 
-Bradley et~al.\ \cite{bradley2010high} use seven stereo camera pair arrangements directed to different parts of the subject, and combine the resulting 3D point clouds into a single one for meshing and animating with optical flow.
+Bradley et~al.~\cite{bradley2010high} use seven stereo camera pair arrangements directed to different parts of the subject, and combine the resulting 3D point clouds into a single one for meshing and animating with optical flow.
 The geometry is tracked by using optical flow to compute vertex positions between successive frames.
 An initial mesh is computed and manually refined, which is then modified preserving the vertex connectivity.
 Too fast movement not suitable for optical flow is tracked separately with a priori knowledge of the subject, such as special constraints on a human mouth.
 
-Ghosh et~al.\ \cite{ghosh2011multiview} compute a single output directly with no merging of intermediate point clouds by assuming that the subject is a deformed cylinder.
+Ghosh et~al.~\cite{ghosh2011multiview} compute a single output directly with no merging of intermediate point clouds by assuming that the subject is a deformed cylinder.
 The cylinder is divided in small parts that individually deform based on the captured data, which easily preserves the subject structure.
 
-The large-scale approach by Snavely et~al.\ \cite{snavely2006photo} presents methods and user interfaces that are not restricted on pre-calibrated or pairwise cameras, but instead are designed for unordered image collections.
+The large-scale approach by Snavely et~al.~\cite{snavely2006photo} presents methods and user interfaces that are not restricted on pre-calibrated or pairwise cameras, but instead are designed for unordered image collections.
 The method presents only the structure from motion solution and is suitable for thousands of views.
 
-Toldo et~al.\ \cite{toldo2013accurate,toldo2013towards} present an algorithm with visibility constraint filtering on a point cloud combined from a disparity map on each camera, with no requirements on camera structure such as pairing.
+Toldo et~al.~\cite{toldo2013accurate,toldo2013towards} present an algorithm with visibility constraint filtering on a point cloud combined from a disparity map on each camera, with no requirements on camera structure such as pairing.
 The point cloud is converted to a mesh with Poisson surface reconstruction.
 
 A global \emph{surface element} (\emph{surfel}, \emph{patch}) approach is used by several researchers recently \cite{carceroni2002multi,furukawa2010accurate,vu2012high,chang2011gpu}.
 The surface is not interpreted as a simple point cloud, but as a surface consisting of small elements, each visible in several views.
 Visibility constraints can then be employed based on occlusion between the elements and the outliers can be filtered away effectively.
 
-The patch-based method by Furukawa et~al.\ \cite{furukawa2012patch,furukawa2010accurate} collects initial correspondences from all source images, and expands 3D patches to a dense set iteratively spreading current matches to nearby pixels, finally filtering them by visibility constraints globally.
+The patch-based method by Furukawa et~al.~\cite{furukawa2012patch,furukawa2010accurate} collects initial correspondences from all source images, and expands 3D patches to a dense set iteratively spreading current matches to nearby pixels, finally filtering them by visibility constraints globally.
 
 Energy minimization with graph cuts applied in computer vision \cite{boykov2004experimental} is also increasingly used in dense reconstruction \cite{chang2011gpu,vu2012high,labatut2009robust,jancosek2011multi} for labeling the depths in a discrete voxel grid or a triangulation.
 
@@ -1501,7 +1500,7 @@ The de facto method in computer graphics is to uses \emph{texture mapping} to co
 A \emph{texture coordinate} is set for each vertex in the mesh to \emph{map} a smaller image from the texture on to the particular polygon. \cite{heckbert1986survey}
 
 Building the texture is done in a similar way of rendering the image on a screen or capturing a scene with a camera:
-The reconstructed mesh surface is projected on the raster images, registering the image coordinates on each vertex \cite[p. 610]{szeliski10vision} \cite[p. 98]{heyden2005multiple}.
+The reconstructed mesh surface is projected on the raster images, registering the image coordinates on each vertex \cite[p.~610]{szeliski10vision} \cite[p.~98]{heyden2005multiple}.
 When the mesh is viewed from another viewpoint, the pre-projected texture data is used again.
 Great accuracy can be acheived if a MVS structure is combined with a laser scan, by registering the point clouds generated by both together, using the laser scan as geometry and registered camera poses to project textures \cite{liu2006multiview}.
 % (XXX read meshlab src, references?)
@@ -1513,7 +1512,7 @@ The selection can be taken based on some goodness criteria, e.g., the image with
 \simplegfx{t}{\textwidth}{texreproj}{
 	Texture mapping a triangle from a color image on a virtual image plane on a computer screen as $m_v$.
 	The triangle geometry is mapped on the color images, or textures, of the real cameras as $m_i$, and the triangular patch between the image vertices is stretched on the rendered triangle.
-	Image from \cite[p. 98]{heyden2005multiple}.
+	Image from \cite[p.~98]{heyden2005multiple}.
 }
 
 To optimize the triangle rendering resources of GPUs, the deepest level of geometry is typically colored using texture maps describing not color, but \emph{surface roughness} and \emph{glossiness}.
