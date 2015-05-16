@@ -221,7 +221,7 @@ In a dark environment with flash lights, the exposure time is not particularly i
 The baseline was chosen by the guidelines proposed and by the difficulty in using the cameras in close proximity to each other.
 Initially, a slightly longer baseline of approximately 50 cm was used; it was subsequently reduced to 30 cm.
 
-\begin{table}[h]
+\begin{table}[t]
 	\centering
 	\begin{tabular}{l l}
 		Camera baseline & 30 +/- 5 cm\\
@@ -527,10 +527,7 @@ Both PhotoScan and VisualSFM+Meshlab appeared to produce highly usable models, a
 Comparing the results, it can be concluded that PhotoScan appeared more robust to the shooting conditions and always gave results of some quality.
 Given carefully tuned conditions, the VisualSFM method gave more freedom in selecting different parameters and external programs, and might result in a better level of detail, given enough time for testing.
 The community visible in PhotoScan's forums \cite{agisoftforum} appears active, and the existing forum topics give a quick start to the use of the program and to reconstruction rigs.
-Infinite Realities uses PhotoScan for rigs containing tens of DSLRs \cite{ir-ltd} and describes some of their methods in the forum for guidance.
 
 While PhotoScan does not disclose the details of its algorithms, the algorithms used by VisualSFM and Meshlab are well specified.
-Meshlab's code is quite directly adapted from scientific papers on state-of-the-art, and being open source, it is freely available for modifications.
+Meshlab's code is quite directly adapted from scientific papers, and being open source, it is easily modified.
 The fact that VisualSFM uses external applications for parts of the reconstruction process and only performs camera alignment by itself, it can be readily used for trying other approaches on those steps performed externally by replacing the other applications.
-The much faster processing speed of VisualSFM and Meshlab is also tempting.
-
