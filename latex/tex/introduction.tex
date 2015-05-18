@@ -15,7 +15,7 @@ The result is a distorted view of the 3D dimensions and colors, depending on ill
 
 % introduce computer graphics and the need for content
 
-In \emph{computer graphics}, a great interest is the digital \emph{synthesis} of visual 3D content.
+In \emph{computer graphics}, a great interest is the digital \emph{synthesis} of visual 3D content \cite{foley1990computer}.
 A geometric 3D model of a scene is given, and the light transport in it is synthesized to produce a flat projection from a single view, as a camera would show the scene.
 3D computer graphics has numerous applications in video games, motion pictures, medical sciences, architectural engineering, archaeology, and more.
 Among most applications, content of high photorealistic detail is of interest and increasingly needed.
@@ -35,16 +35,16 @@ Among the applications of computer vision, reconstructing such 3D structure from
 
 % bring mvs in
 
-\emph{Multi-view stereo (MVS)} is a method for extracting the visible 3D geometry and color information of a subject, given several images of the subject taken from different angles (\emph{views}).
+\emph{Multi-view stereo (MVS)} \cite{hartley03multiview} is a method for extracting the visible 3D geometry and color information of a subject, given several images of the subject taken from different angles (\emph{views}).
 MVS can be applied to an unordered collection of pictures or to the imagery of a more strict set of calibrated cameras.
 A MVS scanning rig is a specially constructed machinery, consisting of a number of cameras and software, for shooting photos from different views and processing the photos using computer vision.
 
 % mvs compared to plain stereo
 
-Plain \emph{stereo vision} based on fixed two-camera views has been long used in many applications varying from the robotics industry to 3D movie recording.
+Plain \emph{stereo vision}, MVS based on fixed two-camera views, has been long used in many applications varying from the robotics industry to 3D movie recording.
 Stereo vision compares the views of two cameras for depth cues, using similar principles as the human binocular vision.
 Multi-view stereo incorporates a multitude of cameras to acquire a more comprehensive and accurate view at the same time.
-The process of acquiring multi-view stereo images and processing them for original 3D structure is called \emph{3D scanning}, \emph{visual 3D capture}, \emph{3D reconstruction} or \emph{photogrammetry}.
+The practice of acquiring multi-view stereo images and processing them for original 3D structure is called \emph{3D scanning}, \emph{visual 3D capture}, \emph{3D reconstruction} or \emph{photogrammetry}.
 
 % static/dynamic definition, surface vs motion capture, texture
 

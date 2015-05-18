@@ -4,30 +4,30 @@
 
 Now that the background has been introduced, the practical part of this thesis follows.
 Specifications for a 3D scanning rig are given and different off-the-shelf camera types are compared more in depth.
-Suitable cameras for the task are then selected and described, with the decisions on mechanical construction.
+Suitable cameras for the task are then selected and described, along with the decisions on mechanical support construction.
 Control software for the rig is developed, and a survey is given on the readily available offering of reconstruction software.
 %Tests of the built system are given in Section \ref{sec:experiments}.
 
 \subsection{Functional specification} % {{{
 
 Constraints on the rig were specified in loose terms, leaving detailed work on the background study.
-Not all features of a general-purpose reconstruction rig can be addressed by the mathematical background.
+Furthermore, not all features of a general-purpose reconstruction rig can be addressed by the mathematical background only.
 Desirable properties of the system were given as:
 
 \begin{itemize}
 	\item Ease of use and practicality: the user should not need to know the implementation details (hardware internals or algorithms) or to have programming skills to calibrate the system and acquire a 3D scan; scanning should be as simple as pressing a button
 	\item Flexibility: for research purposes, the rig should be applicable to different types of subjects
 	\item Mobility: the system should not pose requirements on the environment it is set up in
-	\item Detail: high resolution should be used for achieving data for state-of-the-art algorithms
+	\item Detail: high image resolution should be used for achieving data for state-of-the-art algorithms
 	\item 3D and 4D: possibility for both static surface reconstruction and variations in geometry over time are preferred
 	\item Open design: by documenting the rig well and selecting readily available generic components, a similar system could be built if there was such a need, and the already built system could be easily extended
 	\item Reasonable price: the total budget of all hardware and software combined should not exceed 10~000 EUR.% Typical commercial solutions are many times more expensive.
 \end{itemize}
 
 Flexibility for arbitrary subjects is achieved by using adjustable connections for each camera, such that their poses can be changed individually.
-Distance to the photographed target should not be too short in order to not disturb human subjects, but on the other hand, a large setup may be difficult to build and would consume floor space unnecessarily.
+Distance to the photographed target should not be too short in order to not disturb human subjects, but on the other hand, a large setup may be difficult to build and would consume space unnecessarily.
 When capturing video, the frames should be synchronized among cameras as described in Section \ref{sec:video}, which might not be perfectly possible with consumer hardware.
-A mobile rig should be light enough to carry, set up, and reconfigure for new subjects, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration.
+A mobile rig should be light enough to carry, set up, and reconfigure for new subjects, but it should be rigid enough to give proper quality pictures and hold its calibrated configuration during use.
 Cameras are chosen among pocket cameras, system cameras, and industrial machine vision systems currently in the market.
 
 % }}}
@@ -35,17 +35,15 @@ Cameras are chosen among pocket cameras, system cameras, and industrial machine 
 \subsection{Camera comparison} \label{sec:cameracomparison} % {{{
 
 Section \ref{sec:cameratypes} presented the typical properties of different camera categories in general, and compared them to technical requirements.
-In this section, the focus is more on the feasibility of the properties on reconstruction, and on selecting a collection of feasible cameras fitting in the budget.
+In this section, focus is more on the feasibility of the properties on reconstruction, and on selecting a collection of feasible cameras fitting in the budget.
 
 \paragraph{General requirements}
-Small subjects in the range of a metre or less introduce concerns in shallow depth of field, forcing the lens aperture small using a large image sensor, and consequently, requiring bright lights or slow shutter speeds.
+Small close-up subjects in the range of a metre or less introduce concerns in shallow depth of field, forcing the lens aperture small using a large image sensor, and consequently, requiring bright lights or slow shutter speeds.
 For automatic capture using multiple cameras simultaneously, reliability in configurations and controls is important.
-Due to the large count of cameras required, practical features are also necessary to take into account, such as availability of external power supply instead of batteries.
-For static photography, external shutter releases are required for the cameras for simultaneous shooting.
+Due to the large number of cameras required, practical features are also necessary to take into account, such as availability of external power supply instead of batteries.
+For static photography, an external shutter release tool is required for the cameras for simultaneous shooting.
 Furthermore, it must be possible to download the imagery from the cameras directly to a computer.
-%External shutter release mechanisms have been studied more on DSLRs than compact cameras, and most compacts do not have one;
-%the manufacturers do not provide official specifications electrical connections for rempte shutter releases, but they have been reverse-engineered for many models by individual hobbyists.
-%Machine vision (MV) cameras, in contrast, support only external shutters.
+
 With a fixed budget, maximizing the scanned surface coverage of the subject requires to strongly consider the camera price, as long as the minimum required features are covered: with more cameras, a larger subset of the subject surface can be photographed, resulting in a more complete model.
 Cheaper compact cameras typically lack in lens robustness, raw image formats, remote configuration and manual modes.
 More expensive models have comparable features, and their prices rise into the same range as with DSLRs that are more understood in the field.
@@ -63,8 +61,8 @@ Machine vision cameras have also been used where synchronization was especially 
 \paragraph{Specialized hardware}
 Self-contained consumer devices contain the image processing pipeline from sensor to mass storage by themselves.
 In contrast, machine vision devices need several high performance computers for reliable multi-camera capture because of the lack of local storage and image processing pipelines.
-A machine vision camera contains typically only the imaging sensor and a processor for a control interface, it outputs easily 1 Gbit/s worth of raw data or more.
-A common desktop computer and one additional hard disk per camera would be necessary if the capture is long enough and does not fit in a computer's RAM, increasing the system cost and complexity.
+A machine vision camera contains typically only the imaging sensor and a processor for a control interface, and outputs easily 1 Gbit/s worth of raw data or more.
+A common desktop computer and one additional hard disk per camera would be necessary if the capture is long enough and would not fit in a computer's RAM, increasing the system cost and complexity.
 %For a small number of cameras, existing buses on a PC might be enough, but a larger number requires even more bandwidth.
 Best mechanical hard disks currently have sequential write speed up to 1-1.4 Gbit/s as measured by Tom's Hardware \cite{tomshw-hddwrite};
 newer solid-state drives (SSD) generally are two to four times faster \cite{tomshw-ssdwrite}.
@@ -72,8 +70,8 @@ For covering all the bandwidth, expansion cards would be needed per camera, coun
 Most PC motherboards can accommodate only a few cards, requiring several PCs.
 
 Transfer speeds given by specifications and theoretical maximum frame rates for typical 12-bit raw full-HD frames are listed in Table \ref{tab:busspeeds} ordered by speed; achievable rates would be less depending on bus protocol overhead \cite{hornberg2007handbook,ni2013choosing}.
-Benchmarked \cite{tomshw-sdwrite,tomshw-cfwrite} write speeds for Compact Flash (CF) and Secure Digital (SD) cards used in consumer cameras are given for comparison.
-The cameras may still not support the maximum rate that can be achieved by the card, and actual speed may be less.
+Benchmarked \cite{tomshw-sdwrite,tomshw-cfwrite} write speeds for Compact Flash (CF) and Secure Digital (SD) cards used in consumer cameras are also given for comparison.
+The write speed of the cameras themselves must also be taken into account.
 
 \begin{table}[t]
 	\centering
@@ -99,23 +97,23 @@ Main properties affecting image quality directly are as follows:
 
 \begin{itemize}
 	\item CMOS/CCD sensor..
-		CMOS suffers from rolling shutter in video mode, while global-shutter CCD is more expensive and rare in larger formats but also more sensitive.
+		CMOS suffers from rolling shutter in video mode, while global-shutter CCD is more expensive and rare in larger formats but also more responsive to light.
 
-	\item Resolution and sensor size.
+	\item Sensor resolution and physical size.
 		Higher resolution covers more detail, until the optical limits of the system are reached.
-		A larger sensor has larger pixels, and is thus more sensitive to light and results in lower noise and lower required exposure time.
+		A larger sensor has larger pixels, and is thus more responsive to light and results in lower noise and lower required exposure time.
 		On the other hand, at an equivalent subject distance, a deeper DOF is achieved with a smaller sensor.
 
 	\item Low noise.
 		Sensor noise degrades image quality in general, adds error to subpixel position estimation and complicates correspondence search, etc.
 
 	\item Dynamic range, i.e., bit depth of the processing pipeline.
-		Whereas JPEG pictures have only 8 bits per color channel, the typically higher bit depth of the sensor is available in raw image formats.  % DSLRs and industrial cameras use more, often 12 or 14 bits per pixel in raw format, that contains the color filter array effects before interpolation. % Postprocessing without reconstruction can use the added color resolution.
+		Whereas JPEG pictures in some cameras have only 8 bits per color channel, the typically higher bit depth of the sensor is available in raw image formats.  % DSLRs and industrial cameras use more, often 12 or 14 bits per pixel in raw format, that contains the color filter array effects before interpolation. % Postprocessing without reconstruction can use the added color resolution.
 
 	\item Lens quality.
 		High sensor resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general.
 		Fixed focal length lenses have less moving parts and hold their calibration better.
-		The performance of good lenses is usually given as an MTF, or modulation transfer function, describing the best possible contrast.
+		The performance of good lenses is usually given as an MTF, modulation transfer function, describing the contrast.
 \end{itemize}
 
 On practical matters affecting image quality:
@@ -132,10 +130,10 @@ On practical matters affecting image quality:
 		Lag measured between ordering the camera to take the picture to the actual moment where exposure starts should be consistent, and preferably small.
 
 	\item Video frame rate, resolution, and compression.
-		Cameras that support a raw format only use raw for still pictures and compress the video.
-		Raw video is often unnecessary in the consumer market and poses high requirements on memory space and processing speed.
-		For image processing, each frame should be as little compressed as possible.
-		Some DSLRs support writing only full keyframes instead of predicted frames, resulting in higher quality and file size.
+		Consumer cameras that support a raw format only use raw for still pictures and compress the video.
+		Raw video is seen often unnecessary in the consumer market and poses high requirements on memory space and processing speed.
+		For image processing, each frame should be compressed as little as possible.
+		Some system cameras support writing only full keyframes instead of predicted frames, resulting in higher quality and file size.
 
 \end{itemize}
 
@@ -144,9 +142,9 @@ On practical matters affecting usability:
 \begin{itemize}
 	\item Lens features.
 		While photography lenses typically support electronic and even automatic focusing, machine vision lenses typically have mechanically adjustable focus and aperture.
-		Of photography devices, compact cameras feature a non-changeable zoom lens, while system cameras feature interchangeable lenses.
+		Of photography devices, compact cameras feature an integrated zoom lens, while system cameras feature interchangeable lenses.
 
-	\item Continuous shooting rate, or the speed at which full-size pictures can be taken.
+	\item Continuous shooting rate, i.e., the speed at which full-size pictures can be taken.
 		Controlled by many factors, on consumer cameras, image processing speed and memory card write speed have most effect, and on MV cameras, the bus speed typically limits the rate, and sensor speed is selected based on the bus speed.
 
 	\item Configurability.
@@ -156,11 +154,10 @@ On practical matters affecting usability:
 		Practically all DSLRs support wired or wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol in the data bus. % Some protocols may have global commands to send throughout a group of cameras. (FireWire?) Otherwise, software trigger suffers from sporadic jitter from operating system and protocol non-determinism.
 
 	\item For consumer cameras, USB read speed supported by the camera.
-		Retrieving saved image or video data takes less time for faster interfaces.
+		Retrieving saved image or video data takes less time on faster interfaces.
 
 	\item External flashes.
 		Practically all system cameras can be wired to an external flash unit; only some compact cameras support this.
-		Industrial cameras are always externally triggered, some supporting a separate independent signal and some via the transfer bus.
 
 	\item External power supply.
 		Not needing to charge batteries adds value to the ease of use.
@@ -169,10 +166,10 @@ On practical matters affecting usability:
 		A smaller and lighter camera requires less bulky support structures.
 
 	\item Price.
-		With a fixed budget, cheaper cameras can cover a larger area of the subject at a time because more cameras fit in the budget.
+		With a fixed budget, cheaper cameras can cover a larger area of the subject at a time.
 
 	\item Availability.
-		For an easily replicable system, it should be simple to purchase the hardware.
+		For an easily replicable system, it should be straightforward to acquire the hardware.
 \end{itemize}
 
 %Having a much smaller production rate than larger manufacturers that target consumers (such as Canon, Nikon, Pentax or Sony), machine vision cameras have a broad price range from a few hundred euros to thousands, well correlated with pixel count and frame rate.
@@ -203,7 +200,7 @@ Canon was chosen over other brands because of firmware customizability \cite{mag
 }{fig:eos700d}
 {Canon EOS 700D DSLR camera body}
 
-Canon EOS 700D body, also known as the Rebel T5i, introduced in 2013, is the newest of Canon's consumer range DSLRs, with a price at about 600-700 EUR at the point of writing.
+Canon EOS 700D body, also known as the Rebel T5i, introduced in 2013, is the newest of Canon's consumer range DSLRs at the time of writing, with a price at about 600-700 EUR.
 More expensive models would not add considerable value to the rig, as their advantages are mostly in durability for practical photography.
 Key features are shown in Table \ref{tab:eos700dfeatures} and the front and back view of the camera are depicted in Figure \ref{fig:eos700d}.
 The built rig consists of nine cameras arranged as a $3 \times 3$ grid.
@@ -231,10 +228,10 @@ The sensor's pixel size is not unnecessarily small but not as large as in full f
 %Dynamic range with 14 bits per pixel is relatively large; most reconstruction programs use 8-bit images, though.
 % raw images useful for manual image enhancement
 The 5 FPS continuous speed for full-size images can be used for testing high resolution motion, but the video abilities are also reasonable.
-Ghosh et~al.\ use DSLRs operating in burst mode for special illumination capture, which presents one augmentation for the rig in future work \cite{ghosh2011multiview}.
-The quality can be tweaked with firmware modifications and raw video recording is also possible, at reduced resolution limited by storage speed \cite{magiclantern}.
+Ghosh et~al.\ \cite{ghosh2011multiview} use DSLRs operating in burst mode for special illumination capture, which presents one augmentation for the rig in future work.
+The quality can be tweaked with firmware modifications and raw video recording is also possible, at a reduced resolution limited by storage speed \cite{magiclantern}.
 The sensor is labeled ``Hybrid CMOS'', a new Canon's technology that embeds phase-detection autofocus pixels in the sensor for fast continuous autofocusing in video mode.
-A number of pixels is missing color sparsely around the middle of the sensor and are interpolated; they only introduce artifacts in raw video.
+A number of pixels are missing color sparsely around the middle of the sensor and are interpolated; they only introduce artifacts in raw video.
 
 The recent Canon EOS M MILC shares many features and internal elements with EOS 700D and was strongly considered, but it is missing support for remote shooting from USB or wired remote release.
 
@@ -242,7 +239,6 @@ The recent Canon EOS M MILC shares many features and internal elements with EOS 
 %700D has a newer processor and thus faster processing speed, faster memory card controller and others.
 Resolution of the sensor has stayed same since the EOS 550D, introduced in 2010.
 At the same time, also cheaper new models are available, such as the EOS 1200D; at a reduced price, less processing power is provided, resulting in slower operation but otherwise the cameras share mostly same features.
-The more expensive professional cameras vary mostly by processing speed and build quality.
 
 \paragraph{Storage}
 The camera uses Secure Digital (SD) memory cards for mass storage, supporting the UHS-I standard (Ultra High Speed) \cite{sdcardspeed}.
@@ -252,7 +248,7 @@ A class 10 UHS-I memory card was selected; manufacturer claims 45 MB/s write spe
 \paragraph{Conveniences}
 The camera also features a tilting LCD screen that has provided to be useful when looking the camera from the front.
 Additionally, AC power adapters were chosen to operate the cameras without the need for charging batteries.
-Canon sells adapters that plug in the camera's battery holder, providing continuous power at the expense of an additional cable per camera.
+The adapters plug in the camera's battery holder, providing continuous power at the expense of an additional cable per camera.
 For wireless remote shutter, the camera natively supports an infrared remote controller that must be pointed towards the camera from the front.
 
 % flashguns
@@ -273,7 +269,7 @@ At a distance of one metre $d = 1$ m, the sensor size of $s_x \times s_y$ = $22.
 \end{split} \end{align}
 which is easily seen from similar triangles with a common corner.
 From Equation \ref{eq:dof}, the depth of field (using the d/1500 rule) at this setting is about 16 cm for a f-number of f/11, or 20 cm for f/14, at circle of confusion of 0.019 mm, a reasonable depth for the given area size.
-This circle of confusion would span $0.019 \text{mm} / 22.3 \text{mm} * 5184 \text{px} \approx 4.4$ pixels.
+This circle of confusion would span $0.019 \text{mm} / 22.3 \text{mm} \times 5184 \text{px} \approx 4.4$ pixels.
 
 \simplefig{t}{%
 \includegraphics[width=0.8\textwidth]{canon50mmlens}
@@ -284,7 +280,7 @@ This circle of confusion would span $0.019 \text{mm} / 22.3 \text{mm} * 5184 \te
 \subsubsection{Magic Lantern}
 
 An important consideration was the ability to use the third-party Magic Lantern (ML) firmware add-on \cite{magiclantern};
-it was originally developed for tools and improved user interfaces for video recording, but has been extended for numerous other features.
+it was originally developed for improved user interfaces in video recording, but has been extended for numerous other features.
 It was installed on each camera in the rig.
 Firstly, it provides experimental support for raw video recording, easier remote triggering for video, and other hacks;
 additionally, being open source, it can be modified for any custom purposes, such as multi-camera synchronization aids, if necessary.
@@ -307,18 +303,18 @@ No ``stable'' release is offered for EOS 700D yet, but the unofficial testing ve
 
 The cameras need additional support structures for mounting.
 A trivial solution would be a tripod for each camera, which would not allow stacking the cameras vertically, though.
-Two main methods were considered; they are described below.
+Two main methods were considered and are described below.
 
 \subsubsection{Mechanical options}
 
-With flexibility and mobility as requirements, the system should be built of removable parts that need no modifications to the environment, such as screwing bolts to nearby walls.
+With flexibility and mobility as requirements, the system should be built of removable parts that need no modifications to the environment, such as attachments to walls.
 The separate parts should be small enough for transportation, but large enough for rigidity and build simplicity.
 Each camera should be able to turn at least in landscape and portrait mode to fully utilize the picture frame for portrait subjects, such as human faces.
 
 Two different major designs were considered: a hinged frame consisting of industrial aluminium profile system, or individual tripod stands available in most photography stores meant for supporting audiovisual equipment.
 For connecting the cameras, a custom profile could make use of also custom built parts; also, photography stores sell screws and clamps meant for connecting cameras, lights and other hardware.
 
-Extruded aluminium profiles such as those by MiniTec, Item or Bosch Rexroth consist of rectangular tube with a T-shaped slot running along each side for screws. % , sometimes called T-slot systems.
+Aluminium profiles such as those by MiniTec, Item or Bosch Rexroth consist of rectangular tube with a T-shaped slot running along each side for screws. % , sometimes called T-slot systems.
 %The profile systems are commonly used in assembly lines and other automation installations in factories, but also in smaller assemblies
 Mechanical dimensions vary by manufacturer but most supply a large catalog of connection brackets, hinges, screws etc.\ that allow much flexibility in the frame design.
 A hobbyist-purposed manufacturer OpenBuilds targets open source projects, such as 3D printers and CNC routers.
@@ -330,12 +326,11 @@ Speaker stands typically share a similar standard; in general, they are also hea
 Most photography and audio/video studio stores offer a variety of light and speaker stands.
 
 A custom aluminium profile system would have its benefits in rigidity and positional flexibility, because it could be built in any shape.
-On the other hand, one rigid shape is more difficult to modify when such a change is needed.
+On the other hand, one rigid shape would be more difficult to modify when any change were needed.
 Standard light or speaker stands are attractive because of their availability in normal stores.
 They also can be moved around, which also means more work in configuring the camera poses again.
 A stand consisting of mostly round rods lacks flat surfaces and slots that could be used for fastening parts together.
 For that purpose, special clamps and ball heads are sold separately.
-
 Machine vision cameras do not generally use the same tripod screws aimed for consumer market, but are screwed on the frame with custom bases.
 
 \subsubsection{Selected design}
@@ -345,13 +340,13 @@ Millenium LST-310 (a brand by the Thomann music equipment store \cite{thomann}) 
 Additionally, it has a rotating horizontal bar at the top.
 Similar tripods were used in other projects in the same laboratory and they were found useful and rigid.
 The relatively heavy weight (approximately 10 kg per stand) makes the support structures steady.
-Four of these stands were bought, which should allow a moderate coverage around a subject.
+Four of these stands were bought, which should allow a moderate coverage around a subject in pairs of cameras.
 
 For flexibility, each camera should be able to rotate in at least to horizontal or vertical pose, with arbitrary aiming position.
-Manfrotto 494 ball heads were used for this purpose, connected to the tripod rod with Manfrotto 035 Super Clamps.
+Manfrotto 494 ball heads \cite{manfrotto494} were used for this purpose, connected to the tripod rod with Manfrotto 035 Super Clamps \cite{manfrotto035}.
 Figure \ref{fig:camconnection} shows a complete connection from a stand pole to a camera.
 
-The total structure of all nine cameras divided in three supports (Figure \ref{fig:totalsetup}) takes up relatively little space, and is flexible enough to set up around any human-size subject or smaller.
+The total structure of all nine cameras divided in three supports (Figure \ref{fig:totalsetup}) takes up relatively little space, and is flexible to set up around any human-size subject or smaller.
 The stands can be carried in bags and the more fragile parts are fitted in two cases shown in Figure \ref{fig:cases}.
 
 Wires and power adapters are fastened to the stand legs in long-term use to reduce wires running on the floor.
@@ -361,7 +356,7 @@ Wires and power adapters are fastened to the stand legs in long-term use to redu
 \includegraphics[width=0.49\textwidth]{camconn}
 }{fig:camconnection}{
 	Left: the Super Clamp, ball head, and a camera separately.
-	Right: one camera connected to a pole and its wires.
+	Right: one camera connected to the pole and its wires.
 }
 
 \simplegfx{t}{\textwidth}{totalsetup}{
@@ -397,24 +392,23 @@ Detailed description on the lights is given in Section \ref{sec:samplesubjects}.
 %To fully automate the system, the trigger device should be connected to the computer that downloads the photos from the cameras.
 To fully automate the system, it is desirable to trigger the cameras remotely from a computer that also downloads the photos.
 Additionally, for a rig with possibly non-static subjects but an intended result of a still subject, the cameras have to be synchronized to record the subject at the same instant in time.
-This chapter describes the remote shutter mechanism and a custom tool that was built for the task.
+This section describes the remote shutter mechanism and a custom tool that was built for the task.
 The cameras are enabled to shoot in arbitrary order, while the most common order would be to shoot all cameras synchronously.
 An alternative method in synchronization could have been one third-party wireless remote trigger per camera;
 however, they are expensive, may be not as consistent as a wired solution, and would require modifications to work connected to a computer.
-
 Similarly, custom and undocumented solutions previously used for hard synchronization for machine vision cameras cameras, e.g., by Bickel et~al.\ \cite{bickel2007multi} include ready-made USB I/O boards such as those provided by Data Translation \cite{datatranslation}.
 
 \subsubsection{Remote shutter synchronization} % {{{
 
 %Photo synchronization was done with a remote mechanism provided by the camera, by driving the remote control of all cameras simultaneously.
-The synchronization was implemented as a wired remote trigger for each camera, driven from the same source.
+The synchronization was implemented as a wired remote trigger for each camera, driven from a single source.
 Additionally, when using flash units for lighting, the short light pulse emitted by the flash typically synchronizes the cameras if the surrounding environment is dark, and the camera shutter synchronization has less strict requirements.
 However, the trigger hub was designed to not rely on this fact.
 In video recording mode, the same remote wire can be used with 3rd-party firmware to start recording.
 
 \paragraph{Canon remote trigger}
 
-The selected Canon EOS 700D has an input port for focus trigger and shutter release, in addition to the integrated focus and shutter button.
+Canon EOS 700D has an input port for focus trigger and shutter release, in addition to the integrated focus and shutter button.
 The camera uses a standard 2.5 mm stereo jack for connecting external remote controllers.
 Wired and wireless electronic remotes are available in the market, but no standard devices for triggering several cameras arbitrarily appear to be well available; expensive wireless devices (such as the PocketWizard series \cite{pocketwizard}) advertise support for multiple cameras using one shutter release, with no well defined latency.
 Fortunately, the triggering method is simple and widely researched among hobbyists; it is well enough documented, as will soon follow.
@@ -424,7 +418,7 @@ The pins supply some current that flows back to the camera via the ground pin.
 It is safer to separate the cameras from each other electrically instead of connecting the similar remote wires of all cameras together.
 A common method among hobbyists and even suggested by Breeze Systems \cite{breezesystemsremote} is to use opto-isolators to control each camera individually, isolated from the shared control circuit.
 Breeze Systems sells popular software for controlling multiple cameras simultaneously, and advertises third-party USB controlled relay boards for triggering the shutters remotely as programmed from a computer \cite{breezesystemsremote}.
-However, mechanical relays are slow and their timings are inconsistent; a transistor or opto-isolator based system would be better.
+However, mechanical relays are slow and their timings are inconsistent compared to transistors or opto-isolators.
 
 \paragraph{Isolation}
 An opto-isolator provides a galvanically separated switch that can be used to electrically ``connect'' the release wire to the camera's ground such that no electrical signal path is shared between the cameras.
@@ -437,7 +431,7 @@ Another common setting is a powered device that outputs a voltage signal from a 
 % }}}
 \subsubsection{Microcontroller platform}
 
-A microcontroller (MCU) is a tiny computer in a single, usually fingernail-sized package containing a microprocessor core, RAM, nonvolatile program memory and peripheral devices; all parts required to run a single user-defined embedded application typically with no general operating system.
+A microcontroller (MCU) is a tiny computer in a single package containing a microprocessor core, RAM, nonvolatile program memory and peripheral devices; all parts required to run a single user-defined embedded application typically with no general operating system.
 The Arduino microcontroller board family \cite{arduino} is a popular example.
 The typical programming languages for microcontrollers are C and C++.
 Communication on the host PC end of a USB connection, when supported, can be implemented in any language.
@@ -460,13 +454,12 @@ This MCU contains a relatively powerful 32-bit ARM core, space for 512 KB of pro
 A single-wire debugging (SWD) method is supported to debug the running software in real time \cite{stnucleo}.
 
 The trigger was constructed for ten cameras, functionally transferring trigger pulses from a PC to all cameras synchronously through opto-isolators and 2.5 mm stereo cables connecting to the cameras.
-The microcontroller has unused I/O pins for 22 outputs in total, and if individual control is not necessary, the number of connections can be arbitrarily large.
+The microcontroller has unused I/O pins for 22 outputs in total after the ten camera outputs, and if individual control is not necessary, the number of connections can be arbitrarily large.
 For each output, a Toshiba TLP621-2 dual opto-isolator was used, mainly because they were readily available; any similar device would work.
 An output pin in the microcontroller drives an LED of the isolator, making the corresponding transistor conductive.
 Schematic of one camera controller is shown in Figure \ref{fig:singleopto}.
-Each LED is driven through a current-limiting resistor of 220 ohms, resulting in approx.\ 10 milliamperes of LED current with the LED voltage drop of 1.15 V specified by Toshiba datasheet, matching the specified test condition in the datasheet \cite{tlp621}.
+Each LED is driven through a current-limiting resistor of 220 ohms, resulting in approx.\ 10 milliamperes of LED current with the LED voltage drop of 1.15 V specified by Toshiba datasheet \cite{tlp621}.
 This results in the transistor conducting the current in the camera remote connection.
-The cameras have shown to consistently respond to this well.
 
 The circuit was initially constructed on a solderless protoboard, ``breadboard'', shown in Figure \ref{fig:camsremote-proto}.
 After proving that the circuit worked, a proper circuit board was built and installed in an extruded metal enclosure.
@@ -475,7 +468,7 @@ Full schematic for the whole circuit is available in Appendix \ref{app:fullschem
 The circuit was drawn with the Cadsoft EAGLE, a printed circuit board (PCB) design software \cite{eaglepcb}; complete schematic and layout files are available in \url {http://github.com/sooda/thesis}.
 
 The circuit board was designed to fit in a recycled enclosure that has inside dimensions of exactly 5 by 3.9 inches (approximately 127 by 99 mm).
-The used housing has a removable lid, but any box with a height of 1.4 inches (35 mm) or more should fit to the design.
+The used housing has a removable lid, but any box with a height of 35 mm or more should fit to the design.
 
 % TODO: disconnect ground from the camera side
 \simplefig{t}{%
@@ -486,13 +479,13 @@ The used housing has a removable lid, but any box with a height of 1.4 inches (3
 	Right: TLP621-2 dual opto-isolator in a DIP8 through-hole package, with physical dimensions of approximately 10 by 7 mm.
 }
 
+\simplegfx{p}{0.9\textwidth}{camsremote-proto}{
+	Remote trigger tool prototype on a solderless breadboard.
+}
+
 \simplegfx{p}{0.9\textwidth}{triggerboard}{
 	Final version of the printed circuit board layout for the trigger box.
 	Full schematic is available in Appendix \ref{app:fullschematic}.
-}
-
-\simplegfx{p}{0.9\textwidth}{camsremote-proto}{
-	Remote trigger tool prototype on a solderless breadboard.
 }
 
 \simplegfx{t}{\textwidth}{camsremote}{
@@ -504,13 +497,13 @@ The used housing has a removable lid, but any box with a height of 1.4 inches (3
 \subsubsection{Code}
 
 STMicroelectronics advertises the Mbed programming environment and library for the board as an option for writing software for the MCU \cite{mbednucleo}.
-The toolchain that compiles the binary for the board works also via the browser in a cloud service, but the libraries can be also installed locally.
+The toolchain that compiles the binary for the board works also via a web browser in a cloud service, but the libraries can be also installed locally.
 All MCU-side code was developed using the Mbed libraries, built locally with the GCC-ARM Embedded toolchain \cite{launchpad-gcc-arm}.
 Mbed hides the hardware complexity of the platform, making the total application source code small (less than 200 lines of simple C++) and relatively independent of hardware initialisation details.
 A significant advantage in this hardware abstraction is that a novice could extend the program without previous knowledge on the particular hardware architecture.
 
-The MCU software fox the trigger hub, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no special drivers.
-Communication protocol consists of flags for setting focus or shutter mode and entering bit flags that describe what cameras should be affected, in text mode.
+The MCU software for the trigger hub, or \emph{firmware}, communicates via a serial line that the board passes through USB as a standard virtual serial port, requiring no special drivers.
+Communication protocol consists of flags for setting focus or shutter mode and entering bit flags that describe which cameras should be affected, in text mode.
 The least significant, i.e., rightmost, bit signifies the first camera.
 The device echoes the sent characters back, making it convenient to test with a serial console.
 The protocol is described in detail in Table \ref{tab:triggerprotocol}.
@@ -541,14 +534,13 @@ This is not a problem because of the high clock speed of the processor;
 the difference between first and last pin changes was measured to be a negligible 1.6 microseconds.
 %Expected variance from each camera is supposed to be orders of magnitude longer.
 
-Control software for the host PC was implemented as a small command-line Python script communicating to the virtual serial port of the Nucleo board.
+Control software for the host PC was implemented as a small command-line Python program communicating to the virtual serial port of the Nucleo board.
 The host controls the trigger's outputs individually, normally driving all the outputs at once.
 Sequential or other forms of triggering are possible, because the cameras are controlled individually in hardware.
-For example, as each camera is able to record five full-resolution frames per second in burst, interleaving the nine cameras results in short 45 FPS full-resolution imagery.
+For example, as each camera is able to record five full-resolution frames per second in burst, interleaving the nine cameras would result in short 45 FPS full-resolution imagery.
 Also, when using the internal pop-up flashes in the cameras, they can be fired separately to circumvent issues in lighting synchronization or exposure control.
 
 The same MCU can be reprogrammed with another firmware at any time; it was used also for measuring shutter delay of one camera, see Section \ref{sec:shutterdelaymeas}.
-
 The programs are available in \url {http://github.com/sooda/thesis} with source code.
 
 % }}}
@@ -588,18 +580,18 @@ Details on list of configurable properties and sequences for capturing pictures 
 \paragraph{gphoto2 wrapper}
 A ``wrapper'' code library was written in C++ for libgphoto2 to automate memory and resource management, simplify the usage of the raw library, and to write the programs themselves in clean C++; libgphoto2 itself is implemented in the C language and is not well documented.
 Libgphoto2 exposes the data as objects, and the wrapper simplifies their handling and implements some more complicated operations, such as creating a new camera object instance, configuring parameters, and downloading preview frames and actual shots.
-The library itself is also not thread-safe: if a camera is used in two or more threads of execution simultaneously, unexpected errors happen \cite{gphoto2}.
+Libgphoto2 itself is also not thread-safe: it was discovered that if a camera were used in two or more threads of execution simultaneously, unexpected errors or crashes would happen.
 Locking mechanisms were written for the wrapper to prevent more than one executing threads from accessing a camera instance simultaneously.
-The library initialization was also protected, because camera-specific sub-libraries are loaded after first use.
+The library initialization is also protected, because camera-specific sub-libraries are loaded after first use.
 Initializing multiple cameras concurrently using gphoto2 only would result in a crash.
 
 The wrapper is written exclusively with libgphoto2 in mind, but as it actually hides the implementation details strongly, it could be ported to use other libraries, e.g., EDSDK, without affecting the actual applications using it.
 
 \paragraph{Mac OS X issues}
-The programs described in this section were written and tested in GNU/Linux systems, using libraries that would work also under Mac OS X.
+The programs described in the following were written and tested in GNU/Linux systems, using libraries that would work also under Mac OS X.
 The gphoto2 library does not yet have official support for the Windows operating system.
-In a single Mac OS X laptop tested, parallel use of gphoto2 for multiple cameras showed concurrency issues, as the programs occasionally crashed with a segmentation fault, suggesting problems with differently implemented USB libraries for the operating system.
-The programs were also much slower than compared to the Linux machines used, which may also be an issue with the laptop's USB hardware.
+In a single Mac OS X laptop tested, parallel use of gphoto2 (the supplied application with the library) for multiple cameras showed concurrency issues, as the programs occasionally crashed due to a segmentation fault, suggesting problems with differently implemented USB libraries for the operating system.
+The programs were also much slower than compared to the Linux machines used, which may be an issue with the laptop's USB hardware.
 
 % }}}
 
@@ -615,12 +607,12 @@ The programs were also much slower than compared to the Linux machines used, whi
 \includegraphics[width=\textwidth]{timeline-sync}
 }{fig:grid-timelines}{
 	Timelines displaying the points in time (x axis, in seconds) when frames have been captured from different cameras (y axis, by camera number).
-	The upper image shows all cameras running freely, and in the lower image, no new frame is captured from any camera until all have finished the current capture.
+	The upper image shows all cameras running freely, and in the lower image, no new frame is captured from any camera until all have finished the latest capture.
 }
 
-Although each camera can be positioned by individually looking through the viewfinders, a simple preview live feed is almost mandatory to properly set up a new configuration to see the big picture.
-A preview matrix of all cameras makes it easy to identify the cameras and to see if they all have been pointed to correct directions, and to verify that their settings are the same by judging from the image quality.
-The program is shown in Figure \ref{fig:gphotogrid} and is found in the github repository under the name \emph{gphotogrid}.
+Although each camera can be positioned by individually looking through the viewfinders, a simple preview live feed is desired to properly set up a new configuration to see the big picture.
+A preview matrix of all cameras makes it easy to identify the cameras and to see if they all have been pointed to correct directions, and to verify that their settings are the same by judging from the image.
+The program is shown in Figure \ref{fig:gphotogrid} and is found in the git repository under the name \emph{gphotogrid}.
 It is written in C++ and uses the libgphoto2 wrapper for camera control and the wxWidgets GUI library \cite{wxwidgets} for the user interface.
 The purpose is to view the picture frame of each camera in realtime and change the most important camera parameters concurrently.
 
@@ -635,7 +627,7 @@ The code control flow is described in a simplified form in Listing \ref{lst:gpho
 A timeline widget was also developed to investigate the points in time when the preview frames have been grabbed, aiming to study synchronization accuracy using this preview method.
 Observing the times was found to be of no use, because the pipeline from camera to application seems to be so complex that the preview frame rate is completely sporadic, with no ability to control the frame order or timing.
 The application includes a checkbox for ``synchronizing'' the preview grabber threads so that no camera starts to read a new preview before all have read the last frame.
-This synchronization attempt did not have any positive effect; in contrast, restricting each camera this way made the performance much worse, as can be seen in Figure \ref{fig:grid-timelines}.
+This synchronization attempt did not have any positive effect; in fact, restricting each camera this way made the performance much worse, as can be seen in Figure \ref{fig:grid-timelines}.
 In the figure, a vertical bar is drawn for each frame captured, with a small circle on the line of each corresponding camera number.
 
 \paragraph{Identification}
@@ -646,7 +638,7 @@ A separate configuration property stored in the camera itself is most robust; US
 
 The pop-up flashes should not be activated during use, because the camera was found to ignore the effects of most settings when the flash is up.
 Additionally, remote control disables the camera user interface.
-Taking pictures or changing settings is not possible while previewing.
+Taking pictures or changing settings is not possible while running the preview application.
 
 It is recommended to spread the cameras as evenly to all USB root hubs as possible to help even out the transmission capacity, maximizing the frame rate.
 The same is recommended when downloading the actual images.
@@ -695,8 +687,8 @@ screen update requested {
 
 Remote control of all cameras is required to set all settings, such as shutter speed, jointly from the same computer instead of operating each camera's buttons manually.
 The preview matrix program allows to change exposure time, aperture size and ISO sensitivity, but more tools were written for automatic configuration.
-
-The following small command-line scripts were written using the gphoto2 command-line tool:
+The tools are proof-of-concept type, written using the gphoto2 command-line tool as command-line scripts and are not particularly meant for final end-user.
+A graphical, button-based diagram specifying the next required step is suggested for future development.
 
 \begin{itemize}
 	\item \emph{config}: reset common parameters to defaults for all connected cameras, listed in the script itself
@@ -711,7 +703,7 @@ The \emph{forall} and \emph{forallp} scripts are trivial shortcuts to autodetect
 
 With \emph{readconfig}, one camera is first configured manually, and the settings are cloned to others automatically with the script.
 
-Either libgphoto2 or the EOS 700D camera has a bug that locks the camera's physical user interface when configuring the cameras and even only starting and exiting the program:
+Either libgphoto2 or the EOS 700D camera has a bug that locks the camera's physical user interface when configuring the cameras, even only after starting and exiting the program:
 it appears that this is a safety feature that is left on after disconnecting the configuration connection, and probably gphoto2 does not release it properly.
 When setting or getting any configuration, the camera screen turns off and all buttons stop responding until the camera is rebooted, USB cable is unplugged, or if gphoto2 touches the camera's filesystem.
 Listing the files is thus enough and it has no side effects.
@@ -733,7 +725,7 @@ Each download task runs in a separate thread of execution to overcome the synchr
 \begin{lstlisting}[
 	caption=Pseudocode for \emph{paraphotos}.
 	Ctrl-C (interrupt) signal is captured and it requests quit.
-	Many of the possible debug messages not shown here.,
+	Many of the possible debug messages not shown.,
 	basicstyle=\ttfamily\footnotesize,
 	label=lst:paraphotosalgo,
 	float=h
@@ -796,9 +788,9 @@ Canon EOS 700D stores this information properly in the files.
 
 \subsubsection{Free libraries} % {{{
 
-There exist several generic computer vision and geometry and image processing libraries.
+There exist several generic computer vision and geometry and image processing libraries suitable for the purpose of 3D reconstruction.
 The most common ones are OpenCV \cite{opencv}, Point Cloud Library (PCL) \cite{pcl} and Computational Geometry Algorithms Library (CGAL) \cite{cgal}.
-These are written in the C and C++ programming languages and they have bindings to several scripting languages too.
+These are written in the C and C++ programming languages and they have bindings to several scripting languages.
 For future work using the rig, these libraries present a well supported basis for developing own tools.
 
 OpenCV contains a large set of utilities for 2D image processing and extends also to camera calibration and 3D reprojection.
@@ -813,7 +805,7 @@ CGAL provides more strictly specified data structures and algorithms extending i
 
 \subsubsection{Free reconstruction programs} % {{{
 
-While libraries can be used to write new tools, many pieces of software are readily available that implement 3D reconstruction based on methods presented in Section \ref{sec:static3d}, and are distributed in source code form and/or readily usable binary executables.
+While libraries can be used to write new tools, many programs are readily available that implement 3D reconstruction based on methods presented in Section \ref{sec:static3d}, and are distributed in source code form and/or readily usable executables.
 Some of the most known state-of-the-art implementations are listed below.
 
 \begin{description}
@@ -823,31 +815,32 @@ Some of the most known state-of-the-art implementations are listed below.
 	\item[Bundler] \cite{snavely2006photo} is a bundle adjustment and structure-from-motion system for computing camera poses and sparse point clouds, targeted for large-scale unordered photo collections, originally used for the Photo Tourism project.
 
 	\item[SiftGPU] \cite{changchang2007siftgpu} is a fast SIFT implementation for graphics processing units (GPUs).
-		It is built on Sift++ \cite{vedaldi2011sift++}, an separately developed open source SIFT implementation.
+		It is built on Sift++ \cite{vedaldi2011sift++}, a separately developed open source SIFT implementation.
 
-	\item[PBA], \cite{wu2011multicore} Multicore (parallel) bundle adjustment, is a fast bundle adjustment library built with the modern parallel nature of multi-processor computers in mind.
+	\item[PBA] \cite{wu2011multicore} Multicore (parallel) bundle adjustment, is a fast bundle adjustment library built with the modern parallel nature of multi-processor computers in mind.
 
-	\item[PMVS], Patch-based, multi-view stereopsis, starts from a set of matching keypoints (features) and a pre-acquired camera calibration, and expands the keypoints to a dense patch set iteratively, resulting in a high number of oriented points.
-		PMVS is usually combined with CMVS, a clustering tool that decomposes the input set to smaller clusters that are more convenient to process, when the amount of different views is large \cite{furukawa2010accurate,furukawa2012patch}.
+	\item[PMVS] \cite{furukawa2010accurate,furukawa2012patch} Patch-based, multi-view stereopsis, starts from a set of matching keypoints (features) and a pre-acquired camera calibration, and expands the keypoints to a dense patch set iteratively, resulting in a high number of oriented points.
+		PMVS is usually combined with CMVS, a clustering tool that decomposes the input set to smaller clusters that are more convenient to process, when the amount of different views is large.
 % xxx viewpoint invariant patch, repetition analysis http://www.academia.edu/2021718/3D_Digitization_using_Structure_from_Motion
 
 	\item[VisualSFM] \cite{wu2013towards} is a common and free but closed-source full-scale pipeline that implements a structure from motion algorithm and simplifies the workflow of several external programs, visualizing the results in real time.
 		The needed external tools are feature matching, bundle adjustment and dense reconstruction.
-		VisualSFM is probably the most common tool in the open source and research community for practical use.
+		VisualSFM is probably the most common tool for practical use in the open source and research community.
 		It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, its own radial undistortion model and SfM for camera estimation, PBA for bundle adjustment, and finally PMVS/CMVS for dense matching.
-		A common final step is to use Meshlab to filter outliers away from the data and to build a triangular textured mesh of it with the input points and normals.
 %PMVS is suggested by many others.
 
 	\item[Meshlab] \cite{meshlab} is a generic interactive editor of point clouds and meshes, implementing many scientific papers.
 		It can be used interactively and scripted to do the same steps automatically.
 		In a reconstruction pipeline, it is one of the last processing steps, used for removing outliers or fitting a surface on a point cloud with the poisson surface reconstruction method, and finally projecting the textures to the generated mesh when given the camera parameters in relation to the point cloud pose.
+		Meshlab is often used in conjunction with VisualSFM.
 
-	\item[PoissonRecon,] \cite{kazhdan2013screened} (Screened) poisson surface reconstruction, is a stand-alone program as an alternative for surface fitting.
+	\item[PoissonRecon] \cite{kazhdan2013screened} (Screened) poisson surface reconstruction is a stand-alone program as an alternative for surface fitting.
 
 	\item[CMPMVS] \cite{jancosek2011multi} is a multi-view reconstruction software for transforming a set of calibrated image data to a full textured mesh, used in a similar way as VisualSFM but using internally a different method based on graph cuts and weakly-supported surfaces.
 		The software is Windows-only and provided for research purposes.
 
-	\item[Python Photogrammetry Toolbox,] \cite{moulon2011python} popular in archaeological fields, combines Bundler and PMVS/CMVS for a full-scale pipeline.
+	\item[Python Photogrammetry Toolbox] \cite{moulon2011python} is popular in archaeological fields.
+		It combines Bundler and PMVS/CMVS into a full-scale pipeline.
 \end{description}
 
 %SFM toolkit combines Bundler and CMVS/PMVS.
@@ -903,7 +896,7 @@ In contrast to the above, the following list includes complete systems that are 
 
 	\item[Dimensional Imaging ltd.] \cite{di4d} provides DI3D and DI4D systems and software for static and dynamic surface capture, respectively, used for video games, research and medical applications.
 
-	\item[Vicon] \cite{vicon} is a mature motion capture company, producing both both hardware and software for motion and surface capture and listing applications from life sciences to engineering and enterntainment.
+	\item[Vicon] \cite{vicon} is a mature motion capture company, producing both both hardware and software for motion and surface capture and listing applications from life sciences to engineering and entertainment.
 
 	\item[3dMD] \cite{3dmd} offers healthcare-focused systems, software and research papers.
 
@@ -931,15 +924,15 @@ No detailed description is available on the implemented algorithms \cite{photosc
 
 \paragraph{VisualSFM}
 VisualSFM \cite{wu2013towards} performs the same structure from motion estimation and dense point cloud generation by combining several research projects into a single graphical user interface.
-The work pipeline in VisualSFM is composed in parts that are done mostly by external programs; feature extraction and matching is done first using SiftGPU \cite{changchang2007siftgpu}, followed by SfM using PBA \cite{wu2011multicore}, and finally dense reconstruction is performed by PMVS/CMVS \cite{furukawa2010accurate,furukawa2012patch}.
-Final Poisson surface reconstruction is done by opening the resulting dense point cloud in Meshlab and using its reconstruction plugin \cite{meshlab}.
+The work pipeline in VisualSFM is composed in parts that are done mostly by external programs; feature extraction and matching is done first using SiftGPU \cite{changchang2007siftgpu}, followed by SfM and bundle adjustment using PBA \cite{wu2011multicore}, and finally dense reconstruction is performed by PMVS/CMVS \cite{furukawa2010accurate,furukawa2012patch}.
+Final Poisson surface reconstruction is done by opening the resulting dense point cloud in Meshlab and using its surface reconstruction plugin \cite{meshlab}.
 
 PMVS works by expanding a set of initially found patches iteratively in the reconstruction, resulting in a dense point cloud with oriented and colored points.
 The point cloud is filtered by certain visibility constraints, and the resulting points have few outliers \cite{furukawa2012patch}.
 
 PMVS divides the source images iteratively to smaller sets, and begins at a halved size by default with one fourth of the pixel count of the original.
 Forcing the original size was found to provide roughly twice the number of points with four times longer processing time, but with no observed increase in accuracy, as if a spatially noisy object were interpolated with more points.
-The documentation of this parameter also suggests that a halved size is used, because a large part of the pixels in the color image is interpolated in the original image because of the color filter array in the image sensor (Section \ref{sec:sensors}).
+The documentation of this parameter suggests that a halved size is used, because a large part of the pixels in the color image is interpolated in the original image because of the color filter array in the image sensor (Section \ref{sec:sensors}).
 
 No software installation instructions are provided in this thesis; refer to documentation of the presented programs for installation and usage.
 Testing was done on the Linux operating system, and the VisualSFM pipeline was built from source with no modifications done.

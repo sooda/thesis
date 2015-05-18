@@ -6,17 +6,17 @@ Additionally, light sources should be used as necessary.
 \begin{itemize}
 	\item 9 x Canon EOS 700D DSLR camera body
 	\item 9 x Canon EF 50mm f/1.8 II lens
-	\item 9 x Canon ACK-E8 Power adapter (one for each)
+	\item 9 x Canon ACK-E8 Power adapter
 	\item 9 x Transcend SDHC class 10 UHS-I 16GB memory card
 	\item 9 x Manfrotto 494 ball head
 	\item 9 x Manfrotto 035 Super Clamp, with Manfrotto 036-38 studs
 	\item 3 x D-link DUB-H4 USB hub
-	\item 4 x Millenium LST-310, a sturdy three-legged lighting stand with a pole that can be extended several meters high.
+	\item 4 x Millenium LST-310, a three-legged lighting stand
 	\item Custom built remote trigger board using ST Nucleo-F401RE, see Section \ref{app:remotetrigger}
 	\item Canon RC-6 wireless remote control for testing
 	\item Auxiliary extension cords
 	\item 2 x bags for the stands
-	\item 2 x hard equipment cases with cut holes for all smaller parts of the rig
+	\item 2 x hard equipment cases with cut holes for all fragile parts of the rig
 \end{itemize}
 
 %\clearpage
@@ -24,15 +24,16 @@ Additionally, light sources should be used as necessary.
 \section{Remote trigger} \label{app:remotetrigger}
 
 The designed remote trigger consists of a Nucleo-F401RE microcontroller platform by ST microelectronics \cite{stnucleo}, and supporting hardware for connecting the cameras.
-The microcontroller was programmed using the Mbed library for the particular microcontroller. \cite{mbednucleo}
+The microcontroller was programmed using the Mbed library \cite{mbednucleo}.
 Each camera connects to the trigger via a 2.5mm stereo plug, as the cameras have a standard 2.5mm jack for remote trigger.
-To secure the cameras from each other, the remote wires are connected with opto-isolators (TLP621-2).
+To drive the cameras individually, the remote wires are connected with opto-isolators (TLP621-2).
 
-The ground signals of the isolators in the built circuit are connected together by mistake, so the cameras are not completely isolated - only their signal wires are.
+The ground signals of the isolators in the built circuit are connected together by mistake, so the cameras are not completely isolated; only their signal wires are.
 However, common grounding is generally not an issue.
 Furthermore, the USB connections of all cameras also connect to each other and to the trigger box via the computer they are connected to, which cannot be easily circumvented.
 %The diagrams depicted in this section show the fixed versions; the older ones used in the production device can be found in the git repository history at \url {http://github.com/sooda/thesis} if necessary.
-The repository contains the project files for the Cadsoft EAGLE pcb design software \cite{eaglepcb}; the diagrams for schematic and PCB layout are given here for illustration only.
+The git repository contains the project files in a format for the Cadsoft EAGLE pcb design software \cite{eaglepcb}.
+The diagrams for schematic and PCB layout are given here for illustration only.
 
 \subsection{Schematic} \label{app:fullschematic}
 

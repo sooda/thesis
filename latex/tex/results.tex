@@ -3,9 +3,10 @@
 
 The feasibility of the rig was evaluated based on custom techniques on syncronization and on several scans of different subjects.
 The purpose of the experiments was to see how suitable the rig is for the task.
-Synchronization was considered important from the beginning, and it was unknown how well the system would perform; measurements were done in static and video modes.
+Synchronization was considered important from the beginning, and it was unknown how well the system would perform.
+Measurements were done in static and video modes.
 Photographing test subjects and running reconstruction using popular programs was considered a good way to evaluate the system as a whole, as the system was planned to be used for such methods.
-Subjects with different surface material were chosen to test if the material type would perform as expected.
+Subjects with different surface materials were chosen to test if the material types would perform as expected.
 
 \subsection{Synchronization}
 
@@ -21,7 +22,7 @@ A repeated test was conducted using the microcontroller board to accurately meas
 An input pin of the Nucleo-F401RE MCU was connected to the hot shoe flash present in the camera body.
 Assuming a negligible delay between the flash trigger signal and the actual photo exposure, the time between shutter signal and signal from the flash connector is the shutter delay.
 The camera was set up to all manual settings and manual focus, and the focus signal was given before each measurement.
-Measurements matched consistently a 75 millisecond delay, repeated shots varying less than 1 \%.
+Measurements matched consistently a 75 millisecond delay, repeated shots varying less than 0.5 \%.
 This level of repeatability suggests that moderately moving subjects can be captured properly.
 If a synchronized light was connected to the remote trigger instead of the cameras' flash contacts, this delay would be needed to be taken into account.
 The used test program for the Nucleo board can be found in the microcontroller programs directory in the github repository by the name \emph{measure.cpp}.
@@ -73,7 +74,7 @@ Two such images are depicted in Figure \ref{fig:fansynctest}.
 % intro
 
 The EOS 700D does not support an external clock signal for timing the frames in video recording, but relies on an accurate internal clock to sync the frames within a single video file.
-It can be assumed that the clock speed has little variation, and thus, little drift or jitter occur in the videos during timespans of at most a few minutes.
+It can be assumed that the clock speed has little variation, and thus, little drift or jitter occur in the videos during timespans of a few minutes.
 Even if errors in a single clock were measurable, offsets would still be the dominant source of errors.
 The processing time of each camera from the shutter button to start of first frame varies because of unknown reasons; even though a Canon wireless remote control was used for starting several cameras at once, the offset was found to be sometimes almost as much as the duration of two frames.
 
@@ -81,7 +82,7 @@ The processing time of each camera from the shutter button to start of first fra
 
 Visual and audio-based tests were carried out to find variations in the recording offset.
 Three cameras were triggered several times with a Canon RC-6 wireless remote control.
-The remote sends a short infrared pulse to a sensor in the front of a camera when a key is pressed.
+The remote sends a short infrared pulse to a sensor in the front of a camera when a button is pressed.
 The cameras were set in video mode and configured to use the remote release.
 %The exposure time was set to minimum, 1/4000 s, to maximise the rolling shutter effect.
 %In this mode, the sensor rows are exposed one by one in succession.
@@ -101,7 +102,7 @@ t_{Cl} &= t_{Ci} + t_{Cf} \\
 \end{split} \end{align}
 where $C$ is a camera identifier, $t_{Cl}$ is camera-relative time for the light pulse, $t_{Ci}$ is the starting time for the frame where the light shows up, and $t_{Cf}$ is the time inside the particular frame.
 The frame index $i$ marks the number of the frame in the video file, starts from 0, and there are $F$ = $1/\text{fps}$ seconds between the frames.
-$f_C$ is the first exposed row, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the ratio of exposure time and frame duration due to rolling shutter ($0.5$ in this case, referring to a characteristic to the camera, as it exposes the first and last rows in half the time between frames).
+$f_C$ is the first row exposed to the flash, $R = r / c$ is the time for a single row to expose, $r$ is the vertical frame resolution and $c$ is a correction coefficient describing the ratio of exposure time and frame duration due to rolling shutter ($0.5$ in this case, referring to a characteristic to the camera, as it exposes the first and last rows in half the time between frames).
 Offset between two cameras $A$ and $B$ is then $t_{Al} - t_{Bl}$.
 The timings are depicted in Figure \ref{fig:flashtimeline} as a timeline with matching symbols.
 
@@ -144,7 +145,7 @@ Bradley et~al.\ noted that sub-frame offset effects were not noticeable during m
 Optical flow was suggested for sub-frame synchronization if necessary.
 
 Another method for triggering multiple video recordings is to use a Magic Lantern based wired remote trigger by pressing the half-shutter, or focus button when a record key has been configured in ML to start recording.
-This method did not show any improvements in overcoming the offset, as opposed to the wireless remote.
+This method did not show any improvements in overcoming the offset, compared to the wireless remote.
 % it may be even worse, as the additional code in ML induces more lag.
 
 A typical measurement result is shown in Figure \ref{fig:flashtiming}.
@@ -161,10 +162,11 @@ For this reason, decreasing the exposure time only helps in motion blur, but not
 
 %The mask, human heads, legos, books
 
-Test subjects were scanned using the system for validation and analysis and reconstruction was performed using two software pipelines.
-Proposals for a typical scanning setup and minimum quality of instant results are shown in this section.
+Test subjects were scanned using the system for validation and analysis.
+Reconstruction was performed using two software pipelines.
+Proposals for a typical scanning setup and minimum expected quality of instant results are shown in this section.
 The results answer questions on what kinds of surfaces can be reconstructed well; different types of materials were selected for the datasets.
-It was expected that areas with low texture or high reflectivity would pose most problems.
+It was expected that areas with low variation in texture or high reflectivity would pose most problems.
 No particular tuning of any algoritmic configuration parameters were tested, which suggests that higher quality than that presented here can be achieved with more careful work.
 No makeup, light polarizers or any such improvements were tested; the subjects were photographed as-is in normal lighting.
 
@@ -173,10 +175,10 @@ For a complete body, the methods are identical but as the distance to the subjec
 
 \subsubsection{Photography setup}
 
-The nine cameras were set up in a dark hall as a $3 \times 3$ grid and two flash units were attached to two cameras, directed up and down to a white styrofoam board and a fabric diffuser to soften the light, shown in Figure \ref{fig:totalsetuptwo} and Figure \ref{fig:frontview}.
+The nine cameras were set up in a dark hall as a $3 \times 3$ grid and two flash units were attached to two cameras, directed up and down to a white styrofoam board and a fabric diffuser to soften the light.
 The flash units were a Canon Speedlite 430EX and a Yongnuo YN565EX II, set to normal front curtain sync.
 The top-facing Canon flash has only automatic mode, which was sufficient; the Yongnuo was set to manual full power, facing downwards to a piece of fabric.
-The Canon EOS 700Ds have internal pop-up flash lights; they were not used, as they were found to trigger inconsistently, and they are relatively too bright and small so that dark shadows and highlights would pose a problem.
+The Canon EOS 700Ds have internal pop-up flash lights; they were not used, as they were found to trigger inconsistently, and they are relatively too bright and small so that shadows and highlights would pose problems.
 
 A black background matte was used to isolate out unnecessary items in the background;
 the textureless out-of-focus fabric has no particular features that would be detected, and its color is not particularly important, although chroma-keying with a green cloth is commonly used to isolate the subject already in the source images.
@@ -187,6 +189,7 @@ The general setup is shown in Figure \ref{fig:totalsetuptwo}, and a closer depic
 \includegraphics[width=\textwidth]{totalsetup}
 }{fig:totalsetuptwo}{
 	Complete setup with cameras mounted on the stands, surrounded by 800 watt spot lights (red) for video recording tests.
+	For photos, the cameras were closer to each other as shown in Figure \ref{fig:frontview}.
 }
 
 \simplefig{p}{%
@@ -226,7 +229,7 @@ Initially, a slightly longer baseline of approximately 50 cm was used; it was su
 	\begin{tabular}{l l}
 		Camera baseline & 30 +/- 5 cm\\
 		Aperture size & f/14\\
-		Exposure time & 1/20\\
+		Exposure time & 1/20 s\\
 		ISO sensitivity & 200\\
 		Subject distance & 90 +/- 10 cm\\
 		Lighting & Two flash heads bounced indirectly\\
@@ -234,7 +237,7 @@ Initially, a slightly longer baseline of approximately 50 cm was used; it was su
 	\end{tabular}
 	\caption{
 		Key parameters in the sample photographs.
-		Baseline refers to the distance to the nearest camera, horizontally and vertically.
+		Baseline refers to the distance to the nearest camera in the grid, horizontally and vertically.
 	}
 	\label{tab:sampleshotparams}
 \end{table}
@@ -242,11 +245,11 @@ Initially, a slightly longer baseline of approximately 50 cm was used; it was su
 \paragraph{Reconstruction software}
 The programs suggested in the previous section were used for evaluation due to their popularity and availability: PhotoScan \cite{photoscan} and VisualSFM \cite{wu2013towards}.
 Both were run on a typical modern Linux installation.
-A free demo version of PhotoScan was used, which does not include exporting the generated meshes; screenshots were taken in the user interface for illustration of results.
+A free demo version of PhotoScan was used, which does not support exporting the generated meshes; screenshots were taken in the user interface for illustration of results.
 VisualSFM and the related software were built from source.
 
 All photographs were captured using the developed software presented in the previous Section \ref{sec:implementation}.
-Identical settings were configured on all cameras; no post-processing was done and JPEG mode was used.
+Identical settings were configured on all cameras; JPEG mode was used and no post-processing was done on the PC.
 Downloading the images in JPEG format from all cameras is done within seconds or less, depending on the USB hardware.
 The developed software downloads data naively from each camera concurrently, leaving the USB data scheduling to the operating system.
 % XXX (CMVS always resulted in only a single cluster due to the small number of views)
@@ -255,10 +258,10 @@ The developed software downloads data naively from each camera concurrently, lea
 With the 18 million pixel count of the cameras, a human face is scanned with pore-level detail, and no markers are necessary.
 Markerless capture has been suggested to be important for human subjects, as both the geometry and the texture can be scanned simultaneously, and variations of the texture over time are also seen when capturing video \cite{bradley2010high}.
 
-The native resolution of each photograph obtained was 5124 x 3456 pixels; the subjects never filled the frame completely, but free space was left around them on purpose to make rotating and placing the subject easier.
+The native resolution of each photograph obtained was $5124 \times 3456$ pixels; the subjects never filled the frame completely, but free space was left around them on purpose to make rotating and placing the subject easier.
 Moreover, human subjects would typically not stay completely still.
 The free space provides robustness that can be altered by bringing the subject closer to the cameras.
-Approximately 25 \% of the pixel count was used for the subject.
+Approximately 25-30 \% of the pixel count was used for the subject.
 For the final resolution of the color texture that was combined from all views, 4096 x 4096 pixels was used in the images that follow in this section.
 The resulting accuracy of the color textures is easily determined by the physical size of the subject.
 Assuming approx.\ 30 cm coverage (by Equation \ref{eq:areasize}) for the shorter image axis and a planar subject, image coverage would be $3456 / 300 \approx 11$ pixels per millimeter, or $\approx 0.09$ mm per pixel.
@@ -269,26 +272,9 @@ Using the source data shown partly in Figure \ref{fig:sample-arto-photoscan-sour
 The workflow in PhotoScan is similar to that of VisualSFM and other tools based on separate programs:
 initially, the scene structure is computed, resulting in a sparse point set of the subject and camera parameters.
 A dense point set computation follows, and finally a textured triangle mesh is computed based on the dense points and the source images.
-Spatially uniform quality in the point cloud suggests that all PhotoScan's algorithm uses all cameras in a combined way, instead of, e.g., computing disparity maps in pairs and naively combining the maps, which would be recognizable by visible boundaries on the surface.
+Spatially uniform quality in the point cloud suggests that PhotoScan's algorithm uses all cameras in a combined way, instead of, e.g., computing disparity maps in pairs and naively combining the pairwise built point clouds, which would be recognizable by visible boundaries on the surface.
 
-Figure \ref{fig:sample-arto-photoscan} depicts the results from a dense point cloud and a textured mesh based on the point cloud.
-A typical face scan, with surrounding geometry removed, results in a high-density point cloud of 2-3 million points, which the software reduces into a textured mesh with exactly five times fewer triangles than the original points.
-The meshing process was found to consume temporarily 4-5 GB of RAM on a typical human subject.
-
-PhotoScan was found to be relatively robust to baseline length, reconstructing the scene geometry well with a baseline almost twice as much as the 15 degree rule suggested in Bundler with no apparent increase in accuracy or matching performance when the baseline is halved.
-The tested reconstructions in PhotoScan have significant noise on all point sets and surfaces for unknown reasons, though.
-By the console output of the mesh generation process, the meshing algorithm is probably based on Poisson surface reconstruction or similar octree based algorithm.
-
-The resulting point set is dense enough to include medium wrinkles in the reconstructed mesh geometry, but with a well noticeable level of noise, larger than the smallest pore-level details seen in the photographs.
-Medium-scale wrinkle detail tests can be seen in Figure \ref{fig:sample-arto-forehead}; the point cloud and the mesh have enough detail to encode forehead wrinkles in the geometry, in addition to the texture color.
-
-In Figure \ref{fig:sample-arto-photoscan-textures}, two of the texture mapping modes provided by PhotoScan are depicted.
-A ``generic'' mapping mode with no distortion in the pictures produces piecewise texture islands with original photo content.
-A ``spherical'' mode where the subject is assumed to be a sphere and the texture is made continuous but the original photos are warped shows as more intuitive and easier to modify manually if necessary.
-
-%As seen in Figure \ref{fig:sample-arto-forehead}, the triangle mesh is more detailed than what would typically be used by an end-user; the small skin wrinkles that show as color variations would be rendered as variation in the texture color.
-
-\simplefig{p}{%
+\simplefig{t}{%
 \includegraphics[width=0.33\textwidth]{arto-1}%
 \includegraphics[width=0.33\textwidth]{arto-2}%
 \includegraphics[width=0.33\textwidth]{arto-3}
@@ -298,13 +284,30 @@ A ``spherical'' mode where the subject is assumed to be a sphere and the texture
 	Note the shadows under the chin, the nose, and near the eyes; only the top flash was used for this dataset for demonstration.
 }
 
-\simplefig{p}{%
+\simplefig{t}{%
 \includegraphics[width=0.5\textwidth]{photoscan-arto-dense}%
 \includegraphics[width=0.5\textwidth]{photoscan-arto-textured}
 }{fig:sample-arto-photoscan}{
 	A dense point set (left) and a textured mesh in PhotoScan, matching the pictures in Figure \ref{fig:sample-arto-photoscan-source}.
 	The underlying triangle mesh contains as much noise as the point set, which is hidden by the noiseless texture.
 }
+
+Figure \ref{fig:sample-arto-photoscan} depicts the results from a dense point cloud and a textured mesh based on the point cloud.
+A typical face scan, with surrounding geometry removed, results in a high-density point cloud of 2-3 million points, which the software reduces into a textured mesh with exactly five times fewer triangles than the original points.
+The meshing process was found to consume temporarily 4-5 GB of RAM on a typical human subject.
+
+PhotoScan was found to be relatively robust to baseline length, reconstructing the scene geometry well with a baseline almost twice as much as the 15 degree rule suggested in Bundler with no apparent increase in accuracy or matching performance when the baseline is halved.
+The tested reconstructions in PhotoScan have distinct spatial noise on all point sets and surfaces for unknown reasons, though.
+By the console output of the mesh generation process, the meshing algorithm is probably based on Poisson surface reconstruction or similar octree based algorithm.
+
+The resulting point set is dense enough to include medium wrinkles in the reconstructed mesh geometry, but with a well noticeable level of noise, larger than the smallest pore-level details seen in the photographs.
+Medium-scale wrinkle detail tests can be seen in Figure \ref{fig:sample-arto-forehead}; the point cloud and the mesh have enough detail to encode forehead wrinkles in the geometry, in addition to the texture color which is actually unwanted and a cause of less than optimal lighting.
+
+In Figure \ref{fig:sample-arto-photoscan-textures}, two of the texture mapping modes provided by PhotoScan are depicted.
+A ``generic'' mapping mode with no distortion in the pictures produces piecewise texture islands with original photo content.
+A ``spherical'' mode where the subject is assumed to be a sphere and the texture is made continuous but the original photos are warped shows as more intuitive and easier to modify manually if necessary.
+
+%As seen in Figure \ref{fig:sample-arto-forehead}, the triangle mesh is more detailed than what would typically be used by an end-user; the small skin wrinkles that show as color variations would be rendered as variation in the texture color.
 
 \simplefig{t}{%
 \includegraphics[width=0.5\textwidth]{arto-forehead-dense}%
@@ -335,18 +338,19 @@ A ``spherical'' mode where the subject is assumed to be a sphere and the texture
 }
 
 \paragraph{VisualSFM and Meshlab results}
-This alternative was found to be slightly faster than PhotoScan, while the resulting geometry also contains fewer, but more accurate points.
+This alternative was found to be much faster than PhotoScan, while the resulting geometry also contains fewer, but more accurate points.
 Same datasets were tested as with PhotoScan with similar results.
 VisualSFM's feature matching seems not as robust as with PhotoScan, sometimes resulting in separate models because of a too long baseline and displaying very few feature matches between pictures.
 The VisualSFM manual suggests to decrease the camera baseline in this case or to take more pictures.
 With the shorter baseline of approximately 30 cm, the SfM process was consistently successful.
 This suggests that the SIFT feature descriptor may not be the best for this purpose, if it does not cope well with different viewpoints.
+The features could have been matched manually if desired.
 
 The results of a face scan are depicted in Figure \ref{fig:sample-sooda-meshlab}; the surface has visibly less noise than that of PhotoScan's, but without a ground truth geometry, precise analysis is not possible.
 Comparison between surfaces generated from PhotoScan and Meshlab is depicted in Figure \ref{fig:nosecompare}.
 
 Figure \ref{fig:soodaheadclosecompare} shows a cropped region of one of the source photographs.
-Note that the skin pores and wrinkles are visually well noticeable in the photograph, but the triangular model is missing smallest of them.
+Note that the skin pores and smallest wrinkles are visually well noticeable in the photograph, but the triangular model is missing smallest of them.
 High-level detail could be encoded in the color texture as it shows in the photographs, but since the detail is geometric, computer renderings using detailed light models in differently lit environments need geometric information of the surface roughness, not only a color texture.
 The texture type built in Meshlab is depicted in Figure \ref{fig:meshlabtex}.
 
@@ -380,7 +384,7 @@ As high level of geometry as produced initially by the surface generation proces
 
 Other subjects that were also scanned and reconstructed using VisualSFM are summarized in Figure \ref{fig:vsfm-compare}.
 Text in a page of a book provides enough dense points that the text is well readable, while the paper itself does not contain any texture and is not reconstructed.
-Only problems in human scans are hair that is not well distinguishable (most features are similar) and does not present any definitive surface, and bright spots that result from a combination of bad lighting and sweating.
+The only problems in human scans are hair that is not well distinguishable (most features are similar) and also does not present any definitive surface, bright spots that result from a combination of bad lighting and sweating, and local shadowing in wrinkles getting in the color textures.
 A horse head mask made of diffuse rubber had problems only in textureless areas composed of exclusively white or black paint.
 Those areas either provided incorrect points or no points at all.
 Surprisingly, a poorly textured soft plushie provided well reconstructed geometry even in less textured areas, where the fabric provides enough detail to distinguish any correspondences.
@@ -404,20 +408,27 @@ A mildly reflective painted statue presented difficulties in some shiny areas, b
 	Subjects listed: book, hand, head, statue, horsemask, plushie.
 }
 
-The statue model was scanned four times at approximately 90 degrees of rotation between the shots, and the resulting four point clouds were aligned into one in Meshlab to evaluate a surface reconstruction for a fully closed subject.
+The statue model was scanned four times with approximately 90 degrees of rotation between the shots, and the resulting four point clouds were aligned into one in Meshlab to evaluate a surface reconstruction for a fully closed subject.
 Results can be seen in Figure \ref{fig:statue-meshed}.
 Some noise exists where it was not cleaned up, and closest details are missing partly because of noise, bright highlight artifacts and selected level of detail in the surface reconstruction.
 Slight misalignment in the top can be seen in the point cloud version, and the holes in the bottom are errorneously filled in the meshing process.
-The mesh was built with Meshlab's Poisson surface reconstruction plugin with 12 as the tree depth and  7 as the solver divide depth.
+The mesh was built with Meshlab's Poisson surface reconstruction plugin with 12 as the tree depth and 7 as the solver divide depth.
 
 \simplefig{p}{%
-\includegraphics[width=0.5\textwidth]{statue-full-pts}%
-\includegraphics[width=0.5\textwidth]{statue-full-mesh}\\
-%\includegraphics[width=0.5\textwidth]{statue-zoom-pts}%
-%\includegraphics[width=0.5\textwidth]{statue-zoom-mesh}
+\includegraphics[width=0.25\textwidth]{statu360-00}%
+\includegraphics[width=0.25\textwidth]{statu360-01}%
+\includegraphics[width=0.25\textwidth]{statu360-02}%
+\includegraphics[width=0.25\textwidth]{statu360-03}
+\includegraphics[width=0.25\textwidth]{statu360-04}%
+\includegraphics[width=0.25\textwidth]{statu360-05}%
+\includegraphics[width=0.25\textwidth]{statu360-06}%
+\includegraphics[width=0.25\textwidth]{statu360-07}
+\includegraphics[width=0.25\textwidth]{statue-full-pts}%
+\includegraphics[width=0.25\textwidth]{statue-full-mesh}\\
+
 }{fig:statue-meshed}{
-	A full statue as a 360-degree point set and meshed with Poisson surface reconstruction, combined from four point scans in Meshlab.
-	The artifact in the helmet is caused by a slight misalignment between two clouds.
+	A full statue as a 360-degree point set, combined in Meshlab from four scans, and meshed.
+	A slight misalignment between two of the clouds is visible.
 	Misalignment errors could be addressed by more careful alignment and outlier removal, or a bigger rig with more cameras.
 }
 
@@ -433,7 +444,7 @@ Figure \ref{fig:legoscompare} depicts the results from three vertical cameras on
 	The old and dirty block in the middle had enough texture to fill better than the others.
 }
 
-Typical duration of the reconstruction steps and the used hardware are listed in Table \ref{tab:reconsttime}.
+Typical durations of the reconstruction steps and the used hardware are listed in Table \ref{tab:reconsttime}.
 Most of the time is taken by dense reconstruction.
 PhotoScan was configured to use CPU only; the dense reconstruction in PMVS is also performed on CPU.
 Different approaches remain to be tested; both have a similar working pipeline.
@@ -471,12 +482,13 @@ in this experiment, the lights were bright enough to be remarkably uncomfortable
 Halogen spotlights were found to produce enough heat to make the subject sweat within minutes of continuous recording.
 A default ``180 degree shutter'' was used, i.e., an exposure time of half the time between frames.
 Motion blur was found to be an issue in some frames during quick motion; a shorter exposure time coupled with higher ISO sensitity would help.
-The ISO sensitivity level of Canon EOS 700D ranges up to 12800, but the highest levels are usually avoided as they are extremely sensitive to noise.
+The video ISO sensitivity level of Canon EOS 700D ranges up to 6400, but the highest levels are usually avoided as they are extremely sensitive to noise.
 
 The videos were shot with the larger 50 cm baseline which was later found to be intolerable for VisualSFM.
 Thus, the results were analyzed only in PhotoScan.
 In some frames, where the subject was moving too quickly, the resulting camera poses were incorrect.
 In similar challenging picture sets, VisualSFM typically did not reconstruct the parameters at all, due to lack of enough matching features.
+Placing a calibration object in the scene might have helped.
 With less motion, correct camera poses were found and results were comparable to the static reconstruction, with fewer points and polygons reconstructed because of the lower resolution (1920 x 1080).
 A typical result is shown in Figure \ref{fig:artoglassescompare}; surface on the textureless and partly reflective sunglasses is incorrect, as was expected.
 
@@ -491,7 +503,7 @@ The loss in resolution and compression quality results in poor description of su
 		F number & f/14\\
 		Resolution & 1920 x 1080\\
 		FPS & 25\\
-		Exposure time & 1/50\\
+		Exposure time & 1/50 s\\
 		ISO sensitivity & 800\\
 		Subject distance & 90 +/- 10 cm\\
 		Lighting & total 2400 W halogen spot lights\\
@@ -503,7 +515,7 @@ The loss in resolution and compression quality results in poor description of su
 \end{table}
 
 
-\simplefig{p}{%
+\simplefig{t}{%
 \includegraphics[width=0.45\textwidth]{artoglassestex}%
 \includegraphics[width=0.45\textwidth]{artoglassessolid}
 }{fig:artoglassescompare}{
@@ -511,19 +523,19 @@ The loss in resolution and compression quality results in poor description of su
 	The solid rendering shows the relatively low vertex count and high amount of spatial noise, which are hidden in this particular textured demonstration view.
 }
 
-\simplefig{p}{%
-\includegraphics[width=0.33\textwidth]{videoframeface}%
-\includegraphics[width=0.33\textwidth]{videoframefacepart}%
-\includegraphics[width=0.33\textwidth]{stillframefacepart}
+\simplefig{t}{%
+\includegraphics[width=0.305\textwidth]{videoframeface}%
+\includegraphics[width=0.305\textwidth]{videoframefacepart}%
+\includegraphics[width=0.305\textwidth]{stillframefacepart}
 }{fig:artoglassesframe}{
-	Video frame quality comparison for the subject in Figure \ref{fig:artoglassescompare}.
-	From left to right: a frame of a single camera, a cropped area from it, and a cropped area from a still photo.
-	Note the colored aliasing in the hair and the lack of surface detail in the skin in the cropped frame.
+	A frame of a single camera, a crop, and a crop from a still photo.
+	Note the colored aliasing in the hair and the lack of surface detail in the skin.
 }
 
 \subsubsection{Final thoughts}
 
-Both PhotoScan and VisualSFM+Meshlab appeared to produce highly usable models, and both support similar output formats for the point cloud, mesh, and texture.
+Both PhotoScan and VisualSFM+Meshlab appeared to produce highly usable models.
+Both support similar output formats for the point cloud, mesh, and texture.
 Comparing the results, it can be concluded that PhotoScan appeared more robust to the shooting conditions and always gave results of some quality.
 Given carefully tuned conditions, the VisualSFM method gave more freedom in selecting different parameters and external programs, and might result in a better level of detail, given enough time for testing.
 The community visible in PhotoScan's forums \cite{agisoftforum} appears active, and the existing forum topics give a quick start to the use of the program and to reconstruction rigs.
