@@ -70,18 +70,9 @@
 
 \scene{2}{-0.7}{longer}
 
-%\path [name intersections={of=AB and CD,total=\t}];
-%    \foreach \s in {1,...,\t}{(intersection-\s) circle (2pt) node {\footnotesize\s}};
-%\node [fill=red,inner sep=1pt,label=-90:$E$] at (intersection-1) {};
-%\draw (intersection-1) --(0, 0);
-%\draw[name path=line 1] (0,0) -- (2,2);
-%\draw[name path=line 2] (2,0) -- (0,2);
-%\fill[red,name intersections={of=line 1 and line 2,total=\t}]
-%    \foreach \s in {1,...,\t}{(intersection-\s) circle (2pt) node {\footnotesize\s}};
 \begin{scope}[xshift = \sceneseparation cm]
 	\scene{5}{-1.7}{shorter}
 \end{scope}
-
 
 \end{tikzpicture}
 \end{document}

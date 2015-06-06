@@ -1,15 +1,6 @@
-%snake surrounding stuff
-
-%visual hull
-
-%NASA cams
-
-% Aikaisempi tutkimus
 \section{Image acquisition} \label{sec:image-acquisition}
 
 % TODO: image of a scene, a camera with optics and sensor, and a computer, all connected
-
-% TODO this is the first actual paragraph and needs to be much better
 
 % in addition too hollsten's number of points, note also the actual accuracy of the model?
 This section describes the background theory for basic image acquisition steps in a camera and for main concerns that affect reconstruction quality.
@@ -21,7 +12,6 @@ Quality of the outcome in a reconstruction pipeline depends on many factors of t
 	Image processing pipeline in a typical modern camera consists of several optical and digital steps with additional post-processing.
 	Image from \cite[p.~74]{szeliski10vision}.
 }
-
 
 \subsection{Computer images} \label{sec:computer-images}
 
@@ -51,7 +41,6 @@ the main differences are in image storage as a discrete image, as opposed to a p
 
 Reconstruction algorithms assume a \emph{pinhole camera} model on the camera optics, and the images must be captured such that the model is accurate.
 However, as will be described in this section, cameras in reality seldom match the simplified model thoroughly, and care must be taken when configuring the cameras and post-processing the images later.
-%Lens systems are configured such that the subject is in focus, and optical distortions are corrected.
 
 % }}} imaging
 
@@ -90,7 +79,7 @@ More exotic lenses that have a completely different projection are not considere
 
 Mathematically, a point in a three-dimensional world can be encoded in any coordinate system;
 in this work, a standard 3D cartesian coordinate system is used.
-In cartesian coordinates, a point is described as a location relative to a selected origin reference, as a triplet of distances along three perpendicular X, Y and Z axes. % (Figure \ref{fig:coordsys}).
+In cartesian coordinates, a point is described as a location relative to a selected origin reference, as a triplet of distances along three perpendicular X, Y and Z axes.
 In a traditional right-handed system, X increases right, Y upwards and Z towards the viewer.
 
 % }}} pinhole
@@ -100,11 +89,9 @@ In a traditional right-handed system, X increases right, Y upwards and Z towards
 In practice, no actual camera works ideally; a pinhole-resembling camera with a tiny hole could be built, but it would have poor light gathering power and low resolution limited by diffraction effects \cite[p.~29]{greenleaf1950photographic}.
 Light sensitivity is increased by using a larger hole, and the light rays are directed using carefully manufactured lens systems.
 Refraction properties of light rays and manufacturing defects introduce additional distortions that must be taken into account.
-%In practice, lens distortions deviate the rays nonlinearly, and no system is in perfect focus, so that one point spreads out as a circle.
 
 Construction of optical systems is well studied \cite{kingslake1989history,greenleaf1950photographic}.
 Actual camera ``lenses'' (\emph{camera objectives}) consist of not only a single glass element (optical lens) but many, especially in the case of zoom lenses.
-%where the focal length can be changed.
 As an example, a mechanically simple fixed focal length Canon lens diagram is shown in Figure \ref{fig:canonef50mm}.
 There are several lenses, aligned so that their centers lie on the the optical axis parallel to it.
 Most objectives can be reduced to a \emph{thin lens} model (depicted in Figure \ref{fig:thinlens}), an ideal optical model of a single infinitesimally thin glass element \cite[p.~21]{greenleaf1950photographic} \cite[p.~61]{szeliski10vision}.
@@ -137,7 +124,7 @@ For objects at distances approaching infinity ($a = \infty$), $b$ becomes equal 
 	\frac{1}{a} + \frac{1}{b} = \frac{1}{f}
 \end{equation}
 
-% Aperture.
+% Aperture, its effects (light, dof...)
 
 \paragraph{Aperture}
 The size of the hole where light effectively goes through is called \emph{aperture}; the hole itself is called \emph{aperture stop} and it is located inside the the objective in between its lenses.
@@ -219,15 +206,12 @@ The disk size can be approximated \cite[p.~29]{greenleaf1950photographic} by
 which, for example, for red light having a wavelength $\lambda$ of 700 nanometers, with an aperture of f/11, results in $\approx$ 0.01 mm (compare to above CoC of 0.03 mm).
 Again, this should be compared to the image sensor's pixel size, and already an aperture of f/11 would approach the diffraction limit.
 
-% rayleigh limit?
-
 \paragraph{Geometric distortion}
 While most rectilinear lenses are close to a perspective projection, practical optical systems introduce some non-linear \emph{radial} and \emph{tangential distortion} that affect the accuracy of the ideal pinhole model as light rays travel through the pieces of glass \cite{brown1966decentering,brown1971close}.
 Common distortions are the purely radial so-called \emph{barrel} and \emph{pincushion} distortions, where the lens magnification is a nonlinear function of image ray distance from the center of the lens, caused by the shape of the lenses \cite{brown1966decentering,brown1971close}.
 In addition to radial, tangential distortion is less significant, and it is often ignored.
 Its cause is small misalignments in separate elements in a single optical system, lenses being offset from each other and not being parallel to the image plane \cite{brown1966decentering,kingslake1989history}.
 
-%Wilson \cite{wilson2004anton} discusses optical systems' relation to depth of field, focus and distortions.
 \simplefig{t}{%
 \includegraphics[width=0.32\textwidth]{wall-pincushion}
 \includegraphics[width=0.32\textwidth]{wall}
@@ -237,7 +221,7 @@ Its cause is small misalignments in separate elements in a single optical system
 }
 
 Because stereo vision assumes that the images are free of nonlinearities, i.e., straight lines in the world should remain straight in 2D images after the projective transformation, it is important to correct the geometric distortions beforehand \cite{szeliski10vision}.
-The radially symmetric radial error model and correction proposed first by Brown \cite{brown1971close,brown1966decentering} and used directly or with slight alternations in programming libraries, e.g., OpenCV \cite{opencv}, is % to create a new image of the original pixel values at new positions is
+The radially symmetric radial error model and correction proposed first by Brown \cite{brown1971close,brown1966decentering} and used directly or with slight alternations in programming libraries, e.g., OpenCV \cite{opencv}, is
 \begin{align} \label{eq:radialdist} \begin{split}
 	x_{corr} &= x(1 + \kappa_1 r^2 + \kappa_2 r^4 + \kappa_3 r^6)\\
 	y_{corr} &= y(1 + \rho_1 r^2 + \kappa_2 r^4 + \kappa_3 r^6).
@@ -273,18 +257,16 @@ A typical image sensor is not a square but a rectangle, and clips the distortion
 	The leftmost correction is for a barrel distortion, and the others are for pincushion distortion.
 }
 
-The Brown's model describes the distortion characteristics for a lens system on an otherwise perfect image, but typically the inverse transform is required, because a distorted image is given as noted by e.g.\ Villiers et~al.~\cite{villiers2008centi}. % and implemented in OpenCV \cite{opencv}.
+The Brown's model describes the distortion characteristics for a lens system on an otherwise perfect image, but typically the inverse transform is required, because a distorted image is given as noted by e.g.\ Villiers et~al.~\cite{villiers2008centi}.
 For each pixel in the undistorted destination image, the pixel value is necessary to find from the distorted source, but the mapping described by the model works to the other way.
 However, Villiers et~al.\ note that as plain barrel and pincushion distortion can be considered as inverse transforms to each other, the same model can actually be used for the inverse direction if the more complex tangential part is left out \cite{villiers2008centi}.
 
 Because digital images consist of a discrete pixel array, the pixel coordinates given by the undistortion do not necessarily lie on exact pixel positions; the sampling should then interpolate between neighboring pixels, considering the image as a continuous but discretely sampled 2D function \cite{wolberg1990digital}.
 Throughout this thesis, interpolation is assumed to be performed as necessary when sampling an image.
 
-%Perspective distortion something something viewer location.
 %Normal TV is usually watched at the distance of twice the screen diagonal.
 %At this location, the scene looks normal when taken with a normal lens.
 %A wide-angle scene then looks normal when viewed at a nearer distance. \cite{wilson2004anton}
-
 % 14:01:55 <naavis> Kai sillä yritetään emuloida sitä, että katsojan paikalta se leffan kuvakenttä vastais sitä että valkokankaan tilalla on ikkuna.
 
 % }}} optics
@@ -316,7 +298,6 @@ In recent digital image sensors, the sensor itself can be made inactive to light
 
 \paragraph{Shutter types}
 All shutters serve the same purpose: to restrict light from entering the image plane before and after the exposure.
-%A shutter is a mechanical device that blocks light to the film and can be moved momentarily out of the way and back.
 There are several types of constructions for shutters, depending on the application.
 Some cheaper compact cameras have a small \emph{diaphragm shutter}, or \emph{leaf shutter} in the lens center near the aperture stop.
 A leaf shutter moves quickly away from the light path and back, either as a single opaque piece or as several \emph{leaves}, analogously to the aperture stop whose size can be changed \cite[p.~117]{greenleaf1950photographic}.
@@ -336,8 +317,6 @@ Video film cameras that capture each frame to a separate part of film used a spi
 This rotates at a precise speed synchronized to the frame rate, exposing the film to light for a consistent duration for each frame.
 The size of the window constitutes to the amount of light and motion blur.
 Video is more discussed in Section \ref{sec:video}.
-
-%\cite{szeliski10vision}.
 
 \paragraph{Artifacts}
 If the camera or the imaged subject moves while exposing the frame, the subject gets smeared along the movement on the image, an effect known as \emph{motion blur}.
@@ -410,8 +389,6 @@ The missing values for other colors bands are interpolated from surrounding pixe
 The most popular interleaving pattern is the Bayer filter \cite[p.~76]{szeliski10vision}, illustrated in Figure \ref{fig:bayerpattern}.
 Other arrangements than red, green and blue are also used; e.g., red, green, blue and emerald or cyan, yellow, green, and magenta \cite{park2003implementing}.
 Alternatives have slightly better color accuracy at the expense of spatial resolution.
-%Very high-end cameras use three separate sensors with different wavelengths specially divided to them for increased accuracy;
-%The increased cost induced from requiring three sensors and the accompanying optics instead of one makes the method infeasible for consumer cameras.
 
 \simplefig{t}{\bayer{0.6}}{fig:bayerpattern}{
 	A small partly drawn subset of the repeating $2 x 2$ Bayer pattern.
@@ -469,7 +446,6 @@ A large variety of different studio lights are available in the market for diffe
 \simplegfx{t}{0.7\textwidth}{nayarbrdf}{
 	Polar plots of three reflection components as functions of the viewing angle, as suggested by Nayar \cite{nayar1991surface}, showing the brightness seen from different angles from the surface normal.
 	In a reconstruction subject, the bright specular spike and lobe reflections should be minimized, and only the diffuse color is desired.
-	%Image by Nayar \cite{nayar1991surface}.
 }
 
 \paragraph{Surface color}
@@ -477,7 +453,7 @@ The \emph{perceived} color of a point on a surface is the light exiting it and r
 Therefore, the light sources should be uniformly white and cast no shadows.
 Surfaces reflecting light can be modeled as a combination of \emph{diffuse} and \emph{specular} components that are functions of light direction, viewing direction and sometimes additionally location on the surface.
 Surface reflection models are described with a \emph{bidirectional reflectance distribution function, or BRDF} \cite{nicodemus1965directional}.
-Such distribution model of the surface's global or local microgeometry specifies how much light reflects in different directions \cite{nayar1991surface}. % XXX 1991 or -89? % XXX N different sources, clarify...
+Such distribution model of the surface's global or local microgeometry specifies how much light reflects in different directions \cite{nayar1991surface}.
 \emph{Diffuse} means a material that reflects light uniformly to all directions, depending only on the angle between the surface normal and light location, whereas more \emph{specular} surfaces are composed of a different microstructure that reflects light in a mirror-like way; the surface brightness depends on where it is looked from.
 In Figure \ref{fig:nayarbrdf}, different types of reflections seen by the camera are visualized as a function of the camera viewpoint.
 
@@ -496,14 +472,12 @@ On the contrary, in photographs and image synthesis, shadows and reflections are
 In practice, polarizing filters may be used in front of the lights and in the camera lenses, to filter out most of the specular lighting.
 Advanced capture and rendering methods may take advantage of also the specular component \cite{ghosh2011multiview}; however, capturing material properties is easily done separately from the geometry capture \cite{aittala2013practical}.
 
-%Surfaces modeled in computer graphics are often relighted with functions of surface normal and light and view directions, given as unit vectors, as in Figure \ref{fig:brdfdiagram}.
-
 \paragraph{Light sources}
 As the surface should be illuminated as evenly as possible to minimize specular highlights and shadows, it is important to pay attention to light sources.
 The often used photography terms \emph{soft} and \emph{hard lighting} refer to the size and power of light sources: bright spotlights are hard, and larger and relatively less bright lamps are soft.
 Softness can be added by increasing the light's area while holding its power constant using a ``diffuser'', such as a large surface where light is reflected off or a white cloth between the lamp and the imaged subject.
 \cite[p.~108]{langford2000basic}
-%Effects of a soft versus hard light are illustrated in Figure \ref{fig:lighthardness}.
+% TODO Effects of a soft versus hard light are illustrated in Figure \ref{fig:lighthardness}.
 
 Powerful electronic flash units use usually a gas-filled tube that is excited with high voltage to produce a short, bright burst of light for some milliseconds;
 since this tube is small, a diffuser should be used for uniform lighting.
@@ -513,16 +487,12 @@ Short bursts of light in an otherwise dark environment are also suitable for sto
 % }}} light sources
 
 \subsubsection{Data capture path} % {{{
-% data path intro
 
 The image information travels from the subject through the optics to the image sensor's surface, via an analog/digital converter, the camera's processor(s) and finally to mass storage \cite{szeliski10vision}.
 The final mass storage is typically on the camera in consumer devices, or on a computer reached by a wired connection for more sophisticated machine vision cameras \cite{hornberg2007handbook,ni2013choosing}.
 Many parts in this path contribute to the quality of images and the rate at which the images can be taken, usually measured in frames per second (FPS).
 
-% fps
-
-%An average DSLR can achieve around five frames per second of full resolution footage, while more expensive models can reach over 10 FPS.
-%A digital still camera can often also record video, at a lower resolution and a higher FPS.
+% fps, performance sample
 
 For example, for the high-end Canon DSLR camera EOS-1D X, a continuous shooting speed of 14 frames per second is advertised \cite{eos1dx}.
 With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate for the bit rate from the sensor is
@@ -530,7 +500,6 @@ With its resolution of 5184 by 3456 pixels and 14-bit processing, an estimate fo
 5184 \times 3456 \times 14 \times 14 \approx 3.5\text{ Gb/s}
 \end{equation}
 by average, or 0.4 gigabytes per second, requiring also high speed from the processor and mass storage.
-%In reality, a number of other factors also have a small effect.
 Due to the cost of transferring and processing large amount of data, video is typically recorded in lower resolution for faster FPS.
 
 % files
@@ -539,25 +508,21 @@ A ``raw'' image file can be saved with more advanced cameras, containing the pla
 The raw files saved by DSLR cameras are packed in a proprietary lossless format and contain also metadata about certain camera settings.
 When a raw file is not used, the camera processes the image with device-specific correction filters and applies image enhancements, e.g., white balance correction and sharpening, and finally saves the image as a standard image file such as JPEG \cite[p.~412]{szeliski10vision}.
 For such automatic in-camera processing, all cameras should be identical for consistent reconstruction results.
-%Clock speed of the conversion circuits with the main processor speed ultimately determine the maximum burst imaging speed.
 
 %Lossless compression maintains image quality and reduces file size depending on the complexity of the frame.
 %Some manufacturers encode the brightness values through a lookup table, and it's common to use a compression scheme known from standard file compressions, or a specific lossless image compression.
 
 Video files are almost always saved in a lossy video format by consumer devices, the H.264 format being common for modern cameras.
 Compression introduces loss of detail and artifacts typical to the particular algorithm, often visible as blocks or blurring \cite{richardson2004h264}.
-%Common bitrate for a full-HD (1920 by 1080 pixels) 24 FPS video is about 5 MB/s.
 Reconstruction quality from frames extracted from such a compressed video may not be as high as from separately saved stills that encode more spatial information.
 Machine vision cameras and some professional video cameras can record raw uncompressed video, and some others can be unofficially enhanced;
 Canon DSLRs can be tricked using a third-party software modification \cite{magiclantern} to capture the raw stream to a mass storage card, but only some models support the cards necessary for the high recording speed.
-
-%Typical machine vision transfer protocols are given in Section \ref{sec:cameratypes}.
 
 % }}} image download
 
 \subsection{Video} \label{sec:video} % {{{
 
-%Hox ALL-I (intra) / IPB (intra-predict-bidirpredict)
+% NOTE ALL-I (intra) / IPB (intra-predict-bidirpredict)
 
 % intro, connection to reconstruction
 
@@ -574,14 +539,12 @@ To reconstruct the frames in 3D, each set of frames encoded by the cameras shoul
 \subsubsection{Sequence of frames} % {{{ or: video is frames
 
 % how/when frames are captured
-%\cite{poynton1996technical}
-%\cite{musburger2010single}
 When scanning a scene continuously, a camera shoots frames using the same principles as in photos, but does it in sequence, at a speed that is called \emph{frame rate} \cite{poynton1996technical}.
 For each frame, the shutter is open for a duration of \emph{exposure time} or interchangeably \emph{shutter speed}.
 In \emph{interlaced video}, two frames make up a whole picture that covers all pixels.
 Interlacing alternates between odd and even lines to increase update rate, and was invented for cathode ray tube displays to reduce apparent flicker \cite{poynton1996technical}.
 The alternation results in tearing artifacts when imaging horizontally moving subjects (shown in Figure \ref{fig:interlace}).
-Many CCD video cameras still produce interlaced stream. % because it is cheaper to manufacture due to fewer pixels.
+Many CCD video cameras still produce interlaced stream.
 Video that contains full frames only is called \emph{progressive}.
 
 \simplegfx{t}{0.7\textwidth}{interlace}{
@@ -595,7 +558,7 @@ Video that contains full frames only is called \emph{progressive}.
 
 Consumer video cameras, video-capable pocket cameras and DSLRs typically offer a few choices of frame rate.
 Traditionally, the movie industry has used 24 FPS; 25 and 30 are common alternatives used in TV broadcast, some cameras being capable to twice the speed at a lower resolution.
-Actual FPS is slowed down from the advertised by a factor of 1.001 because of historical reasons. % in monochrome and color TV backwards compatibilities.
+Actual FPS is slowed down from the advertised by a factor of 1.001 because of historical reasons.
 30 and 24 FPS refer to approximately 29.970 and 23.976 FPS, respectively.
 \cite{musburger2010single}
 
@@ -621,6 +584,7 @@ The color filter array makes the problem even worse for small-detailed features 
 
 \subsubsection{Frame rate and shutter speed} % {{{
 
+% no particular reason to be inline instead of pdf, just legacy
 \simplefig{t}{
 \begin{tikzpicture}[scale=1.5]
 	\def\nframes{5}
@@ -664,10 +628,6 @@ Film cameras and some professional video cameras use a rotary disc shutter that 
 Having half the exposure time of frame rate is sometimes called ``180 degree shutter'' due to this historical reason \cite[p.~37]{wilson2004anton}.
 While the light is blocked, film is mechanically advanced to the next frame.
 Digital video analogously downloads data from the image sensor and clears it during this time.
-
-%For unsynchronized videos that shoot frames at different points in time, morphing techniques have been developed to analyze motion between frames and to interpolate intelligently. \cite{bradley2009synchronization}
-%Motion blur encodes more information about object travel but gets less precise by time.
-%slowmovideo \cite{eugster2011slowmovideo}
 
 % }}}
 
@@ -713,23 +673,6 @@ Unsynchronized shooting still leaves an offset of at most half a frame between t
 Professional video cameras can be synced to a single clock generator, so that they all operate on the same frequency (i.e., no drift) and phase (i.e., no offset), called \emph{genlocking} or \emph{generator locking}.
 Similar method is used when shooting with machine vision cameras that have external trigger input \cite{poynton1996technical}.
 Synchronizable camcorders are expensive, and consumer-grade hardware usually lacks all possibilities for proper sync.
-
-%\begin{verbatim}
-%Drift
-%
-%normal   |   |   |   |   |   |   |
-%drifting |    |    |    |    |    |
-%         0t  1t  2t  3t  4t  5t  6t time -->
-%
-%
-%Jitter
-%
-%normal   |   |   |   |   |   |   |
-%jitterin |    |  |   | |      |    |
-%         0t  1t  2t  3t  4t  5t  6t time -->
-%\end{verbatim}
-
-%Often used techniques are starting flash (does not need an audio track) [REF], clapperboard [REF], strobe sync'd to fps, genlock.
 
 \simplefig{t}{
 \begin{tikzpicture}[scale=1.5]
@@ -804,7 +747,6 @@ Currently, typical sensor sizes for different camera categories are as follows:
 % lenses, shutters
 
 \paragraph{Lens quality}
-% XXX fix references
 To benefit from the sensor resolution, the camera objective should have an equivalent or better \emph{resolving power}, provided as a chart of \emph{modulation transfer function} (MTF), which is a function of frequency, or number of black-and-white \emph{line pairs} per millimetre.
 A lens attenuates the frequencies of the optical patterns, such that at some point, dense line pairs are not resolved from each other but show up as gray.
 \cite[p.~71]{kingslake1992optics}
@@ -815,7 +757,6 @@ Calibration is also an issue with moving zoom elements that may not align to pre
 Interchangeable lenses have a large selection of fixed focal length (``prime'') lenses with less moving parts and typically better optical quality.
 The lack of zoom of a prime lens is acceptable in a controlled environment, where the distance to the subject can be adjusted as necessary.
 With DSLRs that have a moving mirror and a shutter, the mechanical vibration could move the zoom lens each time a little, changing the focal length.
-%Some compact cameras have a lightweight leaf shutter in the lens, and many use digital shutters.
 %Rieke-Zapp et~al.\ \cite{rieke2009evaluation} address several problems in camera calibration and imaging quality.
 
 % storage
@@ -830,7 +771,6 @@ Overall storage speed is determined by several factors between the sensor, the c
 Reading the pictures to a computer can be done via USB bus or a memory card reader; the latter method is not practical, since the card must be removed from each camera and placed to a reader manually.
 Industrial cameras typically have temporary memory for only one frame that is read out immediately via a bus or transfer the read frame from the sensor directly with no buffering.
 For video recording, this needs relatively large amounts of auxiliary hardware to save the raw frame feed.
-%For example, according to Equation \ref{eq:gigabit-transfer}, one network interface per each camera would be needed for a decent video rate.
 Additionally, either fast hard disks or large amounts of RAM for live data storage would be required.
 
 % software support
@@ -843,7 +783,7 @@ The standards specify data formats and buses, image streaming, and control metho
 Key standards \cite{hornberg2007handbook,ni2013choosing} for industrial cameras are:
 
 \begin{itemize}
-	\item Camera Link, partly proprietary serial transfer protocol with special cable and connector types % (but significantly reverse-engineered)
+	\item Camera Link, partly proprietary serial transfer protocol with special cable and connector types
 	\item GigE vision, standard interface for video data over gigabit Ethernet connection; licensed so that writing open source software directly based on the standard is not officially possible
 	\item IIDC/DCAM, Instrumentation \& Industrial Digital Camera or 1394-based Digital Camera Specification, data format standard used in IEEE 1394 (Fire-Wire) cameras; an open specification
 	\item USB3 Vision, a computer vision standard for the USB 3 bus
@@ -880,12 +820,6 @@ Summarizing for the general feasibility of the most popular camera types in the 
 	\item Others (smartphone cameras, webcams) have poorly documented features, cheaper optics and are not configurable properly in general.
 \end{itemize}
 
-%\paragraph{Other types}
-%In addition to multiview stereo, there exist cameras that can capture depth directly.
-%Laser range finders are common in automation industry and precision engineering, and have great precision and high price.
-%Active infrared cameras such as the well-known Kinect (sensor manufactured by PrimeSense) project an infrared pattern of dots to the camera's view and estimate depth in coarse blobs, resulting in an easy-to-use depth camera but poor accuracy.
-%Light field cameras such as the newer Kinect 2 have a better spatial accuracy but not yet an established reliable software state.
-
 % }}} camera selection
 
 \clearpage
@@ -896,7 +830,6 @@ In this thesis, a multi-view setup with ordinary digital photo cameras is assume
 fundamentally different methods, such as laser rangers or light field imaging, are not considered.
 
 A complete reconstruction pipeline consists of many parts of hardware and software.
-%The hardware parts were given in Section \ref{sec:image-acquisition}.
 This section concentrates on the steps of the software pipeline, which is illustrated in Figure \ref{fig:reconstpipeline}.
 The subject is broad and this section aims to only describe the main ideas in a nutshell.
 For detailed descriptions and analysis, refer to textbooks, e.g., \cite{hartley03multiview,heyden2005multiple,szeliski10vision}.
@@ -920,17 +853,7 @@ A surface is more natural than the point-based output of the dense reconstructio
 	Typical steps in a full structure-from-motion type reconstruction pipeline with no prior calibration information.
 }
 %[1] Shape and motion from image streams under orthography: A factorization approach
-
-% kruppa eqs
-%algebraic vs geometric error
-% previous work! implemented algorithms
-%Close range photogrammetry, stereopsis, isolated object, camera resectioning
-%Pairs vs overlap? bradley: pairs
-% self occlusion and range images
-
-% separate part or part of 3d reconst intro? or combine to intro?
 %- every Nth frame free of patterns for texture extraction (zhang snavely curless 2004)
-%- maybe not fast enough with common cameras
 % project noise for geometry if low-featured texture, grab texture/color separately with flashes
 
 % }}}
@@ -947,7 +870,7 @@ The camera is reduced to the pinhole model; distortions caused by the optical sy
 
 The camera is a projective object located somewhere in the imaged scene.
 Its \emph{intrinsic parameters} model the properties of the projection, but do not take into account the camera location in any global coordinate frame.
-The \emph{extrinsic parameters} contain the camera location and rotation in another global coordinate frame, often structured as a matrix \cite[p.~41]{hartley03multiview}. % , \cite{heyden2005multiple}
+The \emph{extrinsic parameters} contain the camera location and rotation in another global coordinate frame, often structured as a matrix \cite[p.~41]{hartley03multiview}.
 This section reviews basic transforms whose results are needed in the later reconstruction steps.
 
 \simplefig{t}{%
@@ -958,7 +881,6 @@ This section reviews basic transforms whose results are needed in the later reco
 	The point $P = (P_x, P_y, P_z)$ projects to $p$, as well as everything else on the line joining them.
 	The image plane is f units away from camera origin.
 }
-% FIXME z left handed?
 
 \paragraph{Projection}
 Light rays travel through the pinhole camera's aperture to the image plane that is $f$ units behind the aperture, while the camera origin is set to the aperture \cite{hartley03multiview}.
@@ -977,16 +899,13 @@ The result can be derived from similar triangles with a common vertex at the ape
 Sometimes the sign is inverted, which results in a plane on the other side of the origin where the actual point lies, where the image is not rotated; this can be more convenient to analyse, since the image does not flip.
 Physically, the projected point in a camera is behind the aperture, on the film or sensor.
 
-%The camera position and rotation in a global coordinate frame are encoded in a matrix transformation, so that the point $(x,y,z)$ in global coordinate frame is first transformed from a global coordinates to a camera-centered frame.
 % Matrices, homogeneous coordinates.
-
 % projective element, "~" up to scale equality definition
 
 \paragraph{Homogeneous coordinates}
 In computer graphics and vision, points are usually described in \emph{homogeneous coordinates} \cite{dubrofsky2009homography,hartley03multiview,heyden2005multiple}.
 An extra dimension is added to the interpretation of coordinates, and each point becomes a line that crosses the origin in a dimension one higher than the original.
 Several vector operations become more convenient to manipulate: for example, 3D translation is embedded in 4D matrices with homogeneous coordinates.
-%Translation, perspective projection, rotation, and other operations are conveniently described as matrix transformations by using an additional dimension for points: $(x, y, z, 1)$.
 The space is scale-invariant; all points $(xw, yw, zw, w)$ ($w \neq 0$) map to the same 3D point $(x, y, z)$.
 This freedom of scaling makes many camera matrices defined only up to scale, as will follow.
 
@@ -1008,23 +927,12 @@ The transformation chain \cite[p.~163]{hartley03multiview} is encoded as follows
 where $\vec p$ is a 2D pixel in a discrete image, and $\vec P$ is still in physical units.
 $\bm R$, $\bm T$ encode the camera rotation and translation (extrinsics) and transform the point to a camera-centric coordinate frame;
 $\bm K_p$ projects the camera-centric world coordinates to the camera sensor (still in world coordinates), and finally the affine $\bm K_s$ transforms the points from the sensor to pixel coordinates on the digital image (not necessarily yet discretized).
-%The transformation pipeline is depicted in Figure \ref{fig:projxformworld}.
-
-%\simplegfx{p}{1.0\textwidth}{projxformworld}{
-%	Transformations in a projection matrix pipeline.
-%	FIXME: draft image
-%}
 
 The whole projection $\bm M = \bm K_s \bm K_p \bm T \bm R$ can be used as-is without decomposing it to separate matrices, unless the individual parameters are needed.
 The matrices $\bm K_s$ and $\bm K_p$ are usually not decomposed but presented as a single intrinsic matrix $\bm K$, and $\bm R$ and $\bm T$ are usually given as a single extrinsic matrix.
 As the chain consists of several matrices, some of them are defined only up to scale; the coordinate systems' units can be chosen freely.
-%Software packages usually do not decompose the chain, because it is not needed and unique parameters cannot be found because of scaling.
-
-%The external camera parameters are called the extrinsics: camera coordinate system position and rotation (heading) in the global space.
-%Camera position sits at the projection center blah.
 
 The internal parameters, intrinsics, encode how the image is formed on the sensor: they consist of focal length $f$, pixel size ($m_x$ by $m_y$) and principal point $(u_0, v_0)$:
-% FIXME 3x3 3x4 4x4
 \begin{equation}
 	\bm K =
 	\begin{pmatrix}
@@ -1088,13 +996,9 @@ It can be used to calibrate an arbitrarily large unknown set of cameras automati
 SfM is described further in Section \ref{sec:sfm}.
 
 %many single planar chessboard pics vs a single image of an accurate 3d model.
-%Single three-dimensional calibration object is also sufficient blbl
-%cv::stereocalibrate, cv::calibratecamera
 %TODO Figure: show extrinsic in matlab cam calibs, nice pics (both cam and world centered)
-
 %The scale of values affects the numerical calibration accuracy \cite{hartley1997defense,hartley03multiview}.
 %A similarity transform is often initially applied to modify the values to a more consistent range.
-%Coordinate system centroid is moved to image center, and the coordinate axes are scaled such that the average point distance from the origin becomes 1.
 %The 3D points are scaled accordingly, which is only ideal if the calibration object has uniform geometry \cite{hartley03multiview}.
 
 % }}} camera calibration
@@ -1103,7 +1007,6 @@ SfM is described further in Section \ref{sec:sfm}.
 
 Given two or more views of a same scene, depth for a point can be extracted by comparing the positions of the point in different views.
 Whole-picture depth extraction results in a depth map imaged from a single view, giving a depth value for each pixel in a picture, resulting in a set of three-dimensional points seen by that view.
-%The resulting stereo vision consists of many processing steps.
 In order to compare the point positions in two images, given a point in one image, its matching pair must be found on the other.
 In the following section, this search problem in finding corresponding pixels, mapping them so that they can be compared, and the comparison that results a depth value is formalized.
 
@@ -1158,7 +1061,6 @@ All epipolar lines in a view join in the same point ($e_l$ and $e_r$).}
 In stereo vision, the same scene of interest is seen by two or more cameras at the same time.
 The cameras are rarely aligned perfectly as in the stereo setup described above.
 \emph{Epipolar geometry} \cite[ch.~7.3]{trucco1998introductory} encodes the relations between arbitrarily positioned cameras in a standard way so that coordinates of a 3D point seen in several images can be calculated with similar triangulation as in the simple stereo setup \cite{trucco1998introductory,hartley03multiview}.
-% truccoverri chap 7.3
 As seen in Figure \ref{fig:epigeom}, a 3D point $\vec A$ seen by the left camera $\vec C_l$ could lie anywhere on the line between $\vec C_l$'s origin and $\vec A$, because a line passing through the principal point always projects to a point (the camera position is equal to the principal point, i.e., the pinhole).
 This line is seen as a single point $\vec A_l$.
 From another view, seen by the right camera $\vec C_r$, this line equals to some line on the right image plane.
@@ -1190,18 +1092,6 @@ It includes the relative rotation and translation of the two cameras in a single
 	\vec A_l^T \bm E \vec A_r = 0
 \end{equation}
 
-%\begin{align*} \label{eq:essential}
-%	%A_r &= R (A_l - t) \\
-%	%A_r^T R T A_l &= 0 \\
-%	%A_r^T E A_l &= 0
-%	A_l \cdot t \times A_r = 0\\
-%	A_l \cdot t \times R A_r = 0\\
-%	A_l^T T
-%\end{align*}
-
-%where $T$ is the cross-product form of $t$ encoded in a matrix form as below.
-%The essential matrix is obtained as $E = R T$.
-
 \emph{Fundamental matrix} \cite[ch.~11]{hartley03multiview} is a similar object to essential matrix, as it also relates the corresponding points in stereo images.
 It has the same meaning as the essential matrix, but it works in the pixel coordinates of the cameras.
 The described vectors ($\vec X_l$, $\vec X_r$) are in normalized camera coordinate frames, but from the photographed images in actual image processing, only pixel values can be measured.
@@ -1211,27 +1101,9 @@ Given pixel coordinates $\vec a_l$ and $\vec a_r$ that represent the points $\ve
 	\vec a_l^T \bm F \vec a_r = 0
 \end{equation}
 
-%\[
-%\hat pAl = M_p A_l\\
-%\hat A_r = M_p A_r
-%\]
-%
-%\[
-%A_r^T E A_l = 0\\
-%(M_p^-1 \hat A_r)^T E (M_p^-1 \hat A_l) = 0\\
-%\hat A_r^T M_p^-T E M_p^-1 A_l = 0\\
-%\hat A_r^T F \hat A_l = 0
-%\]
-%
-%\[
-%F = M_p^-T E M_p^-1 = M_p^-T R T M_p^-1
-%\]
-
 The essential and fundamental matrices can be seen as a more general configuration of the triangulation in Figure \ref{fig:simplestereo} and Equation \ref{eq:triangulation}.
 The matrices can be estimated by forming a system of linear equations using Equation \ref{eq:essential} or \ref{eq:fundamental} and at least eight point correspondences, using some method to solve the equations, e.g., the \emph{eight-point algorithm} \cite[p.~155]{hartley03multiview}.
 Having estimated the matrix, the epipolar geometry and thus the 3D position of any point with two matching pixel coordinates are easily recovered \cite[p.~162]{hartley03multiview}.
-
-% cite longuet-higgins 1981
 
 % }}} epipolar geometry
 
@@ -1250,7 +1122,6 @@ Different views must be imaged at the same time, and be free of visible view-dep
 Artifacts may introduce outliers if matches are detected wrongly, or holes in the geometry if no matches are detected at all.
 
 \paragraph{Features}
-% sift and surf patented in us
 Edges or corners are the typical features that are detected automatically at specific steps of reconstruction.
 They are essentially high-frequency information in the image that can be interpreted as a 2D discrete function;
 thus, \emph{edge detection} can be performed by a discrete high-pass or band-pass filter, zeroing all but those pixels where a high difference is found \cite{marr1980theory}.
@@ -1281,10 +1152,8 @@ The surrounding pixel values themselves inside a \emph{window} centered at the s
 % rectification pics
 
 In order to triangulate a 3D point from two photographs, the location of the point in both images must be known, as described above.
-%The dense correspondence search is typically not done with feature matching but comparing pixels directly instead.
 Given a single pixel in one image, its corresponding pair would naively be searched by looking at every pixel in another.
 Rectification is a process that simplifies this search problem by restricting the search to a single dimension using the epipolar lines \cite[p.~157]{trucco1998introductory} \cite[ch.~7.1]{pollefeys2004visual}.
-%Further, closeby points are only looked in a small window around the previous, not spanning the whole search space.
 
 A common \emph{planar rectification} projects the images on a common plane and rotates them such that corresponding lines are axis-aligned (horizontal or vertical) in both images \cite{hartley03multiview}.
 By virtually aligning the cameras such that their images are coplanar and their axes parallel, the search only has to be performed on a line that is parallel to the line connecting the camera centers.
@@ -1363,7 +1232,6 @@ A \emph{bundle adjustment} method is used to globally optimize the scene paramet
 Many reconstruction programs use structure from motion as an initial step to determine calibration and proceed then to dense reconstruction.
 
 The initial stage builds a reference frame and structure for the selected features (points) in two cameras.
-% pollefeys tutorial builds the frame using the epipolar geometry, determined as previously in Section \ref{sec:epipolar}.
 The structure is determined with triangulation as in Section \ref{sec:binocular}.
 In practice, perfect reconstruction cannot be achieved due to noise, and the points are found by minimizing a reprojection error to the extent of a specified threshold limit.
 
@@ -1382,7 +1250,6 @@ when the goal is to find the projection matrices $\bm M_k$ and the 3D points $\v
 In practice, this nonlinear optimization problem is approached in iterative means.
 According to Wu \cite{wu2013towards}, bundle adjustment should be performed using a Levenberg-Marquardt or Preconditioned Conjugate Gradient method.
 %Beardsley et~al.\ use an iterative extended kalman filter \cite{beardsley1997sequential}
-% XXX others?
 
 An incremental algorithm linear-time in number of the cameras has been suggested for structure from motion for large-scale reconstructions \cite{wu2013towards}.
 A specialized scanning rig in this work is not considered large-scale.
@@ -1426,8 +1293,6 @@ Units originating from reconstruction of raster images can be simply scaled to m
 
 %Compare to algebraic, geometric etc.
 
-%Mesoscopic level shape reconstruction
-
 % }}}
 
 \subsection{Surface fitting} % {{{
@@ -1453,8 +1318,6 @@ When ultimately rendering the polygons on a computer screen using the graphics p
 	On the left: the whole model, shaded with a simple Phong lighting model.
 	On the right: a closeup of the left ear, showing the edges of the faces as black lines connecting the vertices.
 }
-
-% http://en.wikipedia.org/wiki/File:Mesh_overview.svg
 
 A \emph{(polygon) mesh}, a data structure often used to describe 3D models, consists generally of \emph{vertices} connected by \emph{edges}, forming \emph{faces} of objects \cite{foley1990computer}.
 The meshes often consist of triangles, which is the simplest possible polygon.
@@ -1484,8 +1347,6 @@ Specular highlights and other artifacts on the surface may also introduce outlie
 Manual work in a point cloud editing software is a simple way to delete the points that are not part of the actual object.
 If manually filtering the subject would be undesirable, e.g., when recording many expressions on a human face in a constant environment or rendering the scan in realtime, automatic methods could be used, e.g., nearest-neighbor or point grouping methods \cite{pcl}.
 
-% assuming X on the geometry to fit a model
-
 % }}} geometry
 
 \subsubsection{Texture reprojection} % {{{
@@ -1498,8 +1359,8 @@ Building the texture is done in a similar way of rendering the image on a screen
 The reconstructed mesh surface is projected on the raster images, registering the image coordinates on each vertex \cite[p.~610]{szeliski10vision} \cite[p.~98]{heyden2005multiple}.
 When the mesh is viewed from another viewpoint, the pre-projected texture data is used again.
 Great accuracy can be acheived if a MVS structure is combined with a laser scan, by registering the point clouds generated by both together, using the laser scan as geometry and registered camera poses to project textures \cite{liu2006multiview}.
-% (XXX read meshlab src, references?)
-% parameterization + texturing from registered rasters
+% (XXX meshlab src, references?)
+% note: parameterization + texturing from registered rasters
 
 When several cameras share the same view, the correct texture must be chosen on each vertex.
 The selection can be taken based on some goodness criteria, e.g., the image with largest viewed area or highest brightness.
@@ -1515,30 +1376,6 @@ Accurate lighting models make heavy use of highly spatially varying surface \emp
 Such information is typically kept in a \emph{normal map} or a \emph{bump map}, encoding the surface normal or roughness at each visible pixel.
 Several studies have presented methods to augment the base geometry by adding wrinkles as normal mapping \cite{bickel2007multi}.
 
-% }}} textures
-
-%\subsection{Rendering} % {{{
-
-%Probably the most common usage of 3D data is to draw, or \emph{render}, it on a computer screen.
-%The subject is typically inserted in a scene that is different from where it was scanned, with different lighting conditions.
-%Typical usage in movies and video games is to \emph{shade} the subject in a realistic way 
-
-%
-%(how the stored geometry is different from the rendered one; mathematical models in fragment shaders to use the texture variations / normal maps etc.)
-%
-%Error removal; strip outliers that do not have nearby pairs; small disconnected islands.
-%
-%Postprocessing: remodel the mesh (face), see what it would look like.
-%Refine parameters to get a similar output as in the photos (normal map etc.), backproject.
-%Use colors and highpass them; assume uniform lighting and locally uniform texture color (bradley).
-%(Simply a rendering technique, that level of detail in 3D structure might not be needed).
-%%Still, structured light and/or shading assumptions [shape from single image cues/shading trucco+verri p.225] done too.
-%
-%(video: 3d topology different in each frame; most algos do just stills, simple to combine them to a pre-recorded mesh)
-%
-%Rendered facial animation: on bones and stuff.
-% }}} rendering
-
 \clearpage
 \section{Motion capture} \label{sec:motioncapture} % {{{
 
@@ -1546,8 +1383,6 @@ Several studies have presented methods to augment the base geometry by adding wr
 A recorded subject can be described as a piecewise rigid object, e.g., a human, possibly encoding also some skin movement.
 In computer animation, the movement data is encoded as positions of certain vertices at each recorded point in time, and often post-processed to be parameterized by joint angles or muscular actions \cite{deng2007computer,waters1987muscle}.
 \emph{Surface capture} is a related term referring to a similar motion recording but happening on a deforming surface instead of globally moving rigid bodies.
-
-% It is possible to assume locally smooth movements in most areas; thus, a more intelligent approach should be used than simply reconstructing a new mesh for each frame and using registration to just align them.
 
 % }}} mocap
 
@@ -1563,8 +1398,7 @@ Each frame would produce a different point cloud not connected to the previous r
 
 Possibilities to correct the lack of coherent geometric structure exist.
 Typical methods include fitting each frame of the mesh to another pre-recorded or pre-modeled mesh \cite{bickel2007multi,bradley2010high,li2009robust,zhang2007spacetime} and matching to the previous frame iteratively, or using intermediate keyframes for later animation \cite{beeler2011high}.
-%Later usage may need only the tracked positions of specific locations on the surface to deform a mesh with bone guides.
-% \cite{di4d}
+
 % }}}
 
 \subsection{Geometry tracking} % {{{
@@ -1578,8 +1412,6 @@ Non-static human motion capture in video gaming or movies, where post-processing
 In realtime applications, the full frame is typically not reconstructed again, but only selected keypoints that are tracked in 2D are triangulated, and a previously scanned model is deformed based on them.
 
 However, the simplest tracking method is to leave tracking out completely: depending on the application, tracking might not be needed if the work done on the three-dimensional data does not need topological coherence in the time domain, but recomputes its work on each new point cloud.
-
-%Some work with the reconstructed 3D structure; others use the source images and do additional work.
 
 In three dimensions, a template model is often scanned beforehand that is then morphed to match the target object to keep the topology (i.e., vertex neighborhood connectivity) constant.
 This technique adapts well to non-rigid deforming subjects \cite{bojsen2012tracking,li2009robust}.
@@ -1601,14 +1433,11 @@ Parameterized models may include a base template pose and spatially varying defo
 In two dimensions, the dense reconstruction step can be skipped when using only features in image space, providing real-time performance \cite{pilet2005real}.
 Assuming that a particular object stays in the imaged volume, features can be detected and mapped to a point on the 3D surface, and tracked locally with no full-image reconstruction, while the tracked object is assumed to keep the same topology as a previously scanned template model.
 
-%Facial animation does not necessarily even need multi-view stereo for tracking and driving a predesigned character \cite{chuang2002performance,deng2007computer}.
-
 Classic motion capture uses special reflective markers that are tracked in 2D with infrared cameras.
 Distinctive bright markers are easily thresholded from the background, tracked, and triangulated in real time.
 Markerless surface capture detects image features that are then used as virtual markers, working in a similar way.
 Matching textured objects is more computationally intensive, and needs high resolution cameras \cite{moeslund2001survey}.
 Markerless capture is important in scanning facial movement, because time-varying texture is significant in highly dynamic and detailed deformations, such as wrinkles from different facial expressions \cite{bradley2008markerless,beeler2011high,bradley2010high}.
-%Practically, scanning a neutral and wrinkled static subject beforehand and morphing between their texture is easier.
 
 Tracking is done by looking for the same feature as in a previous frame in the neighborhood where it was previously.
 State-of-the-art 2D tracking methods include Kanade-Lucas-Tomasi (KLT) \cite{lucas1981iterative,tomasi1991detection}, Tracking-Learning-Detection (TLD) \cite{kalal2012tracking}, and Consensus-based Matching and Tracking (CMT) \cite{nebehay2014consensus}, all based on \emph{optical flow} \cite{horn1981determining,gibson1950perception,beauchemin1995computation}.
@@ -1617,7 +1446,6 @@ Estimating the flow is based on the brightness constancy constraint: the intensi
 
 Optical flow is also used in interpolating new frames between recorded frames for non-synchronized cameras \cite{bradley2009synchronization,eugster2011slowmovideo}.
 The assumption of stereo reconstruction that the cameras encode the same scene can then be virtually achieved by interpolating the motion vectors between two frames to obtain an intermediate frame that then temporally matches that of another camera.
-% The Matrix.
 
 % }}} 2d tracking
 
@@ -1627,7 +1455,6 @@ Aligning two meshes or point clouds together is called \emph{registration} in th
 Registration finds a rigid transformation from one object to another.
 For a moving subject, the method can be used to find the object movement between the frames \cite{pons2005modelling,zhao2005alignment}.
 Registration is also used for combining different, overlapping parts of a static subject generated from different viewpoints to one larger model if the number of cameras is not enough for complete surface coverage \cite{eggert1998simultaneous,huber2003fully}.
-%However, for a globally calibrated camera setup, the parts need no registration since the relation between cameras is already known.
 
 The basic idea in registration is to fit two surfaces or point clouds together so that the shapes that they present become as close as possible to each other.
 The practical method of choice is iterative closest point fitting (ICP).
@@ -1635,6 +1462,5 @@ Given a sufficiently close initial guess, ICP iteratively finds a rigid transfor
 In tracking applications, an identity transform is a good initial guess for the algorithm, because the tracked object has presumably moved only a little.
 Variants of the original ICP apply assumptions on real-world data and errors, to improve convergence speed and quality \cite{zhang1994iterative,rusinkiewicz2001efficient}.
 Advances to the rigid ICP has been proposed to address surface noise and other issues, by applying ICP locally and allowing the surfaces to warp \cite{brown2007global}.
-
 
 % }}} registration

@@ -31,7 +31,6 @@ To drive the cameras individually, the remote wires are connected with opto-isol
 The ground signals of the isolators in the built circuit are connected together by mistake, so the cameras are not completely isolated; only their signal wires are.
 However, common grounding is generally not an issue.
 Furthermore, the USB connections of all cameras also connect to each other and to the trigger box via the computer they are connected to, which cannot be easily circumvented.
-%The diagrams depicted in this section show the fixed versions; the older ones used in the production device can be found in the git repository history at \url {http://github.com/sooda/thesis} if necessary.
 The git repository contains the project files in a format for the Cadsoft EAGLE pcb design software \cite{eaglepcb}.
 The diagrams for schematic and PCB layout are given here for illustration only.
 
@@ -61,7 +60,7 @@ Figure \ref{fig:triggerboard-brd-big} shows the board layout without a ground pl
 
 \subsection{Complete device}
 
-% 0.9: just enough width to fit both in a single page
+% just enough width to fit both in a single page
 \simplefig{p}{%
 \includegraphics[width=0.95\textwidth]{camsremoteclosed}
 }{fig:camsremote-closed}
@@ -78,10 +77,6 @@ Of the two buttons, the red one is the user button, and black one is the reset b
 The red LED shows that the power is on, and the yellow LED is on when the focus command has been received.
 
 The completed device is shown in Figure \ref{fig:camsremote-closed}, and Figure \ref{fig:camsremote-full} shows the same with the case opened, exposing the circuit board, soldered parts and the connectors mounted on the end.
-
-%Much of the physical space is taken by the microcontroller board and the bulky through-hole mounted opto-isolators.
-%The size of the trigger box could be reduced to approximately half of its size by using surface mount opto-isolators and designing the microcontroller itself on the same circuit board, removing the large pin headers.
-%This was not a high priority, though, as the whole trigger device is already small compared to the whole system.
 
 %\clearpage
 

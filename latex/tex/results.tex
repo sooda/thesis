@@ -1,4 +1,3 @@
-% Tulokset / results
 \section{Experiments and results} \label{sec:experiments}
 
 The feasibility of the rig was evaluated based on custom techniques on syncronization and on several scans of different subjects.
@@ -46,9 +45,6 @@ Without any actual measurements done but only with careful manual observation, n
 Two such images are depicted in Figure \ref{fig:fansynctest}.
 
 \simplefig{t}{%
-%\setlength\fboxsep{0pt}
-%\setlength\fboxrule{1pt}
-%\fbox{\includegraphics[width=0.3\textwidth]{flashtiming-a}}
 \includegraphics[width=0.49\textwidth]{fan-a}
 \includegraphics[width=0.49\textwidth]{fan-b}
 }{fig:fansynctest}{
@@ -56,18 +52,6 @@ Two such images are depicted in Figure \ref{fig:fansynctest}.
 	A marking on the end of a fan blade can be seen in the right side.
 	The position of the marking does not differ distinctively in the pictures.
 }
-
-% "hardly scientific" jonnekin väliin, hehheh?
-%Another test was done using a mobile phone microphone.
-%A DSLR makes a distinct clanking sound because of its mirror and mechanical shutter.
-%Two sound clips were recorded several times: the sound of all cameras triggering at the same time, and for comparison, the sound of a single camera only.
-%The waveforms were drawn on top of each other and inspected, and no distinct difference was found.
-%For comparison, also intentionally wrongly synchronized sequences were recorded.
-%
-%\simplegfx{p}{0.8\textwidth}{shutteraudio}{
-%	Trimmed audio recordings of all cameras shooting (top), and only a single camera (bottom).
-%	The waveforms cannot be clearly distinguished.
-%}
 
 \subsubsection{Video capture}
 
@@ -146,7 +130,6 @@ Optical flow was suggested for sub-frame synchronization if necessary.
 
 Another method for triggering multiple video recordings is to use a Magic Lantern based wired remote trigger by pressing the half-shutter, or focus button when a record key has been configured in ML to start recording.
 This method did not show any improvements in overcoming the offset, compared to the wireless remote.
-% it may be even worse, as the additional code in ML induces more lag.
 
 A typical measurement result is shown in Figure \ref{fig:flashtiming}.
 Audio recorded by the cameras' internal microphones at the same event is shown in Figure \ref{fig:flashaudio}, and the order of flash pulses in the three frames can be verified from the order of the sound emitted by the flash.
@@ -159,8 +142,6 @@ For a shorter exposure time, a shorter white overexposed line occurs in the vide
 For this reason, decreasing the exposure time only helps in motion blur, but not in rolling shutter artifacts.
 
 \subsection{Sample subjects} \label{sec:samplesubjects}
-
-%The mask, human heads, legos, books
 
 Test subjects were scanned using the system for validation and analysis.
 Reconstruction was performed using two software pipelines.
@@ -199,16 +180,6 @@ The general setup is shown in Figure \ref{fig:totalsetuptwo}, and a closer depic
 	Left: Poses of the cameras from the subject's viewpoint.
 	Right: Flash gun bounced from a white cloth is used to evenly illuminate the bottom side of the subject.
 }
-
-%\simplegfx{p}{0.5\textwidth}{setupcams}{
-%	Poses of the cameras from the subject's viewpoint.
-%}
-%
-%\simplegfx{p}{0.5\textwidth}{flashbounce}{
-%	Flash gun bounced from a white cloth is used to evenly illuminate the bottom side of the subject.
-%}
-%
-
 
 The Bundler SfM system recommends to take photos at least every $\alpha = 15$ degrees around a subject \cite{bundlerfaq}.
 Similar rough guidelines are usually suggested, such as a camera baseline of 10-20 \% of the distance to the subject.
@@ -368,7 +339,6 @@ As high level of geometry as produced initially by the surface generation proces
 }
 
 \simplefig{t}{%
-%\includegraphics[width=0.38\textwidth]{soodaheadorig}
 \includegraphics[width=0.99\textwidth]{soodaheadorigclose}
 \includegraphics[width=0.99\textwidth]{soodaheadreconsteyeswire}
 }{fig:soodaheadclosecompare}{

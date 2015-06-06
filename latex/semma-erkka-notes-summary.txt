@@ -1,8 +1,0 @@
-- video processing issues in low level: compression, noncausal movement etc
-- camera intrinsics into camera chapter, not in stereo vision
-- better error reviews for disparity/depth
-- better epipolar geometry section
-- link fundamental matrix to the idea of correspondence search
-- describe image rectification based on corresp/triangulation
-- n-view theory in more detail
-- describe meaning of dynamic scenes in detail

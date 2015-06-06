@@ -1,3 +1,6 @@
+# note: this is not a particularly good example on how to latex makefiles,
+# but just what i needed at the time
+
 SRC := dippa.tex \
 	$(wildcard tex/*.tex) \
 	gfx/tex/bayer.tex \
@@ -12,8 +15,7 @@ SRC := dippa.tex \
 	gfx/tex/simplestereo.pdf \
 	gfx/tex/epigeom.pdf \
 	gfx/tex/baselineerr.pdf \
-	gfx/tex/tinyflowergrid.pdf \
-	gfx/dot/img-get-process.dot.pdf
+	gfx/tex/tinyflowergrid.pdf
 
 all: dippa.pdf
 	okular dippa.pdf

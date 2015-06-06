@@ -1,12 +1,9 @@
-%Tutkimusaineisto ja -menetelmät
-% vai: multi-view stereo rig implementation
 \section{3D scanning rig implementation} \label{sec:implementation}
 
 Now that the background has been introduced, the practical part of this thesis follows.
 Specifications for a 3D scanning rig are given and different off-the-shelf camera types are compared more in depth.
 Suitable cameras for the task are then selected and described, along with the decisions on mechanical support construction.
 Control software for the rig is developed, and a survey is given on the readily available offering of reconstruction software.
-%Tests of the built system are given in Section \ref{sec:experiments}.
 
 \subsection{Functional specification} % {{{
 
@@ -21,7 +18,7 @@ Desirable properties of the system were given as:
 	\item Detail: high image resolution should be used for achieving data for state-of-the-art algorithms
 	\item 3D and 4D: possibility for both static surface reconstruction and variations in geometry over time are preferred
 	\item Open design: by documenting the rig well and selecting readily available generic components, a similar system could be built if there was such a need, and the already built system could be easily extended
-	\item Reasonable price: the total budget of all hardware and software combined should not exceed 10~000 EUR.% Typical commercial solutions are many times more expensive.
+	\item Reasonable price: the total budget of all hardware and software combined should not exceed 10~000 EUR.
 \end{itemize}
 
 Flexibility for arbitrary subjects is achieved by using adjustable connections for each camera, such that their poses can be changed individually.
@@ -52,7 +49,6 @@ All the properties should be looked as a whole; e.g., large pixel count does not
 
 \paragraph{Previous work}
 DSLRs have been popular in commercial static capture setups \cite{ir-ltd,ten24,capturelab,agisoftforum,winder2008technical} probably due to their price compared to specialized hardware, and software availability.
-%Several hobbyists in the Agisoft forum \cite{agisoftforum} suggest a Canon or Nikon DSLR.
 Commercial video capture setups may use specialized machine vision devices and hardware-accompanying or customized software for image capture and reconstruction \cite{al2013new}.
 Also standard commercial video cameras have been used \cite{bradley2010high}, but their resolution is limited compared to still cameras.
 As an example, Borshukov et~al.\ used professional Sony/Panavision HDW-F900 video cameras for the movie The Matrix Reloaded \cite{borshukov05universal} producing uncompressed video, with a list price exceeding \$80000 \cite{sonyhdwf900r}.
@@ -63,7 +59,6 @@ Self-contained consumer devices contain the image processing pipeline from senso
 In contrast, machine vision devices need several high performance computers for reliable multi-camera capture because of the lack of local storage and image processing pipelines.
 A machine vision camera contains typically only the imaging sensor and a processor for a control interface, and outputs easily 1 Gbit/s worth of raw data or more.
 A common desktop computer and one additional hard disk per camera would be necessary if the capture is long enough and would not fit in a computer's RAM, increasing the system cost and complexity.
-%For a small number of cameras, existing buses on a PC might be enough, but a larger number requires even more bandwidth.
 Best mechanical hard disks currently have sequential write speed up to 1-1.4 Gbit/s as measured by Tom's Hardware \cite{tomshw-hddwrite};
 newer solid-state drives (SSD) generally are two to four times faster \cite{tomshw-ssdwrite}.
 For covering all the bandwidth, expansion cards would be needed per camera, count depending on the camera protocol.
@@ -108,7 +103,7 @@ Main properties affecting image quality directly are as follows:
 		Sensor noise degrades image quality in general, adds error to subpixel position estimation and complicates correspondence search, etc.
 
 	\item Dynamic range, i.e., bit depth of the processing pipeline.
-		Whereas JPEG pictures in some cameras have only 8 bits per color channel, the typically higher bit depth of the sensor is available in raw image formats.  % DSLRs and industrial cameras use more, often 12 or 14 bits per pixel in raw format, that contains the color filter array effects before interpolation. % Postprocessing without reconstruction can use the added color resolution.
+		Whereas JPEG pictures in some cameras have only 8 bits per color channel, the typically higher bit depth of the sensor is available in raw image formats.
 
 	\item Lens quality.
 		High sensor resolution is only useful if the lens is sharp enough, and color aberrations degrade image quality in general.
@@ -151,7 +146,7 @@ On practical matters affecting usability:
 		Aperture, shutter speed and others should be manually controllable remotely, and repeatable without automatic features.
 
 	\item Remote trigger.
-		Practically all DSLRs support wired or wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol in the data bus. % Some protocols may have global commands to send throughout a group of cameras. (FireWire?) Otherwise, software trigger suffers from sporadic jitter from operating system and protocol non-determinism.
+		Practically all DSLRs support wired or wireless remote shutter releases; some machine vision cameras have optionally an external logic-level trigger input in addition to one that is set by the protocol in the data bus.
 
 	\item For consumer cameras, USB read speed supported by the camera.
 		Retrieving saved image or video data takes less time on faster interfaces.
@@ -171,10 +166,6 @@ On practical matters affecting usability:
 	\item Availability.
 		For an easily replicable system, it should be straightforward to acquire the hardware.
 \end{itemize}
-
-%Having a much smaller production rate than larger manufacturers that target consumers (such as Canon, Nikon, Pentax or Sony), machine vision cameras have a broad price range from a few hundred euros to thousands, well correlated with pixel count and frame rate.
-%Lens prices for the C-mount optics used by machine vision are moderate, at around 200-300 EUR.
-%The price of professional video cameras leaves them out of the comparison, them being an order of magnitude more costly than average consumer devices.
 
 % }}}
 
@@ -225,7 +216,6 @@ The built rig consists of nine cameras arranged as a $3 \times 3$ grid.
 \paragraph{Properties}
 Relatively large pixel count combined to a good lens captures high-resolution detail.
 The sensor's pixel size is not unnecessarily small but not as large as in full frame DSLR cameras.
-%Dynamic range with 14 bits per pixel is relatively large; most reconstruction programs use 8-bit images, though.
 % raw images useful for manual image enhancement
 The 5 FPS continuous speed for full-size images can be used for testing high resolution motion, but the video abilities are also reasonable.
 Ghosh et~al.\ \cite{ghosh2011multiview} use DSLRs operating in burst mode for special illumination capture, which presents one augmentation for the rig in future work.
@@ -235,8 +225,6 @@ A number of pixels are missing color sparsely around the middle of the sensor an
 
 The recent Canon EOS M MILC shares many features and internal elements with EOS 700D and was strongly considered, but it is missing support for remote shooting from USB or wired remote release.
 
-%Older models of the same product line can still be found in the market, such as 650D or 600D.
-%700D has a newer processor and thus faster processing speed, faster memory card controller and others.
 Resolution of the sensor has stayed same since the EOS 550D, introduced in 2010.
 At the same time, also cheaper new models are available, such as the EOS 1200D; at a reduced price, less processing power is provided, resulting in slower operation but otherwise the cameras share mostly same features.
 
@@ -273,7 +261,6 @@ This circle of confusion would span $0.019 \text{mm} / 22.3 \text{mm} \times 518
 
 \simplefig{t}{%
 \includegraphics[width=0.8\textwidth]{canon50mmlens}
-%\includegraphics[width=0.4\textwidth]{canonef50mm-2}
 }{fig:canonef50mmlens}
 {Canon EF 50mm f/1.8 II, a fixed focal length lens with manual focus and autofocus}
 
@@ -314,7 +301,7 @@ Each camera should be able to turn at least in landscape and portrait mode to fu
 Two different major designs were considered: a hinged frame consisting of industrial aluminium profile system, or individual tripod stands available in most photography stores meant for supporting audiovisual equipment.
 For connecting the cameras, a custom profile could make use of also custom built parts; also, photography stores sell screws and clamps meant for connecting cameras, lights and other hardware.
 
-Aluminium profiles such as those by MiniTec, Item or Bosch Rexroth consist of rectangular tube with a T-shaped slot running along each side for screws. % , sometimes called T-slot systems.
+Aluminium profiles such as those by MiniTec, Item or Bosch Rexroth consist of rectangular tube with a T-shaped slot running along each side for screws.
 %The profile systems are commonly used in assembly lines and other automation installations in factories, but also in smaller assemblies
 Mechanical dimensions vary by manufacturer but most supply a large catalog of connection brackets, hinges, screws etc.\ that allow much flexibility in the frame design.
 A hobbyist-purposed manufacturer OpenBuilds targets open source projects, such as 3D printers and CNC routers.
@@ -388,8 +375,6 @@ Detailed description on the lights is given in Section \ref{sec:samplesubjects}.
 
 \subsection{Universally synchronized multi-trigger hub} % {{{
 
-%By connecting each camera to a separate opto-isolator and driving all of them from same source, all cameras are triggered simultaneously in a safe fashion.
-%To fully automate the system, the trigger device should be connected to the computer that downloads the photos from the cameras.
 To fully automate the system, it is desirable to trigger the cameras remotely from a computer that also downloads the photos.
 Additionally, for a rig with possibly non-static subjects but an intended result of a still subject, the cameras have to be synchronized to record the subject at the same instant in time.
 This section describes the remote shutter mechanism and a custom tool that was built for the task.
@@ -400,7 +385,6 @@ Similarly, custom and undocumented solutions previously used for hard synchroniz
 
 \subsubsection{Remote shutter synchronization} % {{{
 
-%Photo synchronization was done with a remote mechanism provided by the camera, by driving the remote control of all cameras simultaneously.
 The synchronization was implemented as a wired remote trigger for each camera, driven from a single source.
 Additionally, when using flash units for lighting, the short light pulse emitted by the flash typically synchronizes the cameras if the surrounding environment is dark, and the camera shutter synchronization has less strict requirements.
 However, the trigger hub was designed to not rely on this fact.
@@ -532,7 +516,6 @@ The reset button resets the whole microcontroller, restarting the program with n
 The used Mbed library does not actually turn all pins on at exactly the same time but in fast succession.
 This is not a problem because of the high clock speed of the processor;
 the difference between first and last pin changes was measured to be a negligible 1.6 microseconds.
-%Expected variance from each camera is supposed to be orders of magnitude longer.
 
 Control software for the host PC was implemented as a small command-line Python program communicating to the virtual serial port of the Nucleo board.
 The host controls the trigger's outputs individually, normally driving all the outputs at once.
@@ -569,7 +552,6 @@ Olympus has had an SDK, but it is no longer available \cite{olympussdk}.
 To support all vendors, one would have to write code for all APIs.
 In this work, extendability to other vendors was seen as an optional advantage.
 In addition, development kits provided by the vendors may be more restrictive and may not be fully available.
-%Canon provides a Digital Imaging Developer Programme that requires registration to be able to download the SDK (EOS Digital SDK, or EDSDK).
 
 Furthermore, the Canon EDSDK claims in the manual not to support sessions to more than one camera in parallel \cite{canonedsdk}.
 This technical issue could probably be overcome with additional workarounds in software, though.
@@ -644,6 +626,7 @@ It is recommended to spread the cameras as evenly to all USB root hubs as possib
 The same is recommended when downloading the actual images.
 The USB hub where a device is connected can be verified in Linux by looking at the output of the \emph{lsusb} command-line tool.
 
+% note: an actual algorithm listing would have been neater
 \begin{lstlisting}[
 	caption=Pseudocode for \emph{gphotogrid}.
 	The lock task runs only if synchronization is enabled.
@@ -773,8 +756,6 @@ Raw recording is also supported, but with the limited memory card speed, only a 
 
 \subsection{3D reconstruction software survey} % {{{
 
-% something on individual algorithms/tasks of the reconstruction pipeline; standalone pipelines; web services; sw/hw solutions
-
 When the imagery has been downloaded to a PC, the actual reconstruction can be started.
 There is a wide collection of libraries, open-source tools and commercial packages for both automatic reconstruction and generic mesh editing for post-processing the data.
 Some of them are presented in this section.
@@ -827,7 +808,6 @@ Some of the most known state-of-the-art implementations are listed below.
 		The needed external tools are feature matching, bundle adjustment and dense reconstruction.
 		VisualSFM is probably the most common tool for practical use in the open source and research community.
 		It integrates into a few clicks the pipeline from images to 3D point cloud, using SiftGPU for features, its own radial undistortion model and SfM for camera estimation, PBA for bundle adjustment, and finally PMVS/CMVS for dense matching.
-%PMVS is suggested by many others.
 
 	\item[Meshlab] \cite{meshlab} is a generic interactive editor of point clouds and meshes, implementing many scientific papers.
 		It can be used interactively and scripted to do the same steps automatically.
@@ -842,8 +822,6 @@ Some of the most known state-of-the-art implementations are listed below.
 	\item[Python Photogrammetry Toolbox] \cite{moulon2011python} is popular in archaeological fields.
 		It combines Bundler and PMVS/CMVS into a full-scale pipeline.
 \end{description}
-
-%SFM toolkit combines Bundler and CMVS/PMVS.
 
 % }}}
 
@@ -875,8 +853,6 @@ The following list includes software-only reconstruction solutions available for
 
 	\item[Pix4dMapper] \cite{pix4d} converts aerial images to geometric surface models for mapping related applications.
 
-	%\item[Trimensional] is a 3D scanner for iPhone.
-
 	\item[Pixel Farm] \cite{pixelfarm} provides tools for reconstruction, CG integration and match moving (i.e., augmenting live footage with computer-generated imagery).
 
 	\item[3D-equalizer] \cite{3dequalizer} is a multi-platform 3D tracking solution for the visual effects industry, including Python scripting, customer support, and more.
@@ -892,7 +868,6 @@ In contrast to the above, the following list includes complete systems that are 
 
 	\item [FARO] \cite{faro} manufactures hardware and provides scanning software for 3D documentation and surveying, and provides a free application for Kinect-based scanning.
 		Many commercial applications are listed, ranging from product development to crime scene analysis.
-	%\item[Fuel3D] is a complete low-cost handheld scanning system.
 
 	\item[Dimensional Imaging ltd.] \cite{di4d} provides DI3D and DI4D systems and software for static and dynamic surface capture, respectively, used for video games, research and medical applications.
 
@@ -914,7 +889,6 @@ These two were used in evaluating the system in the following part (Section \ref
 \paragraph{PhotoScan}
 PhotoScan \cite{photoscan} is a popular commercial program for scanning subjects from several pictures for generation of 3D models and measuring spatial data.
 Agisoft advertises PhotoScan ``to be used in GIS applications, cultural heritage documentation, and visual effects production as well as for indirect measurements of objects of various scales''.
-%The programs are targeted for the end user and include tools for editing the resulting data, and need no external tools for outputting complete meshes.
 The program is targeted for users without necessarily full knowledge of the technology, and is popular and successful for modeling human subjects according to the forum \cite{agisoftforum}.
 
 PhotoScan uses a typical multi-view reconstruction pipeline, taking also into account practical issues such as light variations in different images.
