@@ -2,6 +2,44 @@ dippa
 	Art of Optical Flow | fxguide http://www.fxguide.com/featured/art_of_optical_flow/
 	CGL @ ETHZ - Papers http://graphics.ethz.ch/publications/papers/papers.php
 	fxguide | vfx, mograph, and production news http://www.fxguide.com/
+	Digital Photography Review: Digital Photography Review http://www.dpreview.com/?utm_campaign=internal-link&utm_source=logo&utm_medium=image&ref=logo
+	Computer Vision Research Groups http://www.cs.cmu.edu/~cil/v-groups.html
+	Master's thesis - Bachelor and Master students, School of Electrical Engineering - Into https://into.aalto.fi/display/enmasterelec/Master's%20thesis
+	Welcome to BAYERPATTERN.com | BAYERPATTERN.com http://www.bayerpattern.com/
+	Jättivertailussa peilittömät järjestelmäkamerat - Ennakot - MBnet http://www.mbnet.fi/artikkeli/lehti/ennakot/jattivertailussa_peilittomat_jarjestelmakamerat
+	Vertailu: Peilittömät järjestelmäkamerat - Pdf - MBnet http://www.mbnet.fi/artikkeli/lehti/pdf/vertailu_peilittomat_jarjestelmakamerat
+	Harrastajan haltuun 3/2012 - Lehti - MBnet http://www.mbnet.fi/artikkeli/lehti/harrastajan_haltuun_3_2012
+	Computer Vision and Image Understanding | Vol 68, Iss 3, Pgs 255-363, (December, 1997) | ScienceDirect.com http://www.sciencedirect.com/science/journal/10773142/68
+	How L.A. Noire Conquered The Uncanny Valley With A Tech Called MotionScan http://gizmodo.com/5714436/how-la-noire-conquered-the-uncanny-valley-with-a-tech-called-motionscan
+	HowStuffWorks "The Face of the Revolution" http://electronics.howstuffworks.com/motionscan-technology1.htm
+	Motionscan » Depth Analysis http://depthanalysis.com/motionscan/
+	Geodetic Systems, Inc - what is photogrammetry http://www.geodetic.com/v-stars/what-is-photogrammetry.aspx
+	▶ 3D Models for Cultural Heritage: Beyond Plain Visualization (Web extra 3) - YouTube http://www.youtube.com/watch?v=VVmVTrtx-wo&list=LL70CKZQPj_ZAJ0Osrm6TyTg
+	Digital Photography Review: Digital Photography Review http://www.dpreview.com/
+	xx Marks the Spot – Using DSLR Cameras for Cutting Edge Effects, 3D Capture and Augmented Reality | Nikon Cinema http://cinema.nikonusa.com/xx-marks-the-spot-using-dslr-cameras-for-cutting-edge-effects-3d-capture-and-augmented-reality/
+	ASPRS American Society for Photogrammetry and Remote Sensing http://www.asprs.org/
+	Cracking The Black Box of Photogrammetry Scanning | Infinite-Realities http://ir-ltd.net/cracking-the-black-box-of-photogrammetry-scanning/
+	Gear to Geek Out Over: LensRentals' New Lens Adjustment Rig is Awesome http://petapixel.com/2014/03/30/gear-geek-lensrentals-gets-awesome-new-lens-adjustment-rig/
+	Janimation Head Tech http://www.zbrushcentral.com/showthread.php?133479-Janimation-Head-Tech
+	ATOR: How to make 3d scan with pictures and the PPT GUI http://arc-team-open-research.blogspot.com.br/2012/12/how-to-make-3d-scan-with-pictures-and.html
+	Depth of field and diffraction http://www.normankoren.com/Tutorials/MTF6.html
+	Vision Systems Design - Machine Vision Systems and Image Processing Applications http://www.vision-systems.com/index.html
+	Uutiset: Tarkkoja implantteja 3D-tulostuksella - Aalto-yliopisto http://eng.aalto.fi/fi/current/news/view/2014-01-09/
+	Elektroniset väitöskirjat - Electronic doctoral dissertations - Aalto University Library, Otaniemi - Aalto University http://otalib.aalto.fi/en/collections/e-publications/dissertations/
+	Digital fabrication studio 25438 Lectures - Noppa - Aalto https://noppa.aalto.fi/noppa/kurssi/25438/luennot
+	Understanding distortion in machine vision lenses - Vision Systems Design http://www.vision-systems.com/articles/print/volume-18/issue-7/features/understanding-distortion-in-machine-vision-lenses.html
+	vision.middlebury.edu/mview/eval multiview stereo comparison evaluation http://vision.middlebury.edu/mview/eval/
+	History of Motion Capture http://www.motioncapturesociety.com/resources/industry-history
+	Dynamic Shape Capture using Multi-View Photometric Stereo http://gl.ict.usc.edu/Research/DynamicShape/
+	Infinite-Realities - 3D Scanning and Character Creation http://ir-ltd.net/
+	starlike lee filters http://www.starlike.fi/index.php?sivu=tuotteet&alasivu=5&valmistaja=52
+	Sensor and pixel sizes of area scan cameras or line scan cameras - machine vision camera technology http://www.vision-doctor.co.uk/camera-technology-basics/sensor-and-pixel-sizes.html
+	DLT Method http://kwon3d.com/theory/dlt/dlt.html
+	Photographic optics. . - Full View | HathiTrust Digital Library | dof paras kirja http://babel.hathitrust.org/cgi/pt?id=mdp.39015006765567;view=1up;seq=7
+	studio - What are the differences between different types of cloth backdrops? - Photography Stack Exchange http://photo.stackexchange.com/questions/18888/what-are-the-differences-between-different-types-of-cloth-backdrops
+	Agisoft PhotoScan - Tips and Tricks - Agisoft http://www.agisoft.ru/wiki/PhotoScan/Tips_and_Tricks
+	Photometrics Research Imaging Learning Zone: CCD Camera Readout Versus Frame Rate http://www.photometrics.com/resources/learningzone/readoutvsframerate.php
+	The Machine Vision Portal - Machine Vision Portal :: industrielle Bildverarbeitung :: Computer Vision http://www.machine-vision.de/
 	hardware
 		Data Translation - USB and Ethernet Data Acquisition Solutions http://www.datatranslation.com/
 		3dMD Customer Research http://www.3dmd.com/3dmd-customer-research/
@@ -9,6 +47,42 @@ dippa
 		1004_CAMERA http://homepage.ntlworld.com/molyned/1004.htm
 		Computer Vision Hardware / CMU http://www.cs.cmu.edu/~cil/v-hardware.html
 		DSLR vs. Camcorder for Video http://mountainmultimedia.biz/web-multimedia-blog/dslr-vs-camcorder-video
+		Aluminium Profiles, T-slot Nuts, Fasteners and Accessories http://www.modularcomponents.com.au/building-blocks/
+		Canon EOS 5D http://photonotes.org/reviews/eos-5d/
+		Wired remotes for Canon EOS (Canon, Adidt M1C3, Nova and OMG! SR2) http://photonotes.org/reviews/wired-remotes/
+		PhotoNotes.org - EOS 550D, EOS 600, EOS 5D, EOS 5D mark II http://photonotes.org/cgi-bin/camera-lookup.pl?camera1=eos550d&camera2=eos600&camera3=eos5d&camera4=eos5dii&camera5=*
+		www.doc-diy.net :: DIY wired remote control for Canon EOS cameras http://www.doc-diy.net/photo/eos_wired_remote/
+		shutter lag times: Canon EOS 7D / 10D - 70D Talk Forum: Digital Photography Review http://www.dpreview.com/forums/post/37845292
+		Profile Connectors - Bosch Rexroth Corp. http://www13.boschrexroth-us.com/Framing_Shop/Product/Default.aspx?Group=102
+		HDSLR Camera Support Accessories http://www.samys.com/c/HDSLR-Camera-Support-Accessories/start_49/3/616.html
+		Dimensional Imaging DI3D http://www.dirdim.com/port_ffproducts.php?fileName=ffp_di3d
+		Extrusions - RepRapWiki http://reprap.org/wiki/Extrusions
+		KJN - Suppliers or Aluminium Profile and Accessories http://www.aluminium-profile.co.uk/
+		Pacific Integrated Handling - Bosch Rexroth - Aluminum Framing http://www.pacificintegrated.com/mas/framing.htm
+		di3d_05.jpg (712×762) http://www.dirdim.com/images/portfolio/ffproducts/imagegalleries/di3d_05.jpg
+		Hardware - OpenBuilds Part Store http://openbuildspartstore.com/hardware/?sort=bestselling
+		Free Canon memory card compatibility chart | Canon D-SLR Skills, Photography Tutorials | PhotoPlus http://www.photoplusmag.com/2013/01/08/free-canon-memory-card-compatibility-chart/
+		Portable CMM Products and Solutions from FARO http://www.faro.com/en-gb/products
+		The pi 3D Scanner | An "low-cost" multi camera 3d scanner setup http://www.pi3dscan.com/
+		Get your own full-body 3D scan... for free - Time Out Tokyo http://www.timeout.jp/en/tokyo/feature/7121/Get-your-own-full-body-3D-scan-for-free
+		Explore Cornell - The 3D Body Scanner - About the Body Scanner http://www.bodyscan.human.cornell.edu/scene60df.html
+		An Affordable Full Body Studio Grade 3D Scanner http://hackaday.com/2014/03/07/an-affordable-full-body-studio-grade-3d-scanner/
+		Full Body 3D Scanning using 80 x DSLR’s | Ten24 http://www.ten24.info/?p=1063
+		Video Game Uses 18-DSLR Rig to Create Head Scans of Athletes http://petapixel.com/2013/08/01/bts-creating-3d-head-scans-for-fifa-14-with-ea-sports-18-dslr-rig/
+		39 Raspberry Pi 3D Scanner http://hackaday.com/2013/11/13/39-raspberry-pi-3d-scanner/
+		DSLR Remote Pro Multi-Camera: Control multiple Canon cameras from a PC http://breezesys.com/MultiCamera/index.htm
+		Triggering multiple cameras http://breezesys.com/MultiCamera/release.htm
+		Welcome to 3D Film Factory http://www.3dfilmfactory.com/index.php
+		Phidgets Inc. - Unique and Easy to Use USB Interfaces http://www.phidgets.com/
+		Build a mini ST-LINK/V2 programmer/debugger for the STM32 http://www.micromouseonline.com/2014/01/05/mini-st-linkv2-programmer/
+		Elinchrom Polarizing Filter for 8-1/4" Elinchrom EL 26244 http://www.bhphotovideo.com/c/product/16851-REG/Elinchrom_EL_26244_Polarizing_Filter_for_8_1_4.html
+		Tervetuloa | Top Shot - kamerakauppa netissä https://www.topshot.fi/
+		Buy stand - Cheap stand from Linkdelight http://www.linkdelight.com/buy/stand.html
+		trussit & telineet & hissit - Discoland http://discoland.fi/index.php?val1=4
+		feasible compact cameras | Camera feature search: Digital Photography Review http://www.dpreview.com/products/search/cameras?utm_campaign=internal-link&utm_source=mainmenu&utm_medium=text&ref=mainmenu#criterias=SpecsCoreParams%2CSpecsUncompressedFormatNew%2CSpecsExposureModesSearch%2CSpecsFlashSearch%2CSpecsManualFocus&page=2&paramSpecsCoreParamsBodyType=UltraCompact%2CCompact%2CLargeSensorCompact%2CSLRLikeCompact&paramSpecsUncompressedFormatNew=RAW&paramSpecsExposureModesSearch=manual-exposure&paramSpecsFlashSearch=hotshoe%2Csync&paramSpecsManualFocus=Yes
+		Using a IR remote to focus and start/stop recording on your Canon DSLR - DSLR Film Noob http://www.dslrfilmnoob.com/2012/06/24/ir-remote-focus-startstop-recording-canon-dslr/
+		EOS magazine article: Canon Remote Control RC-6 http://www.eos-magazine.com/articles/remotes/canonrc6.html
+		ESPER | bright ideas in black boxes | shutter sync box http://www.esperdesign.co.uk/
 		cameras
 			Point Grey http://ww2.ptgrey.com/
 			Sony | Applications Catalog Professional http://pro.sony.com/bbsc/ssr/app-machinevision/
@@ -52,11 +126,45 @@ dippa
 			Photonfocus AG, producer of CMOS image sensors and CMOS cameras http://www.photonfocus.com/
 			Thorlabs, Inc. - Your Source for Fiber Optics, Laser Diodes, Optical Instrumentation and Polarization Measurement & Control http://www.thorlabs.de/index.cfm
 			A comprehensive list of firewire and USB3 machine vision cameras http://damien.douxchamps.net/ieee1394/cameras/
+			Triggering multiple cameras http://www.breezesys.com/MultiCamera/release.htm
+			Steves Digicams - Digital Camera Reviews, Camera News, and Photography Information http://www.steves-digicams.com/
+			HTC Evo 3D - Wikipedia, the free encyclopedia http://en.wikipedia.org/wiki/HTC_EVO_3D
+			PhotoNotes Complete EOS Lookup http://photonotes.org/lookup/
+		mechanics
+			Profiltechnik: Alu-Profile und Profilsysteme - mk Technology Group http://www.mk-group.com/produkte/profiltechnik.html
+			Rakenneprofiilijärjestelmä - Litemaster Oy / Porin Elektroniikkatarvike http://lm.fi/index.php?page=kokoonpanotekniikka-rakenneprofiilijaerjestelmae
+			SKS GROUP - Alumiiniprofiilijärjestelmät http://www.sks.fi/www/_alumiiniprofiilijarjestelmat&id=Maytec_alumiiniprofiilit
+			T-Slot Parts - Aluminum Profile Products & Accessories http://www.tslotparts.com/
+			Tripods and Camera Supports - Park Cameras Online http://www.parkcameras.com/g/16/Tripods-and-Camera-Supports.html
+			Tubing & Struts parts with free next day delivery | RS Components http://uk.rs-online.com/web/c/enclosures-storage-material-handling/structural-systems-handrails/tubing-struts/
+			Valuframe - Aluminium Extrusions > Aluminium Profile > Aluminium Extrusion > Aluminium Profiles >Aluminium Profile Systems http://www.valuframe.co.uk/
+			MiniTec Finland Oy http://www.minitec.fi/
+			MiniTec T-Slotted Aluminum Extrusions. Modular Aluminum Profiles For Custom Construction From Aluminum Extrusions. Custom Clean Rooms, Ergonomic Workstations, Belt Conveyors, and Machine Guards Are But A Few Applications. http://www.minitecframing.com/
+			MiniTec T-Slotted Aluminum Extrusions. Modular Aluminum Profiles For Custom Construction From Aluminum Extrusions. Custom Clean Rooms, Ergonomic Workstations, Belt Conveyors, and Machine Guards Are But A Few Applications. http://www.minitecframing.com/Products/Aluminum_Profiles/Aluminum_Profile_Catalog_Pages/45_Series_T-slot_Information.html
+			Misumi Aluminum Extrusion Search Tool (BETA) http://us.misumi-ec.com/maker/misumi/mech/aluminum_extrusions/Extrusion-Browser.html
+			Movetec Oy http://www.movetec.fi/eng/
+			80/20 (framing system) - Wikipedia, the free encyclopedia http://en.wikipedia.org/wiki/80/20_(framing_system)
+			80/20® Inc. - The Industrial Erector Set® http://www.8020.net/
+			item profiilijärjestelmä http://www.itemprofiili.fi/sida39_fi.html
+			item-alumiiniprofiilit http://www.itemprofiili.fi/sida5_fi.html
+			MiniTec - aluminium profiles http://www.movetec.fi/eng/products-mechanic/aluminium-profiles/minitec-aluminium-profiles
+			MiniTec Finland Oy - Profiilijärjestelmä http://www.minitec.fi/finnish/profilesystem_fi.htm
+			Alumiiniprofiilit | Rollco http://rollco.fi/tuotteet/alumiiniprofiilit/
+			Alumiiniprofiilit - Valmistajat | Exportpages http://www.exportpages.fi/valmistaja/alumiiniprofiilit-1001098198-1.htm
+			Download Aluminum Framing Catalog - Download Aluminum Framing Catalog http://www.boschrexroth-us.com/country_units/america/united_states/sub_websites/brus_dcl/Products/Aluminum_Structural_Framing/a_catalog/mge_catalog_download/index.jsp?
+			Buy Connecting Components & Structural Systems & Handrails parts | RS Online http://uk.rs-online.com/web/c/enclosures-storage-material-handling/structural-systems-handrails/connecting-components/?applied-dimensions=4294461715&esid=cl_4294967294,cl_4294467994,cl_4294468035,cl_4294468034,cl_4294959392,cl_4294468182&m=1
+			Bonnekamp - Home http://www.bonnekamp.nl/en_US/index.html
+			PlugIns/Catalogues: DIAL - light. building. software. http://www.dial.de/DIAL/en/dialux/pluginscatalogues.html
+			aLUMEN / Innovatiivista valaistustekniikkaa http://www.alumen.fi/
+			Janster anodisointi alumiini http://www.janster.fi/web/index.php?id=21
+			Aluminium profiles, aluminium profile system, aluminium construction profiles, assembly profiles - RK Rose+Krieger http://www.rk-rose-krieger.com/english/products/blocanr-profile-system/
+			Item Profiili - Your partner in automation solutions http://www.itemprofiili.fi/
 	synch
 		Crowdsourcing Bullet Time | DIYPhotography.net http://www.diyphotography.net/crowdsourcing-bullet-time
 		Camera Axe flash strobe trigger http://www.cameraaxe.com/
 	specs
 		Photo Strobe Trigger Voltages http://www.botzilla.com/photo/strobeVolts.html
+		Inside the Canon RAW format version 2, understanding .CR2 file format and files produced by Canon EOS Digital Camera http://lclevy.free.fr/cr2/
 	software
 		plural eyes audio video sync | B&H Photo Video http://www.bhphotovideo.com/c/search?Ntt=plural+eyes&N=0
 		Camera Calibration Toolbox for Matlab http://www.vision.caltech.edu/bouguetj/calib_doc/
@@ -77,11 +185,169 @@ dippa
 		Linux: Tethered Shooting ─ .:: granjow.net http://granjow.net/tetheredCam.html
 		MeshMixer http://meshmixer.com/
 		MeshLab http://meshlab.sourceforge.net/
+		GPU Gems 3 - Chapter 15. Playable Universal Capture http://http.developer.nvidia.com/GPUGems3/gpugems3_ch15.html
+		optical flow | pca | human motion tracking | Michael J. Black: Software http://cs.brown.edu/~black/code.html
+		Machine Vision Toolbox | matlab http://www.petercorke.com/Machine_Vision_Toolbox.html
+		Camera calibration toobox for Matlab http://www.ee.oulu.fi/~jth/calibr/
+		OCamCalib: Omnidirectional Camera Calibration Toolbox for Matlab - Davide Scaramuzza https://sites.google.com/site/scarabotix/ocamcalib-toolbox
+		sfm ssba klt optical flow gpu http://www.inf.ethz.ch/personal/chzach/opensource.html
+		PMVS2 Patch-based Multi-view Stereo Software http://www.di.ens.fr/pmvs/
+		CMVS Clustering Views for Multi-view Stereo http://www.di.ens.fr/cmvs/
+		Simple triangulation with OpenCV from Harley & Zisserman [w/ code] | More Than Technical http://www.morethantechnical.com/2012/01/04/simple-triangulation-with-opencv-from-harley-zisserman-w-code/
+		MeshLab Stuff: Meshing Point Clouds http://meshlabstuff.blogspot.com.br/2009/09/meshing-point-clouds.html
+		ATOR: Converting pictures into a 3D mesh with PPT, MeshLab and Blender http://arc-team-open-research.blogspot.co.at/2012/09/converting-pictures-into-3d-mesh-with.html
+		ATOR: Python Photogrammetry Toolbox (PPT) and a turntable for 3D objects http://arc-team-open-research.blogspot.co.at/2011/07/python-photogrammetry-toolbox-ppt-and.html
+		How to make 3d scan with pictures and the Python Photogrammetry Toolbox GUI http://www.blenderartists.org/forum/showthread.php?276668-How-to-make-3d-scan-with-pictures-and-the-Python-Photogrammetry-Toolbox-GUI
+		Multicore Bundle Adjustment http://grail.cs.washington.edu/projects/mcba/
+		Open Source Photogrammetry: Ditching 123D Catch – We Did Stuff http://wedidstuff.heavyimage.com/index.php/2013/07/12/open-source-photogrammetry-workflow/
+		DIY Photogrammetry: Open Source Alternatives to 123D Catch | MAKE http://makezine.com/2013/08/21/diy-photogrammetry-open-source-alternatives-to-123d-catch/
+		VisualSize.com http://www.visualsize.com/FAQ/3Dmodel.php
+		Point Cloud Library (PCL) Users mailing list - disabling some default key event handling in PCLVisualizer http://www.pcl-users.org/disabling-some-default-key-event-handling-in-PCLVisualizer-td4026797.html
+		PCLVisualizer - Documentation - Point Cloud Library (PCL) http://pointclouds.org/documentation/tutorials/pcl_visualizer.php#pcl-visualizer
+		CGAL - Computational Geometry Algorithms Library http://www.cgal.org/
+		Real-world camera and scene matching in Blender http://home.metrocast.net/~chipartist/BlensesSite/Part2.html
+		Mister P. MeshLab Tutorials - YouTube http://www.youtube.com/user/MrPMeshLabTutorials/videos
+		Dimensional Imaging - World Leading 3D & 4D Surface Imaging http://www.di3d.com/index.php
+		ARToolKit Home Page http://www.hitl.washington.edu/artoolkit/
+		Camera Calibration Toolbox for Matlab http://www.vision.caltech.edu/bouguetj/calib_doc/htmls/functions.html
+		Stereo Vision - Computer Vision System Toolbox for MATLAB & Simulink - MathWorks Nordic http://www.mathworks.se/products/computer-vision/description6.html
+		strawlab/MultiCamSelfCal https://github.com/strawlab/MultiCamSelfCal/
+		Multi-Camera Self-Calibration http://cmp.felk.cvut.cz/~svoboda/SelfCal/index.html
+		VisualSFM : A Visual Structure from Motion System - Documentation http://ccwu.me/vsfm/doc.html#usage
+		Open Source Photogrammetry: Python Photogrammetry Toolbox http://opensourcephotogrammetry.blogspot.fi/2010/09/python-photogrammetry-toolbox.html
+		Arc-Team 2.0 Open Your mind and share your knowledge http://www.arc-team.homelinux.com/arcteam/progetti.php
+		Modeling and Rendering from Photographs http://ict.debevec.org/~debevec/Research/
+		RunSFM | Nghia Ho http://nghiaho.com/?page_id=253
+		CMP SfM Web Service http://ptak.felk.cvut.cz/sfmservice/websfm.pl?menu=cmpmvs
+		Blender.org :: View topic - location of code correlating FOV and "Lens" settin http://www.blender.org/forum/viewtopic.php?t=12108
+		Blender Aid • Posts Tagged ‘Basics’ http://blenderaid.com/tagged/Basics
+		Photo Tourism http://phototour.cs.washington.edu/
+		Finding Paths through the World's Photos http://phototour.cs.washington.edu/findingpaths/
+		StreamPix multiple camera - digital video camera http://norpix.com/products/streampix/streampix.php
+		Products | www.agisoft.ru http://www.agisoft.ru/products
+		PhotoModeler - close-range photogrammetry and image-based modeling http://www.photomodeler.com/index.html
+		Software - Leica Geosystems http://www.leica-geosystems.com/en/Software_3253.htm
+		Photogrammetry • Index page http://pgrammetry.com/forum/index.php
+		About My3DScanner http://my3dscanner.com/
+		ARToolKit - Wikipedia, the free encyclopedia http://en.wikipedia.org/wiki/ARToolKit
+		OpenCV 2.X: Reading/Writing from/in markup languages (XML, YAML) | La plaga Tux http://plagatux.es/2011/08/opencv-2-x-readingwriting-infrom-markup-languages-xml-yaml/
+		▶ Faceshift: Markerless Motion Capture - YouTube http://www.youtube.com/watch?v=24qUFDdZAG8
+		Scemosystems - Myydään EDULLISESTI käytettyjä teollisuusautomaatio laitteita ja kaikkea sen ympäriltä http://scemosystems.fi/
+		Reference API Usage — Blender 2.69.0 - API documentation http://www.blender.org/documentation/blender_python_api_2_69_release/info_api_reference.html
+		Current raw video capabilities - All ML cameras http://www.magiclantern.fm/forum/index.php?topic=6215.0
+		Nightly builds with Raw recording support http://www.magiclantern.fm/forum/index.php?topic=6362.0
+		Bit rate - Magic Lantern Firmware Wiki http://magiclantern.wikia.com/wiki/Bit_rate
+		Which Canon DSLR’s can do RAW with Magic Lantern? [Updated November 11th '13] « cinema5D https://www.cinema5d.com/news/?p=18205
+		VideoTimer - Magic Lantern Firmware Wiki http://magiclantern.wikia.com/wiki/VideoTimer
+		Greater than 30fps in crop mode? http://www.magiclantern.fm/forum/index.php?topic=11323.0
+		http://builds.magiclantern.fm/ http://builds.magiclantern.fm/#/features
+		Agisoft StereoScan | www.agisoft.ru http://www.agisoft.ru/products/stereoscan/
+		Augmented Reality / 3D Tracking | ALVAR http://virtual.vtt.fi/virtual/proj2/multimedia/alvar/
+		blender | [Scripts]Create camera image plane http://blenderartists.org/forum/showthread.php?300436-Scripts-Create-camera-image-plane
+		NorPix new Streampix 6 release http://norpix.com/news/newsletters/streampix6.php
+		Sepharad's: Camera tethered capturing using libgphoto2 http://sepharads.blogspot.fi/2011/11/camera-tethered-capturing-using.html
+		Standard event identifiers http://docs.wxwidgets.org/2.8.12/wx_stdevtid.html
+		Compute the distorted pixel position, given the undistorted position and the radial (un)distortion - Google Groups https://groups.google.com/forum/#!msg/vsfm/IcbdIVv_Uek/Us32SBUNK9oJ
+		Creating custom widgets in wxPython http://www.zetcode.com/wxpython/customwidgets/
+		Making a render loop - WxWiki http://wiki.wxwidgets.org/Making_a_render_loop
+		multithreading - Is this an acceptable way to lock a container using C++? - Stack Overflow http://stackoverflow.com/questions/11762724/is-this-an-acceptable-way-to-lock-a-container-using-c
+		include/redi/exec_around.h in redistd/redistd:master - Gitorious https://gitorious.org/redistd/redistd/source/0d9c849726729e66e5703fadba0222d6df724533:include/redi/exec_around.h
+		Index of /MCU/Frameworks/ARM/stm32f4 http://tech.munts.com/MCU/Frameworks/ARM/stm32f4/
+		texane/stlink · GitHub https://github.com/texane/stlink
+		Scanalyze: a system for aligning and merging range data http://graphics.stanford.edu/software/scanalyze/
+		Virtual USB Analyzer - Tutorial http://vusb-analyzer.sourceforge.net/tutorial.html
+		PTP - Magic Lantern Firmware Wiki http://magiclantern.wikia.com/wiki/PTP
+		[ML] Canon PTP commands - Google Groups https://groups.google.com/forum/#!topic/ml-devel/EFLby-U-vy0
+		pyying/piggyphoto/ptp.py at master · soixantecircuits/pyying · GitHub https://github.com/soixantecircuits/pyying/blob/master/piggyphoto/ptp.py
+		Layout management in wxPython http://zetcode.com/wxpython/layout/
+		How to Record: -- 60/50 fps RAW Video for 5D3 & others -- http://www.magiclantern.fm/forum/index.php?topic=5472.0
+		RAW Video - Magic Lantern Firmware Wiki http://magiclantern.wikia.com/wiki/RAW_Video
+		Magic Lantern (RAW) Video format v2.0 (mlv_rec.mo) http://www.magiclantern.fm/forum/index.php?topic=7122.0
+		Son Hua's Home Page: A short note about using Canon EDSDK http://songuke.blogspot.fi/2012/05/short-note-about-using-canon-edsdk.html
+		PDFtk - The PDF Toolkit http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
+		Smoothieware/mbed/src at edge · Smoothieware/Smoothieware · GitHub https://github.com/Smoothieware/Smoothieware/tree/edge/mbed/src
+		STM32F10x Standard Peripherals Library: TIM_Output_Compare_and_PWM_modes http://stm32.kosyak.info/doc/group___t_i_m___output___compare__and___p_w_m__modes.html
+		Photo software | www.dxo.com http://www.dxo.com/intl/photography/dxo-optics-pro/photo-software
+		PinkDotRemover tool 650D http://www.magiclantern.fm/forum/index.php?topic=6658.0
+		How to process Magic Lantern RAW videos - GNA Productions http://www.gna-productions.com/tutos/how-to-process-magic-lantern-raw-videos
+		ffmpeg
+			How to extract images from a Video using FFmpeg | Linuxers http://linuxers.org/tutorial/how-extract-images-video-using-ffmpeg
+			Create a video slideshow from images – FFmpeg https://trac.ffmpeg.org/wiki/Create%20a%20video%20slideshow%20from%20images
+			Create a thumbnail image every X seconds of the video – FFmpeg https://trac.ffmpeg.org/wiki/Create%20a%20thumbnail%20image%20every%20X%20seconds%20of%20the%20video
+			graphics - How can I extract a good quality JPEG image from an H264 video file with ffmpeg? - Stack Overflow http://stackoverflow.com/questions/10225403/how-can-i-extract-a-good-quality-jpeg-image-from-an-h264-video-file-with-ffmpeg
+		linux
+			introductory udev stuff http://timocharis.com/help/udev.html
+			Writing udev rules http://reactivated.net/writing_udev_rules.html
+			Linux USB FAQ http://www.linux-usb.org/FAQ.html#i6
 	capture
 		Vicon | Homepage http://www.vicon.com/
 		Animation World Network http://www.awn.com/
+		HowStuffWorks "How MotionScan Technology Works" http://electronics.howstuffworks.com/motionscan-technology.htm
+		3D Scanning - MakerBot http://www.makerbot.com/blog/category/scanner/3d-scanning/
+		3ders.org - First open source D3D scanner from 3D Creations | 3D Printing news http://www.3ders.org/articles/20130104-first-open-source-d3d-scanner-from-3d-creations.html
+		The Stanford Spherical Gantry http://graphics.stanford.edu/projects/gantry/
+		LIKENESS CAPTURE - The Capture LabThe Capture Lab http://www.capturelab.com/likeness-capture/
 	render
 		DIY Universal Capture System http://www.zbrushcentral.com/showthread.php?177615-DIY-Universal-Capture-System
 		Crossing the uncanny valley WIP - CGFeedback http://www.cgfeedback.com/cgfeedback/showthread.php?t=3776
 	math
+		Lens correction model - PanoTools.org Wiki http://wiki.panotools.org/Lens_correction_model
+		Close-range photogrammetry http://iapg.jade-hs.de/crp/
+		CVPR2010 3d Shape Reconstruction from Photographs: a Multi-View Stereo Approach http://carlos-hernandez.org/cvpr2010/index.html
+		Dense 3D Motion Capture for Human Faces http://grail.cs.washington.edu/projects/fmocap/
+		CVPR2010 webpage http://carlos-hernandez.org/cvpr2010/
 		Scheimpflug principle - Wikipedia http://en.wikipedia.org/wiki/Scheimpflug_principle
+		Cross-correlation - Wikipedia, the free encyclopedia http://en.wikipedia.org/wiki/Cross-correlation#Normalized_cross-correlation
+		Multiple View Geometry in Computer Vision (comp290-89) http://www.cs.unc.edu/~marc/tutorial04/
+		olivier faugeras http://www-sop.inria.fr/members/Olivier.Faugeras/publications_new.html
+		Diffraction Limited Photography: Pixel Size, Aperture and Airy Disks http://www.cambridgeincolour.com/tutorials/diffraction-photography.htm
+		Image Processing, Analysis, and Machine Vision: A MATLAB Companion http://visionbook.felk.cvut.cz/
+		Camera Calibration http://www.kwon3d.com/theory/calib.html
+		Three-Dimensional Computer Vision | The MIT Press https://mitpress.mit.edu/books/three-dimensional-computer-vision
+		Hausdorff distance - Wikipedia, the free encyclopedia http://en.wikipedia.org/wiki/Hausdorff_distance
+		Kalman Filtering Book by Peter Maybeck http://www.cs.unc.edu/~welch/kalman/maybeck.html
+		researchers
+			Yasutaka Furukawa http://www.cse.wustl.edu/~furukawa/
+			Yasutaka Furukawa - Research at Google http://research.google.com/pubs/YasutakaFurukawa.html
+			marc pollefeys - Google Scholar http://scholar.google.fi/scholar?hl=fi&q=marc+pollefeys&btnG=Submit
+			Tim Cootes: Overview http://personalpages.manchester.ac.uk/staff/timothy.f.cootes/
+			Heikki Hyyti - AS-laitos - Aalto-yliopisto http://autsys.aalto.fi/HeikkiHyyti
+			Marc Pollefeys' publications http://www.cs.unc.edu/~marc/publications.html
+			Tomas Svoboda http://cmp.felk.cvut.cz/~svoboda/
+			Home Page Christoph Strecha http://cvlabwww.epfl.ch/~strecha/research.html
+			Kristen Grauman http://www.cs.utexas.edu/~grauman/
+			Manmohan Chandraker : Research http://www.nec-labs.com/~manu/research.html
+			Andrew Davison: Research http://www.doc.ic.ac.uk/~ajd/
+			Jim Chandler - Google Scholar Citations http://scholar.google.com/citations?hl=en&user=LAQmzd0AAAAJ&view_op=list_works&pagesize=100
+			Manmohan Chandraker http://www.nec-labs.com/~manu/
+			Carlos Hernández research http://carlos-hernandez.org/research.html
+			Cicero Moraes | BlenderNation http://www.blendernation.com/?s=Cicero+Moraes+&submit=Search
+			Zhengyou Zhang's Home Page http://research.microsoft.com/en-us/um/people/zhang/
+		brdf
+			GPU Gems - Chapter 18. Spatial BRDFs http://http.developer.nvidia.com/GPUGems/gpugems_ch18.html
+			Bidirectional reflectance distribution function - Wikipedia, the free encyclopedia http://en.wikipedia.org/wiki/Bidirectional_reflectance_distribution_function
+			webgl - Should the Oj lobe of a Lafortune shader cause the light to be displaced? - Game Development Stack Exchange http://gamedev.stackexchange.com/questions/68804/should-the-oj-lobe-of-a-lafortune-shader-cause-the-light-to-be-displaced
+			Reflection Models http://www.virial.com/reflection-models.html
+	latex
+		Flowchart - Online LaTeX Editor ShareLaTeX https://www.sharelatex.com/project/52205bbce77a8bec1415bf38
+		typesetting - Best practices in LaTeX - Stack Overflow http://stackoverflow.com/questions/193298/best-practices-in-latex/196724#196724
+		graphics - How to use \graphicspath? - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/139401/how-to-use-graphicspath
+		graphics - \graphicspath and \include - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/15960/graphicspath-and-include
+		LaTeX/Importing Graphics - Wikibooks, open books for an open world http://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
+		LaTeX/Modular Documents - Wikibooks, open books for an open world http://en.wikibooks.org/wiki/LaTeX/Modular_Documents
+		beamer - High level macros and environments based on Tikz - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/52394/high-level-macros-and-environments-based-on-tikz
+		diagrams - Nice scientific pictures show off - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/158668/nice-scientific-pictures-show-off
+		TeX Frequently Asked Questions http://www.tex.ac.uk/cgi-bin/texfaq2html?introduction=yes
+		CTAN: tex-archive/macros/latex/contrib/tufte-latex http://www.ctan.org/tex-archive/macros/latex/contrib/tufte-latex/
+		CTAN: tex-archive/macros/latex/contrib/booktabs http://www.ctan.org/tex-archive/macros/latex/contrib/booktabs/
+		LaTeX/Creating Packages - Wikibooks, open books for an open world http://en.wikibooks.org/wiki/LaTeX/Creating_Packages
+		Creating a package of custom-made commands - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/27612/creating-a-package-of-custom-made-commands
+		Managing a project: separate .tex-files, externalized TikZ, folders - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/51226/managing-a-project-separate-tex-files-externalized-tikz-folders
+		build - Latex, TikZ and separate compilation of chapters and figures - Stack Overflow http://stackoverflow.com/questions/3248816/latex-tikz-and-separate-compilation-of-chapters-and-figures
+		Online LaTeX Editor ShareLaTeX - Creating Flowcharts with TikZ https://www.sharelatex.com/blog/2013/08/29/tikz-series-pt3.html
+		packages - Best practice for control flow charts - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/9057/best-practice-for-control-flow-charts
+		How can I use BibTeX to cite a web page? - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/3587/how-can-i-use-bibtex-to-cite-a-web-page
+		citing - Bibtex Key definition - TeX - LaTeX Stack Exchange http://tex.stackexchange.com/questions/108595/bibtex-key-definition
+	paperwork
+		Diplomityön sähköinen versio - Kandidaatti- ja maisteriopiskelijalle Sähkötekniikan korkeakoulussa - Into https://into.aalto.fi/pages/viewpage.action?pageId=3225846
+		Diplomityön tekeminen - Kandidaatti- ja maisteriopiskelijalle Sähkötekniikan korkeakoulussa - Into https://into.aalto.fi/pages/viewpage.action?pageId=1022561
